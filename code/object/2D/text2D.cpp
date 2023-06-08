@@ -1,0 +1,212 @@
+//========================================
+// 
+// テキスト(2D)
+// 
+//========================================
+//  *** text2D.cpp ***
+//========================================
+#include "text2D.h"
+#include "../object2D.h"
+#include "../../main.h"
+#include "../../manager.h"
+#include "../../renderer.h"
+
+//****************************************
+// 静的メンバ変数宣言
+//****************************************
+LPDIRECT3DTEXTURE9 CText2D::m_pTexture = NULL;	// 共有テクスチャ
+
+// コンストラクタ
+CText2D::CText2D(int nPriority) : CObject(nPriority)
+{
+	sprintf(m_aString, "");		// 文字列のポインタ
+	m_disp = DISPLAY_LEFT;		// 表示形式
+	m_pos = INIT_D3DXVECTOR3;	// 位置
+	m_rot = INIT_D3DXVECTOR3;	// 向き
+	m_fWidth = 0.0f;			// 幅
+	m_fHeight = 0.0f;			// 高さ
+
+	// オブジェクト2Dのポインタ配列
+	for (int nCntObj = 0; nCntObj < TXT_MAX; nCntObj++)
+	{
+		m_apObject2D[nCntObj] = NULL;
+	}
+}
+
+// デストラクタ
+CText2D::~CText2D() 
+{
+
+}
+
+//========================================
+// 初期化処理
+//========================================
+HRESULT CText2D::Init(void) 
+{
+	// オブジェクト2Dのポインタ配列解放
+	for (int nCntObj = 0; nCntObj < TXT_MAX; nCntObj++)
+	{
+		if (m_apObject2D[nCntObj] != NULL)
+		{
+			m_apObject2D[nCntObj]->Uninit();
+			m_apObject2D[nCntObj] = NULL;
+		}
+	}
+
+	// 種類設定
+	SetType(TYPE_TEXT);
+
+	return S_OK;
+}
+
+//========================================
+// 終了処理
+//========================================
+void CText2D::Uninit(void) 
+{
+	Release();
+}
+
+//========================================
+// 更新処理
+//========================================
+void CText2D::Update(void) 
+{
+	
+}
+
+//========================================
+// 描画処理
+//========================================
+void CText2D::Draw(void)
+{
+
+}
+
+//========================================
+// 文字列設定処理
+//========================================
+void CText2D::SetString(char *pString) 
+{
+	// 文字列代入
+	sprintf(m_aString, pString);
+
+	int nStrLen = (int)strlen(m_aString);
+
+	for (int nCntDigit = 0; nCntDigit < TXT_MAX; nCntDigit++)
+	{
+		if (nCntDigit >= nStrLen)
+		{// 文字カウントが文字列の長さに達していた時、
+		 // オブジェクトの解放
+			if (m_apObject2D[nCntDigit] != NULL)
+			{
+				m_apObject2D[nCntDigit]->Uninit();
+				m_apObject2D[nCntDigit] = NULL;
+			}
+			continue;	// 折り返す
+		}
+		else if (m_aString[nCntDigit] == ' ')
+		{// カウントの文字が空白の時、
+		 // オブジェクトの解放
+			if (m_apObject2D[nCntDigit] != NULL) {
+				m_apObject2D[nCntDigit]->Uninit();
+				m_apObject2D[nCntDigit] = NULL;
+			}
+			continue;	// 折り返す
+		}
+
+		// 生成
+		if (m_apObject2D[nCntDigit] == NULL) {
+			m_apObject2D[nCntDigit] = CObject2D::Create();
+		}
+
+		// 設定位置
+		D3DXVECTOR3 setPos = m_pos;
+
+		// 表示形式に応じた設定位置の設定
+		switch (m_disp)
+		{
+		case DISPLAY_CENTER:
+			// 設定位置に文字の最終的な長さの半分を減算
+			setPos.x -= m_fWidth * nStrLen * 0.5f;
+			// 設定位置に配置間隔Xを適用(加算)
+			setPos.x += ((float)nCntDigit + 0.5f) * m_fWidth;
+			break;
+		case DISPLAY_LEFT:
+			// 設定位置に配置間隔Xを適用(加算)
+			setPos.x += nCntDigit * m_fWidth;
+			break;
+		case DISPLAY_RIGHT:
+			// 設定位置に文字の最終的な長さを減算
+			setPos.x -= m_fWidth * (nStrLen - 1);
+			// 設定位置に配置間隔Xを適用(加算)
+			setPos.x += nCntDigit * m_fWidth;
+			break;
+		}
+
+		// 位置設定
+		m_apObject2D[nCntDigit]->SetPos(setPos);
+
+		// 向き設定
+		m_apObject2D[nCntDigit]->SetRot(INIT_D3DXVECTOR3);
+
+		// サイズ設定
+		m_apObject2D[nCntDigit]->SetSize(m_fWidth, m_fHeight);
+
+		// パターン情報設定
+		m_apObject2D[nCntDigit]->SetPtn((int)m_aString[nCntDigit] - START_CHAR);
+		m_apObject2D[nCntDigit]->SetPtnInfo(PTN_WIDTH, PTN_HEIGHT, PTN_MAX);
+
+		// テクスチャ割り当て
+		m_apObject2D[nCntDigit]->BindTexture(m_pTexture);
+	}
+}
+
+//========================================
+// 生成処理
+//========================================
+CText2D *CText2D::Create(void) {
+	
+	CText2D *pText2D = NULL;
+
+	// テキスト2Dの生成
+	pText2D = new CText2D;
+
+	// 初期化処理
+	pText2D->Init();
+
+	return pText2D;
+}
+
+//========================================
+// テクスチャ読み込み
+//========================================
+HRESULT CText2D::Load(char *pPath) 
+{
+	if (pPath != NULL)
+	{
+		// デバイス取得
+		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+		// テクスチャの読み込み
+		if (FAILED(D3DXCreateTextureFromFile(pDevice, pPath, &m_pTexture))) 
+		{
+			m_pTexture = NULL;
+		}
+	}
+
+	return S_OK;
+}
+
+//========================================
+// テクスチャ破棄
+//========================================
+void CText2D::Unload(void) 
+{
+	// テクスチャの破棄
+	if (m_pTexture != NULL)
+	{
+		m_pTexture->Release();
+		m_pTexture = NULL;
+	}
+}
