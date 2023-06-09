@@ -175,10 +175,12 @@ void CPlayer::Physics(void)
 	if (pInputKeyboard->GetPress(DIK_D) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_RIGHT, 0) == true)
 	{// 右
 		m_Info.move.x += PLAYER_SPEED;
+		SetPtn(25);
 	}
 	else if (pInputKeyboard->GetPress(DIK_A) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_LEFT, 0) == true)
 	{// 左
 		m_Info.move.x -= PLAYER_SPEED;
+		SetPtn(35);
 	}
 
 	//移動量を更新(減衰させる)
@@ -198,11 +200,13 @@ void CPlayer::Physics(void)
 
 	// 移動量を更新(減衰)
 
+	//Ｙの移動量に重力を加算
+	m_Info.move.y += (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+
 	// ブロックとの当たり判定
 	m_Info.pos = Collision(m_Info.pos);
 
-	//Ｙの移動量に重力を加算
-	m_Info.move.y += (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+	
 
 	// 位置の更新
 	SetPos(m_Info.pos);
@@ -265,13 +269,13 @@ D3DXVECTOR3 CPlayer::Collision(D3DXVECTOR3 pos)
 
 					//  プレイヤーの取得
 					D3DXVECTOR3 PosOld = GetPosOld();		// 位置(過去)
-					float fWidth = m_Info.fHeight * 0.5;	// 高さ
-					float fHeight = m_Info.fWidth *0.5;		// 幅	
+					float fWidth = m_Info.fWidth * 0.5;		// 幅
+					float fHeight = m_Info.fHeight *0.5;	// 高さ
 
 					// ブロックの取得
 					D3DXVECTOR3 BlockPos = pObj->GetPos();			// 位置
-					float fBlockWidth = pObj->GetHeight() * 0.5;	// 高さ
-					float fBlockeHight = pObj->GetWidth() * 0.5;	// 幅	
+					float fBlockWidth = pObj->GetWidth() * 0.5;		// 幅
+					float fBlockeHight = pObj->GetHeight() * 0.5;	// 高さ	
 
 					/* 当たり判定 */
 
@@ -303,6 +307,7 @@ D3DXVECTOR3 CPlayer::Collision(D3DXVECTOR3 pos)
 						{// 上からめり込んでいる時
 
 							pos.y = (BlockPos.y - fBlockeHight) - fHeight;
+							m_Info.move.y = 0.0f;
 							m_Info.bJump = false;
 						}
 						else if ((pos.y - fHeight) <= (BlockPos.y + fBlockeHight) &&
