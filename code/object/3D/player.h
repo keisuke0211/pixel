@@ -34,7 +34,6 @@ public:
 		D3DXVECTOR3 move;			// 移動量
 		float fWidth;				// 幅
 		float fHeight;				// 高さ
-		float fMove;				// 移動力
 		float fJump;				// ジャンプ力
 		bool bJump;					// ジャンプフラグ
 	} Info;

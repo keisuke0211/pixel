@@ -61,6 +61,13 @@
     <ClInclude Include="code\renderer.h" />
     <ClInclude Include="code\sound.h" />
     <ClInclude Include="code\texture.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="000.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\ICO\icon.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AF414DC5-6441-44C3-B140-F8ECB676D59E}</ProjectGuid>

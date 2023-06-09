@@ -64,6 +64,7 @@ public:
 	virtual float GetWidth(void) { return 0.0f; }					// ïù
 	virtual float GetHeight(void) { return 0.0f; }					// ïù
 	virtual D3DXVECTOR3 GetPos(void) { return INIT_D3DXVECTOR3; }	// à íu
+
 	TYPE GetType() { return m_type; }
 	static int GetNumAll() { return m_nNumAll; };
 	static CObject *GetObjectPointer(int nPriority,int nIdx) { return m_apObject[nPriority][nIdx]; }

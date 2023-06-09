@@ -106,10 +106,32 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 		CBgMulti::Create(D3DXVECTOR3((nCntBg + 1)* 0.0005f, 0.0f, 0.0f), nCntBg);
 	}
 
+	// ブロックの生成
 	for (int nCntObj = 0; nCntObj < 25; nCntObj++)
 	{
 		CBlock2D::Create(D3DXVECTOR3((35.0f + (nCntObj * 50.0f)), 650.0f, 0.0f));
 	}
+
+	for (int nCntObj = 0; nCntObj < 10; nCntObj++)
+	{
+		CBlock2D::Create(D3DXVECTOR3(1235.0f, (650.0f - (nCntObj * 50)), 0.0f));
+	}
+
+	for (int nCntObj = 0; nCntObj < 10; nCntObj++)
+	{
+		CBlock2D::Create(D3DXVECTOR3(35.0f, (650.0f - (nCntObj * 50)), 0.0f));
+	}
+
+	for (int nCntObj = 0; nCntObj < 5; nCntObj++)
+	{
+		CBlock2D::Create(D3DXVECTOR3((750.0f + (nCntObj * 50.0f)), 450, 0.0f));
+	}
+
+	for (int nCntObj = 0; nCntObj < 5; nCntObj++)
+	{
+		CBlock2D::Create(D3DXVECTOR3((1000.0f + (nCntObj * 50.0f)), 350, 0.0f));
+	}
+
 
 	// プレイヤーの生成
 	for (int nCntPlayer = 0; nCntPlayer < CPlayer::PLAYER_MAX; nCntPlayer++)

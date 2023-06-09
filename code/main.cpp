@@ -64,18 +64,18 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 	// ウインドウクラスの構造体
 	WNDCLASSEX wcex =
 	{
-		sizeof(WNDCLASSEX),						  //WNDCLASSEXのメモリサイズ
-		CS_CLASSDC,								  //ウインドウのスタイル
-		WindowProc,								  //ウインドウプロシージャ
-		0,										  //0にする(通常は使用しない)
-		0,										  //0にする(通常は使用しない)
-		hinstance,								  //インスタンスハンドル
-		(HICON)LoadImage(NULL,"icon.ico",IMAGE_ICON,0,0,LR_SHARED | LR_LOADFROMFILE),		  //タスクバーのアイコン
-		LoadCursor(NULL,IDC_ARROW),				  //マウスカーソル
-		(HBRUSH)(COLOR_WINDOW + 1),				  //クライアント領域の背景色
-		NULL,									  //メニューバー
-		CLASS_NAME,								  //ウインドウクラスの名前
-		(HICON)LoadImage(NULL,"icon.ico",IMAGE_ICON,0,0,LR_SHARED | LR_LOADFROMFILE),		  //ファイルのアイコン
+		sizeof(WNDCLASSEX),																//WNDCLASSEXのメモリサイズ
+		CS_CLASSDC,																		//ウインドウのスタイル
+		WindowProc,																		//ウインドウプロシージャ
+		0,																				//0にする(通常は使用しない)
+		0,																				//0にする(通常は使用しない)
+		hinstance,																		//インスタンスハンドル
+		(HICON)LoadImage(NULL,"data\\ICO\\icon.ico",IMAGE_ICON,0,0,LR_SHARED | LR_LOADFROMFILE),	//タスクバーのアイコン
+		LoadCursor(NULL,IDC_ARROW),														//マウスカーソル
+		(HBRUSH)(COLOR_WINDOW + 1),														//クライアント領域の背景色
+		NULL,																			//メニューバー
+		CLASS_NAME,																		//ウインドウクラスの名前
+		(HICON)LoadImage(NULL,"data\\ICO\\icon.ico",IMAGE_ICON,0,0,LR_SHARED | LR_LOADFROMFILE),	//ファイルのアイコン
 	};
 	MSG msg;									  //メッセージを格納する変数
 

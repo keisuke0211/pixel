@@ -60,8 +60,8 @@ public:
 	static CObject2D *Create(void);	// 生成
 
 	/* 設定 */
-	virtual void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }		// 位置
-	virtual void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }		// 向き
+	virtual void SetPos(D3DXVECTOR3 pos) { m_pos = m_posOld = pos; }		// 位置
+	virtual void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }					// 向き
 	virtual void SetSize(float fWidth, float fHeight) { m_fWidth = fWidth, m_fHeight = fHeight; };		// サイズ
 	virtual void SetColor(D3DXCOLOR color);				// 色
 	void SetPtn(int nPtn) { m_nPtn = nPtn; }			// パターン
@@ -72,6 +72,7 @@ public:
 	float GetWidth(void) { return m_fWidth; }		// 幅
 	float GetHeight(void) { return m_fHeight; }		// 幅
 	D3DXVECTOR3 GetPos(void) { return m_pos; }		// 位置
+	D3DXVECTOR3 GetPosOld(void) { return m_posOld; }// 位置(過去)
 	int GetPtn(void) { return m_nPtn; }				// パターン 
 	int GetPtnWidth(void) { return m_nPtnWidth; }	// パターン幅
 	int GetPtnHeight(void) { return m_nPtnHeight; }	// パターン高さ
@@ -92,17 +93,18 @@ private:
 	// ***** 変数 *****
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファへのポインタ
 	LPDIRECT3DTEXTURE9 m_pTexture;		// テクスチャへのポインタ
-	D3DXVECTOR3 m_pos;	// 位置
-	D3DXVECTOR3 m_rot;	// 向き
-	D3DXCOLOR m_color;	// 色
-	float m_fWidth;		// 幅
-	float m_fHeight;	// 高さ
-	int m_nPtn;			// パターン
-	int m_nPtnWidth;	// パターン幅
-	int m_nPtnHeight;	// パターン高さ
-	int m_nPtnMax;		// パターンの最大
-	bool m_bPtnAnim;	// パターンアニメフラグ
-	int m_nAnimCounter;	// アニメカウンター
-	int m_nAnimTime;	// アニメにかかる時間
+	D3DXVECTOR3 m_pos;					// 位置
+	D3DXVECTOR3 m_posOld;				// 位置(過去)
+	D3DXVECTOR3 m_rot;					// 向き
+	D3DXCOLOR m_color;					// 色
+	float m_fWidth;						// 幅
+	float m_fHeight;					// 高さ
+	int m_nPtn;							// パターン
+	int m_nPtnWidth;					// パターン幅
+	int m_nPtnHeight;					// パターン高さ
+	int m_nPtnMax;						// パターンの最大
+	bool m_bPtnAnim;					// パターンアニメフラグ
+	int m_nAnimCounter;					// アニメカウンター
+	int m_nAnimTime;					// アニメにかかる時間
 };
 #endif

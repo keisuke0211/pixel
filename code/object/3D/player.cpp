@@ -16,7 +16,7 @@
 //****************************************
 // マクロ定義
 //****************************************
-#define JUMP_POWER		(-20.0f)// ジャンプ量
+#define JUMP_POWER		(-40.0f)// ジャンプ量
 #define GRAVITY_MAG		(0.08f)	// 重力係数
 #define GRAVITY_POWER	(9.0f)	// 重力加速度
 
@@ -36,8 +36,6 @@ CPlayer::CPlayer(int nPriority) : CObject2D(nPriority)
 	m_Info.move = INIT_D3DXVECTOR3;
 	m_Info.fWidth = INIT_FLOAT;
 	m_Info.fHeight = INIT_FLOAT;
-	m_Info.fJump = INIT_FLOAT;
-	m_Info.fMove = INIT_FLOAT;
 	m_Info.bJump = false;
 
 
@@ -121,7 +119,6 @@ HRESULT CPlayer::Init(void)
 	m_Info.pos = D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f);
 	m_Info.fWidth = 75.0f;
 	m_Info.fHeight = 75.0f;
-	m_Info.fJump = 2.0f;
 
 	// 生成
 	SetPos(m_Info.pos);
@@ -177,11 +174,11 @@ void CPlayer::Physics(void)
 
 	if (pInputKeyboard->GetPress(DIK_D) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_RIGHT, 0) == true)
 	{// 右
-		AddMove(0.5f);
+		m_Info.move.x += PLAYER_SPEED;
 	}
 	else if (pInputKeyboard->GetPress(DIK_A) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_LEFT, 0) == true)
 	{// 左
-		AddMove(-0.5f);
+		m_Info.move.x -= PLAYER_SPEED;
 	}
 
 	//移動量を更新(減衰させる)
@@ -190,20 +187,22 @@ void CPlayer::Physics(void)
 	// --- ジャンプ ---------------------------------
 	if (pInputKeyboard->GetPress(DIK_SPACE) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_A, 0) == true)
 	{
-		m_Info.bJump = true;	// ジャンプフラグを真にする
-		m_Info.move.y += JUMP_POWER;
+		if (m_Info.bJump == false)
+		{
+			m_Info.bJump = true;	// ジャンプフラグを真にする
+			m_Info.move.y += JUMP_POWER;
+		}
 	}
 
-	m_Info.pos.y += m_Info.move.y;
+	m_Info.pos += m_Info.move;
 
 	// 移動量を更新(減衰)
-	m_Info.move.y += GRAVITY_MAG;
 
-	if (m_Info.bJump)
-	{// ジャンプフラグが真の時、
-	
-	}
+	// ブロックとの当たり判定
+	m_Info.pos = Collision(m_Info.pos);
 
+	//Ｙの移動量に重力を加算
+	m_Info.move.y += (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
 
 	// 位置の更新
 	SetPos(m_Info.pos);
@@ -248,5 +247,80 @@ void CPlayer::AddMove(float fRoty)
 //========================================
 D3DXVECTOR3 CPlayer::Collision(D3DXVECTOR3 pos)
 {
+	for (int nCntPriority = 0; nCntPriority < TYPE_MAX; nCntPriority++)
+	{
+		for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
+		{
+			// オブジェクトを取得
+			CObject *pObj = GetObjectPointer(nCntPriority, nCntObj);
 
+			if (pObj != NULL)
+			{// 使用されている時、
+
+				// 種類を取得
+				TYPE type = pObj->GetType();
+
+				if (type == TYPE_BLOCK)
+				{// 種類がブロックの時、
+
+					//  プレイヤーの取得
+					D3DXVECTOR3 PosOld = GetPosOld();		// 位置(過去)
+					float fWidth = m_Info.fHeight * 0.5;	// 高さ
+					float fHeight = m_Info.fWidth *0.5;		// 幅	
+
+					// ブロックの取得
+					D3DXVECTOR3 BlockPos = pObj->GetPos();			// 位置
+					float fBlockWidth = pObj->GetHeight() * 0.5;	// 高さ
+					float fBlockeHight = pObj->GetWidth() * 0.5;	// 幅	
+
+					/* 当たり判定 */
+
+					// プレイヤーがブロックの上辺～下辺の間にいる時
+					if ((pos.y + fHeight) > (BlockPos.y - fBlockeHight) &&
+						(pos.y - fHeight) < (BlockPos.y + fBlockeHight))
+					{
+						if ((pos.x + fWidth) >= (BlockPos.x - fBlockWidth) &&
+							(PosOld.x + fWidth) <= (BlockPos.x - fBlockWidth))
+						{// 左からめり込んでいる時
+
+							pos.x = (BlockPos.x - fBlockWidth) - fWidth;
+						}
+						else if ((pos.x - fWidth) <= (BlockPos.x + fBlockWidth) &&
+							(PosOld.x - fWidth) >= (BlockPos.x + fBlockWidth))
+						{// 右からめり込んでいる時
+
+							pos.x = (BlockPos.x + fBlockWidth) + fWidth;
+						}
+					}
+
+					// プレイヤーがブロックの左辺～右辺の間にいる時
+
+					if ((pos.x + fWidth) > (BlockPos.x - fBlockWidth) &&
+						(pos.x - fWidth) < (BlockPos.x + fBlockWidth))
+					{
+						if ((pos.y + fHeight) >= (BlockPos.y - fBlockeHight) &&
+							(PosOld.y + fHeight) <= (BlockPos.y - fBlockeHight))
+						{// 上からめり込んでいる時
+
+							pos.y = (BlockPos.y - fBlockeHight) - fHeight;
+							m_Info.bJump = false;
+						}
+						else if ((pos.y - fHeight) <= (BlockPos.y + fBlockeHight) &&
+							(PosOld.y - fHeight) >= (BlockPos.y + fBlockeHight))
+						{// 下からめり込んでいる時
+							pos.y = (BlockPos.y + (fBlockeHight + fHeight));
+
+							//プレイヤーが上昇中
+							if (m_Info.move.y < 0.0f)
+							{
+								//Ｙの移動量を0に
+								m_Info.move.y = 0.0f;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return pos;
 }
