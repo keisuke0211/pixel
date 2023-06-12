@@ -12,21 +12,6 @@
 #include "object.h"
 
 //****************************************
-// マクロ
-//****************************************
-#define INIT_POSITIONVEC4	PositionVec4(0.0f,1.0f,0.0f,1.0f)	// PositionVec4の初期値
-
-//****************************************
-// 構造体
-//****************************************
-struct PositionVec4
-{
-	float     P0, P1, P2, P3;
-	constexpr PositionVec4() : P0(0.0f), P1(0.0f), P2(0.0f), P3(0.0f) { }
-	constexpr PositionVec4(float _P0, float _P1, float _P2, float _P3) : P0(_P0), P1(_P1), P2(_P2), P3(_P3) { }
-};
-
-//****************************************
 // クラス
 //****************************************
 class CObject2D : public CObject

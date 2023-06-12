@@ -14,6 +14,8 @@
 // 前方宣言
 //****************************************
 class CRenderer;		// レンダラー
+class CCamera;			// カメラ
+class CLight;			// ライト
 class CSound;			// サウンド
 class CTexture;			// テクスチャ
 class CInputKeyboard;	// キーボード
@@ -45,6 +47,8 @@ public:
 
 	/* 取得 */
 	static CRenderer *GetRenderer() { return m_pRenderer; }
+	static CCamera *GetCamera() { return m_pCamera; }
+	static CLight *GetLight() { return m_pLight; }
 	static CSound *GetSound() { return m_pSound; }
 	static CTexture* GetTexture(){ return m_pTexture; }
 	static CInputKeyboard* GetInputKeyboard() { return m_InputKeyboard; }
@@ -58,6 +62,8 @@ public:
 
 private:
 	static CRenderer *m_pRenderer;
+	static CCamera *m_pCamera;
+	static CLight *m_pLight;
 	static CSound *m_pSound;
 	static CTexture *m_pTexture;
 	static CInputKeyboard *m_InputKeyboard;

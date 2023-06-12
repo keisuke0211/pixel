@@ -31,6 +31,7 @@ public:
 		TYPE_NONE = 0,	// 無し
 		TYPE_BG,		// 背景
 		TYPE_BG_MULTI,	// マルチ背景
+		TYPE_FLOOR,		// 床
 		TYPE_BLOCK,		// ブロック
 		TYPE_PLAYER,	// プレイヤー
 		TYPE_ENEMY,		// エネミー

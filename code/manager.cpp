@@ -7,21 +7,25 @@
 //========================================
 #include "manager.h"
 #include "renderer.h"
+#include "camera.h"
+#include "light.h"
 #include "sound.h"
 #include "texture.h"
 #include "input.h"
 #include "object\object.h"
-#include "object\object2D.h"
 #include "object\2D\score.h"
 #include "object\2D\text2D.h"
 #include "object\2D\bg2D.h"
 #include "object\2D\bg_Multi2D.h"
+#include "object\3D\floor.h"
 #include "object\2D\block2D.h"
 #include "object\3D\player.h"
 #include "object\3D\enemy.h"
 
 // 静的メンバ変数
 CRenderer *CManager::m_pRenderer = NULL;
+CCamera *CManager::m_pCamera = NULL;
+CLight *CManager::m_pLight = NULL;
 CSound *CManager::m_pSound = NULL;
 CTexture *CManager::m_pTexture = NULL;
 CInputKeyboard *CManager::m_InputKeyboard = NULL;
@@ -84,6 +88,25 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 		m_InputJoypad->Init();
 	}
 
+	if (m_pCamera == NULL)
+	{
+		// カメラの生成
+		m_pCamera = new CCamera;
+
+		// カメラの初期化
+		m_pCamera->lnit();
+	}
+
+	if (m_pLight == NULL)
+	{
+		// ライトの生成
+		m_pLight = new CLight;
+
+		// ライトの初期化
+		m_pLight->lnit();
+	}
+
+
 	if (m_pSound == NULL)
 	{
 		// サウンドの生成
@@ -102,8 +125,10 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	// 背景の生成
 	for (int nCntBg = 0; nCntBg < 3; nCntBg++)
 	{
-		CBgMulti::Create(D3DXVECTOR3((nCntBg + 1)* 0.0005f, 0.0f, 0.0f), nCntBg);
+		/*CBgMulti::Create(D3DXVECTOR3((nCntBg + 1)* 0.0005f, 0.0f, 0.0f), nCntBg);*/
 	}
+
+	CFloor::Create();
 
 	// ブロックの生成
 	for (int nCntObj = 0; nCntObj < 25; nCntObj++)
@@ -208,6 +233,26 @@ void CManager::Uninit(void)
 		m_pRenderer = NULL;
 	}
 
+	// カメラの破棄
+	if (m_pCamera != NULL)
+	{
+		// カメラ
+		m_pCamera->Uninit();
+
+		delete m_pCamera;
+		m_pCamera = NULL;
+	}
+
+	// ライトの破棄
+	if (m_pLight != NULL)
+	{
+		// ライト
+		m_pLight->Uninit();
+
+		delete m_pLight;
+		m_pLight = NULL;
+	}
+
 	// サウンドの破棄
 	if (m_pSound != NULL)
 	{
@@ -233,17 +278,12 @@ void CManager::Uninit(void)
 //========================================
 void CManager::Update(void)
 {
-	// キーボード
-	m_InputKeyboard->Update();
-
-	// マウス
-	m_InputMouse->Update();
-
-	// ジョイパット
-	m_InputJoypad->Update();
-
-	// レンダラー
-	m_pRenderer->Update();
+	m_InputKeyboard->Update();	// キーボード
+	m_InputMouse->Update();		// マウス
+	m_InputJoypad->Update();	// ジョイパット
+	m_pCamera->Update();		// カメラ
+	m_pLight->Update();			// ライト
+	m_pRenderer->Update();		// レンダラー
 }
 
 //========================================
@@ -251,8 +291,7 @@ void CManager::Update(void)
 //========================================
 void CManager::Draw(void)
 {
-	// レンダラー
-	m_pRenderer->Draw();
+	m_pRenderer->Draw();	// レンダラー
 }
 //========================================
 // 読み込み

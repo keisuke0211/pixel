@@ -14,11 +14,12 @@ BG 			data\\TEXTURE\\PixelSky_layer03.png 	#02 雲
 PLAYER 		data\\TEXTURE\\player01.png 			#00 プレイヤー
 BULLET 		data\\TEXTURE\\bullet000.png 			#00 弾00
 BULLET 		data\\TEXTURE\\bullet001.png 			#01 弾01
-EXPLOSION 	data\\TEXTURE\\explosion000.png 		#02 爆発
 ENEMY 		data\\TEXTURE\\Enemy_a.png 				#00 敵
 EFFECT		data\\TEXTURE\\eff_circle_000.jpg		#00 光
 TEXT 		data\\TEXTURE\\font_000.png 			#00 フォント
 BLOCK		data\\TEXTURE\\Rocks00.png 				#00 岩
+FLOOR		data\\TEXTURE\\floor001.png 			#00 床
+
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||

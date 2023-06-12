@@ -87,6 +87,15 @@
     <ClCompile Include="code\object\2D\bg2D.cpp">
       <Filter>ソース ファイル\01_object\2D</Filter>
     </ClCompile>
+    <ClCompile Include="code\camera.cpp">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClCompile>
+    <ClCompile Include="code\light.cpp">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\3D\floor.cpp">
+      <Filter>ソース ファイル\01_object\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\main.h">
@@ -148,6 +157,15 @@
     </ClInclude>
     <ClInclude Include="code\object\2D\bg2D.h">
       <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\camera.h">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClInclude>
+    <ClInclude Include="code\light.h">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\3D\floor.h">
+      <Filter>ソース ファイル\01_object\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

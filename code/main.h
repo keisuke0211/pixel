@@ -38,23 +38,22 @@
 #define SWITCH_TIME			(600)															// 切り替わる時間(1秒 = 60)
 #define WINDOW_MODE			(false)															// ウインドウモードの切り替え
 #define INIT_FLOAT			(0.0f)															// floatの初期値
-#define INIT_RHW			D3DXVECTOR3(0.0f,1.0f,0.0f)										// RHWの初期化
+#define INIT_VEC			D3DXVECTOR3(0.0f,1.0f,0.0f)										// VECの初期化
 #define INIT_D3DXVECTOR2	D3DXVECTOR2(0.0f,0.0f)											// D3DXVECTOR2の初期値
 #define INIT_D3DXVECTOR3	D3DXVECTOR3(0.0f,0.0f,0.0f)										// D3DXVECTOR3の初期値
+#define INIT_POSITIONVEC4	PositionVec4(0.0f,1.0f,0.0f,1.0f)								// PositionVec4の初期値
 #define INIT_D3DXCOLOR		D3DXCOLOR(1,1,1,1)												// D3DXCOLORの初期値
 #define TXT_MAX				(256)		// 文字列の最大数(汎用) PositionVec4
 //========================================
 // 情報構造体
 //========================================
 
-//頂点情報【 2D 】
-typedef struct
+struct PositionVec4
 {
-	D3DXVECTOR3 pos;	//頂点座標
-	float rhw;			//座標変換係数（1.0fで固定）
-	D3DCOLOR col;		//頂点カラー
-	D3DXVECTOR2 tex;	//テクスチャ座標
-} VERTEX_2D;
+	float     P0, P1, P2, P3;
+	constexpr PositionVec4() : P0(0.0f), P1(0.0f), P2(0.0f), P3(0.0f) { }
+	constexpr PositionVec4(float _P0, float _P1, float _P2, float _P3) : P0(_P0), P1(_P1), P2(_P2), P3(_P3) { }
+};
 
 // メイン処理の情報構造体
 typedef struct

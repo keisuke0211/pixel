@@ -9,6 +9,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "object\2D\bg2D.h"
+#include "object\3D\floor.h"
 #include "object\2D\block2D.h"
 #include "object\3D\player.h"
 #include "object\3D\enemy.h"
@@ -88,6 +89,14 @@ HRESULT CTexture::Load(void)
 
 			m_nTextureAll++;
 		}
+		else if (!strcmp(aDataSearch, "FLOOR")) // 床
+		{
+			fscanf(pFile, "%s", &s_FileName[m_nTextureAll][0]);
+
+			CFloor::Load(&s_FileName[m_nTextureAll][0]);
+
+			m_nTextureAll++;
+		}
 		else if (!strcmp(aDataSearch, "BLOCK")) // プレイヤー
 		{
 			fscanf(pFile, "%s", &s_FileName[m_nTextureAll][0]);
@@ -147,6 +156,7 @@ HRESULT CTexture::Load(void)
 void CTexture::Unload(void)
 {
 	CBg::Unload();			// 背景
+	CFloor::Unload();		// 床
 	CBlock2D::Unload();		// ブロック
 	CPlayer::Unload();		// プレイヤー
 	CEnemy::Unload();		// エネミー

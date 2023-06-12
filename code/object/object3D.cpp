@@ -11,15 +11,22 @@
 #include "../texture.h"
 
 // コンストラクタ
-CObject3D::CObject3D()
+CObject3D::CObject3D(int nPriority)
 {
 	// 値をクリアする
-	m_pos = INIT_D3DXVECTOR3;
-	m_size = INIT_D3DXVECTOR2;
-	m_nTexture = 0;
-	m_fAngle = INIT_FLOAT;
-	m_fLength = INIT_FLOAT;
-	m_fRotY = INIT_FLOAT;
+	m_pos = INIT_D3DXVECTOR3;		// 位置
+	m_posOld = INIT_D3DXVECTOR3;	// 位置(過去)
+	m_rot = INIT_D3DXVECTOR3;		// 向き
+	m_color = INIT_D3DXCOLOR;		// 色
+	m_fHeight = INIT_FLOAT;			// 高さ
+	m_fWidth = INIT_FLOAT;			// 幅
+	m_nPtn = 0;						// パターン
+	m_nPtnWidth = 0;				// パターン幅
+	m_nPtnHeight = 0;				// パターン高さ
+	m_nPtnMax = 0;					// パターンの最大
+	m_bPtnAnim = false;				// パターンアニメフラグ
+	m_nAnimCounter = 0;				// アニメカウンター
+	m_nAnimTime = 0;				// アニメにかかる時間
 }
 
 // デストラクタ
@@ -39,7 +46,7 @@ CObject3D *CObject3D::Create(void)
 		return pObj3D;
 	}
 
-	// オブジェクト2Dの生成
+	// オブジェクト3Dの生成
 	pObj3D = new CObject3D;
 
 	// 初期化処理
@@ -53,6 +60,14 @@ CObject3D *CObject3D::Create(void)
 //========================================
 HRESULT CObject3D::Init(void)
 {
+	m_nPtn = 0;					// パターン
+	m_nPtnWidth = 1;			// パターン幅
+	m_nPtnHeight = 1;			// パターン高さ
+	m_nPtnMax = 1;				// パターンの最大
+	m_bPtnAnim = false;			// パターンアニメフラグ
+	m_nAnimCounter = 0;			// アニメカウンター
+	m_nAnimTime = 0;			// アニメにかかる時間
+
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	// 頂点バッファの生成
@@ -69,11 +84,8 @@ HRESULT CObject3D::Init(void)
 	// 頂点バッファのロックと頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void **)&pVtx, 0);
 
-	// 頂点座標を設定
-	pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f);
+	// 頂点座標の設定
+	SetVtxPos(pVtx);
 
 	//法線ベクトルの設定
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, -0.0f);
@@ -116,7 +128,19 @@ void CObject3D::Uninit(void)
 //========================================
 void CObject3D::Update(void)
 {
+	VERTEX_3D *pVtx;	// 頂点情報へのポインタ
 
+	// 頂点バッファをロックし、頂点情報へのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	// テクスチャ座標の設定
+	SetTexPos(pVtx);
+
+	// 頂点座標の設定
+	SetVtxPos(pVtx);
+
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
 }
 
 //========================================
@@ -132,15 +156,15 @@ void CObject3D::Draw(void)
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&mtxWorld);
 
-	////向きを反映
-	//D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 
-	//D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);
+	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);
 
-	////位置を反映
-	//D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 
-	//D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrans);
+	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrans);
 
 	//ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
@@ -161,66 +185,28 @@ void CObject3D::Draw(void)
 }
 
 //========================================
-// 位置設定
+// 頂点座標の設定処理
 //========================================
-void CObject3D::SetPos(const D3DXVECTOR3& pos)
+void CObject3D::SetVtxPos(VERTEX_3D *pVtx)
 {
-	// 位置の代入
-	m_pos = pos;
-
-	// 設定用ポインタ
-	VERTEX_2D *pVtx;
-
-	// 頂点バッファのロックと頂点情報へのポインタを取得
-	m_pVtxBuff->Lock(0, 0, (void **)&pVtx, 0);
+	// 対角線の長さ
+	float fLength = sqrtf((m_fWidth * m_fWidth) + (m_fHeight * m_fHeight)) * 0.5f;
+	// 対角線の角度
+	float fAngle = atan2f(m_fWidth, m_fHeight);
 
 	// 頂点座標を設定
-	pVtx[0].pos.x = m_pos.x + sinf(m_fRotY + m_fAngle + -D3DX_PI) * m_fLength;
-	pVtx[0].pos.y = m_pos.y + cosf(m_fRotY + m_fAngle + -D3DX_PI) * m_fLength;
-	pVtx[0].pos.z = 0.0f;
-
-	pVtx[1].pos.x = m_pos.x + sinf(m_fRotY + -m_fAngle + D3DX_PI) * m_fLength;
-	pVtx[1].pos.y = m_pos.y + cosf(m_fRotY + -m_fAngle + D3DX_PI) * m_fLength;
-	pVtx[1].pos.z = 0.0f;
-
-	pVtx[2].pos.x = m_pos.x + sinf(m_fRotY + m_fAngle * -1.0f) * m_fLength;
-	pVtx[2].pos.y = m_pos.y + cosf(m_fRotY + m_fAngle * -1.0f) * m_fLength;
-	pVtx[2].pos.z = 0.0f;
-
-	pVtx[3].pos.x = m_pos.x + sinf(m_fRotY + m_fAngle) * m_fLength;
-	pVtx[3].pos.y = m_pos.y + cosf(m_fRotY + m_fAngle) * m_fLength;
-	pVtx[3].pos.z = 0.0f;
-
-	// 頂点バッファの破棄
-	m_pVtxBuff->Unlock();
-}
-
-//========================================
-// 向き設定
-//========================================
-void CObject3D::SetRot(const float& rotY)
-{
-	// Y軸の代入
-	m_fRotY = rotY;
-
-	//　位置設定
-	SetPos(m_pos);
-}
-
-//========================================
-// サイズ設定
-//========================================
-void CObject3D::SetSize(const D3DXVECTOR2& size)
-{
-	// サイズの代入
-	m_size = size;
-
-	// 長さ・角度の設定
-	m_fLength = sqrtf(m_size.x * m_size.x + m_size.y * m_size.y) * 0.5f;
-	m_fAngle = atan2f(m_size.x, m_size.y);
-
-	// 位置の設定
-	SetPos(m_pos);
+	pVtx[0].pos.x = m_pos.x + sinf(m_rot.y - (D3DX_PI - fAngle)) * fLength;
+	pVtx[0].pos.y = m_pos.y;
+	pVtx[0].pos.z = m_pos.z + cosf(m_rot.y - (D3DX_PI - fAngle)) * fLength;
+	pVtx[1].pos.x = m_pos.x + sinf(m_rot.y + (D3DX_PI - fAngle)) * fLength;
+	pVtx[1].pos.y = m_pos.y;
+	pVtx[1].pos.z = m_pos.z + cosf(m_rot.y - (D3DX_PI - fAngle)) * fLength;
+	pVtx[2].pos.x = m_pos.x + sinf(m_rot.y - fAngle) * fLength;
+	pVtx[2].pos.y = m_pos.y ;
+	pVtx[2].pos.z = m_pos.z + cosf(m_rot.y - fAngle) * fLength;
+	pVtx[3].pos.x = m_pos.x + sinf(m_rot.y + fAngle) * fLength;
+	pVtx[3].pos.y = m_pos.y;
+	pVtx[3].pos.z = m_pos.z + cosf(m_rot.y - fAngle) * fLength;
 }
 
 //========================================
@@ -232,7 +218,7 @@ void CObject3D::SetColor(const D3DXCOLOR& color)
 	m_color = color;
 
 	// 設定用ポインタ
-	VERTEX_2D *pVtx;
+	VERTEX_3D *pVtx;
 
 	// 頂点バッファのロックと頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void **)&pVtx, 0);
@@ -245,6 +231,47 @@ void CObject3D::SetColor(const D3DXCOLOR& color)
 
 	// 頂点バッファの破棄
 	m_pVtxBuff->Unlock();
+}
+
+//========================================
+// パターン情報設定
+//========================================
+void CObject3D::SetPtnInfo(int nPtnWidth, int nPtnHeight, int nPtnMax, bool bPtnAnim, int nAnimTime)
+{
+	m_nPtnWidth = nPtnWidth;	// パターン幅
+	m_nPtnHeight = nPtnHeight;	// パターン高さ
+	m_nPtnMax = nPtnMax;		// パターンの最大
+	m_bPtnAnim = bPtnAnim;	 	// パターンアニメフラグ
+	m_nAnimCounter = 0;			// アニメカウンター(初期化)
+	m_nAnimTime = nAnimTime;	// アニメにかかる時間
+}
+
+//========================================
+// アニメーション処理
+//========================================
+void CObject3D::Animation(void)
+{
+	// パターンアニメフラグが真の時、
+	if (m_bPtnAnim)
+	{
+		if (++m_nAnimCounter % m_nAnimTime == 0)
+		{// アニメカウンターを加算してかかる時間で割り切れたら、
+			m_nAnimCounter = 0;
+			m_nPtn = (m_nPtn + 1) % m_nPtnMax;	// パターンを加算し、最大で剰余算
+		}
+	}
+}
+
+//========================================
+// テクスチャ座標の設定処理
+//========================================
+void CObject3D::SetTexPos(VERTEX_3D *pVtx)
+{
+	// テクスチャ座標の設定
+	pVtx[0].tex = D3DXVECTOR2((m_nPtn % m_nPtnWidth) * (1.0f / m_nPtnWidth), ((m_nPtn / m_nPtnWidth) % m_nPtnHeight) * (1.0f / m_nPtnHeight));
+	pVtx[1].tex = D3DXVECTOR2((m_nPtn % m_nPtnWidth) * (1.0f / m_nPtnWidth) + (1.0f / m_nPtnWidth), ((m_nPtn / m_nPtnWidth) % m_nPtnHeight) * (1.0f / m_nPtnHeight));
+	pVtx[2].tex = D3DXVECTOR2((m_nPtn % m_nPtnWidth) * (1.0f / m_nPtnWidth), (((m_nPtn / m_nPtnWidth) % m_nPtnHeight) * (1.0f / m_nPtnHeight)) + (1.0f / m_nPtnHeight));
+	pVtx[3].tex = D3DXVECTOR2((m_nPtn % m_nPtnWidth) * (1.0f / m_nPtnWidth) + (1.0f / m_nPtnWidth), (((m_nPtn / m_nPtnWidth) % m_nPtnHeight) * (1.0f / m_nPtnHeight)) + (1.0f / m_nPtnHeight));
 }
 
 //=============================================================================
@@ -260,7 +287,7 @@ void CObject3D::BindTexture(LPDIRECT3DTEXTURE9 m_pTexture1)
 //========================================
 void CObject3D::SetTex(PositionVec4 tex)
 {
-	VERTEX_2D *pVtx; //頂点へのポインタ
+	VERTEX_3D *pVtx; //頂点へのポインタ
 
 					 //頂点バッファをロックし頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);

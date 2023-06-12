@@ -8,6 +8,7 @@
 #include "../manager.h"
 #include "object.h"
 #include "../renderer.h"
+#include "../camera.h"
 
 // 静的変数
 int CObject::m_nNumAll = 0;													// オブジェクト総数
@@ -92,8 +93,13 @@ void CObject::UpdateAll(void)
 //========================================
 void CObject::DrawAll(void)
 {
+	CCamera *pCamera = CManager::GetCamera();
+
 	// デバイスの所得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	// カメラの設定
+	pCamera->SetCamera();
 
 	for (int nCntPriority = 0; nCntPriority < TYPE_MAX; nCntPriority++)
 	{
