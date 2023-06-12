@@ -8,8 +8,8 @@
 #ifndef _BG_MULTI_H_
 #define _BG_MULTI_H_
 
-#include "../main.h"
-#include "object.h"
+#include "../../main.h"
+#include "../object.h"
 //****************************************
 // ‘O•ûéŒ¾
 //****************************************

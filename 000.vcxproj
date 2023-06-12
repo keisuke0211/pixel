@@ -22,6 +22,8 @@
     <ClCompile Include="code\input.cpp" />
     <ClCompile Include="code\main.cpp" />
     <ClCompile Include="code\manager.cpp" />
+    <ClCompile Include="code\object\2D\bg2D.cpp" />
+    <ClCompile Include="code\object\2D\bg_Multi2D.cpp" />
     <ClCompile Include="code\object\2D\block2D.cpp" />
     <ClCompile Include="code\object\2D\effect2D.cpp" />
     <ClCompile Include="code\object\2D\particle2D.cpp" />
@@ -30,8 +32,6 @@
     <ClCompile Include="code\object\3D\bullet.cpp" />
     <ClCompile Include="code\object\3D\enemy.cpp" />
     <ClCompile Include="code\object\3D\player.cpp" />
-    <ClCompile Include="code\object\bg.cpp" />
-    <ClCompile Include="code\object\bg_Multi.cpp" />
     <ClCompile Include="code\object\explosion.cpp" />
     <ClCompile Include="code\object\object.cpp" />
     <ClCompile Include="code\object\object2D.cpp" />
@@ -44,6 +44,8 @@
     <ClInclude Include="code\input.h" />
     <ClInclude Include="code\main.h" />
     <ClInclude Include="code\manager.h" />
+    <ClInclude Include="code\object\2D\bg2D.h" />
+    <ClInclude Include="code\object\2D\bg_Multi2D.h" />
     <ClInclude Include="code\object\2D\block2D.h" />
     <ClInclude Include="code\object\2D\effect2D.h" />
     <ClInclude Include="code\object\2D\particle2D.h" />
@@ -52,8 +54,6 @@
     <ClInclude Include="code\object\3D\bullet.h" />
     <ClInclude Include="code\object\3D\enemy.h" />
     <ClInclude Include="code\object\3D\player.h" />
-    <ClInclude Include="code\object\bg.h" />
-    <ClInclude Include="code\object\bg_Multi.h" />
     <ClInclude Include="code\object\explosion.h" />
     <ClInclude Include="code\object\object.h" />
     <ClInclude Include="code\object\object2D.h" />

@@ -8,7 +8,7 @@
 #include "texture.h"
 #include "manager.h"
 #include "renderer.h"
-#include "object\bg.h"
+#include "object\2D\bg2D.h"
 #include "object\2D\block2D.h"
 #include "object\explosion.h"
 #include "object\3D\player.h"

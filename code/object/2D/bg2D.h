@@ -8,8 +8,8 @@
 #ifndef _BG_H_
 #define _BG_H_
 
-#include "../main.h"
-#include "object2D.h"
+#include "../../main.h"
+#include "../object2D.h"
 
 
 //****************************************

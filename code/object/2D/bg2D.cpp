@@ -5,10 +5,10 @@
 //========================================
 // *** bg.cpp ***
 //========================================
-#include "bg.h"
-#include "../manager.h"
-#include "../renderer.h"
-#include "object2D.h"
+#include "../2D/bg2D.h"
+#include "../../manager.h"
+#include "../../renderer.h"
+#include "../object2D.h"
 
 // 静的メンバ変数
 LPDIRECT3DTEXTURE9 CBg::m_pTexture[MAX_TEXTURE] = { NULL };	// 共有テクスチャ

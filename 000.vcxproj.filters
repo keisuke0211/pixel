@@ -69,9 +69,6 @@
     <ClCompile Include="code\object\3D\player.cpp">
       <Filter>ソース ファイル\01_object\3D</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\bg.cpp">
-      <Filter>ソース ファイル\01_object</Filter>
-    </ClCompile>
     <ClCompile Include="code\object\explosion.cpp">
       <Filter>ソース ファイル\01_object</Filter>
     </ClCompile>
@@ -84,10 +81,13 @@
     <ClCompile Include="code\object\2D\particle2D.cpp">
       <Filter>ソース ファイル\01_object\2D</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\bg_Multi.cpp">
-      <Filter>ソース ファイル\01_object</Filter>
-    </ClCompile>
     <ClCompile Include="code\object\2D\block2D.cpp">
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\2D\bg_Multi2D.cpp">
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\2D\bg2D.cpp">
       <Filter>ソース ファイル\01_object\2D</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,9 +131,6 @@
     <ClInclude Include="code\object\3D\player.h">
       <Filter>ソース ファイル\01_object\3D</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\bg.h">
-      <Filter>ソース ファイル\01_object</Filter>
-    </ClInclude>
     <ClInclude Include="code\object\explosion.h">
       <Filter>ソース ファイル\01_object</Filter>
     </ClInclude>
@@ -146,14 +143,17 @@
     <ClInclude Include="code\object\2D\particle2D.h">
       <Filter>ソース ファイル\01_object\2D</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\bg_Multi.h">
-      <Filter>ソース ファイル\01_object</Filter>
-    </ClInclude>
     <ClInclude Include="code\object\2D\block2D.h">
       <Filter>ソース ファイル\01_object\2D</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\2D\bg_Multi2D.h">
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\2D\bg2D.h">
+      <Filter>ソース ファイル\01_object\2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

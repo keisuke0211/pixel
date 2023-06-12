@@ -5,8 +5,8 @@
 //========================================
 // *** bg_Multi.cpp ***
 //========================================
-#include "bg_Multi.h"
-#include "bg.h"
+#include "../2D/bg_Multi2D.h"
+#include "../2D/bg2D.h"
 
 // Ã“I•Ï”éŒ¾
 int CBgMulti::m_nNumBg = -1;
