@@ -24,7 +24,6 @@ class CBg;				// îwåi
 class CPlayer;			// ÉvÉåÉCÉÑÅ[
 class CEnemy;			// ìG
 class CBullet;			// íe
-class CExplosion;		// îöî≠
 
 //****************************************
 // ÉNÉâÉX
@@ -56,7 +55,6 @@ public:
 	static CPlayer* GetPlayer() { return m_pPlayer; }
 	static CEnemy* GetEnemy() { return m_pEnemy; }
 	static CBullet* GetCBullet() { return m_pBullet; }
-	static CExplosion* GetExplosion() { return m_Explosion; }
 
 private:
 	static CRenderer *m_pRenderer;
@@ -70,6 +68,5 @@ private:
 	static CPlayer *m_pPlayer;
 	static CEnemy *m_pEnemy;
 	static CBullet *m_pBullet;
-	static CExplosion *m_Explosion;
 };
 #endif

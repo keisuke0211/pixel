@@ -10,7 +10,6 @@
 #include "renderer.h"
 #include "object\2D\bg2D.h"
 #include "object\2D\block2D.h"
-#include "object\explosion.h"
 #include "object\3D\player.h"
 #include "object\3D\enemy.h"
 #include "object\3D\bullet.h"
@@ -121,14 +120,6 @@ HRESULT CTexture::Load(void)
 
 			m_nTextureAll++;
 		}
-		else if (!strcmp(aDataSearch, "EXPLOSION")) // 爆発
-		{
-			fscanf(pFile, "%s", &s_FileName[m_nTextureAll][0]);
-
-			CExplosion::Load(&s_FileName[m_nTextureAll][0]);
-
-			m_nTextureAll++;
-		}
 		else if (!strcmp(aDataSearch, "EFFECT")) // エフェクト
 		{
 			fscanf(pFile, "%s", &s_FileName[m_nTextureAll][0]);
@@ -160,7 +151,6 @@ void CTexture::Unload(void)
 	CPlayer::Unload();		// プレイヤー
 	CEnemy::Unload();		// エネミー
 	CBullet::Unload();		// バレット
-	CExplosion::Unload();	// 爆発
 	CEffect2D::Unload();	// エフェクト
 	CText2D::Unload();		// テキスト
 }

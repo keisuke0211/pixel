@@ -69,9 +69,6 @@
     <ClCompile Include="code\object\3D\player.cpp">
       <Filter>ソース ファイル\01_object\3D</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\explosion.cpp">
-      <Filter>ソース ファイル\01_object</Filter>
-    </ClCompile>
     <ClCompile Include="code\object\2D\text2D.cpp">
       <Filter>ソース ファイル\01_object\2D</Filter>
     </ClCompile>
@@ -130,9 +127,6 @@
     </ClInclude>
     <ClInclude Include="code\object\3D\player.h">
       <Filter>ソース ファイル\01_object\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\explosion.h">
-      <Filter>ソース ファイル\01_object</Filter>
     </ClInclude>
     <ClInclude Include="code\object\2D\text2D.h">
       <Filter>ソース ファイル\01_object\2D</Filter>

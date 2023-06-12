@@ -31,7 +31,6 @@ CNumber *CManager::m_Number = NULL;
 CBg *CManager::m_pBg = NULL;
 CPlayer *CManager::m_pPlayer = NULL;
 CBullet *CManager::m_pBullet = NULL;
-CExplosion *CManager::m_Explosion = NULL;
 
 // コンストラクタ
 CManager::CManager()

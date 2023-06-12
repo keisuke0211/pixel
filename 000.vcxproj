@@ -32,7 +32,6 @@
     <ClCompile Include="code\object\3D\bullet.cpp" />
     <ClCompile Include="code\object\3D\enemy.cpp" />
     <ClCompile Include="code\object\3D\player.cpp" />
-    <ClCompile Include="code\object\explosion.cpp" />
     <ClCompile Include="code\object\object.cpp" />
     <ClCompile Include="code\object\object2D.cpp" />
     <ClCompile Include="code\object\object3D.cpp" />
@@ -54,7 +53,6 @@
     <ClInclude Include="code\object\3D\bullet.h" />
     <ClInclude Include="code\object\3D\enemy.h" />
     <ClInclude Include="code\object\3D\player.h" />
-    <ClInclude Include="code\object\explosion.h" />
     <ClInclude Include="code\object\object.h" />
     <ClInclude Include="code\object\object2D.h" />
     <ClInclude Include="code\object\object3D.h" />

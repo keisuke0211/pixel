@@ -10,7 +10,6 @@
 #include "../../renderer.h"
 #include "player.h"
 #include "enemy.h"
-#include "../explosion.h"
 #include "../2D/score.h"
 #include "../2D/effect2D.h"
 
@@ -151,9 +150,6 @@ void CBullet::Update(void)
 	if (--m_Info.nLife <= 0)
 	{// Žõ–½‚ªs‚«‚½Žž
 
-		 // ”š”­‚Ì¶¬
-		CExplosion::Create(m_Info.pos);
-
 		// ’e‚Ì”jŠü
 		Uninit();
 
@@ -234,9 +230,6 @@ bool CBullet::CollsionEnemy(D3DXVECTOR3 pos)
 						(m_Info.pos.y + m_Info.fHeight) <= (pObj->GetPos().y + pObj->GetHeight()) &&
 						(m_Info.pos.y - m_Info.fHeight) >= (pObj->GetPos().y - pObj->GetHeight()))
 					{//“G‚Æ’e‚ª“–‚½‚Á‚½
-
-						// ”š”­‚Ì¶¬
-						CExplosion::Create(m_Info.pos);
 
 						// “G‚Ì”jŠü
 						pEnemy->HitLife(1);
