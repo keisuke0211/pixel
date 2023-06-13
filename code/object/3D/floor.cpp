@@ -13,7 +13,9 @@
 LPDIRECT3DTEXTURE9 CFloor::m_pTexture[CFloor::MAX_TEXTURE] = { NULL };
 int CFloor::m_nTexture = -1;
 
+//========================================
 // コンストラクタ
+//========================================
 CFloor::CFloor(int nPriority) : CObject3D(nPriority)
 {
 	m_Info.pos = INIT_D3DXVECTOR3;
@@ -22,7 +24,9 @@ CFloor::CFloor(int nPriority) : CObject3D(nPriority)
 	m_Info.fWidth = INIT_FLOAT;
 }
 
+//========================================
 // デストラクタ
+//========================================
 CFloor::~CFloor()
 {
 
@@ -88,7 +92,7 @@ void CFloor::Uninit(void)
 // 更新
 //========================================
 void CFloor::Update(void)
-{
+{	
 	CObject3D::Update();
 }
 

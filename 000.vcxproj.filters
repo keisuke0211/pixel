@@ -66,9 +66,6 @@
     <ClCompile Include="code\object\3D\enemy.cpp">
       <Filter>ソース ファイル\01_object\3D</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\3D\player.cpp">
-      <Filter>ソース ファイル\01_object\3D</Filter>
-    </ClCompile>
     <ClCompile Include="code\object\2D\text2D.cpp">
       <Filter>ソース ファイル\01_object\2D</Filter>
     </ClCompile>
@@ -94,6 +91,15 @@
       <Filter>ソース ファイル\02_system</Filter>
     </ClCompile>
     <ClCompile Include="code\object\3D\floor.cpp">
+      <Filter>ソース ファイル\01_object\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\objectX.cpp">
+      <Filter>ソース ファイル\01_object</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\3D\player2D.cpp">
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\3D\player.cpp">
       <Filter>ソース ファイル\01_object\3D</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,9 +140,6 @@
     <ClInclude Include="code\object\3D\enemy.h">
       <Filter>ソース ファイル\01_object\3D</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\3D\player.h">
-      <Filter>ソース ファイル\01_object\3D</Filter>
-    </ClInclude>
     <ClInclude Include="code\object\2D\text2D.h">
       <Filter>ソース ファイル\01_object\2D</Filter>
     </ClInclude>
@@ -165,6 +168,15 @@
       <Filter>ソース ファイル\02_system</Filter>
     </ClInclude>
     <ClInclude Include="code\object\3D\floor.h">
+      <Filter>ソース ファイル\01_object\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\objectX.h">
+      <Filter>ソース ファイル\01_object</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\3D\player2D.h">
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\3D\player.h">
       <Filter>ソース ファイル\01_object\3D</Filter>
     </ClInclude>
   </ItemGroup>

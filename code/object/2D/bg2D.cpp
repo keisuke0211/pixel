@@ -14,7 +14,9 @@
 LPDIRECT3DTEXTURE9 CBg::m_pTexture[MAX_TEXTURE] = { NULL };	// 共有テクスチャ
 int CBg::m_nTexture = -1;
 
+//========================================
 // コンストラクタ
+//========================================
 CBg::CBg(int nPriority) : CObject2D(nPriority)
 {
 	m_texPos = INIT_D3DXVECTOR3;
@@ -23,7 +25,9 @@ CBg::CBg(int nPriority) : CObject2D(nPriority)
 	m_Type = 0;
 }
 
+//========================================
 // デストラクタ
+//========================================
 CBg::~CBg()
 {
 

@@ -9,12 +9,12 @@
 #define _PLAYER_H_
 
 #include "../../main.h"
-#include "../object2D.h"
+#include "../objectX.h"
 
 //****************************************
 // クラス
 //****************************************
-class CPlayer : public CObject2D
+class CPlayer : public CObjectX
 {
 public:
 
@@ -29,13 +29,15 @@ public:
 	// プレイヤー情報
 	typedef struct
 	{
-		D3DXVECTOR3 pos;			// 位置
-		D3DXVECTOR3 rot;			// 向き
-		D3DXVECTOR3 move;			// 移動量
-		float fWidth;				// 幅
-		float fHeight;				// 高さ
-		float fJump;				// ジャンプ力
-		bool bJump;					// ジャンプフラグ
+		D3DXVECTOR3 pos;		// 位置
+		D3DXVECTOR3 rot;		// 向き
+		D3DXVECTOR3 moveRot;	// 移動向き
+		D3DXVECTOR3 targetRot;	// 目標向き
+		D3DXVECTOR3 move;		// 移動量
+		D3DCOLOR col;			//　頂点カラー
+		float fWidth;			// 幅
+		float fHeight;			// 高さ
+		float fDepth;			// 奥行き
 	} Info;
 
 	// ***** 関数 *****
@@ -43,8 +45,6 @@ public:
 	~CPlayer();
 
 	/* メイン */
-	static HRESULT Load(char *pPath);			// テクスチャの生成 
-	static void Unload(void);					// テクスチャの破棄
 
 	// 生成
 	static CPlayer *Create(void);
@@ -55,19 +55,14 @@ public:
 	void Draw(void);				// 描画
 
 	/* 取得 */
-	Info GetInfo() { return m_Info; }	// プレイヤー情報
+	D3DXVECTOR3 GetPos() { return m_Info.pos; }
 
 private:
 	// ***** 関数 *****
-	void AddMove(float fRoty);				// 移動量の更新
-	void Physics(void);						// 移動・物理処理
-	D3DXVECTOR3 Collision(D3DXVECTOR3 pos);	// ブロックの当たり判定
+	void MovePos(void);		// 移動
+	void UpdatePos(void);	// 位置更新
 
 	// ***** 変数 *****
-	static LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE];		// 共有テクスチャ
-	static int m_nTexture;									// テクスチャの数
-
-	Info m_Info;	// プレイヤー情報
-	bool bShot;
+	Info m_Info;		// プレイヤー情報
 };
 #endif

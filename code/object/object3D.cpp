@@ -10,7 +10,9 @@
 #include "../renderer.h"
 #include "../texture.h"
 
+//========================================
 // コンストラクタ
+//========================================
 CObject3D::CObject3D(int nPriority)
 {
 	// 値をクリアする
@@ -29,11 +31,14 @@ CObject3D::CObject3D(int nPriority)
 	m_nAnimTime = 0;				// アニメにかかる時間
 }
 
+//========================================
 // デストラクタ
+//========================================
 CObject3D::~CObject3D()
 {
 
 }
+
 //========================================
 // 生成処理
 //========================================
@@ -151,7 +156,6 @@ void CObject3D::Draw(void)
 	// デバイスの所得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 	D3DXMATRIX mtxRot, mtxTrans;										//計算用マトリックス
-
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&mtxWorld);
@@ -289,7 +293,7 @@ void CObject3D::SetTex(PositionVec4 tex)
 {
 	VERTEX_3D *pVtx; //頂点へのポインタ
 
-					 //頂点バッファをロックし頂点情報へのポインタを取得
+	 //頂点バッファをロックし頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//テクスチャの座標設定

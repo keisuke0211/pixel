@@ -14,7 +14,9 @@
 int CObject::m_nNumAll = 0;													// オブジェクト総数
 CObject *CObject::m_apObject[CObject::TYPE_MAX][CObject::MAX_OBJECT] = {};	// オブジェクトのポインタ
 
+//========================================
 // コンストラクタ
+//========================================
 CObject::CObject(int nPriority)
 {
 	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
@@ -30,11 +32,14 @@ CObject::CObject(int nPriority)
 	}
 }
 
+//========================================
 // デストラクタ
+//========================================
 CObject::~CObject()
 {
 	
 }
+
 //========================================
 // 破棄
 //========================================

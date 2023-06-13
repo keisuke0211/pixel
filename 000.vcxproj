@@ -35,9 +35,11 @@
     <ClCompile Include="code\object\3D\enemy.cpp" />
     <ClCompile Include="code\object\3D\floor.cpp" />
     <ClCompile Include="code\object\3D\player.cpp" />
+    <ClCompile Include="code\object\3D\player2D.cpp" />
     <ClCompile Include="code\object\object.cpp" />
     <ClCompile Include="code\object\object2D.cpp" />
     <ClCompile Include="code\object\object3D.cpp" />
+    <ClCompile Include="code\object\objectX.cpp" />
     <ClCompile Include="code\renderer.cpp" />
     <ClCompile Include="code\sound.cpp" />
     <ClCompile Include="code\texture.cpp" />
@@ -59,9 +61,11 @@
     <ClInclude Include="code\object\3D\enemy.h" />
     <ClInclude Include="code\object\3D\floor.h" />
     <ClInclude Include="code\object\3D\player.h" />
+    <ClInclude Include="code\object\3D\player2D.h" />
     <ClInclude Include="code\object\object.h" />
     <ClInclude Include="code\object\object2D.h" />
     <ClInclude Include="code\object\object3D.h" />
+    <ClInclude Include="code\object\objectX.h" />
     <ClInclude Include="code\renderer.h" />
     <ClInclude Include="code\sound.h" />
     <ClInclude Include="code\texture.h" />

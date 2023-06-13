@@ -20,6 +20,7 @@
 #include "object\3D\floor.h"
 #include "object\2D\block2D.h"
 #include "object\3D\player.h"
+#include "object\3D\player2D.h"
 #include "object\3D\enemy.h"
 
 // 静的メンバ変数
@@ -34,19 +35,26 @@ CInputJoypad *CManager::m_InputJoypad = NULL;
 CNumber *CManager::m_Number = NULL;
 CBg *CManager::m_pBg = NULL;
 CPlayer *CManager::m_pPlayer = NULL;
+CEnemy *CManager::m_pEnemy = NULL;
 CBullet *CManager::m_pBullet = NULL;
 
+
+//========================================
 // コンストラクタ
+//========================================
 CManager::CManager()
 {
 	
 }
 
+//========================================
 // デストラクタ
+//========================================
 CManager::~CManager()
 {
 
 }
+
 //========================================
 // 初期化
 //========================================
@@ -127,7 +135,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	{
 		/*CBgMulti::Create(D3DXVECTOR3((nCntBg + 1)* 0.0005f, 0.0f, 0.0f), nCntBg);*/
 	}
-
+	
 	CFloor::Create();
 
 	// ブロックの生成
@@ -158,10 +166,12 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 
 
 	// プレイヤーの生成
-	for (int nCntPlayer = 0; nCntPlayer < CPlayer::PLAYER_MAX; nCntPlayer++)
+	/*for (int nCntPlayer = 0; nCntPlayer < CPlayer2D::PLAYER_MAX; nCntPlayer++)
 	{
-		CPlayer::Create();
-	}
+		CPlayer2D::Create();
+	}*/
+
+	CPlayer::Create();
 
 	// 敵の生成
 	for (int nCntPlayer = 0; nCntPlayer < CEnemy::MAX_ENEMY; nCntPlayer++)

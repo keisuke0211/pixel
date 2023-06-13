@@ -11,13 +11,17 @@
 LPDIRECTINPUT8 CInput::m_pInput = NULL;
 LPDIRECTINPUT8 CInput::m_pMouswInput = NULL;
 
+//========================================
 // コンストラクタ
+//========================================
 CInput::CInput()
 {
 	
 }
 
+//========================================
 // デストラクタ
+//========================================
 CInput::~CInput()
 {
 
@@ -257,6 +261,8 @@ CInputMouse::CInputMouse()
 		m_aMouseCurrentTime.rgbButtons[nCntKey] = false;
 		m_aMouseExecLastTime.rgbButtons[nCntKey] = false;
 	}
+	g_MousePosTemp = INIT_D3DXVECTOR3;	// 位置保存
+	m_MouseMove = INIT_D3DXVECTOR3;		// 移動量
 }
 
 // デストラクタ
@@ -347,6 +353,12 @@ void CInputMouse::Update(void)
 	{
 		m_pDeviceMouse->Acquire();			// アクセス権を獲得
 	}
+
+	// カーソルの移動量を設定
+	m_MouseMove = GetPos() - g_MousePosTemp;
+
+	// カーソルの位置保存
+	g_MousePosTemp = GetPos();
 }
 
 //========================================
@@ -386,12 +398,15 @@ bool CInputMouse::GetRelease(MOUSE Mouse)
 //========================================
 D3DXVECTOR3 CInputMouse::GetPos(void)
 {
-	//画面上のマウスポインターの位置
-	GetCursorPos(&m_MousePos);
-	//ウィンドウ上のマウスポインターの位置
-	ScreenToClient(m_hMouseWnd, &m_MousePos);
+	POINT MousePos;		// カーソル用
 
-	return D3DXVECTOR3((float)m_MousePos.x, (float)m_MousePos.y, 0.0f);
+	//画面上のマウスポインターの位置
+	GetCursorPos(&MousePos);
+
+	//ウィンドウ上のマウスポインターの位置
+	ScreenToClient(m_hMouseWnd, &MousePos);
+
+	return D3DXVECTOR3((float)MousePos.x, (float)MousePos.y, 0.0f);
 }
 
 //========================================
@@ -514,6 +529,12 @@ void CInputJoypad::Update(void)
 			m_nTime[nCnt] = 0;
 		}
 	}
+
+	for (int nCntStick = 0; nCntStick < STICK_TYPE_MAX; nCntStick++)
+	{
+		// スティックの入力情報
+		GetStick(nCntStick);
+	}
 }
 
 //========================================
@@ -597,7 +618,7 @@ void CInputJoypad::JoypadVibration(int nTime, WORD nStrength, int nPlayer)
 //========================================
 // スティックの入力情報を取得
 //========================================
-STICK_INPUT CInputJoypad::GetStick(STICK_TYPE type)
+void CInputJoypad::GetStick(int type)
 {
 	STICK_INPUT stick;	// スティックの入力情報
 	float X = 0;		// スティックのX軸
@@ -623,11 +644,11 @@ STICK_INPUT CInputJoypad::GetStick(STICK_TYPE type)
 
 	// スティックの倒し具合を取得
 	stick.fTplDiameter = fabsf(X);
-	if (stick.fTplDiameter < fabsf(Y)) {
+	if (stick.fTplDiameter < fabsf(Y))
+	{
 		stick.fTplDiameter = fabsf(Y);
 	}
 	stick.fTplDiameter /= 32768.0f;
-	return stick;
 }
 
 //========================================

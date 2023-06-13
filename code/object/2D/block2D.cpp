@@ -134,5 +134,5 @@ void CBlock2D::Update(void)
 //========================================
 void CBlock2D::Draw(void)
 {
-	CObject2D::Draw();
+	/*CObject2D::Draw();*/
 }

@@ -21,7 +21,6 @@ class CTexture
 public:
 
 	// ***** 定義 *****
-	static const int MAX_TEXTURE = 50;	// テクスチャの最大数
 	static const char* FILE_PATH;		// ファイルパス
 
 	// ***** 関数 *****
@@ -33,8 +32,7 @@ public:
 
 private:
 	// ***** 変数 *****
-	static int m_nTextureAll;								// テクスチャの総数
-	static char s_FileName[MAX_TEXTURE][TXT_MAX];			// ファイルパス
+	static char s_FileName[TXT_MAX];	// ファイルパス
 };
 
 #endif // !_TEXTURE_H_

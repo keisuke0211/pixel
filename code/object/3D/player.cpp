@@ -8,82 +8,36 @@
 #include "player.h"
 #include "../../manager.h"
 #include "../../renderer.h"
+#include "../../camera.h"
 #include "../../input.h"
 #include "../../sound.h"
-#include "bullet.h"
-#include "../object2D.h"
-
-//****************************************
-// マクロ定義
-//****************************************
-#define JUMP_POWER		(-40.0f)// ジャンプ量
-#define GRAVITY_MAG		(0.08f)	// 重力係数
-#define GRAVITY_POWER	(9.0f)	// 重力加速度
+#include "../../camera.h"
 
 // 定義
 const float CPlayer::PLAYER_SPEED = 2.5f;
 
-// 静的メンバ変数
-LPDIRECT3DTEXTURE9 CPlayer::m_pTexture[CPlayer::MAX_TEXTURE] = { NULL };
-int CPlayer::m_nTexture = -1;
-
+//========================================
 // コンストラクタ
-CPlayer::CPlayer(int nPriority) : CObject2D(nPriority)
+//========================================
+CPlayer::CPlayer(int nPriority) : CObjectX(nPriority)
 {
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
+	m_Info.moveRot = INIT_D3DXVECTOR3;
+	m_Info.targetRot = INIT_D3DXVECTOR3;
 	m_Info.move = INIT_D3DXVECTOR3;
 	m_Info.fWidth = INIT_FLOAT;
 	m_Info.fHeight = INIT_FLOAT;
-	m_Info.bJump = false;
-
-
-	bShot = false;
+	m_Info.fDepth = INIT_FLOAT;
 }
 
+//========================================
 // デストラクタ
+//========================================
 CPlayer::~CPlayer()
 {
 
-}
-
-//========================================
-// テクスチャの読み込み
-//========================================
-HRESULT CPlayer::Load(char *pPath)
-{
-	if (pPath != NULL)
-	{
-		m_nTexture++;	// テクスチャ数加算
-
-		// デバイス取得
-		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-		// テクスチャの読み込み
-		if (FAILED(D3DXCreateTextureFromFile(pDevice, pPath, &m_pTexture[m_nTexture])))
-		{
-			m_pTexture[m_nTexture] = NULL;
-		}
-	}
-
-	return S_OK;
-}
-
-//========================================
-// テクスチャの破棄
-//========================================
-void CPlayer::Unload(void)
-{
-	// テクスチャの破棄
-	for (int nCntTex = 0; nCntTex < m_nTexture; nCntTex++)
-	{
-		if (m_pTexture[nCntTex] != NULL)
-		{
-			m_pTexture[nCntTex]->Release();
-			m_pTexture[nCntTex] = NULL;
-		}
-	}
 }
 
 //========================================
@@ -106,30 +60,27 @@ CPlayer *CPlayer::Create(void)
 
 	return pPlayer;
 }
+
 //========================================
 // 初期化
 //========================================
 HRESULT CPlayer::Init(void)
 {
-	CObject2D::Init();
-	
+	CCamera *pCamera = CManager::GetCamera();	// カメラの取得
+
+	CObjectX::Init();
+
 	// 種類の設定
 	SetType(TYPE_PLAYER);
 
-	m_Info.pos = D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f);
-	m_Info.fWidth = 75.0f;
-	m_Info.fHeight = 75.0f;
-
+	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f,0.0f);
+	m_Info.col = INIT_D3DXCOLOR;
+	
 	// 生成
 	SetPos(m_Info.pos);
-	SetSize(m_Info.fWidth,m_Info.fHeight);
+	SetSize();
 	SetRot(m_Info.rot);
-	SetColor(INIT_D3DXCOLOR);
-	SetPtn(25);
-	SetPtnInfo(5, 8, 46, false, 0);
-
-	// テクスチャの割り当て
-	BindTexture(m_pTexture[0]);
 
 	return S_OK;
 }
@@ -139,7 +90,7 @@ HRESULT CPlayer::Init(void)
 //========================================
 void CPlayer::Uninit(void)
 {
-	CObject2D::Uninit();
+	CObjectX::Uninit();
 }
 
 //========================================
@@ -147,10 +98,13 @@ void CPlayer::Uninit(void)
 //========================================
 void CPlayer::Update(void)
 {
-	// 移動・物理処理
-	Physics();
+	// 移動処理
+	MovePos();
 
-	CObject2D::Update();
+	// 位置更新
+	UpdatePos();
+
+	CObjectX::Update();
 }
 
 //========================================
@@ -158,174 +112,74 @@ void CPlayer::Update(void)
 //========================================
 void CPlayer::Draw(void)
 {
-	CObject2D::Draw();
+	CObjectX::Draw();
 }
 
 //========================================
-// 移動・物理処理
+// 移動処理
 //========================================
-void CPlayer::Physics(void)
+void CPlayer::MovePos(void)
 {
-	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボードの取得
-	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウスの取得
-	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパットの取得
+	// --- 代入 ---------------------------------
+	m_Info.moveRot = m_Info.rot;	// 移動向き
 
+	// --- 取得 ---------------------------------
+	CCamera *pCamera = CManager::GetCamera();						// カメラ
+	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+
+	
 	// --- 移動 ---------------------------------
-
 	if (pInputKeyboard->GetPress(DIK_D) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_RIGHT, 0) == true)
 	{// 右
-		m_Info.move.x += PLAYER_SPEED;
-		SetPtn(25);
+		m_Info.moveRot.y = D3DX_PI;
+		m_Info.moveRot.y *= 0.5f;
+
+		float fAngle;	// 角度
+
+		fAngle = atan2f(pCamera->GetInfo().posR.z - pCamera->GetInfo().posV.z, pCamera->GetInfo().posR.x - pCamera->GetInfo().posV.x);
+
+		fAngle -= (D3DX_PI * 0.5f);
+		fAngle *= -1;
+
+		m_Info.moveRot.y += fAngle;
+
+		m_Info.move.x += sinf(m_Info.moveRot.y) * PLAYER_SPEED;
+		m_Info.move.z += cosf(m_Info.moveRot.y) * PLAYER_SPEED;
 	}
 	else if (pInputKeyboard->GetPress(DIK_A) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_LEFT, 0) == true)
 	{// 左
 		m_Info.move.x -= PLAYER_SPEED;
-		SetPtn(35);
+	}
+	else if (pInputKeyboard->GetPress(DIK_W) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_UP, 0) == true)
+	{// 上
+		m_Info.move.z += PLAYER_SPEED;
+	}
+	else if (pInputKeyboard->GetPress(DIK_S) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_DOWN, 0) == true)
+	{// 下
+		m_Info.move.z -= PLAYER_SPEED;
 	}
 
-	//移動量を更新(減衰させる)
-	m_Info.move.x += (0.0f - m_Info.move.x) * 0.25f;
-
-	// --- ジャンプ ---------------------------------
-	if (pInputKeyboard->GetPress(DIK_SPACE) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_A, 0) == true)
-	{
-		if (m_Info.bJump == false)
-		{
-			m_Info.bJump = true;	// ジャンプフラグを真にする
-			m_Info.move.y += JUMP_POWER;
-		}
-	}
-
+	// 移動量の代入
 	m_Info.pos += m_Info.move;
 
-	// 移動量を更新(減衰)
+	// 移動量の減衰
+	m_Info.move.x *= 0.8f;
+	m_Info.move.z *= 0.8f;
 
-	//Ｙの移動量に重力を加算
-	m_Info.move.y += (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
-
-	// ブロックとの当たり判定
-	m_Info.pos = Collision(m_Info.pos);
-
-	
-
-	// 位置の更新
 	SetPos(m_Info.pos);
 
-	CSound *pSound = CManager::GetSound();
-
-	// マウス
-
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
-	{
-		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f), false);
-		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f), true);
-		pSound->PlaySound(1);
-	}
-	else if (pInputMouse->GetTrigger(CInputMouse::MOUSE_RIGHT) == true)
-	{
-		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f), false);
-		pSound->PlaySound(1);
-	}
-
-	else if (pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) == true)
-	{
-		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f), true);
-		pSound->PlaySound(1);
-	}
+	// カメラの注視点を設定
+	pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 95, m_Info.pos.z));
 }
-
 //========================================
-// 移動量の更新
+// 位置更新
 //========================================
-void CPlayer::AddMove(float fRoty)
+void CPlayer::UpdatePos(void)
 {
-	// 移動量
-	m_Info.move.x += sinf(D3DX_PI * fRoty) * PLAYER_SPEED;
-	m_Info.move.y += cosf(D3DX_PI * fRoty) * PLAYER_SPEED;
 
-	m_Info.pos += m_Info.move;
-}
 
-//========================================
-// 当たり判定
-//========================================
-D3DXVECTOR3 CPlayer::Collision(D3DXVECTOR3 pos)
-{
-	for (int nCntPriority = 0; nCntPriority < TYPE_MAX; nCntPriority++)
-	{
-		for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
-		{
-			// オブジェクトを取得
-			CObject *pObj = GetObjectPointer(nCntPriority, nCntObj);
-
-			if (pObj != NULL)
-			{// 使用されている時、
-
-				// 種類を取得
-				TYPE type = pObj->GetType();
-
-				if (type == TYPE_BLOCK)
-				{// 種類がブロックの時、
-
-					//  プレイヤーの取得
-					D3DXVECTOR3 PosOld = GetPosOld();		// 位置(過去)
-					float fWidth = m_Info.fWidth * 0.5;		// 幅
-					float fHeight = m_Info.fHeight *0.5;	// 高さ
-
-					// ブロックの取得
-					D3DXVECTOR3 BlockPos = pObj->GetPos();			// 位置
-					float fBlockWidth = pObj->GetWidth() * 0.5;		// 幅
-					float fBlockeHight = pObj->GetHeight() * 0.5;	// 高さ	
-
-					/* 当たり判定 */
-
-					// プレイヤーがブロックの上辺～下辺の間にいる時
-					if ((pos.y + fHeight) > (BlockPos.y - fBlockeHight) &&
-						(pos.y - fHeight) < (BlockPos.y + fBlockeHight))
-					{
-						if ((pos.x + fWidth) >= (BlockPos.x - fBlockWidth) &&
-							(PosOld.x + fWidth) <= (BlockPos.x - fBlockWidth))
-						{// 左からめり込んでいる時
-
-							pos.x = (BlockPos.x - fBlockWidth) - fWidth;
-						}
-						else if ((pos.x - fWidth) <= (BlockPos.x + fBlockWidth) &&
-							(PosOld.x - fWidth) >= (BlockPos.x + fBlockWidth))
-						{// 右からめり込んでいる時
-
-							pos.x = (BlockPos.x + fBlockWidth) + fWidth;
-						}
-					}
-
-					// プレイヤーがブロックの左辺～右辺の間にいる時
-
-					if ((pos.x + fWidth) > (BlockPos.x - fBlockWidth) &&
-						(pos.x - fWidth) < (BlockPos.x + fBlockWidth))
-					{
-						if ((pos.y + fHeight) >= (BlockPos.y - fBlockeHight) &&
-							(PosOld.y + fHeight) <= (BlockPos.y - fBlockeHight))
-						{// 上からめり込んでいる時
-
-							pos.y = (BlockPos.y - fBlockeHight) - fHeight;
-							m_Info.move.y = 0.0f;
-							m_Info.bJump = false;
-						}
-						else if ((pos.y - fHeight) <= (BlockPos.y + fBlockeHight) &&
-							(PosOld.y - fHeight) >= (BlockPos.y + fBlockeHight))
-						{// 下からめり込んでいる時
-							pos.y = (BlockPos.y + (fBlockeHight + fHeight));
-
-							//プレイヤーが上昇中
-							if (m_Info.move.y < 0.0f)
-							{
-								//Ｙの移動量を0に
-								m_Info.move.y = 0.0f;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	return pos;
+	// 目標向きに移動向きを代入
+	m_Info.targetRot = m_Info.moveRot;
 }

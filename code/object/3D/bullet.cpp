@@ -8,7 +8,6 @@
 #include "bullet.h"
 #include "../../manager.h"
 #include "../../renderer.h"
-#include "player.h"
 #include "enemy.h"
 #include "../2D/score.h"
 #include "../2D/effect2D.h"

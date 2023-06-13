@@ -110,15 +110,16 @@ public:
 	~CInputMouse();
 
 	/* メイン */
-	HRESULT Init(HINSTANCE hInstance, HWND hWnd);	// 初期化
-	void Uninit(void);								// 終了
-	void Update(void);								// 更新
-	bool GetPress(MOUSE Mouse);						// プレス情報を取得
-	bool GetTrigger(MOUSE Mouse);					// トリガー情報を取得
-	bool GetRepeat(MOUSE Mouse);					// リピート情報を取得
-	bool GetRelease(MOUSE Mouse);					// リリース情報を取得
-	D3DXVECTOR3 GetPos(void);						// 画面内の位置
-	int GetWheel(void);								// ホイールの動き処理
+	HRESULT Init(HINSTANCE hInstance, HWND hWnd);				// 初期化
+	void Uninit(void);											// 終了
+	void Update(void);											// 更新
+	bool GetPress(MOUSE Mouse);									// プレス情報を取得
+	bool GetTrigger(MOUSE Mouse);								// トリガー情報を取得
+	bool GetRepeat(MOUSE Mouse);								// リピート情報を取得
+	bool GetRelease(MOUSE Mouse);								// リリース情報を取得
+	D3DXVECTOR3 GetPos(void);									// 画面内の位置
+	D3DXVECTOR3 GetCursorMove(void) { return m_MouseMove; }		// カーソルの移動量
+	int GetWheel(void);											// ホイールの動き処理
 
 private:
 	// ***** 定義 *****
@@ -131,8 +132,10 @@ private:
 	DIMOUSESTATE2	m_aMouseStateRepeat;			// リピート情報
 	DIMOUSESTATE2	m_aMouseCurrentTime;			// 現在の時間
 	DIMOUSESTATE2	m_aMouseExecLastTime;			// 最後に真を返した時間
-	POINT m_MousePos;								// カーソル用
 	HWND m_hMouseWnd;								// ウィンドウハンドル
+
+	D3DXVECTOR3 g_MousePosTemp;		// 位置保存用
+	D3DXVECTOR3 m_MouseMove;
 };
 
 // ジョイパット
@@ -190,7 +193,7 @@ public:
 	D3DXVECTOR3 GetJoypadStick(JOYKEY Key, int nPlayer);			// スティックプレス情報を取得
 	int GetJoypadTriggerPedal(JOYKEY Key, int nPlayer);				// トリガーペダル情報を取得
 	void JoypadVibration(int nTime, WORD nStrength, int nPlayer);	// コントローラーの振動制御
-	STICK_INPUT GetStick(STICK_TYPE type);							// スティックの入力情報を取得
+	void GetStick(int type);										// スティックの入力情報を取得
 	XINPUT_STATE *GetXInputState(void);								// ジョイパットの入力情報の取得
 
 private:

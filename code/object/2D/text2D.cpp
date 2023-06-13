@@ -16,7 +16,9 @@
 //****************************************
 LPDIRECT3DTEXTURE9 CText2D::m_pTexture = NULL;	// 共有テクスチャ
 
+//========================================
 // コンストラクタ
+//========================================
 CText2D::CText2D(int nPriority) : CObject(nPriority)
 {
 	sprintf(m_aString, "");		// 文字列のポインタ
@@ -33,7 +35,9 @@ CText2D::CText2D(int nPriority) : CObject(nPriority)
 	}
 }
 
+//========================================
 // デストラクタ
+//========================================
 CText2D::~CText2D() 
 {
 

@@ -12,7 +12,9 @@
 int CBgMulti::m_nNumBg = -1;
 
 
+//========================================
 // コンストラクタ
+//========================================
 CBgMulti::CBgMulti(int nPriority) : CObject(nPriority)
 {
 	for (int nCntBg = 0; nCntBg < BG_MAX; nCntBg++)
@@ -21,7 +23,9 @@ CBgMulti::CBgMulti(int nPriority) : CObject(nPriority)
 	}
 }
 
+//========================================
 // デストラクタ
+//========================================
 CBgMulti::~CBgMulti()
 {
 
