@@ -117,8 +117,7 @@ HRESULT CEnemy::Init(void)
 	SetColor(INIT_D3DXCOLOR);
 
 	// テクスチャの割り当て
-	BindTexture(m_pTexture[m_Info.nType]);
-
+	BindTexture(6);
 
 	return S_OK;
 }

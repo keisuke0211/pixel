@@ -27,7 +27,7 @@ int g_nCountFPS = 0;							// FPSカウンタ
 
 Main	g_main;									// メイン処理の情報構造体
 
-CManager *g_Manager = NULL;						// マネージャーオブジェクトへのポインタ
+CManager *g_Physics = NULL;						// マネージャーオブジェクトへのポインタ
 //========== *** ウインドウハンドルを取得 ***
 HWND *GetWindowHandle(void)
 {
@@ -109,12 +109,12 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 							//ウインドウモードの切り替え
 	WindowMode(WINDOW_MODE);
 
-	if (g_Manager == NULL)
+	if (g_Physics == NULL)
 	{
 		// マネージャーの生成
-		g_Manager = new CManager;
+		g_Physics = new CManager;
 
-		g_Manager->Init(hinstance, g_main.hWnd, TRUE);
+		g_Physics->Init(hinstance, g_main.hWnd, TRUE);
 	}
 
 	//分解能を設定
@@ -161,30 +161,30 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 
 				RECT rec;	// 大きさを受け取るRECT構造体
 
-							// ウインドウの情報を取得
+				// ウインドウの情報を取得
 				GetWindowRect(g_main.hWnd, &rec);
 
 				// ウインドウの位置を設定
 				g_main.windowPos = D3DXVECTOR3(rec.left, rec.top, 0.0f);
 
 				// マネージャーの更新処理
-				g_Manager->Update();
+				g_Physics->Update();
 
 				// マネージャーの描画処理
-				g_Manager->Draw();
+				g_Physics->Draw();
 
 				dwFrameCount++;//フレームカウントを加算
 			}
 		}
 	}
 
-	if (g_Manager != NULL)
+	if (g_Physics != NULL)
 	{
 		// マネージャーの終了処理
-		g_Manager->Uninit();
+		g_Physics->Uninit();
 
-		delete g_Manager;
-		g_Manager = NULL;
+		delete g_Physics;
+		g_Physics = NULL;
 	}
 
 	//分解能を戻す

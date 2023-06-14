@@ -7,14 +7,6 @@
 //========================================
 #include "text2D.h"
 #include "../object2D.h"
-#include "../../main.h"
-#include "../../manager.h"
-#include "../../renderer.h"
-
-//****************************************
-// 静的メンバ変数宣言
-//****************************************
-LPDIRECT3DTEXTURE9 CText2D::m_pTexture = NULL;	// 共有テクスチャ
 
 //========================================
 // コンストラクタ
@@ -163,7 +155,7 @@ void CText2D::SetString(char *pString)
 		m_apObject2D[nCntDigit]->SetPtnInfo(PTN_WIDTH, PTN_HEIGHT, PTN_MAX);
 
 		// テクスチャ割り当て
-		m_apObject2D[nCntDigit]->BindTexture(m_pTexture);
+		m_apObject2D[nCntDigit]->BindTexture(8);
 	}
 }
 
@@ -181,36 +173,4 @@ CText2D *CText2D::Create(void) {
 	pText2D->Init();
 
 	return pText2D;
-}
-
-//========================================
-// テクスチャ読み込み
-//========================================
-HRESULT CText2D::Load(char *pPath) 
-{
-	if (pPath != NULL)
-	{
-		// デバイス取得
-		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-		// テクスチャの読み込み
-		if (FAILED(D3DXCreateTextureFromFile(pDevice, pPath, &m_pTexture))) 
-		{
-			m_pTexture = NULL;
-		}
-	}
-
-	return S_OK;
-}
-
-//========================================
-// テクスチャ破棄
-//========================================
-void CText2D::Unload(void) 
-{
-	// テクスチャの破棄
-	if (m_pTexture != NULL)
-	{
-		m_pTexture->Release();
-		m_pTexture = NULL;
-	}
 }

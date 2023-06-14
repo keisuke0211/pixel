@@ -50,7 +50,7 @@ public:
 	virtual void SetSize(float fWidth, float fHeight) { m_fWidth = fWidth, m_fHeight = fHeight; };		// サイズ
 	virtual void SetColor(D3DXCOLOR color);				// 色
 	void SetPtn(int nPtn) { m_nPtn = nPtn; }			// パターン
-	void BindTexture(LPDIRECT3DTEXTURE9 m_pTexture);	// テクスチャ指定
+	void BindTexture(int nIdx);							// テクスチャ指定
 	virtual void SetTex(PositionVec4 tex);				// テクスチャ座標
 
 	/* 取得 */

@@ -127,7 +127,7 @@ HRESULT CBullet::Init(void)
 	SetColor(INIT_D3DXCOLOR);
 
 	// テクスチャの割り当て
-	BindTexture(m_pTexture[m_Info.nType]);
+	BindTexture(m_Info.nType + 4);
 
 	return S_OK;
 }
@@ -174,7 +174,7 @@ void CBullet::Update(void)
 		pObj->SetColor(D3DXCOLOR(0.1f, 1.0f, 0.25f, 1.0f));
 		break;
 	}
-	pObj->SetLife(10.0f);
+	pObj->SetLife(10);
 
 	// 敵との当たり判定
 	if(CollsionEnemy(m_Info.pos))

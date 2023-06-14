@@ -6,12 +6,6 @@
 // *** floor.cpp ***
 //========================================
 #include "floor.h"
-#include "../../manager.h"
-#include "../../renderer.h"
-
-// 静的メンバ変数
-LPDIRECT3DTEXTURE9 CFloor::m_pTexture[CFloor::MAX_TEXTURE] = { NULL };
-int CFloor::m_nTexture = -1;
 
 //========================================
 // コンストラクタ
@@ -75,7 +69,7 @@ HRESULT CFloor::Init(void)
 	SetColor(INIT_D3DXCOLOR);
 
 	// テクスチャの割り当て
-	BindTexture(m_pTexture[0]);
+	BindTexture(10);
 
 	return S_OK;
 }
@@ -102,42 +96,4 @@ void CFloor::Update(void)
 void CFloor::Draw(void)
 {
 	CObject3D::Draw();
-}
-
-//========================================
-// テクスチャの読み込み
-//========================================
-HRESULT CFloor::Load(char *pPath)
-{
-	if (pPath != NULL)
-	{
-		m_nTexture++;	// テクスチャ数加算
-
-		// デバイス取得
-		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-		// テクスチャの読み込み
-		if (FAILED(D3DXCreateTextureFromFile(pDevice, pPath, &m_pTexture[m_nTexture])))
-		{
-			m_pTexture[m_nTexture] = NULL;
-		}
-	}
-
-	return S_OK;
-}
-
-//========================================
-// テクスチャの破棄
-//========================================
-void CFloor::Unload(void)
-{
-	// テクスチャの破棄
-	for (int nCntTex = 0; nCntTex < m_nTexture; nCntTex++)
-	{
-		if (m_pTexture[nCntTex] != NULL)
-		{
-			m_pTexture[nCntTex]->Release();
-			m_pTexture[nCntTex] = NULL;
-		}
-	}
 }

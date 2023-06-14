@@ -9,12 +9,13 @@
 #define _PLAYER_H_
 
 #include "../../main.h"
-#include "../objectX.h"
+#include "../../physics.h"
+#include "../model.h"
 
 //****************************************
 // クラス
 //****************************************
-class CPlayer : public CObjectX
+class CPlayer : public CObject
 {
 public:
 
@@ -41,7 +42,7 @@ public:
 	} Info;
 
 	// ***** 関数 *****
-	CPlayer(int nPriority = TYPE_PLAYER);
+	CPlayer(int nPriority = CObject::TYPE_PLAYER);
 	~CPlayer();
 
 	/* メイン */
@@ -59,8 +60,14 @@ public:
 
 private:
 	// ***** 関数 *****
-	void MovePos(void);		// 移動
-	void UpdatePos(void);	// 位置更新
+	void MovePos(float fMove);	// 移動
+	void UpdatePos(void);		// 位置更新
+
+	/* 移動 */
+	void MoveKeyboard(DIRECTION drct);	// キーボードの移動処理
+
+	/* 入力 */
+	void KeyInput(void);	// キーボード
 
 	// ***** 変数 *****
 	Info m_Info;		// プレイヤー情報

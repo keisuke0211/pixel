@@ -129,7 +129,7 @@ HRESULT CPlayer2D::Init(void)
 	SetPtnInfo(5, 8, 46, false, 0);
 
 	// テクスチャの割り当て
-	BindTexture(m_pTexture[0]);
+	BindTexture(3);
 
 	return S_OK;
 }

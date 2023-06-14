@@ -81,7 +81,7 @@ CEffect2D *CEffect2D::Create(void)
 	pEffect2D->Init();
 
 	// テクスチャ割り当て
-	pEffect2D->BindTexture(m_pTexture[0]);
+	pEffect2D->BindTexture(7);
 
 	return pEffect2D;
 }

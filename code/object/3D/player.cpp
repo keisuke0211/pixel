@@ -12,6 +12,7 @@
 #include "../../input.h"
 #include "../../sound.h"
 #include "../../camera.h"
+#include "../../physics.h"
 
 // 定義
 const float CPlayer::PLAYER_SPEED = 2.5f;
@@ -19,7 +20,7 @@ const float CPlayer::PLAYER_SPEED = 2.5f;
 //========================================
 // コンストラクタ
 //========================================
-CPlayer::CPlayer(int nPriority) : CObjectX(nPriority)
+CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 {
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
@@ -68,19 +69,18 @@ HRESULT CPlayer::Init(void)
 {
 	CCamera *pCamera = CManager::GetCamera();	// カメラの取得
 
-	CObjectX::Init();
+	/*CModel::Init();*/
 
-	// 種類の設定
-	SetType(TYPE_PLAYER);
+	//// 種類の設定
+	//SetType(TYPE_PLAYER);
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f,0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	
-	// 生成
-	SetPos(m_Info.pos);
-	SetSize();
-	SetRot(m_Info.rot);
+	//// 生成
+	//SetPos(m_Info.pos);
+	//SetRot(m_Info.rot);
 
 	return S_OK;
 }
@@ -90,7 +90,7 @@ HRESULT CPlayer::Init(void)
 //========================================
 void CPlayer::Uninit(void)
 {
-	CObjectX::Uninit();
+	/*CModel::Uninit();*/
 }
 
 //========================================
@@ -99,12 +99,12 @@ void CPlayer::Uninit(void)
 void CPlayer::Update(void)
 {
 	// 移動処理
-	MovePos();
+	KeyInput();
 
-	// 位置更新
+	// 位置更新処理
 	UpdatePos();
 
-	CObjectX::Update();
+	/*CModel::Update();*/
 }
 
 //========================================
@@ -112,54 +112,92 @@ void CPlayer::Update(void)
 //========================================
 void CPlayer::Draw(void)
 {
-	CObjectX::Draw();
+	/*CModel::Draw(true);*/
+}
+
+//========================================
+// キーボードの入力処理
+//========================================
+void CPlayer::KeyInput(void)
+{
+	// --- 取得 ---------------------------------
+	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+
+	if (pInputKeyboard->GetPress(DIK_A))
+	{
+		if (pInputKeyboard->GetPress(DIK_W)) { MoveKeyboard(DIRECTION_LEFT_BACK); }			// 左奥移動
+		else if (pInputKeyboard->GetPress(DIK_S)) { MoveKeyboard(DIRECTION_LEFT_FRONT); }	// 左手前移動
+		else { MoveKeyboard(DIRECTION_LEFT); }		// 左移動
+	}
+	else if (pInputKeyboard->GetPress(DIK_D))
+	{
+		if (pInputKeyboard->GetPress(DIK_W)) { MoveKeyboard(DIRECTION_RIGHT_BACK); }		// 右奥移動
+		else if (pInputKeyboard->GetPress(DIK_S)) { MoveKeyboard(DIRECTION_RIGHT_FRONT); }	// 右手前移動
+		else { MoveKeyboard(DIRECTION_RIGHT); }		// 右移動
+	}
+	else if (pInputKeyboard->GetPress(DIK_W)) { MoveKeyboard(DIRECTION_BACK); }		// 奥移動
+	else if (pInputKeyboard->GetPress(DIK_S)) { MoveKeyboard(DIRECTION_FRONT); }	// 手前移動
+}
+
+//========================================
+// キーボードの移動処理
+//========================================
+void CPlayer::MoveKeyboard(DIRECTION drct)
+{
+	// --- 代入 ---------------------------------
+	m_Info.moveRot = m_Info.rot;	// 移動向き
+
+	// --- 移動 ---------------------------------
+
+	// 移動向きに円周率を代入
+	m_Info.moveRot.y = D3DX_PI;
+
+	switch (drct)
+	{
+	case DIRECTION_LEFT:m_Info.moveRot.y *= -0.5f; break;			// 左
+	case DIRECTION_RIGHT:m_Info.moveRot.y *= 0.5f; break;			// 右
+	case DIRECTION_BACK:m_Info.moveRot.y *= 0.0f; break;			// 奥
+	case DIRECTION_FRONT:m_Info.moveRot.y *= 1.0f; break;			// 手前
+	case DIRECTION_LEFT_BACK:m_Info.moveRot.y *= -0.25f; break;		// 左奥
+	case DIRECTION_LEFT_FRONT:m_Info.moveRot.y *= -0.75f; break;	// 左手前
+	case DIRECTION_RIGHT_BACK:m_Info.moveRot.y *= 0.25f; break;		// 右奥
+	case DIRECTION_RIGHT_FRONT:m_Info.moveRot.y *= 0.75f; break;	// 右手前
+	}
+
+	// 位置更新
+	MovePos(PLAYER_SPEED);
 }
 
 //========================================
 // 移動処理
 //========================================
-void CPlayer::MovePos(void)
+void CPlayer::MovePos(float fMove)
 {
-	// --- 代入 ---------------------------------
-	m_Info.moveRot = m_Info.rot;	// 移動向き
-
 	// --- 取得 ---------------------------------
-	CCamera *pCamera = CManager::GetCamera();						// カメラ
-	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
-	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	CCamera *pCamera = CManager::GetCamera();		// カメラ
 
-	
-	// --- 移動 ---------------------------------
-	if (pInputKeyboard->GetPress(DIK_D) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_RIGHT, 0) == true)
-	{// 右
-		m_Info.moveRot.y = D3DX_PI;
-		m_Info.moveRot.y *= 0.5f;
+	D3DXVECTOR3 posV = pCamera->GetInfo().posV;	// 視点
+	D3DXVECTOR3 posR = pCamera->GetInfo().posR;	// 注視点
 
-		float fAngle;	// 角度
+	// 視点から注視点までの角度
+	float fAngle
+		= FindAngle(D3DXVECTOR3(posV.x, posV.z, 0.0f), D3DXVECTOR3(posR.x, posR.z, 0.0f));
 
-		fAngle = atan2f(pCamera->GetInfo().posR.z - pCamera->GetInfo().posV.z, pCamera->GetInfo().posR.x - pCamera->GetInfo().posV.x);
+	m_Info.moveRot.y += fAngle;
 
-		fAngle -= (D3DX_PI * 0.5f);
-		fAngle *= -1;
+	m_Info.move.x += sinf(m_Info.moveRot.y) * fMove;
+	m_Info.move.z += cosf(m_Info.moveRot.y) * fMove;
+}
 
-		m_Info.moveRot.y += fAngle;
-
-		m_Info.move.x += sinf(m_Info.moveRot.y) * PLAYER_SPEED;
-		m_Info.move.z += cosf(m_Info.moveRot.y) * PLAYER_SPEED;
-	}
-	else if (pInputKeyboard->GetPress(DIK_A) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_LEFT, 0) == true)
-	{// 左
-		m_Info.move.x -= PLAYER_SPEED;
-	}
-	else if (pInputKeyboard->GetPress(DIK_W) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_UP, 0) == true)
-	{// 上
-		m_Info.move.z += PLAYER_SPEED;
-	}
-	else if (pInputKeyboard->GetPress(DIK_S) == true || pInputJoypad->GetJoypadPress(CInputJoypad::JOYKEY_DOWN, 0) == true)
-	{// 下
-		m_Info.move.z -= PLAYER_SPEED;
-	}
+//========================================
+// 位置更新
+//========================================
+void CPlayer::UpdatePos(void)
+{
+	// --- 取得 ---------------------------------
+	CCamera *pCamera = CManager::GetCamera();		// カメラ
 
 	// 移動量の代入
 	m_Info.pos += m_Info.move;
@@ -168,18 +206,11 @@ void CPlayer::MovePos(void)
 	m_Info.move.x *= 0.8f;
 	m_Info.move.z *= 0.8f;
 
-	SetPos(m_Info.pos);
-
-	// カメラの注視点を設定
-	pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 95, m_Info.pos.z));
-}
-//========================================
-// 位置更新
-//========================================
-void CPlayer::UpdatePos(void)
-{
-
+	/*SetPos(m_Info.pos);*/
 
 	// 目標向きに移動向きを代入
 	m_Info.targetRot = m_Info.moveRot;
+
+	// カメラの注視点を設定
+	pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 95, m_Info.pos.z));
 }

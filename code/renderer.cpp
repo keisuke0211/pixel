@@ -9,7 +9,7 @@
 #include "object\object.h"
 
 // 静的変数
-LPD3DXFONT CRenderer::m_pFont = NULL;
+LPD3DXFONT CRenderer::m_pFont = NULL;	// フォント
 
 //========================================
 // コンストラクタ
@@ -111,9 +111,6 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
-	//　初期化
-	InitAll();
-
 	return S_OK;
 }
 
@@ -122,8 +119,8 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 //========================================
 void CRenderer::Uninit(void)
 {
-	// 終了
-	UninitAll();
+	// オブジェクトの全体の破棄
+	CObject::ReleaseAll();
 
 	//デバック表示用フォントの破棄
 	if (m_pFont != NULL)
@@ -153,8 +150,7 @@ void CRenderer::Uninit(void)
 //========================================
 void CRenderer::Update(void)
 {
-	// 更新
-	UpdateAll();
+	CObject::UpdateAll();		// オブジェクト全体
 }
 
 //========================================
@@ -171,8 +167,8 @@ void CRenderer::Draw(void)
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{//描画開始が成功した場合
 
-		// 描画
-		DrawAll();
+		// オブジェクト全体の描画処理
+		CObject::DrawAll();
 
 		//描画終了
 		m_pD3DDevice->EndScene();
@@ -188,48 +184,6 @@ void CRenderer::Draw(void)
 	m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
 }
 
-//========================================
-// 描画の読み込み処理
-//========================================
-void CRenderer::Load(void)
-{
-
-}
-
-//========================================
-// 初期化処理
-//========================================
-HRESULT CRenderer::InitAll(void)
-{
-	return S_OK;
-}
-
-//========================================
-// 終了処理
-//========================================
-void CRenderer::UninitAll (void)
-{
-	// オブジェクトの全体の破棄
-	CObject::ReleaseAll();
-}
-
-//========================================
-// 更新処理
-//========================================
-void CRenderer::UpdateAll(void)
-{
-	// オブジェクト全体の更新処理
-	CObject::UpdateAll();
-}
-
-//========================================
-// 描画処理
-//========================================
-void CRenderer::DrawAll(void)
-{
-	// オブジェクト全体の描画処理
-	CObject::DrawAll();
-}
 //========================================
 // FPS処理
 //========================================

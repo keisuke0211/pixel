@@ -107,7 +107,7 @@ HRESULT CBlock2D::Init(void)
 	SetColor(INIT_D3DXCOLOR);
 
 	// テクスチャの割り当て
-	BindTexture(m_pTexture);
+	BindTexture(9);
 
 	return S_OK;
 }

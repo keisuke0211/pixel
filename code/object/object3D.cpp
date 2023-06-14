@@ -281,9 +281,11 @@ void CObject3D::SetTexPos(VERTEX_3D *pVtx)
 //=============================================================================
 // テクスチャの割り当て
 //=============================================================================
-void CObject3D::BindTexture(LPDIRECT3DTEXTURE9 m_pTexture1)
+void CObject3D::BindTexture(int nIdx)
 {
-	m_pTexture = m_pTexture1;
+	CTexture *pTexture = CManager::GetTexture();
+
+	m_pTexture = pTexture->GetAddress(nIdx);
 }
 
 //========================================

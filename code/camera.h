@@ -9,11 +9,12 @@
 #define _CAMERA_H_
 
 #include "main.h"
+#include "physics.h"
 
 //****************************************
 // ƒNƒ‰ƒX
 //****************************************
-class CCamera
+class CCamera : public CPhysics
 {
 public:
 
@@ -56,20 +57,7 @@ public:
 
 private:
 
-	// ***** —ñ‹“Œ^ *****
-
-	// 4•ûŒü
-	typedef enum
-	{
-		DIRECTION_UP,			// ã
-		DIRECTION_DOWN,			// ‰º
-		DIRECTION_LEFT,			// ¶
-		DIRECTION_RIGHT,		// ‰E
-		DIRECTION_MAX,
-	}DIRECTION;
-
 	// ***** ŠÖ” *****
-
 	void AxisRotationCamera(DIRECTION drct, float fRot, int nIdx = 0); //‰ñ“]ˆ—
 
 	// ***** •Ï” *****

@@ -112,7 +112,7 @@ HRESULT CBg::Init(void)
 	SetColor(INIT_D3DXCOLOR);
 
 	// テクスチャの割り当て
-	BindTexture(m_pTexture[m_Type]);
+	BindTexture(m_Type);
 
 	return S_OK;
 }

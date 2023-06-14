@@ -197,12 +197,14 @@ void CObject2D::SetVtxPos(VERTEX_2D *pVtx)
 	pVtx[3].pos.y = m_pos.y + cosf(m_rot.z + fAngle) * fLength;
 }
 
-//=============================================================================
+//========================================
 // テクスチャの割り当て
-//=============================================================================
-void CObject2D::BindTexture(LPDIRECT3DTEXTURE9 m_pTexture1)
+//========================================
+void CObject2D::BindTexture(int nIdx)
 {
-	m_pTexture = m_pTexture1;
+	CTexture *pTexture = CManager::GetTexture();
+
+	m_pTexture = pTexture->GetAddress(nIdx);
 }
 
 

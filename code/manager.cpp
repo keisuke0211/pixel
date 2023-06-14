@@ -12,6 +12,7 @@
 #include "sound.h"
 #include "texture.h"
 #include "input.h"
+#include "object\model.h"
 #include "object\object.h"
 #include "object\2D\score.h"
 #include "object\2D\text2D.h"
@@ -25,14 +26,13 @@
 
 // 静的メンバ変数
 CRenderer *CManager::m_pRenderer = NULL;
-CCamera *CManager::m_pCamera = NULL;
-CLight *CManager::m_pLight = NULL;
+CCamera *CManager::m_pCamera = NULL;	// カメラ
+CLight *CManager::m_pLight = NULL;		// ライト
 CSound *CManager::m_pSound = NULL;
 CTexture *CManager::m_pTexture = NULL;
 CInputKeyboard *CManager::m_InputKeyboard = NULL;
 CInputMouse *CManager::m_InputMouse = NULL;
 CInputJoypad *CManager::m_InputJoypad = NULL;
-CNumber *CManager::m_Number = NULL;
 CBg *CManager::m_pBg = NULL;
 CPlayer *CManager::m_pPlayer = NULL;
 CEnemy *CManager::m_pEnemy = NULL;
@@ -114,7 +114,6 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 		m_pLight->lnit();
 	}
 
-
 	if (m_pSound == NULL)
 	{
 		// サウンドの生成
@@ -127,8 +126,17 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 		m_pSound->Init(hWnd);
 	}
 	
-	// 読み込み
-	Load();
+	if (m_pTexture == NULL)
+	{
+		// テクスチャの生成
+		m_pTexture = new CTexture;
+
+		// テクスチャ
+		m_pTexture->Load();
+	}
+
+	// モデルの初期化
+	CModel::InitModel();
 
 	// 背景の生成
 	for (int nCntBg = 0; nCntBg < 3; nCntBg++)
@@ -163,13 +171,6 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	{
 		CBlock2D::Create(D3DXVECTOR3((1000.0f + (nCntObj * 50.0f)), 350, 0.0f));
 	}
-
-
-	// プレイヤーの生成
-	/*for (int nCntPlayer = 0; nCntPlayer < CPlayer2D::PLAYER_MAX; nCntPlayer++)
-	{
-		CPlayer2D::Create();
-	}*/
 
 	CPlayer::Create();
 
@@ -233,6 +234,9 @@ void CManager::Uninit(void)
 		m_InputJoypad = NULL;
 	}
 
+	// モデルの終了
+	CModel::UninitModel();
+
 	// レンダラーの破棄
 	if (m_pRenderer != NULL)
 	{
@@ -243,16 +247,6 @@ void CManager::Uninit(void)
 		m_pRenderer = NULL;
 	}
 
-	// カメラの破棄
-	if (m_pCamera != NULL)
-	{
-		// カメラ
-		m_pCamera->Uninit();
-
-		delete m_pCamera;
-		m_pCamera = NULL;
-	}
-
 	// ライトの破棄
 	if (m_pLight != NULL)
 	{
@@ -261,6 +255,16 @@ void CManager::Uninit(void)
 
 		delete m_pLight;
 		m_pLight = NULL;
+	}
+
+	// カメラの破棄
+	if (m_pCamera != NULL)
+	{
+		// カメラ
+		m_pCamera->Uninit();
+
+		delete m_pCamera;
+		m_pCamera = NULL;
 	}
 
 	// サウンドの破棄
@@ -302,18 +306,4 @@ void CManager::Update(void)
 void CManager::Draw(void)
 {
 	m_pRenderer->Draw();	// レンダラー
-}
-//========================================
-// 読み込み
-//========================================
-void CManager::Load(void)
-{
-	if (m_pTexture == NULL)
-	{
-		// テクスチャの生成
-		m_pTexture = new CTexture;
-
-		// テクスチャ
-		m_pTexture->Load();
-	}
 }

@@ -55,8 +55,6 @@ public:
 
 	// *** 静的関数 ***
 	static CText2D *Create(void);		// 生成処理
-	static HRESULT Load(char *pPath);	// テクスチャ読み込み
-	static void Unload(void);			// テクスチャ破棄
 
 private:
 	// ***** 変数 *****
@@ -67,9 +65,6 @@ private:
 	D3DXVECTOR3 m_rot;	// 向き
 	float m_fWidth;		// 幅
 	float m_fHeight;	// 高さ
-
-	// ***** 静的変数 *****
-	static LPDIRECT3DTEXTURE9 m_pTexture;	// 共有テクスチャ
 };
 
 #endif

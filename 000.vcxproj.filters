@@ -28,6 +28,9 @@
     <Filter Include="ソース ファイル\01_object\3D">
       <UniqueIdentifier>{a518ef8b-4263-4dd1-9d4a-b11ce452f40b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\01_object\00_model">
+      <UniqueIdentifier>{ce93420b-a7c8-4db5-bd5f-aec0b8e1ae22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code\manager.cpp">
@@ -93,14 +96,20 @@
     <ClCompile Include="code\object\3D\floor.cpp">
       <Filter>ソース ファイル\01_object\3D</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\objectX.cpp">
-      <Filter>ソース ファイル\01_object</Filter>
-    </ClCompile>
     <ClCompile Include="code\object\3D\player2D.cpp">
       <Filter>ソース ファイル\01_object\2D</Filter>
     </ClCompile>
     <ClCompile Include="code\object\3D\player.cpp">
       <Filter>ソース ファイル\01_object\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\physics.cpp">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\model.cpp">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\parts.cpp">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,14 +179,20 @@
     <ClInclude Include="code\object\3D\floor.h">
       <Filter>ソース ファイル\01_object\3D</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\objectX.h">
-      <Filter>ソース ファイル\01_object</Filter>
-    </ClInclude>
     <ClInclude Include="code\object\3D\player2D.h">
       <Filter>ソース ファイル\01_object\2D</Filter>
     </ClInclude>
     <ClInclude Include="code\object\3D\player.h">
       <Filter>ソース ファイル\01_object\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\physics.h">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\model.h">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\parts.h">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,451 @@
+//========================================
+// 
+// モデル処理
+// 
+//========================================
+// *** objectX.cpp ***
+//========================================
+#include "model.h"
+#include "../manager.h"
+#include "../renderer.h"
+#include "../texture.h"
+
+//========================================
+// 静的変数
+//========================================
+CModel::MODEL_MATERIAL *CModel::m_material = NULL;	// マテリアル情報
+int CModel::m_nMaxModel = 0;						// モデル数		
+
+//========================================
+// コンストラクタ
+//========================================
+CModel::CModel(int nPriority)
+{
+	// 値をクリアする
+	m_pParent = NULL;				// 親モデルの情報
+	m_mtxWorld = {};				// ワールドマトリックス
+	m_pos = INIT_D3DXVECTOR3;		// 位置
+	m_posOld = INIT_D3DXVECTOR3;	// 位置(過去)
+	m_rot = INIT_D3DXVECTOR3;		// 向き
+	m_size = INIT_D3DXVECTOR3;		// 大きさ
+	m_color = INIT_D3DXCOLOR;		// 色
+	m_nModelID = -1;				// モデルID
+}
+
+//========================================
+// デストラクタ
+//========================================
+CModel::~CModel()
+{
+
+}
+
+//========================================
+// 生成
+//========================================
+CModel *CModel::Create(void)
+{
+	CModel *pModel = NULL;
+
+	if (pModel != NULL)
+	{
+		return pModel;
+	}
+
+	// モデルの生成
+	pModel = new CModel;
+
+	// 初期化処理
+	pModel->Init();
+
+	return pModel;
+}
+
+//========================================
+// モデル情報の初期化
+//========================================
+void CModel::InitModel(void)
+{
+	// デバイスの所得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	// ファイル読み込み
+	LoadModel("data\\GAMEDATA\\MODEL\\MODEL_DATA.txt");
+
+	for (int nCntModel = 0; nCntModel < m_nMaxModel; nCntModel++)
+	{// Xファイルの読み込み
+		D3DXLoadMeshFromX(&m_material[nCntModel].aFileName[0],
+			D3DXMESH_SYSTEMMEM,
+			pDevice,
+			NULL,
+			&m_material[nCntModel].pBuffer,
+			NULL,
+			&m_material[nCntModel].nNumMat,
+			&m_material[nCntModel].pMesh);
+
+		// 必要な数のポインタを動的に確保する
+		if (m_material[nCntModel].nNumMat >= 1)
+		{
+			// マテリアルのテクスチャ情報のメモリ確保
+			m_material[nCntModel].pIdxTex = new int[m_material[nCntModel].nNumMat];
+
+		}
+
+		// バッファの先頭ポインタをD3DXMATERIALにキャストして取得
+		D3DXMATERIAL *pMat = (D3DXMATERIAL*)m_material[nCntModel].pBuffer->GetBufferPointer();
+
+		CTexture* pTexture = CManager::GetTexture();
+
+		for (int nCntMat = 0; nCntMat < (int)m_material[nCntModel].nNumMat; nCntMat++)
+		{
+			// マテリアルのテクスチャ情報の初期化
+			m_material[nCntModel].pIdxTex[nCntMat] = -1;
+
+			if (pMat[nCntMat].pTextureFilename != NULL)
+			{// テクスチャファイルが存在する
+
+				// テクスチャの読み込み
+				m_material[nCntMat].pIdxTex[nCntMat] = pTexture->Regist(pMat[nCntMat].pTextureFilename);
+			}
+		}
+		// 頂点座標の最小値・最大値の算出
+		CalcSize(nCntModel);
+	}
+}
+
+//========================================
+// モデル情報の終了
+//========================================
+void CModel::UninitModel(void)
+{
+	for (int nCnt = 0; nCnt < m_nMaxModel; nCnt++)
+	{
+		// メッシュの破棄
+		if (m_material[nCnt].pMesh != NULL)
+		{
+			m_material[nCnt].pMesh->Release();
+			m_material[nCnt].pMesh = NULL;
+		}
+
+		// マテリアルの破棄
+		if (m_material[nCnt].pBuffer != NULL)
+		{
+			m_material[nCnt].pBuffer->Release();
+			m_material[nCnt].pBuffer = NULL;
+		}
+
+		// メモリの解放
+		delete[] m_material[nCnt].pIdxTex;
+		m_material[nCnt].pIdxTex = NULL;
+	}
+
+	// メモリの解放
+	delete[] m_material;
+	m_material = NULL;
+}
+
+//========================================
+// Xファイルの読み込み
+//========================================
+void CModel::LoadModel(const char *pFileName)
+{
+	int nCntModel = 0;
+	char aDataSearch[TXT_MAX];	// データ検索用
+
+	// ファイルの読み込み
+	FILE *pFile = fopen(pFileName, "r");
+
+	if (pFile == NULL)
+	{// 種類毎の情報のデータファイルが開けなかった場合、
+	 //処理を終了する
+		return;
+	}
+
+	// ENDが見つかるまで読み込みを繰り返す
+	while (1)
+	{
+		fscanf(pFile, "%s", aDataSearch);	// 検索
+
+		if (!strcmp(aDataSearch, "END"))
+		{// 読み込みを終了
+			fclose(pFile);
+			break;
+		}
+		if (aDataSearch[0] == '#')
+		{// 折り返す
+			continue;
+		}
+
+		if (!strcmp(aDataSearch, "NUM_MODEL"))
+		{
+			fscanf(pFile, "%s", &aDataSearch[0]);
+			fscanf(pFile, "%d", &m_nMaxModel);		// 最大数
+			m_material = new CModel::MODEL_MATERIAL[m_nMaxModel];
+			assert(m_material != NULL);
+		}
+
+		if (!strcmp(aDataSearch, "MODEL"))
+		{
+			fscanf(pFile, "%s", &aDataSearch[0]);
+			fscanf(pFile, "%s", &m_material[nCntModel].aFileName[0]);	// ファイル名
+			nCntModel++;
+		}
+	}
+}
+
+//========================================
+// 初期化
+//========================================
+HRESULT CModel::Init()
+{
+	// メンバ変数の初期化
+	m_pos = INIT_D3DXVECTOR3;					// 位置
+	m_rot = INIT_D3DXVECTOR3;					// 向き
+	m_size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);		// 大きさ
+	m_nModelID = -1;							// モデルID
+
+	return S_OK;
+}
+
+//========================================
+// 終了
+//========================================
+void CModel::Uninit(void)
+{
+	
+}
+
+//========================================
+// 更新
+//========================================
+void CModel::Update(void)
+{
+
+}
+
+//================================================================================
+// 描画 
+// 親モデルが指定されてる場合、親のワールドマトリックス元に描画する
+//================================================================================
+void CModel::Draw(bool Color)
+{
+	if (m_nModelID >= 0 && m_nModelID < m_nMaxModel)
+	{
+		// 親のワールドマトリックス
+		D3DXMATRIX mtxParent = {};
+
+		// デバイスの取得
+		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+		// 計算用マトリックス
+		D3DXMATRIX mtxRot, mtxTrans, mtxScaling;
+
+		// 現在のマテリアル保存用
+		D3DMATERIAL9 matDef;
+
+		// マテリアルデータへのポインタ
+		D3DXMATERIAL *pMat;
+
+		// ワールドマトリックスの初期化
+		D3DXMatrixIdentity(&m_mtxWorld);
+
+		// サイズの反映
+		D3DXMatrixScaling(&mtxScaling, m_size.x, m_size.y, m_size.z);
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScaling);
+
+		// 向きを反映
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+		// 位置を反映
+		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+		if (m_pParent != NULL)
+		{
+			mtxParent = m_pParent->GetMtxWorld();
+
+			// 行列掛け算関数
+			D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
+		}
+
+		// ワールドマトリックスの設定
+		pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+		// 現在のマテリアルを取得
+		pDevice->GetMaterial(&matDef);
+
+		if (m_material[m_nModelID].pBuffer != NULL)
+		{// マテリアルデータへのポインタを取得
+			pMat = (D3DXMATERIAL*)m_material[m_nModelID].pBuffer->GetBufferPointer();
+
+			for (int nCntMat = 0; nCntMat < (int)m_material[m_nModelID].nNumMat; nCntMat++)
+			{
+				if (Color)
+				{// マテリアル情報の設定
+					D3DMATERIAL9  matD3D = pMat[nCntMat].MatD3D;
+
+					// 引数を色に設定
+					matD3D.Diffuse = m_color;
+
+					// マテリアルの設定
+					pDevice->SetMaterial(&matD3D);
+				}
+				else
+				{// マテリアルの設定
+					pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+				}
+
+				// テクスチャの設定
+				pDevice->SetTexture(0, m_pTexture[nCntMat]);
+
+				// モデルパーツの描画
+				m_material[nCntMat].pIdxTex[nCntMat];
+			}
+		}
+
+		// 保存していたマテリアルを戻す
+		pDevice->SetMaterial(&matDef);
+	}
+}
+
+//========================================
+// 描画
+//========================================
+void CModel::Draw(D3DXMATRIX mtxParent, bool Color)
+{
+	if (m_nModelID >= 0 && m_nModelID < m_nMaxModel)
+	{
+		// デバイスの取得
+		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+		// 計算用マトリックス
+		D3DXMATRIX mtxRot, mtxTrans, mtxScaling;
+
+		// 現在のマテリアル保存用
+		D3DMATERIAL9 matDef;
+
+		// マテリアルデータへのポインタ
+		D3DXMATERIAL *pMat;
+
+		// ワールドマトリックスの初期化
+		D3DXMatrixIdentity(&m_mtxWorld);
+
+		// サイズの反映
+		D3DXMatrixScaling(&mtxScaling, m_size.x, m_size.y, m_size.z);
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScaling);
+
+		// 向きを反映
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+		// 位置を反映
+		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+		// 行列掛け算関数
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
+
+		// ワールドマトリックスの設定
+		pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+		// 現在のマテリアルを取得
+		pDevice->GetMaterial(&matDef);
+
+		if (m_material[m_nModelID].pBuffer != NULL)
+		{// マテリアルデータへのポインタを取得
+			pMat = (D3DXMATERIAL*)m_material[m_nModelID].pBuffer->GetBufferPointer();
+
+			for (int nCntMat = 0; nCntMat < (int)m_material[m_nModelID].nNumMat; nCntMat++)
+			{
+				if (Color)
+				{// マテリアル情報の設定
+					D3DMATERIAL9  matD3D = pMat[nCntMat].MatD3D;
+
+					// 引数を色に設定
+					matD3D.Diffuse = m_color;
+
+					// マテリアルの設定
+					pDevice->SetMaterial(&matD3D);
+				}
+				else
+				{// マテリアルの設定
+					pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+				}
+
+				// テクスチャの設定
+				pDevice->SetTexture(0, m_pTexture[nCntMat]);
+
+				// モデルパーツの描画
+				m_material[nCntMat].pIdxTex[nCntMat];
+			}
+		}
+
+		// 保存していたマテリアルを戻す
+		pDevice->SetMaterial(&matDef);
+	}
+}
+
+//========================================
+// 頂点座標の最小値・最大値の算出
+//========================================
+void CModel::CalcSize(int nCntModel)
+{
+	int		nNumVtx;	// 頂点数
+	DWORD	sizeFVF;	// 頂点フォーマットのサイズ
+	BYTE	*pVtxBuff;	// 頂点バッファへのポインタ
+
+						// 頂点数の取得
+	nNumVtx = m_material[nCntModel].pMesh->GetNumVertices();
+
+	// 頂点フォーマットのサイズの取得
+	sizeFVF = D3DXGetFVFVertexSize(m_material[nCntModel].pMesh->GetFVF());
+
+	// 頂点バッファのロック
+	m_material[nCntModel].pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
+
+	// 最も大きな頂点
+	D3DXVECTOR3 vtxMax = D3DXVECTOR3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+	D3DXVECTOR3 vtxMin = D3DXVECTOR3(FLT_MAX, FLT_MAX, FLT_MAX);
+
+	for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
+	{
+		// 頂点座標の代入
+		D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;
+
+		if (vtx.x < vtxMin.x)
+		{// 比較対象が現在の頂点座標(X)の最小値より小さい
+			vtxMin.x = vtx.x;
+		}
+		if (vtx.y < vtxMin.y)
+		{// 比較対象が現在の頂点座標(Y)の最小値より小さい
+			vtxMin.y = vtx.y;
+		}
+		if (vtx.z < vtxMin.z)
+		{// 比較対象が現在の頂点座標(Z)の最小値より小さい
+			vtxMin.z = vtx.z;
+		}
+
+		if (vtx.x > vtxMax.x)
+		{// 比較対象が現在の頂点座標(X)の最大値より大きい
+			vtxMax.x = vtx.x;
+		}
+		if (vtx.y > vtxMax.y)
+		{// 比較対象が現在の頂点座標(Y)の最大値より大きい
+			vtxMax.y = vtx.y;
+		}
+		if (vtx.z > vtxMax.z)
+		{// 比較対象が現在の頂点座標(Z)の最大値より大きい
+			vtxMax.z = vtx.z;
+		}
+
+		// 頂点フォーマットのサイズ分ポインタを進める
+		pVtxBuff += sizeFVF;
+	}
+
+	// 頂点バッファのアンロック
+	m_material[nCntModel].pMesh->UnlockVertexBuffer();
+
+	// 大きさの設定
+	m_material[nCntModel].size = D3DXVECTOR3(vtxMax.x - vtxMin.x, vtxMax.y - vtxMin.y, vtxMax.z - vtxMin.z);
+}

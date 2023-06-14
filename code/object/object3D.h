@@ -50,7 +50,7 @@ public:
 	virtual void SetColor(const D3DXCOLOR& color);		// 色
 	void SetPtn(int nPtn) { m_nPtn = nPtn; }			// パターン
 	virtual void SetTex(PositionVec4 tex);				// テクスチャ座標
-	void BindTexture(LPDIRECT3DTEXTURE9 m_pTexture);	// テクスチャ指定
+	void BindTexture(int nIdx);							// テクスチャ指定
 
 	int GetPtn(void) { return m_nPtn; }				// パターン 
 	int GetPtnWidth(void) { return m_nPtnWidth; }	// パターン幅
