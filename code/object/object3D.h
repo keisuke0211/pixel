@@ -33,7 +33,7 @@ public:
 	} VERTEX_3D;
 
 	// ***** ä÷êî *****
-	CObject3D(int nPriority = 0);
+	CObject3D(int nPriority = PRIO_OBJ3D);
 	~CObject3D();
 
 	/* ÉÅÉCÉì */

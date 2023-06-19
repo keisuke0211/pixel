@@ -24,7 +24,7 @@ public:
 	static const int MAX_ENEMY = 30;	// “G‚ÌÅ‘å”
 
 	// ***** ŠÖ” *****
-	CEnemy(int nPriority = TYPE_ENEMY);
+	CEnemy(int nPriority = PRIO_OBJX);
 	virtual~CEnemy();
 
 	// ***** \‘¢‘Ì *****

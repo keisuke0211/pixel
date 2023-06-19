@@ -142,3 +142,20 @@ CScore *CObject::GetScore(int nPriority,int nIdx)
 
 	return (CScore*)m_apObject[nPriority][nIdx];
 }
+
+//========================================
+// Timeî•ñŽæ“¾
+//========================================
+CTime *CObject::GetTime(int nPriority, int nIdx)
+{
+	if (m_apObject[nPriority][nIdx] == NULL)
+	{
+		return NULL;
+	}
+	else if (m_apObject[nPriority][nIdx]->m_type != TYPE_TIME)
+	{
+		return NULL;
+	}
+
+	return (CTime*)m_apObject[nPriority][nIdx];
+}

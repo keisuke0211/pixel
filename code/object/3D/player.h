@@ -9,13 +9,12 @@
 #define _PLAYER_H_
 
 #include "../../main.h"
-#include "../../physics.h"
-#include "../model.h"
+#include "../motion_model.h"
 
 //****************************************
 // ÉNÉâÉX
 //****************************************
-class CPlayer : public CObject
+class CPlayer : public CMotionModel
 {
 public:
 
@@ -42,7 +41,7 @@ public:
 	} Info;
 
 	// ***** ä÷êî *****
-	CPlayer(int nPriority = CObject::TYPE_PLAYER);
+	CPlayer(int nPriority = PRIO_OBJX);
 	~CPlayer();
 
 	/* ÉÅÉCÉì */

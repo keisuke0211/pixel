@@ -34,7 +34,7 @@ public:
 	} VERTEX_2D;
 
 	// ***** ä÷êî *****
-	CObject2D(int nPriority = 0);
+	CObject2D(int nPriority = PRIO_OBJ2D);
 	~CObject2D();
 
 	/* ÉÅÉCÉì */

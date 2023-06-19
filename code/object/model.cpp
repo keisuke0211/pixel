@@ -22,6 +22,7 @@ int CModel::m_nMaxModel = 0;						// モデル数
 CModel::CModel(int nPriority)
 {
 	// 値をクリアする
+	m_pTexture = NULL;
 	m_pParent = NULL;				// 親モデルの情報
 	m_mtxWorld = {};				// ワールドマトリックス
 	m_pos = INIT_D3DXVECTOR3;		// 位置
@@ -105,7 +106,7 @@ void CModel::InitModel(void)
 			{// テクスチャファイルが存在する
 
 				// テクスチャの読み込み
-				m_material[nCntMat].pIdxTex[nCntMat] = pTexture->Regist(pMat[nCntMat].pTextureFilename);
+				m_material[nCntModel].pIdxTex[nCntMat] = pTexture->Regist(pMat[nCntMat].pTextureFilename);
 			}
 		}
 		// 頂点座標の最小値・最大値の算出
@@ -296,11 +297,14 @@ void CModel::Draw(bool Color)
 					pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 				}
 
+				CTexture *pTexture = CManager::GetTexture();
+				m_pTexture = pTexture->GetAddress(m_material[m_nModelID].pIdxTex[nCntMat]);
+
 				// テクスチャの設定
-				pDevice->SetTexture(0, m_pTexture[nCntMat]);
+				pDevice->SetTexture(0, m_pTexture);
 
 				// モデルパーツの描画
-				m_material[nCntMat].pIdxTex[nCntMat];
+				m_material[m_nModelID].pMesh->DrawSubset(nCntMat);
 			}
 		}
 
@@ -373,11 +377,14 @@ void CModel::Draw(D3DXMATRIX mtxParent, bool Color)
 					pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 				}
 
+				CTexture *pTexture = CManager::GetTexture();
+				m_pTexture = pTexture->GetAddress(m_material[m_nModelID].pIdxTex[nCntMat]);
+
 				// テクスチャの設定
-				pDevice->SetTexture(0, m_pTexture[nCntMat]);
+				pDevice->SetTexture(0, m_pTexture);
 
 				// モデルパーツの描画
-				m_material[nCntMat].pIdxTex[nCntMat];
+				m_material[m_nModelID].pMesh->DrawSubset(nCntMat);
 			}
 		}
 

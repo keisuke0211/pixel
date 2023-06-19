@@ -37,7 +37,7 @@ public:
 	} Info;
 
 	// ***** ä÷êî *****
-	CBullet(int nPriority = TYPE_BULLET);
+	CBullet(int nPriority = PRIO_OBJX);
 	~CBullet();
 
 	/* ÉÅÉCÉì */

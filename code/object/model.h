@@ -5,8 +5,8 @@
 //========================================
 // *** model.h ***
 //========================================
-#ifndef _MODEL3D_H_
-#define _MODEL3D_H_
+#ifndef _MODEL_H_
+#define _MODEL_H_
 
 #include "../main.h"
 #include "../physics.h"
@@ -65,10 +65,10 @@ public:
 	void Draw(D3DXMATRIX mtxParent, bool Color);	// 描画(オーバーロード)
 
 	/* 設定 */
-	virtual void SetPos(const D3DXVECTOR3 pos) { m_pos = m_posOld = pos; }		// 位置
-	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }							// 向き
-	void SetColor(const D3DXCOLOR color) { m_color = color; }						// 色
-	void SetSize(const D3DXVECTOR3 &size);									// 大きさ
+	virtual void SetPos(const D3DXVECTOR3 pos) { m_pos = m_posOld = pos; }	// 位置
+	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }						// 向き
+	void SetColor(const D3DXCOLOR color) { m_color = color; }				// 色
+	void SetSize(const D3DXVECTOR3 &size) { m_size = size; }				// 大きさ
 	void SetMtxWorld(D3DXMATRIX mtxWorld) { m_mtxWorld = mtxWorld; }		// ワールドマトリックス
 	void SetParent(CModel *pParent) { m_pParent = pParent; }				// 親モデル
 	void SetModelID(const int nModelID) { m_nModelID = nModelID; }			// モデルID
@@ -89,11 +89,11 @@ private:
 	static int				m_nMaxModel;		// モデル数
 
 	// ***** 変数 *****
-	LPDIRECT3DTEXTURE9 *m_pTexture;			//テクスチャへのポインタ
+	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	D3DXMATRIX  m_mtxWorld;					//ワールドマトリックス
 
 
-	CModel	*m_pParent;	// 親モデルの情報
+	CModel	*m_pParent;		// 親モデルの情報
 	D3DXVECTOR3 m_pos;		// 位置
 	D3DXVECTOR3 m_posOld;	// 位置(過去)
 	D3DXVECTOR3 m_rot;		// 向き

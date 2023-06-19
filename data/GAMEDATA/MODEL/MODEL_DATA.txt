@@ -6,13 +6,16 @@
 #========================================
 #モデルの最大数
 #========================================
-NUM_MODEL = 1
+NUM_MODEL = 6
 #========================================
 #ファイル名
 #========================================
-MODEL = data\\MODEL\\Luna.x 	#00 仮プレイヤー ルナ
-
-
+MODEL = data\\MODEL\\Player\\Player_body.x 			#00 プレイヤー 体
+MODEL = data\\MODEL\\Player\\Player_head.x 			#01 プレイヤー 頭
+MODEL = data\\MODEL\\Player\\Player_left_arm.x 		#02 プレイヤー 左手
+MODEL = data\\MODEL\\Player\\Player_right_arm.x 	#03 プレイヤー 右手
+MODEL = data\\MODEL\\Player\\Player_left_foot.x 	#04 プレイヤー 左足
+MODEL = data\\MODEL\\Player\\Player_right_foot.x 	#05 プレイヤー 右足
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||

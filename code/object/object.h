@@ -14,7 +14,8 @@
 //****************************************
 // 前方宣言
 //****************************************
-class CScore;			// スコア
+class CScore;	// スコア
+class CTime;	// タイム
 
 //****************************************
 // クラス
@@ -26,6 +27,19 @@ public:
 	static const int MAX_OBJECT = 2048;	// オブジェクトの最大数
 
 	// ***** 列挙型 *****
+
+	// 優先順位種類
+	typedef enum
+	{
+		PRIO_NONE = 0,	// 無し
+		PRIO_OBJ2D,		// オブジェクト2D
+		PRIO_OBJ3D,		// オブジェクト3D
+		PRIO_OBJX,		// オブジェクトX
+		PRIO_EFFECT,	// エフェクト
+		PRIO_PARTICLE,	// パーティクル
+		PRIO_TEXT,		// テキスト
+		PRIO_MAX
+	}PRIO;
 
 	// オブジェクト種類
 	typedef enum
@@ -41,6 +55,7 @@ public:
 		TYPE_EFFECT,	// エフェクト
 		TYPE_PARTICLE,	// パーティクル
 		TYPE_TEXT,		// テキスト
+		TYPE_TIME,		// タイム
 		TYPE_SCORE,		// スコア
 		TYPE_MAX
 	}TYPE;
@@ -72,6 +87,7 @@ public:
 	static int GetNumAll() { return m_nNumAll; };
 	static CObject *GetObjectPointer(int nPriority,int nIdx) { return m_apObject[nPriority][nIdx]; }
 	static CScore *GetScore(int nPriority,int nIdx);
+	static CTime *GetTime(int nPriority, int nIdx);
 
 protected:
 	void Release(void);						// 破棄

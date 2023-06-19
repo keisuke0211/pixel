@@ -44,7 +44,7 @@ public:
 	void FloatControl(float *pData, float fMax, float fMin);		// float型の値の制御処理
 	void FloatLoopControl(float *pData, float fMax, float fMin);	// float型の値のループ制御処理
 
-	float FindAngle(D3DXVECTOR3 pos, D3DXVECTOR3 targetPos);	// 2点の角度を求める
+	float FindAngle(D3DXVECTOR3 pos, D3DXVECTOR3 targetPos);		// 2点の角度を求める
 	
 	
 	void RotControl(D3DXVECTOR3 *pRot);	// 向きを制御

@@ -139,10 +139,9 @@ int CTexture::Regist(const char* pFilename)
 	// ファイルパスを保存
 	strcpy(&m_FileName[m_NumAll][0],pFilename);
 
-	m_NumAll++;	// 総数を加算
-
-
 	nIdx = m_NumAll;
+
+	m_NumAll++;	// 総数を加算
 
 	return nIdx;
 }

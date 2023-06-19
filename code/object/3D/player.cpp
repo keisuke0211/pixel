@@ -14,13 +14,14 @@
 #include "../../camera.h"
 #include "../../physics.h"
 
+
 // 定義
 const float CPlayer::PLAYER_SPEED = 2.5f;
 
 //========================================
 // コンストラクタ
 //========================================
-CPlayer::CPlayer(int nPriority) : CObject(nPriority)
+CPlayer::CPlayer(int nPriority) : CMotionModel(nPriority)
 {
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
@@ -69,18 +70,19 @@ HRESULT CPlayer::Init(void)
 {
 	CCamera *pCamera = CManager::GetCamera();	// カメラの取得
 
-	/*CModel::Init();*/
+	CMotionModel::Init();
 
-	//// 種類の設定
-	//SetType(TYPE_PLAYER);
+	// 種類の設定
+	SetType(TYPE_PLAYER);
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f,0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	
-	//// 生成
-	//SetPos(m_Info.pos);
-	//SetRot(m_Info.rot);
+	// 生成
+	SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
+	SetPos(m_Info.pos);
+	SetSize(D3DXVECTOR3(5.0f,5.0f,5.0f));
 
 	return S_OK;
 }
@@ -90,7 +92,7 @@ HRESULT CPlayer::Init(void)
 //========================================
 void CPlayer::Uninit(void)
 {
-	/*CModel::Uninit();*/
+	CMotionModel::Uninit();
 }
 
 //========================================
@@ -104,7 +106,7 @@ void CPlayer::Update(void)
 	// 位置更新処理
 	UpdatePos();
 
-	/*CModel::Update();*/
+	CMotionModel::Update();
 }
 
 //========================================
@@ -112,7 +114,7 @@ void CPlayer::Update(void)
 //========================================
 void CPlayer::Draw(void)
 {
-	/*CModel::Draw(true);*/
+	CMotionModel::Draw();
 }
 
 //========================================
@@ -206,7 +208,7 @@ void CPlayer::UpdatePos(void)
 	m_Info.move.x *= 0.8f;
 	m_Info.move.z *= 0.8f;
 
-	/*SetPos(m_Info.pos);*/
+	SetPos(m_Info.pos);
 
 	// 目標向きに移動向きを代入
 	m_Info.targetRot = m_Info.moveRot;
