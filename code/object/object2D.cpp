@@ -129,6 +129,7 @@ void CObject2D::Uninit(void)
 		m_pVtxBuff = NULL;
 	}
 
+	// オブジェクトの解放
 	Release();
 }
 

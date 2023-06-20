@@ -126,6 +126,9 @@ void CObject3D::Uninit(void)
 		m_pVtxBuff->Release();
 		m_pVtxBuff = NULL;
 	}
+
+	// オブジェクトの解放
+	Release();
 }
 
 //========================================

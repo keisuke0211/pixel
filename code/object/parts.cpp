@@ -32,13 +32,13 @@ CParts::~CParts()
 CParts * CParts::Create()
 {
 	// オブジェクトインスタンス
-	CParts *pParts = nullptr;
+	CParts *pParts = NULL;
 
 	// メモリの解放
 	pParts = new CParts;
 
 	// メモリの確保ができなかった
-	assert(pParts != nullptr);
+	assert(pParts != NULL);
 
 	// 数値の初期化
 	pParts->Init();

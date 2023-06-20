@@ -402,7 +402,7 @@ void CModel::CalcSize(int nCntModel)
 	DWORD	sizeFVF;	// 頂点フォーマットのサイズ
 	BYTE	*pVtxBuff;	// 頂点バッファへのポインタ
 
-						// 頂点数の取得
+	// 頂点数の取得
 	nNumVtx = m_material[nCntModel].pMesh->GetNumVertices();
 
 	// 頂点フォーマットのサイズの取得

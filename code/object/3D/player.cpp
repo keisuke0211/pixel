@@ -7,17 +7,14 @@
 //========================================
 #include "player.h"
 #include "../../manager.h"
-#include "../../renderer.h"
 #include "../../camera.h"
 #include "../../input.h"
 #include "../../sound.h"
-#include "../../camera.h"
 #include "../../physics.h"
 
 
 // 定義
 const float CPlayer::PLAYER_SPEED = 2.5f;
-int CPlayer::nCnt = -1;
 
 //========================================
 // コンストラクタ
@@ -33,7 +30,6 @@ CPlayer::CPlayer(int nPriority) : CMotionModel(nPriority)
 	m_Info.fWidth = INIT_FLOAT;
 	m_Info.fHeight = INIT_FLOAT;
 	m_Info.fDepth = INIT_FLOAT;
-	nCnt++;
 }
 
 //========================================

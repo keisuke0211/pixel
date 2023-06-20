@@ -14,14 +14,15 @@
 //========================================
 // コンストラクタ
 //========================================
-CMotionModel::CMotionModel(int nPriority) : CObject(nPriority)
+CMotionModel::CMotionModel(int nPriority) : CObject(nPriority),
+m_pMotion(NULL),				// モーション情報
+m_mtxWorld(D3DXMATRIX()),		// ワールドマトリックス
+m_pos(D3DXVECTOR3()),			// 位置
+m_posOld(D3DXVECTOR3()),		// 過去位置
+m_rot(D3DXVECTOR3()),			// 向き
+m_size(D3DXVECTOR3())			// 大きさ
 {
-	m_pMotion = NULL;				// モーション情報
-	m_mtxWorld = D3DXMATRIX();		// ワールドマトリックス
-	m_pos = INIT_D3DXVECTOR3;		// 位置
-	m_posOld = INIT_D3DXVECTOR3;	// 過去位置
-	m_rot = INIT_D3DXVECTOR3;		// 向き
-	m_size = INIT_D3DXVECTOR3;		// 大きさ
+
 }
 
 //========================================
@@ -41,6 +42,8 @@ CMotionModel * CMotionModel::Create()
 
 	pMotionModel = new CMotionModel;
 
+	// メモリの確保ができなかった
+	assert(pMotionModel != NULL);
 
 	// 数値の初期化
 	pMotionModel->Init();
@@ -60,12 +63,13 @@ HRESULT CMotionModel::Init()
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);					// 向き
 	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);				// スケール
 	m_size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);					// 当たり判定
-	m_quat = { 0.0f,0.0f,0.0f,1.0f };
-	SetIsColor(false);
-	SetColor({ 1.0f,1.0f,1.0f,1.0f });					// 色
+	m_quat = { 0.0f,0.0f,0.0f,1.0f };						// クオータニオン
+	SetIsColor(false);										// 色の変更
+	SetColor({ 1.0f,1.0f,1.0f,1.0f });						// 色
+
 	D3DXVECTOR3 vecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	D3DXQuaternionRotationAxis(&m_quat, &vecY, D3DX_PI);
-	return S_OK;
+	D3DXQuaternionRotationAxis(&m_quat, &vecY, D3DX_PI);	// クオータニオンによる回転
+	return E_NOTIMPL;
 }
 
 //========================================
@@ -171,18 +175,18 @@ void CMotionModel::Draw()
 //========================================
 void CMotionModel::SetMotion(const char * pName)
 {
-	if (m_pMotion != nullptr)
+	if (m_pMotion != NULL)
 	{// 終了処理
 		m_pMotion->Uninit();
 
 		// メモリの解放
 		delete m_pMotion;
-		m_pMotion = nullptr;
+		m_pMotion = NULL;
 	}
 
 	// モーション情報
 	m_pMotion = new CMotion(pName);
-	assert(m_pMotion != nullptr);
+	assert(m_pMotion != NULL);
 
 	// モーションの初期設定
 	m_pMotion->SetMotion(0);

@@ -19,7 +19,7 @@
 #include "object\2D\bg2D.h"
 #include "object\2D\bg_Multi2D.h"
 #include "object\3D\floor.h"
-#include "object\2D\block2D.h"
+#include "object\3D\block.h"
 #include "object\3D\player.h"
 #include "object\3D\player2D.h"
 #include "object\3D\enemy.h"
@@ -35,6 +35,7 @@ CInputMouse *CManager::m_InputMouse = NULL;
 CInputJoypad *CManager::m_InputJoypad = NULL;
 CBg *CManager::m_pBg = NULL;
 CPlayer *CManager::m_pPlayer = NULL;
+CBlock *CManager::m_pBlock = NULL;
 CEnemy *CManager::m_pEnemy = NULL;
 CBullet *CManager::m_pBullet = NULL;
 
@@ -144,33 +145,16 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	//	/*CBgMulti::Create(D3DXVECTOR3((nCntBg + 1)* 0.0005f, 0.0f, 0.0f), nCntBg);*/
 	//}
 	
-	CFloor::Create();
+	//CFloor::Create();
 
 	// ÉuÉçÉbÉNÇÃê∂ê¨
-	/*for (int nCntObj = 0; nCntObj < 25; nCntObj++)
+	for (int nCntX = 0; nCntX < 21; nCntX++)
 	{
-		CBlock2D::Create(D3DXVECTOR3((35.0f + (nCntObj * 50.0f)), 650.0f, 0.0f));
+		for (int nCntZ = 0; nCntZ < 21; nCntZ++)
+		{
+			CBlock::Create(D3DXVECTOR3((-150.0f + (nCntX * 15.0f)), -10.0f, -150.0f + (nCntZ * 15.0f)));
+		}
 	}
-
-	for (int nCntObj = 0; nCntObj < 10; nCntObj++)
-	{
-		CBlock2D::Create(D3DXVECTOR3(1235.0f, (650.0f - (nCntObj * 50)), 0.0f));
-	}
-
-	for (int nCntObj = 0; nCntObj < 10; nCntObj++)
-	{
-		CBlock2D::Create(D3DXVECTOR3(35.0f, (650.0f - (nCntObj * 50)), 0.0f));
-	}
-
-	for (int nCntObj = 0; nCntObj < 5; nCntObj++)
-	{
-		CBlock2D::Create(D3DXVECTOR3((750.0f + (nCntObj * 50.0f)), 450, 0.0f));
-	}
-
-	for (int nCntObj = 0; nCntObj < 5; nCntObj++)
-	{
-		CBlock2D::Create(D3DXVECTOR3((1000.0f + (nCntObj * 50.0f)), 350, 0.0f));
-	}*/
 
 	CPlayer::Create();
 

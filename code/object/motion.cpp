@@ -150,7 +150,7 @@ void CMotion::SetParts(D3DXMATRIX mtxWorld, const bool IsColor, const D3DXCOLOR 
 //========================================
 // 元の場所に配置
 //========================================
-void CMotion::SetPartsOrigin()
+void CMotion::SetPartsOrigin(void)
 {
 	for (int nCntParts = 0; nCntParts < m_nMaxParts; nCntParts++)
 	{
@@ -379,240 +379,240 @@ void CMotion::LoodMotion(const char *pFileName)
 	int nCntParts = 0;				// パーツ数のカウント
 	int nCntMotion = 0;				// モーション数のカウント
 
-									// ファイルポインタの宣言
-	FILE * pFile;
+		// ファイルポインタの宣言
+		FILE * pFile;
 
-	//ファイルを開く
-	pFile = fopen(pFileName, "r");
+		//ファイルを開く
+		pFile = fopen(pFileName, "r");
 
-	if (pFile != NULL)
-	{//ファイルが開いた場合
-		fscanf(pFile, "%s", &aString);
+		if (pFile != NULL)
+		{//ファイルが開いた場合
+			fscanf(pFile, "%s", &aString);
 
-		while (strncmp(&aString[0], "SCRIPT", 6) != 0)
-		{// 文字列が一致した場合
-			aString[0] = {};
-			// 文字列の読み込み
-			fscanf(pFile, "%s", &aString[0]);
-		}
-		while (strncmp(&aString[0], "END_SCRIPT", 10) != 0)
-		{
-			fscanf(pFile, "%s", &aString[0]);
-
-			if (strncmp(&aString[0], "#", 1) == 0)
-			{// 一列読み込む
-				fgets(&aString[0], sizeof(aString), pFile);
+			while (strncmp(&aString[0], "SCRIPT", 6) != 0)
+			{// 文字列が一致した場合
+				aString[0] = {};
+				// 文字列の読み込み
+				fscanf(pFile, "%s", &aString[0]);
 			}
+			while (strncmp(&aString[0], "END_SCRIPT", 10) != 0)
+			{
+				fscanf(pFile, "%s", &aString[0]);
 
-			if (strcmp(&aString[0], "MODEL_FILENAME") == 0)
-			{// ファイル名の読み込み
-				fscanf(pFile, "%s", &g_aEqual[0]);
-				fscanf(pFile, "%s", &m_partsFile[nCntFileName][0]);
-				nCntFileName++;
-			}
+				if (strncmp(&aString[0], "#", 1) == 0)
+				{// 一列読み込む
+					fgets(&aString[0], sizeof(aString), pFile);
+				}
 
-			if (strcmp(&aString[0], "CHARACTERSET") == 0)
-			{// キャラクターの読み込み
-				while (strcmp(&aString[0], "END_CHARACTERSET") != 0)
-				{
-					fscanf(pFile, "%s", &aString[0]);
+				if (strcmp(&aString[0], "MODEL_FILENAME") == 0)
+				{// ファイル名の読み込み
+					fscanf(pFile, "%s", &g_aEqual[0]);
+					fscanf(pFile, "%s", &m_partsFile[nCntFileName][0]);
+					nCntFileName++;
+				}
 
-					if (strncmp(&aString[0], "#", 1) == 0)
-					{// 一列読み込む
-						fgets(&aString[0], sizeof(aString), pFile);
-					}
+				if (strcmp(&aString[0], "CHARACTERSET") == 0)
+				{// キャラクターの読み込み
+					while (strcmp(&aString[0], "END_CHARACTERSET") != 0)
+					{
+						fscanf(pFile, "%s", &aString[0]);
 
-					if (strcmp(&aString[0], "NUM_PARTS") == 0)
-					{// 読み込むパーツ数
-						fscanf(pFile, "%s", &g_aEqual[0]);
-						fscanf(pFile, "%d", &m_nMaxParts);
-
-						// メモリの解放
-						m_ppParts = new CParts*[m_nMaxParts];
-						m_motion = new Motion[MYMAX_MOTION];
-						for (int i = 0; i < MYMAX_MOTION; i++)
-						{
-							m_motion[i].pKeySet = nullptr;
+						if (strncmp(&aString[0], "#", 1) == 0)
+						{// 一列読み込む
+							fgets(&aString[0], sizeof(aString), pFile);
 						}
-						assert(m_ppParts != nullptr && m_motion != nullptr);
 
-						for (int i = 0; i < m_nMaxParts; i++)
-						{// パーツの生成
-							m_ppParts[i] = CParts::Create();
-						}
-					}
+						if (strcmp(&aString[0], "NUM_PARTS") == 0)
+						{// 読み込むパーツ数
+							fscanf(pFile, "%s", &g_aEqual[0]);
+							fscanf(pFile, "%d", &m_nMaxParts);
 
-					if (strcmp(&aString[0], "PARTSSET") == 0)
-					{// パーツの読み込み
-						while (strcmp(&aString[0], "END_PARTSSET") != 0)
-						{
-							fscanf(pFile, "%s", &aString[0]);
-
-							if (strncmp(&aString[0], "#", 1) == 0)
-							{// 一列読み込む
-								fgets(&aString[0], sizeof(aString), pFile);
+							// メモリの解放
+							m_ppParts = new CParts*[m_nMaxParts];
+							m_motion = new Motion[MYMAX_MOTION];
+							for (int i = 0; i < MYMAX_MOTION; i++)
+							{
+								m_motion[i].pKeySet = NULL;
 							}
+							assert(m_ppParts != NULL && m_motion != NULL);
 
-							if (strcmp(&aString[0], "INDEX") == 0)
-							{// タイプの読み込み
-								int nType = -1;
-								fscanf(pFile, "%s", &g_aEqual[0]);
-								fscanf(pFile, "%d", &nType);
+							for (int i = 0; i < m_nMaxParts; i++)
+							{// パーツの生成
+								m_ppParts[i] = CParts::Create();
+							}
+						}
 
-								// マテリアル情報の取得
-								CModel::MODEL_MATERIAL *pMaterial = CModel::GetMaterial();
+						if (strcmp(&aString[0], "PARTSSET") == 0)
+						{// パーツの読み込み
+							while (strcmp(&aString[0], "END_PARTSSET") != 0)
+							{
+								fscanf(pFile, "%s", &aString[0]);
 
-								for (int nCntModel = 0; nCntModel < CModel::GetMaxModel(); nCntModel++)
-								{
-									if (strcmp(&m_partsFile[nType][0], &pMaterial[nCntModel].aFileName[0]) == 0)
-									{// モデルのIDの設定
-										m_ppParts[nCntParts]->SetModelID(nCntModel);
-										break;
+								if (strncmp(&aString[0], "#", 1) == 0)
+								{// 一列読み込む
+									fgets(&aString[0], sizeof(aString), pFile);
+								}
+
+								if (strcmp(&aString[0], "INDEX") == 0)
+								{// タイプの読み込み
+									int nType = -1;
+									fscanf(pFile, "%s", &g_aEqual[0]);
+									fscanf(pFile, "%d", &nType);
+
+									// マテリアル情報の取得
+									CModel::MODEL_MATERIAL *pMaterial = CModel::GetMaterial();
+
+									for (int nCntModel = 0; nCntModel < CModel::GetMaxModel(); nCntModel++)
+									{
+										if (strcmp(&m_partsFile[nType][0], &pMaterial[nCntModel].aFileName[0]) == 0)
+										{// モデルのIDの設定
+											m_ppParts[nCntParts]->SetModelID(nCntModel);
+											break;
+										}
 									}
 								}
-							}
-							if (strcmp(&aString[0], "PARENT") == 0)
-							{// 親の読み込み
-								int nIdxParent = -1;
-								fscanf(pFile, "%s", &g_aEqual[0]);
-								fscanf(pFile, "%d", &nIdxParent);
+								if (strcmp(&aString[0], "PARENT") == 0)
+								{// 親の読み込み
+									int nIdxParent = -1;
+									fscanf(pFile, "%s", &g_aEqual[0]);
+									fscanf(pFile, "%d", &nIdxParent);
 
-								if (nIdxParent != -1)
-								{// 親のモデルの設定
-									m_ppParts[nCntParts]->SetParent(m_ppParts[nIdxParent]);
+									if (nIdxParent != -1)
+									{// 親のモデルの設定
+										m_ppParts[nCntParts]->SetParent(m_ppParts[nIdxParent]);
+									}
+								}
+								if (strcmp(&aString[0], "POS") == 0)
+								{// 位置の読み込み
+									D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+									fscanf(pFile, "%s", &g_aEqual[0]);
+									fscanf(pFile, "%f", &pos.x);
+									fscanf(pFile, "%f", &pos.y);
+									fscanf(pFile, "%f", &pos.z);
+									m_ppParts[nCntParts]->SetPos(pos);
+									m_ppParts[nCntParts]->SetPosOrigin(pos);
+								}
+								if (strcmp(&aString[0], "ROT") == 0)
+								{// 向きの読み込み
+									D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+									fscanf(pFile, "%s", &g_aEqual[0]);
+									fscanf(pFile, "%f", &rot.x);
+									fscanf(pFile, "%f", &rot.y);
+									fscanf(pFile, "%f", &rot.z);
+									m_ppParts[nCntParts]->SetRot(rot);
+									m_ppParts[nCntParts]->SetRotOrigin(rot);
 								}
 							}
-							if (strcmp(&aString[0], "POS") == 0)
-							{// 位置の読み込み
-								D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-								fscanf(pFile, "%s", &g_aEqual[0]);
-								fscanf(pFile, "%f", &pos.x);
-								fscanf(pFile, "%f", &pos.y);
-								fscanf(pFile, "%f", &pos.z);
-								m_ppParts[nCntParts]->SetPos(pos);
-								m_ppParts[nCntParts]->SetPosOrigin(pos);
-							}
-							if (strcmp(&aString[0], "ROT") == 0)
-							{// 向きの読み込み
-								D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-								fscanf(pFile, "%s", &g_aEqual[0]);
-								fscanf(pFile, "%f", &rot.x);
-								fscanf(pFile, "%f", &rot.y);
-								fscanf(pFile, "%f", &rot.z);
-								m_ppParts[nCntParts]->SetRot(rot);
-								m_ppParts[nCntParts]->SetRotOrigin(rot);
-							}
-						}
 
-						// パーツカウントのインクリメント
-						nCntParts++;
+							// パーツカウントのインクリメント
+							nCntParts++;
+						}
 					}
 				}
-			}
-			if (strcmp(&aString[0], "MOTIONSET") == 0)
-			{// モーションの読み込み
-				while (strcmp(&aString[0], "END_MOTIONSET") != 0)
-				{
-					fscanf(pFile, "%s", &aString[0]);
+				if (strcmp(&aString[0], "MOTIONSET") == 0)
+				{// モーションの読み込み
+					while (strcmp(&aString[0], "END_MOTIONSET") != 0)
+					{
+						fscanf(pFile, "%s", &aString[0]);
 
-					if (strncmp(&aString[0], "#", 1) == 0)
-					{// 一列読み込む
-						fgets(&aString[0], sizeof(aString), pFile);
-					}
-
-					if (strcmp(&aString[0], "LOOP") == 0)
-					{// ループ有無の読み込み
-						fscanf(pFile, "%s", &g_aEqual[0]);
-						fscanf(pFile, "%d", (int*)(&m_motion[nCntMotion].bLoop));
-					}
-					if (strcmp(&aString[0], "NUM_KEY") == 0)
-					{// キー数の読み込み
-						fscanf(pFile, "%s", &g_aEqual[0]);
-						fscanf(pFile, "%d", &m_motion[nCntMotion].nNumKey);
-
-						// メモリの確保
-						m_motion[nCntMotion].pKeySet = new KeySet[m_motion[nCntMotion].nNumKey];
-						assert(m_motion[nCntMotion].pKeySet != nullptr);
-
-						for (int nCntNumKeySet = 0; nCntNumKeySet < m_motion[nCntMotion].nNumKey; nCntNumKeySet++)
-						{
-							m_motion[nCntMotion].pKeySet[nCntNumKeySet].pKey = new Key[m_nMaxParts];
-							assert(m_motion[nCntMotion].pKeySet[nCntNumKeySet].pKey != nullptr);
+						if (strncmp(&aString[0], "#", 1) == 0)
+						{// 一列読み込む
+							fgets(&aString[0], sizeof(aString), pFile);
 						}
-					}
-					if (strcmp(&aString[0], "KEYSET") == 0)
-					{// キーセットの読み込み
-						while (strcmp(&aString[0], "END_KEYSET") != 0)
-						{
-							fscanf(pFile, "%s", &aString[0]);
 
-							if (strncmp(&aString[0], "#", 1) == 0)
-							{// 一列読み込む
-								fgets(&aString[0], sizeof(aString), pFile);
+						if (strcmp(&aString[0], "LOOP") == 0)
+						{// ループ有無の読み込み
+							fscanf(pFile, "%s", &g_aEqual[0]);
+							fscanf(pFile, "%d", (int*)(&m_motion[nCntMotion].bLoop));
+						}
+						if (strcmp(&aString[0], "NUM_KEY") == 0)
+						{// キー数の読み込み
+							fscanf(pFile, "%s", &g_aEqual[0]);
+							fscanf(pFile, "%d", &m_motion[nCntMotion].nNumKey);
+
+							// メモリの確保
+							m_motion[nCntMotion].pKeySet = new KeySet[m_motion[nCntMotion].nNumKey];
+							assert(m_motion[nCntMotion].pKeySet != NULL);
+
+							for (int nCntNumKeySet = 0; nCntNumKeySet < m_motion[nCntMotion].nNumKey; nCntNumKeySet++)
+							{
+								m_motion[nCntMotion].pKeySet[nCntNumKeySet].pKey = new Key[m_nMaxParts];
+								assert(m_motion[nCntMotion].pKeySet[nCntNumKeySet].pKey != NULL);
 							}
+						}
+						if (strcmp(&aString[0], "KEYSET") == 0)
+						{// キーセットの読み込み
+							while (strcmp(&aString[0], "END_KEYSET") != 0)
+							{
+								fscanf(pFile, "%s", &aString[0]);
 
-							if (strcmp(&aString[0], "FRAME") == 0)
-							{// フレーム数の読み込み
-								fscanf(pFile, "%s", &g_aEqual[0]);
-								fscanf(pFile, "%d", &m_motion[nCntMotion].pKeySet[nCntKeySet].nFrame);
-							}
-							if (strcmp(&aString[0], "KEY") == 0)
-							{// キーの読み込み
-								while (strcmp(&aString[0], "END_KEY") != 0)
-								{
-									fscanf(pFile, "%s", &aString[0]);
-
-									if (strncmp(&aString[0], "#", 1) == 0)
-									{// 一列読み込む
-										fgets(&aString[0], sizeof(aString), pFile);
-									}
-
-									if (strcmp(&aString[0], "POS") == 0)
-									{// 位置の読み込み
-										fscanf(pFile, "%s", &g_aEqual[0]);
-										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.x);
-										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.y);
-										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.z);
-									}
-									if (strcmp(&aString[0], "ROT") == 0)
-									{// 向きの読み込み
-										fscanf(pFile, "%s", &g_aEqual[0]);
-										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.x);
-										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.y);
-										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.z);
-									}
+								if (strncmp(&aString[0], "#", 1) == 0)
+								{// 一列読み込む
+									fgets(&aString[0], sizeof(aString), pFile);
 								}
 
-								// キーカウントのインクリメント
-								nCntKey++;
+								if (strcmp(&aString[0], "FRAME") == 0)
+								{// フレーム数の読み込み
+									fscanf(pFile, "%s", &g_aEqual[0]);
+									fscanf(pFile, "%d", &m_motion[nCntMotion].pKeySet[nCntKeySet].nFrame);
+								}
+								if (strcmp(&aString[0], "KEY") == 0)
+								{// キーの読み込み
+									while (strcmp(&aString[0], "END_KEY") != 0)
+									{
+										fscanf(pFile, "%s", &aString[0]);
+
+										if (strncmp(&aString[0], "#", 1) == 0)
+										{// 一列読み込む
+											fgets(&aString[0], sizeof(aString), pFile);
+										}
+
+										if (strcmp(&aString[0], "POS") == 0)
+										{// 位置の読み込み
+											fscanf(pFile, "%s", &g_aEqual[0]);
+											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.x);
+											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.y);
+											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.z);
+										}
+										if (strcmp(&aString[0], "ROT") == 0)
+										{// 向きの読み込み
+											fscanf(pFile, "%s", &g_aEqual[0]);
+											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.x);
+											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.y);
+											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.z);
+										}
+									}
+
+									// キーカウントのインクリメント
+									nCntKey++;
+								}
 							}
+
+							// キーカウントの初期化
+							nCntKey = 0;
+
+							// キーセットカウントのインクリメント
+							nCntKeySet++;
 						}
-
-						// キーカウントの初期化
-						nCntKey = 0;
-
-						// キーセットカウントのインクリメント
-						nCntKeySet++;
 					}
-				}
-				// キーセットカウントの初期化
-				nCntKeySet = 0;
+					// キーセットカウントの初期化
+					nCntKeySet = 0;
 
-				// パーツ情報のインクリメント
-				nCntMotion++;
+					// パーツ情報のインクリメント
+					nCntMotion++;
+				}
 			}
+
+			//ファイルを閉じる
+			fclose(pFile);
+		}
+		else
+		{//ファイルが開けない場合
+			assert(false);
 		}
 
-		//ファイルを閉じる
-		fclose(pFile);
-	}
-	else
-	{//ファイルが開けない場合
-		assert(false);
-	}
-
-	// 初期化
-	Init();
+		// 初期化
+		Init();
 }
 
 //========================================

@@ -51,7 +51,7 @@ public:
 	static void LoadModel(const char *pFileName);					// 読み込み
 	static void CalcSize(int nCntModel);							// 頂点座標の最小値・最大値の算出
 	static MODEL_MATERIAL *GetMaterial() { return m_material; }		// マテリアル情報の取得
-	static int GetMaxModel() { return m_nMaxModel; }				// モデル数 
+	static int GetMaxModel(void) { return m_nMaxModel; }			// モデル数 
 
 	// ***** 関数 *****
 	CModel(int nPriority = 0);
@@ -74,13 +74,13 @@ public:
 	void SetModelID(const int nModelID) { m_nModelID = nModelID; }			// モデルID
 
 	/* 取得 */
-	D3DXVECTOR3 GetPos() { return m_pos; }									// 位置
-	D3DXVECTOR3 GetRot() { return m_rot; }									// 向き
-	D3DXCOLOR GetColor() { return m_color; }								// 色
-	D3DXVECTOR3 GetSize() { return m_size; }								// 大きさ
-	D3DXMATRIX GetMtxWorld() { return m_mtxWorld; }							// ワールドマトリックス
-	CModel *GetParent() { return m_pParent; }								// 親モデル
-	int GetModelID() { return m_nModelID; }									// モデルID
+	D3DXVECTOR3 GetPos(void) { return m_pos; }								// 位置
+	D3DXVECTOR3 GetRot(void) { return m_rot; }								// 向き
+	D3DXCOLOR GetColor(void) { return m_color; }							// 色
+	D3DXVECTOR3 GetSize(void) { return m_size; }							// 大きさ
+	D3DXMATRIX GetMtxWorld(void) { return m_mtxWorld; }						// ワールドマトリックス
+	CModel *GetParent(void) { return m_pParent; }							// 親モデル
+	int GetModelID(void) { return m_nModelID; }								// モデルID
 
 private:
 

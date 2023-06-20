@@ -42,19 +42,19 @@ public:
 	// キー設定
 	typedef struct
 	{
-		int		nFrame;			// フレーム数
-		Key	*pKey;			// キー情報
+		int	nFrame;		// フレーム数
+		Key	*pKey;		// キー情報
 	}KeySet;
 
 	// モーション設定
 	typedef struct
 	{
-		int				nNumKey;		// キー数
-		int				nCntKeySet;		// キーセットカウント
-		int				nCntFrame;		// フレームカウント
-		bool			bLoop;			// ループ使用状況
-		bool			bMotion;		// モーションを行っているか
-		KeySet		*pKeySet;			// キー設定情報
+		int		nNumKey;		// キー数
+		int		nCntKeySet;		// キーセットカウント
+		int		nCntFrame;		// フレームカウント
+		bool	bLoop;			// ループ使用状況
+		bool	bMotion;		// モーションを行っているか
+		KeySet	*pKeySet;		// キー設定情報
 	}Motion;
 
 
@@ -74,7 +74,7 @@ public:
 	void SetParts(D3DXMATRIX mtxWorld, const bool IsColor, const D3DXCOLOR color);
 
 	// 元の場所に配置
-	void SetPartsOrigin();	
+	void SetPartsOrigin(void);	
 
 	/* モーション */
 	void SetMotion(const int nCntMotionSet);	// 初期設定

@@ -32,6 +32,7 @@
     <ClCompile Include="code\object\2D\score.cpp" />
     <ClCompile Include="code\object\2D\text2D.cpp" />
     <ClCompile Include="code\object\2D\time.cpp" />
+    <ClCompile Include="code\object\3D\block.cpp" />
     <ClCompile Include="code\object\3D\bullet.cpp" />
     <ClCompile Include="code\object\3D\enemy.cpp" />
     <ClCompile Include="code\object\3D\floor.cpp" />
@@ -64,6 +65,7 @@
     <ClInclude Include="code\object\2D\score.h" />
     <ClInclude Include="code\object\2D\text2D.h" />
     <ClInclude Include="code\object\2D\time.h" />
+    <ClInclude Include="code\object\3D\block.h" />
     <ClInclude Include="code\object\3D\bullet.h" />
     <ClInclude Include="code\object\3D\enemy.h" />
     <ClInclude Include="code\object\3D\floor.h" />

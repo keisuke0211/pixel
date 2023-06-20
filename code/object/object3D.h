@@ -19,7 +19,7 @@ class CObject3D : public CObject
 public:
 
 	// ***** 定義 *****
-	const DWORD  FVF_VERTEX_3D	= (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1);		// 頂点フォーマット【2D】
+	const DWORD  FVF_VERTEX_3D	= (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1);		// 頂点フォーマット【3D】
 
 	// ***** 構造体 *****
 

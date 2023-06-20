@@ -34,7 +34,7 @@ public:
 		D3DXVECTOR3 moveRot;	// 移動向き
 		D3DXVECTOR3 targetRot;	// 目標向き
 		D3DXVECTOR3 move;		// 移動量
-		D3DCOLOR col;			//　頂点カラー
+		D3DCOLOR col;			// 頂点カラー
 		float fWidth;			// 幅
 		float fHeight;			// 高さ
 		float fDepth;			// 奥行き
@@ -70,7 +70,5 @@ private:
 
 	// ***** 変数 *****
 	Info m_Info;		// プレイヤー情報
-
-	static int nCnt;
 };
 #endif

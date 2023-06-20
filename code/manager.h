@@ -23,6 +23,7 @@ class CInputMouse;		// マウス
 class CInputJoypad;		// ジョイパット
 class CBg;				// 背景
 class CPlayer;			// プレイヤー
+class CBlock;			// ブロック
 class CEnemy;			// 敵
 class CBullet;			// 弾
 
@@ -54,6 +55,7 @@ public:
 	static CInputJoypad* GetInputJoypad() { return m_InputJoypad; }			// ジョイパット
 	static CBg* GetBg() { return m_pBg; }									// 背景
 	static CPlayer* GetPlayer() { return m_pPlayer; }						// プレイヤー
+	static CBlock* GetBlock() { return m_pBlock; }							// ブロック
 	static CEnemy* GetEnemy() { return m_pEnemy; }							// エネミー
 	static CBullet* GetCBullet() { return m_pBullet; }						// バレット
 
@@ -68,6 +70,7 @@ private:
 	static CInputJoypad* m_InputJoypad;		// ジョイパット
 	static CBg *m_pBg;						// 背景
 	static CPlayer *m_pPlayer;				// プレイヤー
+	static CBlock *m_pBlock;				// ブロック
 	static CEnemy *m_pEnemy;				// エネミー
 	static CBullet *m_pBullet;				// バレット
 };
