@@ -43,6 +43,7 @@
     <ClCompile Include="code\object\object2D.cpp" />
     <ClCompile Include="code\object\object3D.cpp" />
     <ClCompile Include="code\object\model.cpp" />
+    <ClCompile Include="code\object\objectX.cpp" />
     <ClCompile Include="code\object\parts.cpp" />
     <ClCompile Include="code\physics.cpp" />
     <ClCompile Include="code\renderer.cpp" />
@@ -74,6 +75,7 @@
     <ClInclude Include="code\object\object2D.h" />
     <ClInclude Include="code\object\object3D.h" />
     <ClInclude Include="code\object\model.h" />
+    <ClInclude Include="code\object\objectX.h" />
     <ClInclude Include="code\object\parts.h" />
     <ClInclude Include="code\physics.h" />
     <ClInclude Include="code\renderer.h" />

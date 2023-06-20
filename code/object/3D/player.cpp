@@ -17,6 +17,7 @@
 
 // 定義
 const float CPlayer::PLAYER_SPEED = 2.5f;
+int CPlayer::nCnt = -1;
 
 //========================================
 // コンストラクタ
@@ -32,6 +33,7 @@ CPlayer::CPlayer(int nPriority) : CMotionModel(nPriority)
 	m_Info.fWidth = INIT_FLOAT;
 	m_Info.fHeight = INIT_FLOAT;
 	m_Info.fDepth = INIT_FLOAT;
+	nCnt++;
 }
 
 //========================================
@@ -76,13 +78,13 @@ HRESULT CPlayer::Init(void)
 	SetType(TYPE_PLAYER);
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f,0.0f);
+	m_Info.rot = D3DXVECTOR3(0.0f, 3.14f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	
 	// 生成
 	SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 	SetPos(m_Info.pos);
-	SetSize(D3DXVECTOR3(5.0f,5.0f,5.0f));
+	SetRot(m_Info.rot);
 
 	return S_OK;
 }

@@ -59,7 +59,7 @@ HRESULT CMotionModel::Init()
 	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// 過去位置
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);					// 向き
 	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);				// スケール
-	m_size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);					//当たり判定
+	m_size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);					// 当たり判定
 	m_quat = { 0.0f,0.0f,0.0f,1.0f };
 	SetIsColor(false);
 	SetColor({ 1.0f,1.0f,1.0f,1.0f });					// 色

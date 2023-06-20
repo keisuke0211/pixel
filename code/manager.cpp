@@ -139,15 +139,15 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	CModel::InitModel();
 
 	// 背景の生成
-	for (int nCntBg = 0; nCntBg < 3; nCntBg++)
-	{
-		/*CBgMulti::Create(D3DXVECTOR3((nCntBg + 1)* 0.0005f, 0.0f, 0.0f), nCntBg);*/
-	}
+	//for (int nCntBg = 0; nCntBg < 3; nCntBg++)
+	//{
+	//	/*CBgMulti::Create(D3DXVECTOR3((nCntBg + 1)* 0.0005f, 0.0f, 0.0f), nCntBg);*/
+	//}
 	
 	CFloor::Create();
 
 	// ブロックの生成
-	for (int nCntObj = 0; nCntObj < 25; nCntObj++)
+	/*for (int nCntObj = 0; nCntObj < 25; nCntObj++)
 	{
 		CBlock2D::Create(D3DXVECTOR3((35.0f + (nCntObj * 50.0f)), 650.0f, 0.0f));
 	}
@@ -170,12 +170,12 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	for (int nCntObj = 0; nCntObj < 5; nCntObj++)
 	{
 		CBlock2D::Create(D3DXVECTOR3((1000.0f + (nCntObj * 50.0f)), 350, 0.0f));
-	}
+	}*/
 
 	CPlayer::Create();
 
 	// 敵の生成
-	for (int nCntPlayer = 0; nCntPlayer < CEnemy::MAX_ENEMY; nCntPlayer++)
+	/*for (int nCntPlayer = 0; nCntPlayer < CEnemy::MAX_ENEMY; nCntPlayer++)
 	{
 		if (nCntPlayer <= 14)
 		{
@@ -185,7 +185,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 		{
 			CEnemy::Create(D3DXVECTOR3((100.0f + ((nCntPlayer - 15) * 75.0f)), 100.0f, 0.0f));
 		}
-	}
+	}*/
 	
 	{
 		// スコア生成

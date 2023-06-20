@@ -105,7 +105,7 @@ private:
 	// ***** 変数 *****
 	CModel		*m_pParent;								// 親
 	Motion		*m_motion;								// モーション
-	CParts		**m_pParts;								// パーツ
+	CParts		**m_ppParts;							// パーツ
 	char		m_partsFile[MAX_MODEL_PARTS][0xff];		// パーツのXファイル名
 	int			m_nMaxParts;							// パーツ数
 	int			m_nNumMotion;							// 扱うモーション

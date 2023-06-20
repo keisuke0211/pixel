@@ -101,10 +101,10 @@ void CScore::SetScore(int nScore)
 	char aString[TXT_MAX];
 	sprintf(aString, "SCORE:%06d", m_nScore);
 
-	for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
+	for (int nCntObj = 0; nCntObj < GetNumAll(); nCntObj++)
 	{
 		// オブジェクトを取得
-		CObject *pObj = GetObjectPointer(TYPE_SCORE,nCntObj);
+		CObject *pObj = GetObjectPointer(PRIO_TEXT,nCntObj);
 
 		if (pObj != NULL)
 		{// 使用されている時、
@@ -112,7 +112,7 @@ void CScore::SetScore(int nScore)
 
 			if (type == TYPE_SCORE)
 			{// 種類がスコアの時、
-				CScore *pScore = pObj->GetScore(TYPE_SCORE,nCntObj);
+				CScore *pScore = pObj->GetScore(PRIO_TEXT,nCntObj);
 
 				// NULLでなければ文字列設定
 				if (pScore != NULL)

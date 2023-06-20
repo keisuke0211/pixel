@@ -68,7 +68,7 @@ public:
 	virtual void SetPos(const D3DXVECTOR3 pos) { m_pos = m_posOld = pos; }	// 位置
 	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }						// 向き
 	void SetColor(const D3DXCOLOR color) { m_color = color; }				// 色
-	void SetSize(const D3DXVECTOR3 &size) { m_size = size; }				// 大きさ
+	void SetSize(const D3DXVECTOR3 size) { m_size = size; }					// 大きさ
 	void SetMtxWorld(D3DXMATRIX mtxWorld) { m_mtxWorld = mtxWorld; }		// ワールドマトリックス
 	void SetParent(CModel *pParent) { m_pParent = pParent; }				// 親モデル
 	void SetModelID(const int nModelID) { m_nModelID = nModelID; }			// モデルID

@@ -50,14 +50,14 @@ HRESULT CCamera::lnit(void)
 {
 	m_Info.posV = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//カメラの位置
 	m_Info.posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//見る場所
-	m_Info.posOldR = INIT_D3DXVECTOR3;	// 前回の視点R3;
-	m_Info.posOldV = INIT_D3DXVECTOR3;	// 前回の注視点R3;
-	m_Info.vecU = INIT_VEC;				// 上方向ベクトル
-	m_Info.rot = INIT_D3DXVECTOR3;		// 向き
-	m_Info.spin = INIT_D3DXVECTOR3;		// 回転力
-	m_Info.fDistance = 100.0f;			// 距離
-	m_Info.fHeight = 0.25f;				// 高さ
-	m_Info.fVerticalMove = INIT_FLOAT;	// 縦の移動量
+	m_Info.posOldR = INIT_D3DXVECTOR3;				// 前回の視点R3;
+	m_Info.posOldV = INIT_D3DXVECTOR3;				// 前回の注視点R3;
+	m_Info.vecU = INIT_VEC;							// 上方向ベクトル
+	m_Info.rot = INIT_D3DXVECTOR3;					// 向き
+	m_Info.spin = INIT_D3DXVECTOR3;					// 回転力
+	m_Info.fDistance = 100.0f;						// 距離
+	m_Info.fHeight = 0.05f;							// 高さ
+	m_Info.fVerticalMove = INIT_FLOAT;				// 縦の移動量
 
 	return S_OK;
 }

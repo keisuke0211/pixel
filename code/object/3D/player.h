@@ -70,5 +70,7 @@ private:
 
 	// ***** •Ï” *****
 	Info m_Info;		// ƒvƒŒƒCƒ„[î•ñ
+
+	static int nCnt;
 };
 #endif
