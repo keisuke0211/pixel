@@ -38,6 +38,8 @@ public:
 		float fWidth;			// 幅
 		float fHeight;			// 高さ
 		float fDepth;			// 奥行き
+		bool bMove;				// 移動フラグ
+		bool bJump;				// ジャンプフラグ
 	} Info;
 
 	// ***** 関数 *****
@@ -59,14 +61,15 @@ public:
 
 private:
 	// ***** 関数 *****
-	void MovePos(float fMove);	// 移動
-	void UpdatePos(void);		// 位置更新
+	D3DXVECTOR3 Collision(D3DXVECTOR3 pos);	// ブロックの当たり判定
 
 	/* 移動 */
 	void MoveKeyboard(DIRECTION drct);	// キーボードの移動処理
+	void MovePos(float fMove);	// 移動
+	void UpdatePos(void);		// 位置更新
 
 	/* 入力 */
-	void KeyInput(void);	// キーボード
+	void KeyInput(void);	// キー入力処理
 
 	// ***** 変数 *****
 	Info m_Info;		// プレイヤー情報

@@ -45,9 +45,11 @@ public:
 	void FloatLoopControl(float *pData, float fMax, float fMin);	// float型の値のループ制御処理
 
 	float FindAngle(D3DXVECTOR3 pos, D3DXVECTOR3 targetPos);		// 2点の角度を求める
-	
-	
-	void RotControl(D3DXVECTOR3 *pRot);	// 向きを制御
+	void RotControl(D3DXVECTOR3 *pRot);								// 向きを制御
+
+	float AngleDifference(float fAngle, float fTargetAngle);		// 角度の差を求める
+	void ControlAngle(float *pAngle);								// 角度の制御
+
 private:
 
 };

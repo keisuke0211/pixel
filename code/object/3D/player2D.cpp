@@ -217,19 +217,19 @@ void CPlayer2D::Physics(void)
 
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
 	{
-		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f), false);
-		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f), true);
+		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f));
+		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f));
 		pSound->PlaySound(1);
 	}
 	else if (pInputMouse->GetTrigger(CInputMouse::MOUSE_RIGHT) == true)
 	{
-		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f), false);
+		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f));
 		pSound->PlaySound(1);
 	}
 
 	else if (pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) == true)
 	{
-		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f), true);
+		CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, -7.5f, 0.0f));
 		pSound->PlaySound(1);
 	}
 }

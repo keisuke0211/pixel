@@ -91,7 +91,7 @@ public:
 	bool GetMotion(void) { return m_bMotion; }			// モーションを実行しているか
 	bool GetMotionBlend() { return m_bMotionBlend; }	// モーションブレンドを実行しているか
 
-	float NormalizeAngle(float *pAngle);	// 角度の正規化
+	float NormalizeAngle(float *pAngle);				// 角度の正規化
 
 private:
 

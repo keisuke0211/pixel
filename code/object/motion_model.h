@@ -38,8 +38,7 @@ public:
 	void ChangeColar(D3DXCOLOR color);									// 色の変更
 
 	/* 設定 */
-	void SetPos(const D3DXVECTOR3 &pos) { m_pos = pos; };				// 位置
-	void SetPosOld(const D3DXVECTOR3 &posOld) { m_posOld = posOld; }	// 位置(過去)
+	void SetPos(const D3DXVECTOR3 &pos) { m_pos = m_posOld =pos; };		// 位置
 	void SetRot(const D3DXVECTOR3 &rot) { m_rot = rot; };				// 向き
 	void SetScale(const D3DXVECTOR3 &scale) { m_scale = scale; }		// サイズ
 	void SetColor(D3DXCOLOR color) { m_color = color; }					// 色
@@ -48,7 +47,7 @@ public:
 	void SetMtxWorld(D3DXMATRIX mtxWorld) { m_mtxWorld = mtxWorld; }	// ワールドマトリックス
 	void SetMotion(const char *pName);									// モーション情報
 	void SetStencil(bool isStencil) { m_Stencil = isStencil; }			// ステンシルバッファ
-	void  SetQuat(D3DXQUATERNION quat) { m_quat = quat; }				// クオータニオン
+	void SetQuat(D3DXQUATERNION quat) { m_quat = quat; }				// クオータニオン
 
 
 	/* 取得 */

@@ -102,7 +102,6 @@ void CTexture::Unload(void)
 	CBlock2D::Unload();		// ブロック
 	CPlayer2D::Unload();	// プレイヤー
 	CEnemy::Unload();		// エネミー
-	CBullet::Unload();		// バレット
 	CEffect2D::Unload();	// エフェクト
 }
 

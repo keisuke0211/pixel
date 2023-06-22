@@ -19,7 +19,7 @@ int CModel::m_nMaxModel = 0;						// モデル数
 //========================================
 // コンストラクタ
 //========================================
-CModel::CModel(int nPriority)
+CModel::CModel()
 {
 	// 値をクリアする
 	m_pTexture = NULL;
@@ -28,7 +28,8 @@ CModel::CModel(int nPriority)
 	m_pos = INIT_D3DXVECTOR3;		// 位置
 	m_posOld = INIT_D3DXVECTOR3;	// 位置(過去)
 	m_rot = INIT_D3DXVECTOR3;		// 向き
-	m_size = INIT_D3DXVECTOR3;		// 大きさ
+	m_size = INIT_D3DXVECTOR3;
+	m_scale = INIT_D3DXVECTOR3;		// 大きさ
 	m_color = INIT_D3DXCOLOR;		// 色
 	m_nModelID = -1;				// モデルID
 }
@@ -202,7 +203,7 @@ HRESULT CModel::Init()
 	// メンバ変数の初期化
 	m_pos = INIT_D3DXVECTOR3;					// 位置
 	m_rot = INIT_D3DXVECTOR3;					// 向き
-	m_size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);		// 大きさ
+	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);	// 大きさ
 	m_nModelID = -1;							// モデルID
 
 	return S_OK;
@@ -251,7 +252,7 @@ void CModel::Draw(bool Color)
 		D3DXMatrixIdentity(&m_mtxWorld);
 
 		// サイズの反映
-		D3DXMatrixScaling(&mtxScaling, m_size.x, m_size.y, m_size.z);
+		D3DXMatrixScaling(&mtxScaling, m_scale.x, m_scale.y, m_scale.z);
 		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScaling);
 
 		// 向きを反映
@@ -336,7 +337,7 @@ void CModel::Draw(D3DXMATRIX mtxParent, bool Color)
 		D3DXMatrixIdentity(&m_mtxWorld);
 
 		// サイズの反映
-		D3DXMatrixScaling(&mtxScaling, m_size.x, m_size.y, m_size.z);
+		D3DXMatrixScaling(&mtxScaling, m_scale.x, m_scale.y, m_scale.z);
 		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScaling);
 
 		// 向きを反映
@@ -455,4 +456,48 @@ void CModel::CalcSize(int nCntModel)
 
 	// 大きさの設定
 	m_material[nCntModel].size = D3DXVECTOR3(vtxMax.x - vtxMin.x, vtxMax.y - vtxMin.y, vtxMax.z - vtxMin.z);
+
+	m_material[nCntModel].fWidth = vtxMax.x;
+	m_material[nCntModel].fHeight = vtxMax.y;
+	m_material[nCntModel].fDepth = vtxMax.z;
+}
+
+//========================================
+// 当たり判定の取得
+//========================================
+D3DXVECTOR3 CModel::GetSize(const int nModelID)
+{
+	m_size = m_material[nModelID].size;
+
+	return m_size;
+}
+
+//========================================
+// 幅の取得
+//========================================
+float CModel::GetWidth(const int nModelID)
+{
+	m_Width = m_material[nModelID].fWidth;
+
+	return m_Width;
+}
+
+//========================================
+// 高さの取得
+//========================================
+float CModel::GetHeight(const int nModelID)
+{
+	m_Height = m_material[nModelID].fHeight;
+
+	return m_Height;
+}
+
+//========================================
+// 奥行きの取得
+//========================================
+float CModel::GetDepth(const int nModelID)
+{
+	m_Depth = m_material[nModelID].fDepth;
+
+	return m_Depth;
 }

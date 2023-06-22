@@ -9,15 +9,14 @@
 #include "../../manager.h"
 #include "../../renderer.h"
 #include "enemy.h"
+#include "block.h"
 #include "../2D/score.h"
 #include "../2D/effect2D.h"
 
-// 静的メンバ変数
-LPDIRECT3DTEXTURE9 CBullet::m_pTexture[MAX_TEXTURE] = {NULL};	// 共有テクスチャ
-int CBullet::m_nTexture = -1;
-
+//========================================
 // コンストラクタ
-CBullet::CBullet(int nPriority) : CObject2D(nPriority)
+//========================================
+CBullet::CBullet(int nPriority) : CObjectX(nPriority)
 {
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
@@ -28,55 +27,18 @@ CBullet::CBullet(int nPriority) : CObject2D(nPriority)
 	m_Info.fHeight = 0.0f;
 	m_Info.fWidth = 0.0f;
 }
-
+//========================================
 // デストラクタ
+//========================================
 CBullet::~CBullet()
 {
 
 }
 
 //========================================
-// テクスチャの読み込み
-//========================================
-HRESULT CBullet::Load(char *pPath)
-{
-	if (pPath != NULL)
-	{
-		m_nTexture++;	// テクスチャ数加算
-
-		// デバイス取得
-		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-		// テクスチャの読み込み
-		if (FAILED(D3DXCreateTextureFromFile(pDevice, pPath, &m_pTexture[m_nTexture])))
-		{
-			m_pTexture[m_nTexture] = NULL;
-		}
-	}
-
-	return S_OK;
-}
-
-//========================================
-// テクスチャの破棄
-//========================================
-void CBullet::Unload(void)
-{
-	// テクスチャの破棄
-	for (int nCntTex = 0; nCntTex < m_nTexture; nCntTex++)
-	{
-		if (m_pTexture[nCntTex] != NULL)
-		{
-			m_pTexture[nCntTex]->Release();
-			m_pTexture[nCntTex] = NULL;
-		}
-	}
-}
-
-//========================================
 // 生成
 //========================================
-CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move,bool bShot)
+CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move)
 {
 	CBullet *pBullet = NULL;
 
@@ -85,23 +47,12 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move,bool bShot)
 		return pBullet;
 	}
 
-	// オブジェクト2Dの生成
+	// バレットの生成
 	pBullet = new CBullet;
 
-	if (bShot == true)
-	{
-		pBullet->m_Info.pos = D3DXVECTOR3(pos.x - 21, pos.y - 20, pos.z);
-		pBullet->m_Info.nType = 0;
-	}
-	else
-	{
-		pBullet->m_Info.pos = D3DXVECTOR3(pos.x + 21, pos.y - 20, pos.z);
-		pBullet->m_Info.nType = 1;
-	}
-
+	pBullet->m_Info.pos = pos;
 	pBullet->m_Info.move = move;
 	pBullet->m_Info.nLife = 70;
-	pBullet->m_Info.bShot = bShot;
 
 	// 初期化処理
 	pBullet->Init();
@@ -113,7 +64,7 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move,bool bShot)
 //========================================
 HRESULT CBullet::Init(void)
 {
-	CObject2D::Init();
+	CObjectX::Init();
 
 	m_Info.fWidth = 15.0f;
 	m_Info.fHeight = 25.0f;
@@ -122,12 +73,8 @@ HRESULT CBullet::Init(void)
 	SetType(TYPE_BULLET);
 
 	SetPos(m_Info.pos);
-	SetSize(m_Info.fWidth, m_Info.fHeight);
 	SetRot(m_Info.rot);
 	SetColor(INIT_D3DXCOLOR);
-
-	// テクスチャの割り当て
-	BindTexture(m_Info.nType + 4);
 
 	return S_OK;
 }
@@ -137,7 +84,7 @@ HRESULT CBullet::Init(void)
 //========================================
 void CBullet::Uninit(void)
 {
-	CObject2D::Uninit();
+	CObjectX::Uninit();
 }
 
 //========================================
@@ -160,29 +107,18 @@ void CBullet::Update(void)
 
 	SetPos(m_Info.pos);
 
-	CEffect2D *pObj = CEffect2D::Create();
+	/*CEffect2D *pObj = CEffect2D::Create();
 	pObj->SetPos(m_Info.pos);
 	pObj->SetRot(m_Info.rot);
 	pObj->SetSize(10.0f, 15.0f);
-
-	switch (m_Info.nType)
-	{
-	case 0:
-		pObj->SetColor(D3DXCOLOR(0.1f, 0.5f, 1.0f, 1.0f));
-		break;
-	case 1:
-		pObj->SetColor(D3DXCOLOR(0.1f, 1.0f, 0.25f, 1.0f));
-		break;
-	}
-	pObj->SetLife(10);
+	pObj->SetLife(10);*/
 
 	// 敵との当たり判定
-	if(CollsionEnemy(m_Info.pos))
+	if(Collsion(m_Info.pos))
 	{
 		return;
 	}
-
-	CObject2D::Update();
+	CObjectX::Update();
 }
 
 //========================================
@@ -190,13 +126,13 @@ void CBullet::Update(void)
 //========================================
 void CBullet::Draw(void)
 {
-	CObject2D::Draw();
+	CObjectX::Draw();
 }
 
 //========================================
-// 敵との当たり判定
+// 当たり判定
 //========================================
-bool CBullet::CollsionEnemy(D3DXVECTOR3 pos)
+bool CBullet::Collsion(D3DXVECTOR3 pos)
 {
 	int nCntEnemy = 0;
 
@@ -216,27 +152,37 @@ bool CBullet::CollsionEnemy(D3DXVECTOR3 pos)
 				// 種類を取得
 				type = pObj->GetType();
 
-  				if (type == TYPE_ENEMY)
+  				if (type == TYPE_BLOCK)
 				{// 種類が敵の場合
 
-					// ダイナミックキャストする
-					CEnemy *pEnemy = dynamic_cast<CEnemy*>(pObj);
+					// バレットの取得
+					D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
+					float Width = GetWidth();		// 幅
+					float Height = GetHeight();		// 高さ
+					float Depth = GetDepth();		// 奥行き
+
+
+					// ブロックの取得
+					D3DXVECTOR3 BlockPos = pObj->GetPos();	// 位置
+					float BlockWidth = pObj->GetWidth();	// 幅
+					float BlockHeight = pObj->GetHeight();	// 高さ
+					float BlockDepth = pObj->GetDepth();	// 奥行き
 
 
 					// 敵と重なった
-					if ((m_Info.pos.x + m_Info.fWidth) <= (pObj->GetPos().x + pObj->GetWidth()) &&
-						(m_Info.pos.x - m_Info.fWidth) >= (pObj->GetPos().x - pObj->GetWidth()) &&
-						(m_Info.pos.y + m_Info.fHeight) <= (pObj->GetPos().y + pObj->GetHeight()) &&
-						(m_Info.pos.y - m_Info.fHeight) >= (pObj->GetPos().y - pObj->GetHeight()))
-					{//敵と弾が当たった
+					if ((m_Info.pos.x + Width) <= (BlockPos.x + BlockWidth) &&
+						(PosOld.x - Width) >= (BlockPos.x - BlockWidth) &&
+						(m_Info.pos.y + Height) <= (BlockPos.y + BlockHeight) &&
+						(PosOld.y - Height) >= (BlockPos.y - BlockHeight) &&
+						(m_Info.pos.z + Depth) <= (BlockPos.z + BlockDepth) &&
+						(PosOld.z - Depth) >= (BlockPos.z - BlockDepth))
+					{//弾とブロックが当たった
 
-						// 敵の破棄
-						pEnemy->HitLife(1);
+						// ブロックを生成
+						CBlock::Create(D3DXVECTOR3(pObj->GetPos().x, m_Info.pos.y , pObj->GetPos().z + 10));
 
 						// 弾の破棄
 						Uninit();
-
-						// スコアを加算
 
 						return TRUE;
 					}

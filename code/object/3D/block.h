@@ -27,6 +27,9 @@ public:
 		D3DXVECTOR3 rot;		// 向き
 		D3DXVECTOR3	size;		// サイズ
 		D3DCOLOR col;			// 頂点カラー
+		float Width;
+		float Height;
+		float Depth;
 	} Info;
 
 	// ***** 関数 *****

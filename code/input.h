@@ -185,16 +185,16 @@ public:
 	HRESULT Init(void);												// 初期化
 	void Uninit(void);												// 終了
 	void Update(void);												// 更新
-	bool GetJoypadPress(JOYKEY Key, int nPlayer);					// プレス情報を取得
-	bool GetJoypadTrigger(JOYKEY Key, int nPlayer);					// トリガー情報を取得
-	bool GetJoypadRelese(JOYKEY Key, int nPlayer);					// リリース情報を取得
-	bool GetJoypadRepeat(JOYKEY Key, int nPlayer);					// リピート情報を取得
+	bool GetJoypadPress(JOYKEY Key, int nPlayer = 0);				// プレス情報を取得
+	bool GetJoypadTrigger(JOYKEY Key, int nPlayer = 0);				// トリガー情報を取得
+	bool GetJoypadRelese(JOYKEY Key, int nPlayer = 0);				// リリース情報を取得
+	bool GetJoypadRepeat(JOYKEY Key, int nPlayer = 0);				// リピート情報を取得
 
-	D3DXVECTOR3 GetJoypadStick(JOYKEY Key, int nPlayer);			// スティックプレス情報を取得
-	int GetJoypadTriggerPedal(JOYKEY Key, int nPlayer);				// トリガーペダル情報を取得
-	void JoypadVibration(int nTime, WORD nStrength, int nPlayer);	// コントローラーの振動制御
-	void GetStick(int type);										// スティックの入力情報を取得
-	XINPUT_STATE *GetXInputState(void);								// ジョイパットの入力情報の取得
+	D3DXVECTOR3 GetJoypadStick(JOYKEY Key, int nPlayer = 0);			// スティックプレス情報を取得
+	int GetJoypadTriggerPedal(JOYKEY Key, int nPlayer = 0);				// トリガーペダル情報を取得
+	void JoypadVibration(int nTime, WORD nStrength, int nPlayer = 0);	// コントローラーの振動制御
+	void GetStick(int type);											// スティックの入力情報を取得
+	XINPUT_STATE *GetXInputState(void);									// ジョイパットの入力情報の取得
 
 private:
 	// ***** 定義 *****

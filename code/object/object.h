@@ -80,7 +80,9 @@ public:
 
 	/* 取得 */
 	virtual float GetWidth(void) { return 0.0f; }					// 幅
-	virtual float GetHeight(void) { return 0.0f; }					// 幅
+	virtual float GetHeight(void) { return 0.0f; }					// 高さ
+	virtual float GetDepth(void) { return 0.0f; }					// 奥行き
+	virtual D3DXVECTOR3 GetSize(void) { return INIT_D3DXVECTOR3; }	// サイズ
 	virtual D3DXVECTOR3 GetPos(void) { return INIT_D3DXVECTOR3; }	// 位置
 
 	TYPE GetType() { return m_type; }

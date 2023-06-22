@@ -9,17 +9,14 @@
 #define _BULLET_H_
 
 #include "../../main.h"
-#include "../object2D.h"
+#include "../objectX.h"
 
 //****************************************
 // クラス
 //****************************************
-class CBullet : public CObject2D
+class CBullet : public CObjectX
 {
 public:
-
-	// ***** 定義 *****
-	static const int MAX_TEXTURE = 50;	// テクスチャの最大数
 
 	// ***** 構造体 *****
 
@@ -33,7 +30,6 @@ public:
 		int nLife;			// 寿命
 		float fWidth;		// 幅
 		float fHeight;		// 高さ
-		bool bShot;			// 位置切り替え
 	} Info;
 
 	// ***** 関数 *****
@@ -41,11 +37,9 @@ public:
 	~CBullet();
 
 	/* メイン */
-	static HRESULT Load(char *pPath);			// テクスチャの生成 
-	static void Unload(void);					// テクスチャの破棄
 
 	// 生成
-	static CBullet *Create(D3DXVECTOR3 pos, D3DXVECTOR3 move,bool bShot);
+	static CBullet *Create(D3DXVECTOR3 pos, D3DXVECTOR3 move);
 
 	HRESULT Init(void);				// 初期化
 	void Uninit(void);				// 終了
@@ -58,14 +52,11 @@ public:
 private:
 
 	// ***** 関数 *****
-	bool CollsionEnemy(D3DXVECTOR3 pos);					// 敵との当たり判定
+	bool Collsion(D3DXVECTOR3 pos);					// 当たり判定
 
 	// ***** 変数 *****
 	Info m_Info;	// 情報
 
-	// ***** 静的変数 *****
-	static LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE];	// 共有テクスチャ
-	static int m_nTexture;								// テクスチャの数
 
 };
 #endif

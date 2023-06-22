@@ -44,11 +44,12 @@ CBlock *CBlock::Create(D3DXVECTOR3 pos)
 	// オブジェクト2Dの生成
 	pBlock = new CBlock;
 
+	pBlock->SetModel(0);
+
 	// 初期化処理
 	pBlock->Init();
 
 	pBlock->BlockSetPos(pos);
-	pBlock->SetModel(0);
 
 	return pBlock;
 }

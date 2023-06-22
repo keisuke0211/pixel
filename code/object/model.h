@@ -42,6 +42,10 @@ public:
 		D3DXVECTOR3		size;				// モデルの大きさ
 		int				*pIdxTex;			// テクスチャ番号
 		char			aFileName[0xff];	// Xファイルのパス
+
+		float fWidth;
+		float fHeight;
+		float fDepth;
 	} MODEL_MATERIAL;
 
 	// ***** 静的関数 *****
@@ -54,7 +58,7 @@ public:
 	static int GetMaxModel(void) { return m_nMaxModel; }			// モデル数 
 
 	// ***** 関数 *****
-	CModel(int nPriority = 0);
+	CModel();
 	~CModel();
 
 	/* メイン */
@@ -68,7 +72,7 @@ public:
 	virtual void SetPos(const D3DXVECTOR3 pos) { m_pos = m_posOld = pos; }	// 位置
 	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }						// 向き
 	void SetColor(const D3DXCOLOR color) { m_color = color; }				// 色
-	void SetSize(const D3DXVECTOR3 size) { m_size = size; }					// 大きさ
+	void SetScale(const D3DXVECTOR3 &scale) { m_scale = scale; }			// スケール
 	void SetMtxWorld(D3DXMATRIX mtxWorld) { m_mtxWorld = mtxWorld; }		// ワールドマトリックス
 	void SetParent(CModel *pParent) { m_pParent = pParent; }				// 親モデル
 	void SetModelID(const int nModelID) { m_nModelID = nModelID; }			// モデルID
@@ -77,10 +81,15 @@ public:
 	D3DXVECTOR3 GetPos(void) { return m_pos; }								// 位置
 	D3DXVECTOR3 GetRot(void) { return m_rot; }								// 向き
 	D3DXCOLOR GetColor(void) { return m_color; }							// 色
-	D3DXVECTOR3 GetSize(void) { return m_size; }							// 大きさ
+	D3DXVECTOR3 GetSize(const int nModelID);								// 大きさ
+	D3DXVECTOR3 GetScale(void) { return m_scale; }							// サイズ
 	D3DXMATRIX GetMtxWorld(void) { return m_mtxWorld; }						// ワールドマトリックス
 	CModel *GetParent(void) { return m_pParent; }							// 親モデル
 	int GetModelID(void) { return m_nModelID; }								// モデルID
+
+	float GetWidth(const int nModelID);	// 幅
+	float GetHeight(const int nModelID);// 高さ
+	float GetDepth(const int nModelID);	// 奥行き
 
 private:
 
@@ -98,7 +107,12 @@ private:
 	D3DXVECTOR3 m_posOld;	// 位置(過去)
 	D3DXVECTOR3 m_rot;		// 向き
 	D3DXVECTOR3	m_size;		// 大きさ
+	D3DXVECTOR3	m_scale;	// スケール
 	D3DXCOLOR m_color;		// 色
 	int	m_nModelID;			// モデルID
+
+	float m_Width;
+	float m_Height;
+	float m_Depth;
 };
 #endif

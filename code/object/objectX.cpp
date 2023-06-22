@@ -14,7 +14,7 @@
 //========================================
 // コンストラクタ
 //========================================
-CObjectX::CObjectX(int nPriority)
+CObjectX::CObjectX(int nPriority) : CObject(nPriority)
 {
 	// 値をクリアする
 	m_pos = INIT_D3DXVECTOR3;		// 位置
@@ -68,9 +68,17 @@ HRESULT CObjectX::Init(void)
 
 	m_pModel->SetPos(m_pos);
 	m_pModel->SetRot(m_rot);
-	m_pModel->SetSize(m_scale);
+	m_pModel->SetScale(m_scale);
 	m_pModel->SetColor(m_color);
 	m_pModel->SetModelID(0);
+
+	// モデルの更新
+	m_pModel->SetModelID(m_nModelID);
+	m_size = m_pModel->GetSize(m_nModelID);
+	m_Width = m_pModel->GetWidth(m_nModelID);
+	m_Height = m_pModel->GetHeight(m_nModelID);
+	m_Depth = m_pModel->GetDepth(m_nModelID);
+
 	return S_OK;
 }
 
@@ -79,7 +87,8 @@ HRESULT CObjectX::Init(void)
 //========================================
 void CObjectX::Uninit(void)
 {
-
+	// オブジェクトの解放
+	Release();
 }
 
 //========================================
@@ -87,13 +96,10 @@ void CObjectX::Uninit(void)
 //========================================
 void CObjectX::Update(void)
 {
-	// モデルの更新
-	m_pModel->SetModelID(m_nModelID);
-
 	// 位置・向き・サイズの更新
 	m_pModel->SetPos(m_pos);
 	m_pModel->SetRot(m_rot);
-	m_pModel->SetSize(m_scale);
+	m_pModel->SetScale(m_scale);
 }
 
 //========================================
@@ -106,7 +112,6 @@ void CObjectX::Draw(void)
 
 	D3DXMATRIX mtxRot, mtxTrans, mtxScale;	// 計算用マトリックス
 	D3DMATERIAL9 matDef;					// 現在のマテリアル保存用
-	D3DXMATERIAL *pMat;						// マテリアルデータへのポインタ
 
 	// 現在のマテリアルを取得
 	pDevice->GetMaterial(&matDef);

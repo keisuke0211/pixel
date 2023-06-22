@@ -114,3 +114,74 @@ void CPhysics::RotControl(D3DXVECTOR3 *pRot)
 	FloatLoopControl(&pRot->y, D3DX_PI, -D3DX_PI);
 	FloatLoopControl(&pRot->z, D3DX_PI, -D3DX_PI);
 }
+
+//========================================
+// 角度の差を求める
+//========================================
+float CPhysics::AngleDifference(float fAngle, float fTargetAngle)
+{
+	float fAngleDifference = 0.0f;	// 角度の差
+
+	// 角度を制御する
+	ControlAngle(&fAngle);
+
+	if ((fAngle >= 0.0f) && (fTargetAngle >= 0.0f))
+	{// どちらの角度もプラスの時、
+	 // 角度の差を設定
+		fAngleDifference = fTargetAngle - fAngle;
+
+		return fAngleDifference;
+	}
+	else if ((fAngle <= 0.0f) && (fTargetAngle <= 0.0f))
+	{// どちらの角度もマイナスの時、
+	 // 角度の差を設定
+		fAngleDifference = fTargetAngle - fAngle;
+
+		return fAngleDifference;
+	}
+
+	if ((fAngle >= 0.0f) && (fTargetAngle <= 0.0f))
+	{// 角度がプラスで、目標角度がマイナスの時、
+		if (fAngle - D3DX_PI <= fTargetAngle)
+		{// 目標角度が下側に近い時、
+		 // 角度の差を設定
+			fAngleDifference = fTargetAngle - fAngle;
+		}
+		else if (fAngle - D3DX_PI >= fTargetAngle)
+		{// 目標角度が上側に近い時、
+		 // 角度の差を設定
+			fAngleDifference = (D3DX_PI - fAngle) + (D3DX_PI + fTargetAngle);
+		}
+	}
+
+	if ((fAngle <= 0.0f) && (fTargetAngle >= 0.0f))
+	{// 角度がマイナスで、目標角度がプラスの時、
+		if (fAngle + D3DX_PI >= fTargetAngle)
+		{// 目標角度が下側に近い時、
+		 // 角度の差を設定
+			fAngleDifference = fTargetAngle - fAngle;
+		}
+		else if (fAngle + D3DX_PI <= fTargetAngle)
+		{// 目標角度が上側に近い時、
+		 // 角度の差を設定
+			fAngleDifference = -(D3DX_PI + fAngle) - (D3DX_PI - fTargetAngle);
+		}
+	}
+
+	return fAngleDifference;
+}
+
+//========================================
+// 角度を制御する
+//========================================
+void CPhysics::ControlAngle(float *pAngle)
+{
+	if (*pAngle > D3DX_PI)
+	{// プラスの円周率を上回っている時、
+		*pAngle = (D3DX_PI - (*pAngle - D3DX_PI)) * -1;
+	}
+	else if (*pAngle < -D3DX_PI)
+	{// マイナスの円周率を下回っている時、
+		*pAngle = (D3DX_PI + (*pAngle + D3DX_PI));
+	}
+}
