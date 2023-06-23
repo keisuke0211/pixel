@@ -21,7 +21,7 @@ using namespace std;
 // クラス
 //****************************************
 template <typename T>
-class CCsvfile
+class CSVFILE
 {
 public:
 	string filepath;	// ファイルパス
@@ -35,7 +35,7 @@ public:
 	vector<vector<T>> cell;	// 要素
 
 	// コンストラクタ
-	CCsvfile()
+	CSVFILE()
 	{
 		bHeader = false;	// ヘッダー
 		bIndex = false;		// インデックス
@@ -43,7 +43,7 @@ public:
 	}
 
 	// デストラクタ
-	~CCsvfile()
+	~CSVFILE()
 	{
 
 	}
@@ -60,28 +60,29 @@ public:
 //****************************************
 
 // int型
-int CCsvfile<int>::cast_cell(string str)
+int CSVFILE<int>::cast_cell(string str)
 {
 	return stoi(str);  
 }
 
 // double型
-double CCsvfile<double>::cast_cell(string str)
+double CSVFILE<double>::cast_cell(string str)
 {
 	return stod(str);
 }
 
 // string型
-string CCsvfile<string>::cast_cell(string str)
+string CSVFILE<string>::cast_cell(string str)
 {
 	return str;
 }
 
-//****************************************
+//================================================================================
 // 読み込み処理
-//****************************************
+// ファイルパス / ヘッダー有無 / インデックス有無 / 区切り文字
+//================================================================================
 template <typename T>
-void CCsvfile<T>::csv_read(string filepath, bool bHeader, bool bIndex, char delim)
+void CSVFILE<T>::csv_read(string filepath, bool bHeader, bool bIndex, char delim)
 {
 	this->filepath = filepath;
 	this->bHeader = bHeader;
@@ -135,11 +136,12 @@ void CCsvfile<T>::csv_read(string filepath, bool bHeader, bool bIndex, char deli
 	}
 }
 
-//****************************************
+//================================================================================
 // 書き出し処理
-//****************************************
+// ファイルパス / 区切り文字
+//================================================================================
 template <typename T>
-void CCsvfile<T>::csv_write(string filepath, char delim)
+void CSVFILE<T>::csv_write(string filepath, char delim)
 {
 	// 書き込むファイルを開く (ofstreamのコンストラクタで開く)
 	ofstream ofs_csv_file(filepath);
@@ -169,11 +171,11 @@ void CCsvfile<T>::csv_write(string filepath, char delim)
 	ofs_csv_file << endl;
 }
 
-//****************************************
+//================================================================================
 // コンソール出力理
-//****************************************
+//================================================================================
 template <typename T>
-void CCsvfile<T>::csv_show(void)
+void CSVFILE<T>::csv_show(void)
 {
 	/* ファイルパス			*/cout << "filepath = " << filepath << ", ";
 	/* ヘッダー				*/cout << "bHeader = " << int(bHeader) << ", ";

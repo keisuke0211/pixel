@@ -10,6 +10,10 @@
 #include "../renderer.h"
 #include "../texture.h"
 
+float CModel::m_Width = 0.0f;
+float CModel::m_Height = 0.0f;
+float CModel::m_Depth = 0.0f;
+
 //========================================
 // Ã“I•Ï”
 //========================================

@@ -92,7 +92,7 @@ protected:
 	void Release(void);						// 破棄
 
 private:
-	static CObject *m_apObject[TYPE_MAX][MAX_OBJECT];
+	static CObject *m_apObject[PRIO_MAX][MAX_OBJECT];
 	static int m_nNumAll;								// オブジェクト総数
 	int m_nPriority;									// 優先順位の位置
 	int m_nID;											// 自分自身のID

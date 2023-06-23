@@ -11,6 +11,15 @@
 #define _MOTION_H_
 
 //****************************************
+// マクロ定義
+//****************************************
+#define MYMAX_MOTION		(128)	// モーションの最大数
+#define MAX_MODEL_PARTS		(128)	// モデル数の最大数
+#define MAX_KEY				(64)	// キーの最大数
+#define MAX_KEYSET			(64)	// キー設定の最大数
+#define MOTION_BLEND_FRAM	(12)	// モーションのブレンドのフレーム数
+
+//****************************************
 // 前方宣言
 //****************************************
 class CModel;
@@ -22,13 +31,6 @@ class CParts;
 class CMotion
 {
 public:
-
-	// ***** 定義 *****
-	static const unsigned int MYMAX_MOTION = 128;		// モーション数の最大数
-	static const unsigned int MAX_MODEL_PARTS = 128;	// モデル数の最大数
-	static const unsigned int MAX_KEY = 64;				// キーの最大数
-	static const unsigned int MAX_KEYSET = 64;			// キー設定の最大数
-	static const unsigned int MOTION_BLEND_FRAM = 12;	// モーションブレンドのフレーム数	
 
 	// ***** 構造体 *****
 

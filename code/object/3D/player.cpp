@@ -85,7 +85,7 @@ HRESULT CPlayer::Init(void)
 	// éÌóﬁÇÃê›íË
 	SetType(TYPE_PLAYER);
 
-	m_Info.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
+	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	
@@ -177,8 +177,8 @@ void CPlayer::KeyInput(void)
 	// çUåÇ
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_B))
 	{
-		//CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, 0.0f, -2.5f));
-		CBullet::Create(D3DXVECTOR3(0.0f, 6.0f, 0.0f),m_Info.rot);
+		CBullet::Create(D3DXVECTOR3(0.0f, 20.0f, 0.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
+		//CBullet::Create(D3DXVECTOR3(0.0f, m_Info.pos.y, 0.0f),m_Info.rot);
 	}
 
 	// à íuçXêV

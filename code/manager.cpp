@@ -148,21 +148,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	//CFloor::Create();
 
 	// ÉuÉçÉbÉNÇÃê∂ê¨
-	for (int nCntX = 0; nCntX < 21; nCntX++)
-	{
-		for (int nCntZ = 0; nCntZ < 21; nCntZ++)
-		{
-			CBlock::Create(0,D3DXVECTOR3((-120.0f + (nCntX * 12.0f)), -6.0f, -120.0f + (nCntZ * 12.0f)));
-		}
-	}
-
-	for (int nCntX = 0; nCntX < 21; nCntX++)
-	{
-		for (int nCntY = 0; nCntY < 11; nCntY++)
-		{
-			CBlock::Create(0,D3DXVECTOR3((-120.0f + (nCntX * 12.0f)), -6.0f + (nCntY * 12.0f),-120.0f));
-		}
-	}
+	CBlock::Load();
 
 	CPlayer::Create();
 

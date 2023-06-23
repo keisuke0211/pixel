@@ -12,13 +12,18 @@
 
 // 静的変数
 int CObject::m_nNumAll = 0;													// オブジェクト総数
-CObject *CObject::m_apObject[CObject::TYPE_MAX][CObject::MAX_OBJECT] = {};	// オブジェクトのポインタ
+CObject *CObject::m_apObject[CObject::PRIO_MAX][CObject::MAX_OBJECT] = {};	// オブジェクトのポインタ
 
 //========================================
 // コンストラクタ
 //========================================
 CObject::CObject(int nPriority)
 {
+	if (nPriority == CObject::TYPE_NONE)
+	{
+		nPriority = CObject::TYPE_NONE;
+	}
+
 	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
 	{
 		if (m_apObject[nPriority][nCntObject] == NULL)
@@ -64,7 +69,7 @@ void CObject::Release(void)
 //========================================
 void CObject::ReleaseAll(void)
 {
-	for (int nCntPriority = 0; nCntPriority < TYPE_MAX; nCntPriority++)
+	for (int nCntPriority = 0; nCntPriority < PRIO_MAX; nCntPriority++)
 	{
 		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
 		{
@@ -81,7 +86,7 @@ void CObject::ReleaseAll(void)
 //========================================
 void CObject::UpdateAll(void)
 {
-	for (int nCntPriority = 0; nCntPriority < TYPE_MAX; nCntPriority++)
+	for (int nCntPriority = 0; nCntPriority < PRIO_MAX; nCntPriority++)
 	{
 		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
 		{
@@ -106,7 +111,7 @@ void CObject::DrawAll(void)
 	// カメラの設定
 	pCamera->SetCamera();
 
-	for (int nCntPriority = 0; nCntPriority < TYPE_MAX; nCntPriority++)
+	for (int nCntPriority = 0; nCntPriority < PRIO_MAX; nCntPriority++)
 	{
 		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
 		{

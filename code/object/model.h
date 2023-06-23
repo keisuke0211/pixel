@@ -87,9 +87,9 @@ public:
 	CModel *GetParent(void) { return m_pParent; }							// 親モデル
 	int GetModelID(void) { return m_nModelID; }								// モデルID
 
-	float GetWidth(const int nModelID);	// 幅
-	float GetHeight(const int nModelID);// 高さ
-	float GetDepth(const int nModelID);	// 奥行き
+	static float GetWidth(const int nModelID);	// 幅
+	static float GetHeight(const int nModelID); // 高さ
+	static float GetDepth(const int nModelID);	// 奥行き
 
 private:
 
@@ -111,8 +111,8 @@ private:
 	D3DXCOLOR m_color;		// 色
 	int	m_nModelID;			// モデルID
 
-	float m_Width;
-	float m_Height;
-	float m_Depth;
+	static float m_Width;
+	static float m_Height;
+	static float m_Depth;
 };
 #endif

@@ -14,15 +14,13 @@
 //========================================
 // コンストラクタ
 //========================================
-CMotionModel::CMotionModel(int nPriority) : CObject(nPriority),
-m_pMotion(NULL),				// モーション情報
-m_mtxWorld(D3DXMATRIX()),		// ワールドマトリックス
-m_pos(D3DXVECTOR3()),			// 位置
-m_posOld(D3DXVECTOR3()),		// 過去位置
-m_rot(D3DXVECTOR3()),			// 向き
-m_size(D3DXVECTOR3())			// 大きさ
+CMotionModel::CMotionModel(int nPriority) : CObject(nPriority)
 {
-
+	m_pMotion = NULL;
+	m_pos = INIT_D3DXVECTOR3;
+	m_posOld = INIT_D3DXVECTOR3;
+	m_rot = INIT_D3DXVECTOR3;
+	m_size = INIT_D3DXVECTOR3;
 }
 
 //========================================
@@ -36,7 +34,7 @@ CMotionModel::~CMotionModel()
 //========================================
 // 生成
 //========================================
-CMotionModel * CMotionModel::Create()
+CMotionModel * CMotionModel::Create(void)
 {
 	CMotionModel *pMotionModel = NULL;
 
@@ -55,7 +53,7 @@ CMotionModel * CMotionModel::Create()
 //========================================
 // 初期化
 //========================================
-HRESULT CMotionModel::Init()
+HRESULT CMotionModel::Init(void)
 {
 	// 変数の初期化
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);					// 位置
@@ -69,13 +67,13 @@ HRESULT CMotionModel::Init()
 
 	D3DXVECTOR3 vecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	D3DXQuaternionRotationAxis(&m_quat, &vecY, D3DX_PI);	// クオータニオンによる回転
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 //========================================
 // 終了
 //========================================
-void CMotionModel::Uninit()
+void CMotionModel::Uninit(void)
 {
 	if (m_pMotion != NULL)
 	{// 終了処理
@@ -93,7 +91,7 @@ void CMotionModel::Uninit()
 //========================================
 // 更新
 //========================================
-void CMotionModel::Update()
+void CMotionModel::Update(void)
 {
 	if (m_pMotion != NULL)
 	{// モーション番号の設定
@@ -104,7 +102,7 @@ void CMotionModel::Update()
 //========================================
 // 描画
 //========================================
-void CMotionModel::Draw()
+void CMotionModel::Draw(void)
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();

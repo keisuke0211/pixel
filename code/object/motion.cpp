@@ -73,6 +73,7 @@ void CMotion::Uninit(void)
 			}
 		}
 	}
+
 	if (m_motion != NULL)
 	{// ƒƒ‚ƒŠ‚Ì‰ğ•ú
 		delete[] m_motion;

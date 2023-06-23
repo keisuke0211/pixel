@@ -8,6 +8,10 @@
 #include "block.h"
 #include "../model.h"
 #include "../../sound.h"
+#include "../../csv_file.h"
+
+// 静的変数
+CBlock::SetInfo *CBlock::pSetInfo = NULL;
 
 //========================================
 // コンストラクタ
@@ -102,9 +106,6 @@ void CBlock::Uninit(void)
 void CBlock::Update(void)
 {
 	SetPos(m_Info.pos);
-	SetRot(m_Info.rot);
-	SetColor(m_Info.col);
-
 
 	// 寿命
 	if (--m_Info.nLife <= 0 && m_Info.nType == 1)
@@ -129,4 +130,87 @@ void CBlock::Update(void)
 void CBlock::Draw(void)
 {
 	CObjectX::Draw();
+}
+
+//========================================
+// 読み込み
+//========================================
+void CBlock::Load(void)
+{
+	CSVFILE<int> data;
+
+	// 読み込み
+	data.csv_read("data\\GAMEDATA\\BLOCK\\BLOCK_DATA.csv", true, true, ',');
+
+	// 動的確保
+	int nLineMax = data.cell.size() - 1;
+	pSetInfo = new SetInfo[nLineMax];
+
+	for (int nLine = 0; nLine < data.cell.size(); nLine++)
+	{
+		int nRowMax = data.cell.at(nLine).size();
+
+		for (int nRow = 0; nRow < data.cell.at(nLine).size(); nRow++)
+		{
+			switch (nRow)
+			{
+				// 種類
+			case SET_TYPE:
+			{
+				pSetInfo[nLine].nType = data.cell.at(nLine).at(nRow);
+			}
+				break;
+
+				// 位置
+			case SET_POS:
+			{
+				pSetInfo[nLine].pos.x = data.cell.at(nLine).at(nRow); nRow++;
+				pSetInfo[nLine].pos.y = data.cell.at(nLine).at(nRow); nRow++;
+				pSetInfo[nLine].pos.z = data.cell.at(nLine).at(nRow);
+			}
+				break;
+
+				// ブロック数
+			case SET_NUM:
+			{
+				pSetInfo[nLine].nNumX = data.cell.at(nLine).at(nRow); nRow++;
+				pSetInfo[nLine].nNumY = data.cell.at(nLine).at(nRow); nRow++;
+				pSetInfo[nLine].nNumZ = data.cell.at(nLine).at(nRow);
+			}
+				break;
+			}
+		}
+	}
+
+	// 配置
+	SetBlock(nLineMax);
+}
+
+//========================================
+// 配置
+//========================================
+void CBlock::SetBlock(int nNumSet)
+{
+	float fWidth = CModel::GetWidth(0);			// 幅
+	float fHeight = CModel::GetHeight(0);		// 高さ
+	float fDepth = CModel::GetDepth(0);			// 奥行き
+	
+
+	for (int nCntSet = 0; nCntSet < nNumSet; nCntSet++, pSetInfo++)
+	{
+		for (int nCntX = 0; nCntX < pSetInfo->nNumX; nCntX++)
+		{
+			for (int nCntY = 0; nCntY < pSetInfo->nNumY; nCntY++)
+			{
+				for (int nCntZ = 0; nCntZ < pSetInfo->nNumZ; nCntZ++)
+				{
+					CBlock::Create(pSetInfo->nType, 
+						D3DXVECTOR3((
+							pSetInfo->pos.x + (nCntX * fWidth)),
+							pSetInfo->pos.y + (nCntY * fHeight),
+							pSetInfo->pos.z + (nCntZ * fDepth)));
+				}
+			}
+		}
+	}
 }
