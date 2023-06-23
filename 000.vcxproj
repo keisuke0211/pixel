@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\camera.h" />
+    <ClInclude Include="code\csv_file.h" />
     <ClInclude Include="code\input.h" />
     <ClInclude Include="code\light.h" />
     <ClInclude Include="code\main.h" />

@@ -224,6 +224,9 @@
     <ClInclude Include="code\object\objectX.h">
       <Filter>ソース ファイル\01_object</Filter>
     </ClInclude>
+    <ClInclude Include="code\csv_file.h">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="000.rc">

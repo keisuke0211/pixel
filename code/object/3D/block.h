@@ -27,9 +27,12 @@ public:
 		D3DXVECTOR3 rot;		// 向き
 		D3DXVECTOR3	size;		// サイズ
 		D3DCOLOR col;			// 頂点カラー
-		float Width;
-		float Height;
-		float Depth;
+		int nType;				// 種類
+		int nLife;				// 寿命
+		int nLifeMax;			// 寿命の最大値
+		float Width;			// 幅
+		float Height;			// 高さ
+		float Depth;			// 奥行き
 	} Info;
 
 	// ***** 関数 *****
@@ -39,7 +42,7 @@ public:
 	/* メイン */
 
 	// 生成
-	static CBlock *Create(D3DXVECTOR3 pos);
+	static CBlock *Create(int nType,D3DXVECTOR3 pos);
 
 	HRESULT Init(void);				// 初期化
 	void Uninit(void);				// 終了

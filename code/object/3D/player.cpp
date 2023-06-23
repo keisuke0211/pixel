@@ -178,7 +178,7 @@ void CPlayer::KeyInput(void)
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_B))
 	{
 		//CBullet::Create(m_Info.pos, D3DXVECTOR3(0.0f, 0.0f, -2.5f));
-		CBullet::Create(D3DXVECTOR3(0.0f, 6.0f, 0.0f),D3DXVECTOR3(0.0f, 0.0f, -2.5f));
+		CBullet::Create(D3DXVECTOR3(0.0f, 6.0f, 0.0f),m_Info.rot);
 	}
 
 	// à íuçXêV

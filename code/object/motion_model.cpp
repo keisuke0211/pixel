@@ -186,7 +186,6 @@ void CMotionModel::SetMotion(const char * pName)
 
 	// モーション情報
 	m_pMotion = new CMotion(pName);
-	assert(m_pMotion != NULL);
 
 	// モーションの初期設定
 	m_pMotion->SetMotion(0);

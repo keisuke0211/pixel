@@ -152,7 +152,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	{
 		for (int nCntZ = 0; nCntZ < 21; nCntZ++)
 		{
-			CBlock::Create(D3DXVECTOR3((-120.0f + (nCntX * 12.0f)), -6.0f, -120.0f + (nCntZ * 12.0f)));
+			CBlock::Create(0,D3DXVECTOR3((-120.0f + (nCntX * 12.0f)), -6.0f, -120.0f + (nCntZ * 12.0f)));
 		}
 	}
 
@@ -160,7 +160,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	{
 		for (int nCntY = 0; nCntY < 11; nCntY++)
 		{
-			CBlock::Create(D3DXVECTOR3((-120.0f + (nCntX * 12.0f)), -6.0f + (nCntY * 12.0f),-120.0f));
+			CBlock::Create(0,D3DXVECTOR3((-120.0f + (nCntX * 12.0f)), -6.0f + (nCntY * 12.0f),-120.0f));
 		}
 	}
 

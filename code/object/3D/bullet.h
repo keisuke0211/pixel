@@ -39,7 +39,7 @@ public:
 	/* ƒƒCƒ“ */
 
 	// ¶¬
-	static CBullet *Create(D3DXVECTOR3 pos, D3DXVECTOR3 move);
+	static CBullet *Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
 	HRESULT Init(void);				// ‰Šú‰»
 	void Uninit(void);				// I—¹

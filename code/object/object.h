@@ -35,9 +35,6 @@ public:
 		PRIO_OBJ2D,		// オブジェクト2D
 		PRIO_OBJ3D,		// オブジェクト3D
 		PRIO_OBJX,		// オブジェクトX
-		PRIO_EFFECT,	// エフェクト
-		PRIO_PARTICLE,	// パーティクル
-		PRIO_TEXT,		// テキスト
 		PRIO_MAX
 	}PRIO;
 

@@ -28,7 +28,7 @@ class CTime : public CText2D
 {
 public:
 
-	CTime(int nPriority = PRIO_TEXT);
+	CTime(int nPriority = PRIO_OBJ2D);
 	~CTime();
 
 	// *****  ä÷êî *****

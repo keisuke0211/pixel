@@ -19,6 +19,12 @@ CBlock::CBlock(int nPriority) : CObjectX(nPriority)
 	m_Info.rot = INIT_D3DXVECTOR3;
 	m_Info.size = INIT_D3DXVECTOR3;
 	m_Info.col = INIT_D3DXCOLOR;
+	m_Info.nType = 0;
+	m_Info.nLife = 0;
+	m_Info.nLifeMax = 0;
+	m_Info.Width = 0.0f;
+	m_Info.Height = 0.0f;
+	m_Info.Depth = 0.0f;
 }
 
 //========================================
@@ -32,7 +38,7 @@ CBlock::~CBlock()
 //========================================
 // ê∂ê¨
 //========================================
-CBlock *CBlock::Create(D3DXVECTOR3 pos)
+CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 {
 	CBlock *pBlock = NULL;
 
@@ -49,6 +55,9 @@ CBlock *CBlock::Create(D3DXVECTOR3 pos)
 	// èâä˙âªèàóù
 	pBlock->Init();
 
+	pBlock->m_Info.nType = nType;
+	pBlock->m_Info.nLife = 180;
+	pBlock->m_Info.nLifeMax = 180;
 	pBlock->BlockSetPos(pos);
 
 	return pBlock;
@@ -68,6 +77,7 @@ HRESULT CBlock::Init(void)
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_Info.col = INIT_D3DXCOLOR;
+	m_Info.nType = 0;
 
 	// ê∂ê¨
 	SetPos(m_Info.pos);
@@ -93,8 +103,22 @@ void CBlock::Update(void)
 {
 	SetPos(m_Info.pos);
 	SetRot(m_Info.rot);
-	SetScale(m_Info.size);
 	SetColor(m_Info.col);
+
+
+	// éıñΩ
+	if (--m_Info.nLife <= 0 && m_Info.nType == 1)
+	{
+		Uninit();
+		return;
+	}
+	else
+	{
+
+	}
+
+
+	SetScale(m_Info.size);
 
 	CObjectX::Update();
 }
