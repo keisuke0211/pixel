@@ -8113,7 +8113,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\OneDrive\\デスクトップ\\作ったゲーム\\pixel\\data\\TEXTURE\\block000.png";
+    "data\\TEXTURE\\block000.png";
    }
   }
  }
