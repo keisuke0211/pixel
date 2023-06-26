@@ -206,9 +206,9 @@ void CBlock::SetBlock(int nNumSet)
 				{
 					CBlock::Create(pSetInfo->nType, 
 						D3DXVECTOR3((
-							pSetInfo->pos.x + (nCntX * fWidth)),
-							pSetInfo->pos.y + (nCntY * fHeight),
-							pSetInfo->pos.z + (nCntZ * fDepth)));
+							pSetInfo->pos.x + (nCntX * (fWidth * 2))),
+							pSetInfo->pos.y + (nCntY * (fHeight * 2)),
+							pSetInfo->pos.z + (nCntZ * (fDepth * 2))));
 				}
 			}
 		}

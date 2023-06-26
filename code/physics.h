@@ -18,6 +18,16 @@ public:
 
 	// ***** —ñ‹“Œ^ *****
 
+	// ƒxƒNƒgƒ‹‚ÌŽí—Þ
+	typedef enum
+	{
+		VECTOR_X,		// X•ûŒü
+		VECTOR_Y,		// Y•ûŒü
+		VECTOR_Z,		// Z•ûŒü
+		VECTOR_NONE,	// –³‚µ
+		VECTOR_MAX
+	}VECTOR;
+
 	// 4•ûŒü
 	typedef enum
 	{

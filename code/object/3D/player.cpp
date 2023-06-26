@@ -171,13 +171,17 @@ void CPlayer::KeyInput(void)
 	// ジャンプ
 	if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_A))
 	{
-
+		if (m_Info.bJump == false)
+		{
+			m_Info.bJump = true;	// ジャンプフラグを真にする
+			m_Info.move.y += 8;
+		}
 	}
 
 	// 攻撃
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_B))
 	{
-		CBullet::Create(m_Info.pos,m_Info.rot);
+		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z),m_Info.rot);
 	}
 
 	// 位置更新
@@ -259,7 +263,8 @@ void CPlayer::UpdatePos(void)
 	m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
 
 	// ブロックとの当たり判定
-	m_Info.pos = Collision(m_Info.pos);
+	Collision(m_Info.pos);
+
 
 	SetPos(m_Info.pos);
 
@@ -273,7 +278,7 @@ void CPlayer::UpdatePos(void)
 //========================================
 // ブロックとの当たり判定
 //========================================
-D3DXVECTOR3 CPlayer::Collision(D3DXVECTOR3 pos)
+void CPlayer::Collision(D3DXVECTOR3 pos)
 {
 	for (int nCntObj = 0; nCntObj < GetNumAll(); nCntObj++)
 	{
@@ -292,6 +297,7 @@ D3DXVECTOR3 CPlayer::Collision(D3DXVECTOR3 pos)
 				// プレイヤーの各パーツの取得
 				D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
 				D3DXVECTOR3 Scale = GetSize();
+				float fSize = 10.0f;
 
 
 				// ブロックの取得
@@ -303,17 +309,39 @@ D3DXVECTOR3 CPlayer::Collision(D3DXVECTOR3 pos)
 
 				// --- 当たり判定 ----------------------------------------------
 
-				// プレイヤーがブロックの左辺～右辺の間にいる時
-				if ((pos.x + 5) > (BlockPos.x - BlockWidth) &&
-					(pos.x - 5) < (BlockPos.x + BlockWidth) &&
-					(pos.z + 5) > (BlockPos.z - BlockDepth) &&
-					(pos.z - 5) < (BlockPos.z + BlockDepth))
-				{
-					if ((pos.y + 5) > (BlockPos.y - BlockHeight) &&
-						(PosOld.y + 5) <= (BlockPos.y - BlockHeight))
+					/* X方向 */
+				if ((pos.z + fSize) > (BlockPos.z - BlockDepth) &&
+					(pos.z - fSize) < (BlockPos.z + BlockDepth) &&
+					(pos.y + fSize) > (BlockPos.y - BlockHeight) &&
+					(pos.y - fSize) < (BlockPos.y + BlockHeight))
+				{// 奥辺と手前辺が相手の幅の内側の時、
+
+					if ((pos.x + fSize) > (BlockPos.x - BlockWidth) &&
+						(PosOld.x + fSize) <= (BlockPos.x - BlockWidth))
+					{// 左からめり込んでいる時
+
+						pos.x = (BlockPos.x - BlockWidth) - fSize;
+					}
+					else if ((pos.x - fSize) < (BlockPos.x + BlockWidth) &&
+						(PosOld.x - fSize) >= (BlockPos.x + BlockWidth))
+					{// 右からめり込んでいる時
+
+						pos.x = (BlockPos.x + BlockWidth) + fSize;
+					}
+				}
+
+				/* Y方向 */
+				if ((pos.x + fSize) > (BlockPos.x - BlockWidth) &&
+					(pos.x - fSize) < (BlockPos.x + BlockWidth) &&
+					(pos.z + fSize) > (BlockPos.z - BlockDepth) &&
+					(pos.z - fSize) < (BlockPos.z + BlockDepth))
+				{// 左辺と右辺が相手の幅の内側の時、
+
+					if ((pos.y + fSize) > (BlockPos.y - BlockHeight) &&
+						(PosOld.y + fSize) <= (BlockPos.y - BlockHeight))
 					{// 下からめり込んでいる時
 
-						pos.y = (BlockPos.y - BlockHeight) - 5;
+						pos.y = (BlockPos.y - BlockHeight) - fSize;
 
 						//プレイヤーが上昇中
 						if (m_Info.move.y > 0.0f)
@@ -322,19 +350,39 @@ D3DXVECTOR3 CPlayer::Collision(D3DXVECTOR3 pos)
 							m_Info.move.y = 0.0f;
 						}
 					}
-					else if ((pos.y - 5) < (BlockPos.y + BlockHeight) &&
-						(PosOld.y - 5) >= (BlockPos.y + BlockHeight))
+					else if ((pos.y - fSize) < (BlockPos.y + BlockHeight) &&
+						(PosOld.y - fSize) >= (BlockPos.y + BlockHeight))
 					{// 上からめり込んでいる時
-						pos.y = (BlockPos.y + BlockHeight) + 5;
+						pos.y = (BlockPos.y + BlockHeight) + fSize;
 
 						m_Info.move.y = 0.0f;
 						m_Info.bJump = false;
-						
+
+					}
+				}
+
+				/* Z方向 */
+				if ((pos.x + fSize) > (BlockPos.x - BlockWidth) &&
+					(pos.x - fSize) < (BlockPos.x + BlockWidth) &&
+					(pos.y + fSize) > (BlockPos.y - BlockHeight) &&
+					(pos.y - fSize) < (BlockPos.y + BlockHeight))
+				{// 奥辺と手前辺が相手の幅の内側の時、
+
+					if ((pos.z + fSize) > (BlockPos.z - BlockDepth) &&
+						(PosOld.z + fSize) <= (BlockPos.z - BlockDepth))
+					{// 左からめり込んでいる時
+
+						pos.z = (BlockPos.z - BlockDepth) - fSize;
+					}
+					else if ((pos.z - fSize) < (BlockPos.z + BlockDepth) &&
+						(PosOld.z - fSize) >= (BlockPos.z + BlockDepth))
+					{// 右からめり込んでいる時
+
+						pos.z = (BlockPos.z + BlockDepth) + fSize;
 					}
 				}
 			}
-
 		}
 	}
-	return pos;
+	m_Info.pos = pos;
 }

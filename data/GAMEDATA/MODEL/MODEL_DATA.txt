@@ -10,7 +10,7 @@ NUM_MODEL = 7
 #========================================
 #ファイル名
 #========================================
-MODEL = data\\MODEL\\Block\\block000.x 				#00 ブロック000	(仮ブロック)
+MODEL = data\\MODEL\\Block\\grass000.x 				#00 草ブロック 1×1
 MODEL = data\\MODEL\\Player\\Player_body.x 			#01 プレイヤー 体
 MODEL = data\\MODEL\\Player\\Player_head.x 			#02 プレイヤー 頭
 MODEL = data\\MODEL\\Player\\Player_left_arm.x 		#03 プレイヤー 左手
