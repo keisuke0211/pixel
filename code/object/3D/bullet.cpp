@@ -56,8 +56,8 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	pBullet = new CBullet;
 
 	pBullet->m_Info.pos = pos;
-	pBullet->m_Info.move = D3DXVECTOR3(0.0f,0.0f,-10.0f);
-	/*pBullet->m_Info.rot = rot;*/
+	//pBullet->m_Info.move = D3DXVECTOR3(0.0f,0.0f,-10.0f);
+	pBullet->m_Info.rot = rot;
 	pBullet->m_Info.nLife = 70;
 
 	// 初期化処理
@@ -75,8 +75,8 @@ HRESULT CBullet::Init(void)
 	// 種類の設定
 	SetType(TYPE_BULLET);
 
-	//m_Info.move.x = sinf(m_Info.rot.y) * BULLET_SPEED;
-	//m_Info.move.z = cosf(m_Info.rot.y) * BULLET_SPEED;
+	m_Info.move.x = sinf(m_Info.rot.y) * BULLET_SPEED;
+	m_Info.move.z = cosf(m_Info.rot.y) * BULLET_SPEED;
 
 	SetPos(m_Info.pos);
 	SetColor(INIT_D3DXCOLOR);
@@ -112,7 +112,6 @@ void CBullet::Update(void)
 	// 移動量を代入
 	m_Info.pos += m_Info.move;
 
-	SetPos(m_Info.pos);
 	//SetRot(m_Info.rot);
 
 	/*CEffect2D *pObj = CEffect2D::Create();
@@ -126,6 +125,9 @@ void CBullet::Update(void)
 	{
 		return;
 	}
+
+	SetPos(m_Info.pos);
+
 	/*CObjectX::Update();*/
 }
 
@@ -142,10 +144,6 @@ void CBullet::Draw(void)
 //========================================
 bool CBullet::Collsion(D3DXVECTOR3 pos)
 {
-	int nCntEnemy = 0;
-	int nRot = 0;
-	bool bHit = false;
-
 	for (int nCntPriority = 0; nCntPriority < PRIO_MAX; nCntPriority++)
 	{
 		for (int nCntObj = 0; nCntObj < GetNumAll(); nCntObj++)
@@ -162,7 +160,7 @@ bool CBullet::Collsion(D3DXVECTOR3 pos)
 				// 種類を取得
 				type = pObj->GetType();
 
-  				if (type == TYPE_BLOCK)
+				if (type == TYPE_BLOCK)
 				{// 種類が敵の場合
 
 					// バレットの取得
@@ -178,79 +176,62 @@ bool CBullet::Collsion(D3DXVECTOR3 pos)
 					float fBlockHeight = pObj->GetHeight();	// 高さ
 					float fBlockDepth = pObj->GetDepth();	// 奥行き
 
-					// 弾 がブロックの上辺～下辺の間にいる時
-					if ((pos.y + fHeight) >= (BlockPos.y - fBlockHeight) &&
-						(pos.y - fHeight) <= (BlockPos.y + fBlockHeight))
+					/* X方向 */
+
+					if ((pos.z + fDepth) > (BlockPos.z - fBlockDepth) &&
+						(pos.z - fDepth) < (BlockPos.z + fBlockDepth) &&
+						(pos.y + fHeight) > (BlockPos.y - fBlockHeight) &&
+						(pos.y - fHeight) < (BlockPos.y + fBlockHeight))
+					{// 奥辺と手前辺がブロックの幅の内側の時、
+
+						if ((pos.x + fWidth) >= (BlockPos.x - fBlockWidth) &&
+							(PosOld.x + fWidth) <= (BlockPos.x - fBlockWidth))
+						{// 左からめり込んでいる時
+
+							m_Info.bHit = true;
+							pos.x = (BlockPos.x - fBlockWidth) - fWidth;
+						}
+						else if ((pos.x - fWidth) <= (BlockPos.x + fBlockWidth) &&
+							(PosOld.x - fWidth) >= (BlockPos.x + fBlockWidth))
+						{// 右からめり込んでいる時
+
+							m_Info.bHit = true;
+							pos.x = (BlockPos.x + fBlockWidth) + fWidth;
+						}
+					}
+
+
+					if ((pos.x + fWidth) > (BlockPos.x - fBlockWidth) &&
+						(pos.x - fWidth) < (BlockPos.x + fBlockWidth) &&
+						(pos.y + fHeight) > (BlockPos.y - fBlockHeight) &&
+						(pos.y - fHeight) < (BlockPos.y + fBlockHeight))
+					{// 左辺と右辺が相手の幅の内側の時、
+
+						if ((pos.z + fDepth) >= (BlockPos.z - fBlockDepth) &&
+							(PosOld.z + fDepth) <= (BlockPos.z - fBlockDepth))
+						{// 前からめり込んでいる時
+
+							m_Info.bHit = true;
+							pos.z = (BlockPos.z - fBlockDepth) - fDepth;
+						}
+						else if ((pos.z - fDepth) <= (BlockPos.z + fBlockDepth) &&
+							(PosOld.z - fDepth) >= (BlockPos.z + fBlockDepth))
+						{// 奥からめり込んでいる時
+
+							m_Info.bHit = true;
+							pos.z = (BlockPos.z + fBlockDepth) + fDepth;
+						}
+					}
+
+					if (m_Info.bHit)
 					{
-						// 弾 がブロックの手前～奥の間にいる時
-						if ((pos.z + fDepth) > (BlockPos.z - fBlockDepth) &&
-							(pos.z - fDepth) < (BlockPos.z + fBlockDepth))
-						{
-							if ((pos.x + fWidth) >= (BlockPos.x - fBlockWidth) &&
-								(PosOld.x + fWidth) <= (BlockPos.x - fBlockWidth))
-							{// 左からめり込んでいる時
+						// ブロックの生成
+						CBlock::Create(1, D3DXVECTOR3(pos.x, pos.y, pos.z));
 
-								bHit = true;			// フラグを真にする
-								nRot = DIRECTION_LEFT;	// 方向指定
-							}
-							else if ((pos.x - fWidth) <= (BlockPos.x + fBlockWidth) &&
-								(PosOld.x - fWidth) >= (BlockPos.x + fBlockWidth))
-							{// 右からめり込んでいる時
+						// 弾の破棄
+						Uninit();
 
-								bHit = true;			// フラグを真にする
-								nRot = DIRECTION_RIGHT;	// 方向指定
-							}
-						}
-
-						// 弾 がブロックの左辺～右辺の間にいる時
-
-						if ((pos.x + fWidth) > (BlockPos.x - fBlockWidth) &&
-							(pos.x - fWidth) < (BlockPos.x + fBlockWidth))
-						{
-							if ((pos.z + fDepth) >= (BlockPos.z - fBlockDepth) &&
-								(PosOld.z + fDepth) <= (BlockPos.z - fBlockDepth))
-							{// 前からめり込んでいる時
-
-								bHit = true;			// フラグを真にする
-								nRot = DIRECTION_FRONT;	// 方向指定
-							}
-							else if ((pos.z - fDepth) <= (BlockPos.z + fBlockDepth) &&
-								(PosOld.z - fDepth) >= (BlockPos.z + fBlockDepth))
-							{// 奥からめり込んでいる時
-
-								bHit = true;			// フラグを真にする
-								nRot = DIRECTION_BACK;	// 方向指定
-							}
-						}
-
-						// 当たっていれば
-						if (bHit)
-						{
-							// ブロックの生成
-							switch (nRot)
-							{
-							case DIRECTION_LEFT:	// 左
-								CBlock::Create(1, D3DXVECTOR3(BlockPos.x - fBlockWidth, BlockPos.y, BlockPos.z));
-								break;
-
-							case DIRECTION_RIGHT:	// 右
-								CBlock::Create(1, D3DXVECTOR3(BlockPos.x + fBlockWidth, BlockPos.y, BlockPos.z));
-								break;
-
-							case DIRECTION_FRONT:	// 前
-								CBlock::Create(1, D3DXVECTOR3(BlockPos.x, BlockPos.y, BlockPos.z - fBlockDepth));
-								break;
-
-							case DIRECTION_BACK:	// 奥
-								CBlock::Create(1, D3DXVECTOR3(BlockPos.x, BlockPos.y , BlockPos.z + fBlockDepth));
-								break;
-							}
-
-							// 弾の破棄
-							Uninit();
-
-							return TRUE;
-						}
+						return TRUE;
 					}
 				}
 			}

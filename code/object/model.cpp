@@ -10,15 +10,16 @@
 #include "../renderer.h"
 #include "../texture.h"
 
-float CModel::m_Width = NULL;
-float CModel::m_Height = NULL;
-float CModel::m_Depth = NULL;
+
 
 //========================================
 // 静的変数
 //========================================
 CModel::MODEL_MATERIAL *CModel::m_material = NULL;	// マテリアル情報
 int CModel::m_nMaxModel = 0;						// モデル数		
+float CModel::m_Width = NULL;
+float CModel::m_Height = NULL;
+float CModel::m_Depth = NULL;
 
 //========================================
 // コンストラクタ

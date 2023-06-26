@@ -105,7 +105,6 @@ void CBlock::Uninit(void)
 //========================================
 void CBlock::Update(void)
 {
-	SetPos(m_Info.pos);
 
 	// Žõ–½
 	if (--m_Info.nLife <= 0 && m_Info.nType == 1)
@@ -118,10 +117,11 @@ void CBlock::Update(void)
 
 	}
 
-
+	SetPos(m_Info.pos);
+	SetRot(m_Info.rot);
 	SetScale(m_Info.size);
-
-	CObjectX::Update();
+	SetColor(m_Info.col);
+	//CObjectX::Update();
 }
 
 //========================================
@@ -164,9 +164,9 @@ void CBlock::Load(void)
 				// ˆÊ’u
 			case SET_POS:
 			{
-				pSetInfo[nLine].pos.x = data.cell.at(nLine).at(nRow); nRow++;
-				pSetInfo[nLine].pos.y = data.cell.at(nLine).at(nRow); nRow++;
-				pSetInfo[nLine].pos.z = data.cell.at(nLine).at(nRow);
+				pSetInfo[nLine].pos.x = (int)data.cell.at(nLine).at(nRow); nRow++;
+				pSetInfo[nLine].pos.y = (int)data.cell.at(nLine).at(nRow); nRow++;
+				pSetInfo[nLine].pos.z = (int)data.cell.at(nLine).at(nRow);
 			}
 				break;
 

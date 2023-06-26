@@ -15,6 +15,8 @@
 #include<string.h>
 #include<string>
 #include <assert.h>
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
 #include"XInput.h"
 #include"d3dx9.h"  //描画処理に必要
 #define DIRECTINPUT_VERSION (0X0800) //ビルド時の警告対処用のマクロ

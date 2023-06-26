@@ -143,7 +143,7 @@ void CEnemy::Update(void)
 //========================================
 void CEnemy::Draw(void)
 {
-	/*CObject2D::Draw();*/
+	CObject2D::Draw();
 }
 
 //========================================

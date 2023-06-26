@@ -8,7 +8,7 @@
 #ifndef _SCORE_H_
 #define _SCORE_H_
 
-#include "../object.h"
+#include "../../main.h"
 #include "text2D.h"
 
 //****************************************
@@ -28,7 +28,7 @@ class CScore : public CText2D
 {
 public:
 
-	CScore(int nPriority = PRIO_OBJ2D);
+	CScore(int nPriority = PRIO_TEXT);
 	~CScore();
 
 	// *****  ä÷êî *****

@@ -105,7 +105,8 @@ void CText2D::SetString(char *pString)
 		else if (m_aString[nCntDigit] == ' ')
 		{// カウントの文字が空白の時、
 		 // オブジェクトの解放
-			if (m_apObject2D[nCntDigit] != NULL) {
+			if (m_apObject2D[nCntDigit] != NULL)
+			{
 				m_apObject2D[nCntDigit]->Uninit();
 				m_apObject2D[nCntDigit] = NULL;
 			}
@@ -113,8 +114,19 @@ void CText2D::SetString(char *pString)
 		}
 
 		// 生成
-		if (m_apObject2D[nCntDigit] == NULL) {
-			m_apObject2D[nCntDigit] = CObject2D::Create();
+		if (m_apObject2D[nCntDigit] == NULL)
+		{
+			// オブジェクト2D
+			CObject2D *pObject2D = NULL;
+
+			// オブジェクト2Dの生成
+			pObject2D = new CObject2D(PRIO_TEXT);
+
+			// 初期化処理
+			pObject2D->Init();
+
+			// アドレス代入
+			m_apObject2D[nCntDigit] = pObject2D;
 		}
 
 		// 設定位置
@@ -162,8 +174,8 @@ void CText2D::SetString(char *pString)
 //========================================
 // 生成処理
 //========================================
-CText2D *CText2D::Create(void) {
-	
+CText2D *CText2D::Create(void)
+{
 	CText2D *pText2D = NULL;
 
 	// テキスト2Dの生成

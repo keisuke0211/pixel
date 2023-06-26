@@ -59,7 +59,7 @@ HRESULT CTexture::Load(void)
 	// ENDが見つかるまで読み込みを繰り返す
 	while (1)
 	{
-		fscanf(pFile, "%s", aDataSearch);	// 検索
+		fscanf(pFile, "%s", &aDataSearch[0]);
 
 		if (!strcmp(aDataSearch, "END"))
 		{// 読み込みを終了
@@ -74,7 +74,7 @@ HRESULT CTexture::Load(void)
 		if (!strcmp(aDataSearch, "TEXTURE"))
 		{
 			fscanf(pFile, "%s", &aDataSearch[0]);
-			fscanf(pFile, "%s", &m_FileName[m_NumAll][0]);	// ファイル名
+			fscanf(pFile, "%s", &m_FileName[m_NumAll][0]); // ファイル名
 
 			Regist(&m_FileName[m_NumAll][0]);
 		}

@@ -30,7 +30,7 @@ public:
 	} Info;
 
 	// ***** 関数 *****
-	CFloor(int nPriority = TYPE_FLOOR);	// コンストラクタ
+	CFloor(int nPriority = PRIO_OBJ3D);	// コンストラクタ
 	~CFloor();							// デストラクタ
 
 	// 生成

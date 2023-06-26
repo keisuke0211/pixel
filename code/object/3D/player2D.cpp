@@ -268,14 +268,14 @@ D3DXVECTOR3 CPlayer2D::Collision(D3DXVECTOR3 pos)
 				{// 種類がブロックの時、
 
 					//  プレイヤーの取得
-					D3DXVECTOR3 PosOld = GetPosOld();		// 位置(過去)
-					float fWidth = m_Info.fWidth * 0.5;		// 幅
-					float fHeight = m_Info.fHeight *0.5;	// 高さ
+					D3DXVECTOR3 PosOld = GetPosOld();				// 位置(過去)
+					float fWidth	= (float)m_Info.fWidth * 0.5;	// 幅
+					float fHeight	= (float)m_Info.fHeight *0.5;	// 高さ
 
 					// ブロックの取得
-					D3DXVECTOR3 BlockPos = pObj->GetPos();			// 位置
-					float fBlockWidth = pObj->GetWidth() * 0.5;		// 幅
-					float fBlockeHight = pObj->GetHeight() * 0.5;	// 高さ	
+					D3DXVECTOR3 BlockPos = pObj->GetPos();					// 位置
+					float fBlockWidth	= (float)pObj->GetWidth() * 0.5;	// 幅
+					float fBlockeHight	= (float)pObj->GetHeight() * 0.5;	// 高さ	
 
 					/* 当たり判定 */
 

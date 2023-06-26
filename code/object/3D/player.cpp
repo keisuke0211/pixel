@@ -85,7 +85,7 @@ HRESULT CPlayer::Init(void)
 	// 種類の設定
 	SetType(TYPE_PLAYER);
 
-	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Info.pos = D3DXVECTOR3(0.0f, 20.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	
@@ -177,8 +177,7 @@ void CPlayer::KeyInput(void)
 	// 攻撃
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_B))
 	{
-		CBullet::Create(D3DXVECTOR3(0.0f, 20.0f, 0.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
-		//CBullet::Create(D3DXVECTOR3(0.0f, m_Info.pos.y, 0.0f),m_Info.rot);
+		CBullet::Create(m_Info.pos,m_Info.rot);
 	}
 
 	// 位置更新
@@ -252,15 +251,15 @@ void CPlayer::UpdatePos(void)
 	// 移動量の代入
 	m_Info.pos += m_Info.move;
 
-	// ブロックとの当たり判定
-	m_Info.pos = Collision(m_Info.pos);
-
 	// 移動量の減衰
 	m_Info.move.x *= 0.8f;
 	m_Info.move.z *= 0.8f;
 
 	//Ｙの移動量に重力を加算
-	//m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+	m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+
+	// ブロックとの当たり判定
+	m_Info.pos = Collision(m_Info.pos);
 
 	SetPos(m_Info.pos);
 
@@ -304,35 +303,35 @@ D3DXVECTOR3 CPlayer::Collision(D3DXVECTOR3 pos)
 
 				// --- 当たり判定 ----------------------------------------------
 
-				//
+				// プレイヤーがブロックの左辺～右辺の間にいる時
+				if ((pos.x + 5) > (BlockPos.x - BlockWidth) &&
+					(pos.x - 5) < (BlockPos.x + BlockWidth) &&
+					(pos.z + 5) > (BlockPos.z - BlockDepth) &&
+					(pos.z - 5) < (BlockPos.z + BlockDepth))
+				{
+					if ((pos.y + 5) > (BlockPos.y - BlockHeight) &&
+						(PosOld.y + 5) <= (BlockPos.y - BlockHeight))
+					{// 下からめり込んでいる時
 
-			//	// プレイヤーがブロックの左辺～右辺の間にいる時
-			//	if ((pos.x + 50) > (BlockPos.x - BlockWidth) &&
-			//		(pos.x - 50) < (BlockPos.x + BlockWidth) &&
-			//		(pos.z + 50) > (BlockPos.z - BlockDepth) &&
-			//		(pos.z - 50) < (BlockPos.z + BlockDepth))
-			//	{
-			//		if ((pos.y + 5) > (BlockPos.y - BlockHeight) &&
-			//			(PosOld.y + 5) <= (BlockPos.y - BlockHeight))
-			//		{// 上からめり込んでいる時
+						pos.y = (BlockPos.y - BlockHeight) - 5;
 
-			//			pos.y = (BlockPos.y - BlockHeight) - 30;
-			//			m_Info.move.y = 0.0f;
-			//			m_Info.bJump = false;
-			//		}
-			//		else if ((pos.y - 5) < (BlockPos.y + BlockHeight) &&
-			//			(PosOld.y - 5) >= (BlockPos.y + BlockHeight))
-			//		{// 下からめり込んでいる時
-			//			pos.y = (BlockPos.y + BlockHeight) + 30;
+						//プレイヤーが上昇中
+						if (m_Info.move.y > 0.0f)
+						{
+							//Ｙの移動量を0に
+							m_Info.move.y = 0.0f;
+						}
+					}
+					else if ((pos.y - 5) < (BlockPos.y + BlockHeight) &&
+						(PosOld.y - 5) >= (BlockPos.y + BlockHeight))
+					{// 上からめり込んでいる時
+						pos.y = (BlockPos.y + BlockHeight) + 5;
 
-			//			//プレイヤーが上昇中
-			//			if (m_Info.move.y < 0.0f)
-			//			{
-			//				//Ｙの移動量を0に
-			//				m_Info.move.y = 0.0f;
-			//			}
-			//		}
-			//	}
+						m_Info.move.y = 0.0f;
+						m_Info.bJump = false;
+						
+					}
+				}
 			}
 
 		}

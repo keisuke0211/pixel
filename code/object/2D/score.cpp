@@ -104,7 +104,7 @@ void CScore::SetScore(int nScore)
 	for (int nCntObj = 0; nCntObj < GetNumAll(); nCntObj++)
 	{
 		// オブジェクトを取得
-		CObject *pObj = GetObjectPointer(PRIO_OBJ2D,nCntObj);
+		CObject *pObj = GetObjectPointer(PRIO_TEXT,nCntObj);
 
 		if (pObj != NULL)
 		{// 使用されている時、
@@ -112,7 +112,7 @@ void CScore::SetScore(int nScore)
 
 			if (type == TYPE_SCORE)
 			{// 種類がスコアの時、
-				CScore *pScore = pObj->GetScore(PRIO_OBJ2D,nCntObj);
+				CScore *pScore = pObj->GetScore(PRIO_TEXT,nCntObj);
 
 				// NULLでなければ文字列設定
 				if (pScore != NULL)

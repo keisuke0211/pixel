@@ -38,12 +38,13 @@ public:
 	static CObjectX *Create(void);	// 生成
 
 	/* 設定 */
-	virtual void SetPos(D3DXVECTOR3 pos) { m_pos = m_posOld = pos; }		// 位置
-	virtual void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }					// 向き
-	virtual void SetSize(const D3DXVECTOR3 &size) { m_size = size; }		// 当たり判定
-	virtual void SetScale(D3DXVECTOR3 scale) { m_scale = scale; };			// スケール
-	virtual void SetColor(D3DXCOLOR color) { m_color = color; }				// 色
-	virtual void SetModel(int  nModelID) { m_nModelID = nModelID; }			// モデルID
+	virtual void SetPos(D3DXVECTOR3 pos) { m_pos = m_posOld = pos; }	// 位置
+	virtual void SetPosOld(D3DXVECTOR3 posld) { m_posOld = posld; }		// 位置(過去)
+	virtual void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }				// 向き
+	virtual void SetSize(const D3DXVECTOR3 &size) { m_size = size; }	// 当たり判定
+	virtual void SetScale(D3DXVECTOR3 scale) { m_scale = scale; };		// スケール
+	virtual void SetColor(D3DXCOLOR color) { m_color = color; }			// 色
+	virtual void SetModel(int  nModelID) { m_nModelID = nModelID; }		// モデルID
 
 	D3DXVECTOR3 GetPos() { return m_pos; }								// 位置
 	D3DXVECTOR3 GetPosOld() { return m_posOld; }						// 位置(過去)

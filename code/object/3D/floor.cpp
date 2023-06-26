@@ -69,7 +69,7 @@ HRESULT CFloor::Init(void)
 	SetColor(INIT_D3DXCOLOR);
 
 	// テクスチャの割り当て
-	BindTexture(10);
+	BindTexture(9);
 
 	return S_OK;
 }

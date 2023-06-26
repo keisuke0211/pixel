@@ -13,7 +13,7 @@
 //========================================
 // コンストラクタ
 //========================================
-CObject2D::CObject2D(int nPriority)
+CObject2D::CObject2D(int nPriority) : CObject(nPriority)
 {
 	// 値をクリアする
 	m_pos = INIT_D3DXVECTOR3;		// 位置

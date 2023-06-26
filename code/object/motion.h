@@ -13,10 +13,10 @@
 //****************************************
 // マクロ定義
 //****************************************
-#define MYMAX_MOTION		(128)	// モーションの最大数
-#define MAX_MODEL_PARTS		(128)	// モデル数の最大数
-#define MAX_KEY				(64)	// キーの最大数
-#define MAX_KEYSET			(64)	// キー設定の最大数
+#define MYMAX_MOTION		(64)	// モーションの最大数
+#define MAX_MODEL_PARTS		(64)	// モデル数の最大数
+#define MAX_KEY				(32)	// キーの最大数
+#define MAX_KEYSET			(32)	// キー設定の最大数
 #define MOTION_BLEND_FRAM	(12)	// モーションのブレンドのフレーム数
 
 //****************************************

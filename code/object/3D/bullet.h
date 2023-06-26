@@ -30,6 +30,7 @@ public:
 		int nLife;			// 寿命
 		float fWidth;		// 幅
 		float fHeight;		// 高さ
+		bool bHit;			// ヒットフラグ
 	} Info;
 
 	// ***** 関数 *****

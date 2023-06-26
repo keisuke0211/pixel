@@ -187,6 +187,9 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 		g_Physics = NULL;
 	}
 
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtDumpMemoryLeaks();
+
 	//•ª‰ð”\‚ð–ß‚·
 	timeEndPeriod(1);
 
