@@ -54,7 +54,14 @@ CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 	// オブジェクト2Dの生成
 	pBlock = new CBlock;
 
-	pBlock->SetModel(0);
+	if (nType == 99)
+	{
+		pBlock->SetModel(0);
+	}
+	else
+	{
+		pBlock->SetModel(nType);
+	}
 
 	// 初期化処理
 	pBlock->Init();
@@ -107,7 +114,7 @@ void CBlock::Update(void)
 {
 
 	// 寿命
-	if (--m_Info.nLife <= 0 && m_Info.nType == 1)
+	if (--m_Info.nLife <= 0 && m_Info.nType == 99)
 	{
 		Uninit();
 		return;

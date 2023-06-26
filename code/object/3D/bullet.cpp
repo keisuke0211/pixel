@@ -226,7 +226,7 @@ bool CBullet::Collsion(D3DXVECTOR3 pos)
 					if (m_Info.bHit)
 					{
 						// ÉuÉçÉbÉNÇÃê∂ê¨
-						CBlock::Create(1, D3DXVECTOR3(pos.x, pos.y, pos.z));
+						CBlock::Create(99, D3DXVECTOR3(pos.x, pos.y, pos.z));
 
 						// íeÇÃîjä¸
 						Uninit();
