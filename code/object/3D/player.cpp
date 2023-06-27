@@ -90,7 +90,7 @@ HRESULT CPlayer::Init(void)
 	m_Info.col = INIT_D3DXCOLOR;
 	
 	// 生成
-	//SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
+	SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 	SetPos(m_Info.pos);
 	SetRot(m_Info.rot);
 
@@ -252,20 +252,39 @@ void CPlayer::UpdatePos(void)
 	// --- 取得 ---------------------------------
 	CCamera *pCamera = CManager::GetCamera();		// カメラ
 
-	// 移動量の代入
-	m_Info.pos += m_Info.move;
+	{
+		// 移動量の代入
+		m_Info.pos.x += m_Info.move.x;
 
-	// 移動量の減衰
-	m_Info.move.x *= 0.8f;
-	m_Info.move.z *= 0.8f;
+		// 移動量の減衰
+		m_Info.move.x *= 0.8f;
 
-	//Ｙの移動量に重力を加算
-	m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+		// X方向の当たり判定
+		m_Info.pos = Collision(VECTOR_X, m_Info.pos);
+	}
 
-	// ブロックとの当たり判定
-	Collision(m_Info.pos);
+	{
+		// 移動量の代入
+		m_Info.pos.z += m_Info.move.z;
 
+		// 移動量の減衰
+		m_Info.move.z *= 0.8f;
 
+		// Z方向の当たり判定
+		m_Info.pos = Collision(VECTOR_Z, m_Info.pos);
+	}
+
+	{
+
+		// 移動量の代入
+		m_Info.pos.y += m_Info.move.y;
+
+		//Ｙの移動量に重力を加算
+		m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+
+		// Y方向の当たり判定
+		m_Info.pos = Collision(VECTOR_Y, m_Info.pos);
+	}
 	SetPos(m_Info.pos);
 
 	// 目標向きに移動向きを代入
@@ -278,7 +297,7 @@ void CPlayer::UpdatePos(void)
 //========================================
 // ブロックとの当たり判定
 //========================================
-void CPlayer::Collision(D3DXVECTOR3 pos)
+D3DXVECTOR3 CPlayer::Collision(VECTOR vector,D3DXVECTOR3 pos)
 {
 	for (int nCntObj = 0; nCntObj < GetNumAll(); nCntObj++)
 	{
@@ -309,80 +328,91 @@ void CPlayer::Collision(D3DXVECTOR3 pos)
 
 				// --- 当たり判定 ----------------------------------------------
 
-					/* X方向 */
-				if ((pos.z + fSize) > (BlockPos.z - BlockDepth) &&
-					(pos.z - fSize) < (BlockPos.z + BlockDepth) &&
-					(pos.y + fSize) > (BlockPos.y - BlockHeight) &&
-					(pos.y - fSize) < (BlockPos.y + BlockHeight))
-				{// 奥辺と手前辺が相手の幅の内側の時、
 
-					if ((pos.x + fSize) > (BlockPos.x - BlockWidth) &&
-						(PosOld.x + fSize) <= (BlockPos.x - BlockWidth))
-					{// 左からめり込んでいる時
-
-						pos.x = (BlockPos.x - BlockWidth) - fSize;
-					}
-					else if ((pos.x - fSize) < (BlockPos.x + BlockWidth) &&
-						(PosOld.x - fSize) >= (BlockPos.x + BlockWidth))
-					{// 右からめり込んでいる時
-
-						pos.x = (BlockPos.x + BlockWidth) + fSize;
-					}
-				}
-
-				/* Y方向 */
-				if ((pos.x + fSize) > (BlockPos.x - BlockWidth) &&
-					(pos.x - fSize) < (BlockPos.x + BlockWidth) &&
-					(pos.z + fSize) > (BlockPos.z - BlockDepth) &&
-					(pos.z - fSize) < (BlockPos.z + BlockDepth))
-				{// 左辺と右辺が相手の幅の内側の時、
-
-					if ((pos.y + fSize) > (BlockPos.y - BlockHeight) &&
-						(PosOld.y + fSize) <= (BlockPos.y - BlockHeight))
-					{// 下からめり込んでいる時
-
-						pos.y = (BlockPos.y - BlockHeight) - fSize;
-
-						//プレイヤーが上昇中
-						if (m_Info.move.y > 0.0f)
-						{
-							//Ｙの移動量を0に
-							m_Info.move.y = 0.0f;
-						}
-					}
-					else if ((pos.y - fSize) < (BlockPos.y + BlockHeight) &&
-						(PosOld.y - fSize) >= (BlockPos.y + BlockHeight))
-					{// 上からめり込んでいる時
-						pos.y = (BlockPos.y + BlockHeight) + fSize;
-
-						m_Info.move.y = 0.0f;
-						m_Info.bJump = false;
-
-					}
-				}
-
-				/* Z方向 */
-				if ((pos.x + fSize) > (BlockPos.x - BlockWidth) &&
-					(pos.x - fSize) < (BlockPos.x + BlockWidth) &&
-					(pos.y + fSize) > (BlockPos.y - BlockHeight) &&
-					(pos.y - fSize) < (BlockPos.y + BlockHeight))
-				{// 奥辺と手前辺が相手の幅の内側の時、
+				switch (vector)
+				{
+				case VECTOR_X: {	/* X方向 */
 
 					if ((pos.z + fSize) > (BlockPos.z - BlockDepth) &&
-						(PosOld.z + fSize) <= (BlockPos.z - BlockDepth))
-					{// 左からめり込んでいる時
+						(pos.z - fSize) < (BlockPos.z + BlockDepth) &&
+						(pos.y + fSize) > (BlockPos.y - BlockHeight) &&
+						(pos.y - fSize) < (BlockPos.y + BlockHeight))
+					{// 奥辺と手前辺が相手の幅の内側の時、
 
-						pos.z = (BlockPos.z - BlockDepth) - fSize;
-					}
-					else if ((pos.z - fSize) < (BlockPos.z + BlockDepth) &&
-						(PosOld.z - fSize) >= (BlockPos.z + BlockDepth))
-					{// 右からめり込んでいる時
+						if ((pos.x + fSize) > (BlockPos.x - BlockWidth) &&
+							(PosOld.x + fSize) <= (BlockPos.x - BlockWidth))
+						{// 左からめり込んでいる時
 
-						pos.z = (BlockPos.z + BlockDepth) + fSize;
+							pos.x = (BlockPos.x - BlockWidth) - fSize;
+						}
+						else if ((pos.x - fSize) < (BlockPos.x + BlockWidth) &&
+							(PosOld.x - fSize) >= (BlockPos.x + BlockWidth))
+						{// 右からめり込んでいる時
+
+							pos.x = (BlockPos.x + BlockWidth) + fSize;
+						}
 					}
+				}
+				   break;
+				case VECTOR_Y: {	/* Y方向 */
+
+					if ((pos.x + fSize) > (BlockPos.x - BlockWidth) &&
+						(pos.x - fSize) < (BlockPos.x + BlockWidth) &&
+						(pos.z + fSize) > (BlockPos.z - BlockDepth) &&
+						(pos.z - fSize) < (BlockPos.z + BlockDepth))
+					{// 左辺と右辺が相手の幅の内側の時、
+
+						if ((pos.y + fSize) > (BlockPos.y - BlockHeight) &&
+							(PosOld.y + fSize) <= (BlockPos.y - BlockHeight))
+						{// 下からめり込んでいる時
+
+							pos.y = (BlockPos.y - BlockHeight) - fSize;
+
+							//プレイヤーが上昇中
+							if (m_Info.move.y > 0.0f)
+							{
+								//Ｙの移動量を0に
+								m_Info.move.y = 0.0f;
+							}
+						}
+						else if ((pos.y - fSize) < (BlockPos.y + BlockHeight) &&
+							(PosOld.y - fSize) >= (BlockPos.y + BlockHeight))
+						{// 上からめり込んでいる時
+							pos.y = (BlockPos.y + BlockHeight) + fSize;
+
+							m_Info.move.y = 0.0f;
+							m_Info.bJump = false;
+
+						}
+					}
+				}
+				   break;
+				case VECTOR_Z: {	/* Z方向 */
+
+					if ((pos.x + fSize) > (BlockPos.x - BlockWidth) &&
+						(pos.x - fSize) < (BlockPos.x + BlockWidth) &&
+						(pos.y + fSize) > (BlockPos.y - BlockHeight) &&
+						(pos.y - fSize) < (BlockPos.y + BlockHeight))
+					{// 奥辺と手前辺が相手の幅の内側の時、
+
+						if ((pos.z + fSize) > (BlockPos.z - BlockDepth) &&
+							(PosOld.z + fSize) <= (BlockPos.z - BlockDepth))
+						{// 左からめり込んでいる時
+
+							pos.z = (BlockPos.z - BlockDepth) - fSize;
+						}
+						else if ((pos.z - fSize) < (BlockPos.z + BlockDepth) &&
+							(PosOld.z - fSize) >= (BlockPos.z + BlockDepth))
+						{// 右からめり込んでいる時
+
+							pos.z = (BlockPos.z + BlockDepth) + fSize;
+						}
+					}
+				}
+				   break;
 				}
 			}
 		}
 	}
-	m_Info.pos = pos;
+	return pos;
 }
