@@ -77,11 +77,13 @@ public:
 	void SetType(TYPE type);		// 種類
 
 	/* 取得 */
-	virtual float GetWidth(void) { return 0.0f; }					// 幅
-	virtual float GetHeight(void) { return 0.0f; }					// 高さ
-	virtual float GetDepth(void) { return 0.0f; }					// 奥行き
-	virtual D3DXVECTOR3 GetSize(void) { return INIT_D3DXVECTOR3; }	// サイズ
-	virtual D3DXVECTOR3 GetPos(void) { return INIT_D3DXVECTOR3; }	// 位置
+	virtual float GetWidth(void) { return 0.0f; }						// 幅
+	virtual float GetHeight(void) { return 0.0f; }						// 高さ
+	virtual float GetDepth(void) { return 0.0f; }						// 奥行き
+	virtual D3DXVECTOR3 GetSize(void) { return INIT_D3DXVECTOR3; }		// サイズ
+	virtual D3DXVECTOR3 GetPos(void) { return INIT_D3DXVECTOR3; }		// 位置
+	virtual D3DXVECTOR3 GetPosOld(void) { return INIT_D3DXVECTOR3; }	// 位置(過去)
+
 
 	TYPE GetType() { return m_type; }
 	static int GetNumAll() { return m_nNumAll; };

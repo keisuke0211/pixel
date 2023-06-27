@@ -9,87 +9,43 @@
 #include "../../manager.h"
 #include "../../renderer.h"
 #include "../../sound.h"
-#include "../object2D.h"
 #include "../2D/score.h"
-#include "../2D/particle2D.h"
 
-// 静的メンバ変数
-LPDIRECT3DTEXTURE9 CEnemy::m_pTexture[CEnemy::MAX_TEXTURE] = { NULL };
-int CEnemy::m_nTexture = -1;
 
+// 静的変数
+CEnemy::SetInfo *CEnemy::pSet = NULL;
+int CEnemy::nNumSet = 0;
+
+//========================================
 // コンストラクタ
-CEnemy::CEnemy(int nPriority) : CObject2D(nPriority)
+//========================================
+CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 {
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
+	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.move = INIT_D3DXVECTOR3;
-	m_Info.fWidth = INIT_FLOAT;
-	m_Info.fHeight = INIT_FLOAT;
 	m_Info.nType = 0;
 	m_Info.nLife = 0;
 }
 
+//========================================
 // デストラクタ
+//========================================
 CEnemy::~CEnemy()
 {
 
 }
 
 //========================================
-// テクスチャの読み込み
-//========================================
-HRESULT CEnemy::Load(char *pPath)
-{
-	if (pPath != NULL)
-	{
-		m_nTexture++;	// テクスチャ数加算
-
-		// デバイス取得
-		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-		// テクスチャの読み込み
-		if (FAILED(D3DXCreateTextureFromFile(pDevice, pPath, &m_pTexture[m_nTexture])))
-		{
-			m_pTexture[m_nTexture] = NULL;
-		}
-	}
-
-	return S_OK;
-}
-//========================================
-// テクスチャの破棄
-//========================================
-void CEnemy::Unload(void)
-{
-	// テクスチャの破棄
-	for (int nCntTex = 0; nCntTex < m_nTexture; nCntTex++)
-	{
-		if (m_pTexture[nCntTex] != NULL)
-		{
-			m_pTexture[nCntTex]->Release();
-			m_pTexture[nCntTex] = NULL;
-		}
-	}
-}
-
-//========================================
 // 生成
 //========================================
-CEnemy *CEnemy::Create(D3DXVECTOR3 pos)
+CEnemy *CEnemy::Create(void)
 {
-	CEnemy *pEnemy = NULL;
+	CEnemy *pEnemy = new CEnemy;
 
-	if (pEnemy != NULL)
-	{
-		return pEnemy;
-	}
-
-	// オブジェクト2Dの生成
-	pEnemy = new CEnemy;
-
-	pEnemy->m_Info.pos = pos;
-	pEnemy->m_Info.nLife = 1;
+	pEnemy->SetModel(9);
 
 	// 初期化処理
 	pEnemy->Init();
@@ -102,22 +58,21 @@ CEnemy *CEnemy::Create(D3DXVECTOR3 pos)
 //========================================
 HRESULT CEnemy::Init(void)
 {
-	CObject2D::Init();
-
-	m_Info.fWidth = 50.0f;
-	m_Info.fHeight = 50.0f;
+	CObjectX::Init();
 
 	// 種類の設定
 	SetType(TYPE_ENEMY);
 
+	m_Info.pos = D3DXVECTOR3(0.0f, -20.0f, -150.0f);
+	m_Info.rot = D3DXVECTOR3(0.0f, 3.14f, 0.0f);
+	m_Info.col = INIT_D3DXCOLOR;
+	m_Info.nLife = 1;
+	m_Info.nType = 0;
+
 	// 生成
 	SetPos(m_Info.pos);
-	SetSize(m_Info.fWidth, m_Info.fHeight);
 	SetRot(m_Info.rot);
-	SetColor(INIT_D3DXCOLOR);
-
-	// テクスチャの割り当て
-	BindTexture(6);
+	SetColor(m_Info.col);
 
 	return S_OK;
 }
@@ -127,7 +82,7 @@ HRESULT CEnemy::Init(void)
 //========================================
 void CEnemy::Uninit(void)
 {
-	CObject2D::Uninit();
+	CObjectX::Uninit();
 }
 
 //========================================
@@ -135,7 +90,10 @@ void CEnemy::Uninit(void)
 //========================================
 void CEnemy::Update(void)
 {
-	CObject2D::Update();
+	// 位置を代入
+	m_Info.posOld = m_Info.pos;
+
+	CObjectX::Update();
 }
 
 //========================================
@@ -143,7 +101,7 @@ void CEnemy::Update(void)
 //========================================
 void CEnemy::Draw(void)
 {
-	CObject2D::Draw();
+	CObjectX::Draw();
 }
 
 //========================================
@@ -157,23 +115,19 @@ void CEnemy::HitLife(int nDamage)
 
 	if (m_Info.nLife >= 0)
 	{
-		for (int nCntPtcl = 0; nCntPtcl < 16; nCntPtcl++) 
-		{
-			// エフェクト2D生成
-			CParticle2D *pObj = CParticle2D::Create();
-
-			// 位置設定
-			pObj->SetPos(GetPos());
-
-			// 向き設定
-			pObj->SetRot(D3DXVECTOR3(0.0f, 0.0f, ((float)rand() / RAND_MAX) * D3DX_PI * 2.0f));
-
-			// 移動量設定
-			pObj->SetMove(5.0f + (5.0f * ((float)rand() / RAND_MAX)));
-
-			// 寿命設定
-			pObj->SetLife(8 + (rand() % 24));
-		}
+		//for (int nCntPtcl = 0; nCntPtcl < 16; nCntPtcl++) 
+		//{
+		//	// エフェクト2D生成
+		//	CParticle2D *pObj = CParticle2D::Create();
+		//	// 位置設定
+		//	pObj->SetPos(GetPos());
+		//	// 向き設定
+		//	pObj->SetRot(D3DXVECTOR3(0.0f, 0.0f, ((float)rand() / RAND_MAX) * D3DX_PI * 2.0f));
+		//	// 移動量設定
+		//	pObj->SetMove(5.0f + (5.0f * ((float)rand() / RAND_MAX)));
+		//	// 寿命設定
+		//	pObj->SetLife(8 + (rand() % 24));
+		//}
 
 		// 敵の破棄
 		Uninit();
@@ -188,5 +142,85 @@ void CEnemy::HitLife(int nDamage)
 	else
 	{
 		pSound->PlaySound(2);
+	}
+}
+
+//========================================
+// 読み込み
+//========================================
+
+//void CEnemy::Load(void)
+//{
+//	CSVFILE<int> data;
+//
+//	// 読み込み
+//	data.csv_read("data\\GAMEDATA\\BLOCK\\BLOCK_DATA.csv", true, true, ',');
+//
+//	// 動的確保
+//	int nLineMax = data.cell.size() - 1;
+//	pSet = new SetInfo[nLineMax];
+//
+//	for (int nLine = 0; nLine < data.cell.size(); nLine++)
+//	{
+//		int nRowMax = data.cell.at(nLine).size();
+//
+//		for (int nRow = 0; nRow < data.cell.at(nLine).size(); nRow++)
+//		{
+//			switch (nRow)
+//			{
+//				// 種類
+//			case SET_TYPE:
+//			{
+//				pSet[nLine].nType = (int)data.cell.at(nLine).at(nRow);
+//			}
+//			break;
+//
+//			// 位置
+//			case SET_POS:
+//			{
+//				pSet[nLine].pos.x = (int)data.cell.at(nLine).at(nRow); nRow++;
+//				pSet[nLine].pos.y = (int)data.cell.at(nLine).at(nRow); nRow++;
+//				pSet[nLine].pos.z = (int)data.cell.at(nLine).at(nRow);
+//			}
+//			break;
+//
+//			// 移動量
+//			case SET_SPEED:
+//			{
+//				pSet[nLine].nSpeed = data.cell.at(nLine).at(nRow);
+//			}
+//			break;
+//
+//			// 部隊ID
+//			case SET_UNIT:
+//			{
+//				pSet[nLine].nStage = (int)data.cell.at(nLine).at(nRow);
+//			}
+//			break;
+//
+//			// ステージID
+//			case SET_STAGE:
+//			{
+//				pSet[nLine].nStage = (int)data.cell.at(nLine).at(nRow);
+//			}
+//			break;
+//			}
+//		}
+//	}
+//}
+
+//========================================
+// 配置
+//========================================
+void CEnemy::SetEnemy(int nStage, int nUnit)
+{
+	for (int nCntSet = 0; nCntSet < nNumSet; nCntSet++, pSet++)
+	{
+		if (!pSet->bSet && pSet->nStage == nStage && pSet->nUnit == nUnit)
+		{
+
+
+			pSet->bSet = true;
+		}
 	}
 }

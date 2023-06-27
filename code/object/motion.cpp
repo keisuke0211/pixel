@@ -64,11 +64,11 @@ void CMotion::Uninit(void)
 				{
 					if (m_motion[nCntMotion].pKeySet[nCntKey].pKey != NULL)
 					{
-						delete[] m_motion[nCntMotion].pKeySet[nCntKey].pKey;
+						delete m_motion[nCntMotion].pKeySet[nCntKey].pKey;
 						m_motion[nCntMotion].pKeySet[nCntKey].pKey = NULL;
 					}
 				}
-				delete[] m_motion[nCntMotion].pKeySet;
+				delete m_motion[nCntMotion].pKeySet;
 				m_motion[nCntMotion].pKeySet = NULL;
 			}
 		}

@@ -26,27 +26,18 @@ public:
 		D3DXVECTOR3 pos;		// 位置
 		D3DXVECTOR3 rot;		// 向き
 		D3DXVECTOR3	size;		// サイズ
-		D3DCOLOR col;			// 頂点カラー
+		D3DXCOLOR col;			// 頂点カラー
 		int nType;				// 種類
 		int nLife;				// 寿命
 		int nLifeMax;			// 寿命の最大値
+		float fRadius;			// 半径
+		int nCntRadius;			// 半径・推移時間
+		float fRadiusRate;		// 半径の割合
+		bool bSet;				// 配置フラグ
 		float Width;			// 幅
 		float Height;			// 高さ
 		float Depth;			// 奥行き
 	} Info;
-
-	// 配置情報
-	typedef struct
-	{
-		D3DXVECTOR3 pos;	// 位置
-		int nType;			// 種類
-		int nNumX;			// X ブロック数
-		int nNumY;			// Y ブロック数
-		int nNumZ;			// Z ブロック数
-		float Width;		// 幅
-		float Height;		// 高さ
-		float Depth;		// 奥行き
-	} SetInfo;
 
 	// ***** 関数 *****
 	CBlock(int nPriority = PRIO_OBJX);
@@ -93,6 +84,21 @@ private:
 		SET_NUM_Z,	// ブロック数 Z
 		SET_MAX,
 	}SET;
+
+	// ***** 構造体 *****
+
+	// 配置情報
+	typedef struct
+	{
+		D3DXVECTOR3 pos;	// 位置
+		int nType;			// 種類
+		int nNumX;			// X ブロック数
+		int nNumY;			// Y ブロック数
+		int nNumZ;			// Z ブロック数
+		float Width;		// 幅
+		float Height;		// 高さ
+		float Depth;		// 奥行き
+	} SetInfo;
 
 	// ***** 変数 *****
 	Info m_Info;				// プレイヤー情報

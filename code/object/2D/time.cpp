@@ -7,15 +7,13 @@
 //========================================
 #include "time.h"
 
-// 静的メンバ変数定義
-int CTime::m_nTime = 0;	// タイム
-
 //========================================
 // コンストラクタ
 //========================================
 CTime::CTime(int nPriority) : CText2D(nPriority)
 {
-
+	m_nTime = 0;	// タイム
+	m_nCounter = 0;	// カウンター
 }
 
 //========================================
@@ -31,15 +29,12 @@ CTime::~CTime(void)
 //========================================
 CTime *CTime::Create(void)
 {
-	CTime *pScore = NULL;
+	CTime *pTime = new CTime;
 
-	// スコアの生成
-	//pScore = new CTime;
+	 // 初期化処理
+	pTime->Init();
 
-	// 初期化処理
-	//pScore->Init();
-
-	return pScore;
+	return pTime;
 }
 
 //========================================
@@ -47,17 +42,20 @@ CTime *CTime::Create(void)
 //========================================
 HRESULT CTime::Init(void)
 {
-	//// 初期化処理
-	//CText2D::Init();
+	// 初期化処理
+	CText2D::Init();
 
-	//{// スコアを文字列に設定
-	//	char aString[TXT_MAX];
-	//	sprintf(aString, "TIME:%02d", m_nTime);
-	//	SetString(aString);
-	//}
+	m_nTime = 0;	// タイム
+	m_nCounter = 0;	// カウンター
 
-	//// 種類設定
-	//SetType(TYPE_SCORE);
+	{// スコアを文字列に設定
+		char aString[TXT_MAX];
+		sprintf(aString, "TIME:%d", m_nTime);
+		SetString(aString);
+	}
+
+	// 種類設定
+	SetType(TYPE_TIME);
 
 	return S_OK;
 }
@@ -68,7 +66,7 @@ HRESULT CTime::Init(void)
 void CTime::Uninit(void)
 {
 	// 終了処理
-	//CText2D::Uninit();
+	CText2D::Uninit();
 }
 
 //========================================
@@ -77,7 +75,19 @@ void CTime::Uninit(void)
 void CTime::Update(void)
 {
 	// 更新処理
-	//CText2D::Update();
+	CText2D::Update();
+
+	if (m_nTime > 0)
+	{// タイムが0以上の時、
+
+		// カウンターが0になった時、
+		m_nCounter = (m_nCounter + 1) % 60;
+		if (m_nCounter == 0)
+		{
+			m_nTime--;			// タイムを減算
+			SetTime(m_nTime);	// タイム設定
+		}
+	}
 }
 
 //========================================
@@ -86,7 +96,7 @@ void CTime::Update(void)
 void CTime::Draw(void)
 {
 	// 描画処理
-	//CText2D::Draw();
+	CText2D::Draw();
 }
 
 //========================================
@@ -94,32 +104,11 @@ void CTime::Draw(void)
 //========================================
 void CTime::SetTime(int nTime)
 {
-	//// スコア加算
-	//m_nTime += nTime;
+	// タイム代入
+	m_nTime = nTime;
 
-	//// スコアを文字列に設定
-	//char aString[TXT_MAX];
-	//sprintf(aString, "TIME:%02d", nTime);
-
-	//for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
-	//{
-	//	// オブジェクトを取得
-	//	CObject *pObj = GetObjectPointer(TYPE_TIME, nCntObj);
-
-	//	if (pObj != NULL)
-	//	{// 使用されている時、
-	//		TYPE type = pObj->GetType();	// 種類を取得
-
-	//		if (type == TYPE_TIME)
-	//		{// 種類がスコアの時、
-	//			CTime *pTime = pObj->GetTime(TYPE_TIME, nCntObj);
-
-	//			// NULLでなければ文字列設定
-	//			if (pTime != NULL)
-	//			{
-	//				pTime->SetString(aString);
-	//			}
-	//		}
-	//	}
-	//}
+	// タイムを文字列に設定
+	char aString[TXT_MAX];
+	sprintf(aString, "TIME :%d", m_nTime);
+	SetString(aString);
 }

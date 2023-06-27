@@ -15,13 +15,13 @@
 #include "object\model.h"
 #include "object\object.h"
 #include "object\2D\score.h"
+#include "object\2D\time.h"
 #include "object\2D\text2D.h"
 #include "object\2D\bg2D.h"
 #include "object\2D\bg_Multi2D.h"
 #include "object\3D\floor.h"
 #include "object\3D\block.h"
 #include "object\3D\player.h"
-#include "object\3D\player2D.h"
 #include "object\3D\enemy.h"
 
 // 静的メンバ変数
@@ -153,26 +153,32 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	CPlayer::Create();
 
 	// 敵の生成
-	/*for (int nCntPlayer = 0; nCntPlayer < CEnemy::MAX_ENEMY; nCntPlayer++)
+	CEnemy::Create();
+
+
 	{
-		if (nCntPlayer <= 14)
-		{
-			CEnemy::Create(D3DXVECTOR3((100.0f + (nCntPlayer * 75.0f)), 50.0f, 0.0f));
-		}
-		else
-		{
-			CEnemy::Create(D3DXVECTOR3((100.0f + ((nCntPlayer - 15) * 75.0f)), 100.0f, 0.0f));
-		}
-	}*/
-	
+		// タイム生成
+		CTime *pObj = CTime::Create();
+
+		// サイズ設定
+		pObj->SetSize(20.0f, 20.0f);
+
+		// 位置設定
+		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 32.0f, 0.0f));
+
+		// タイム設定
+		pObj->SetTime(99);
+	}
+
 	{
 		// スコア生成
 		CScore *pObj = CScore::Create();
 
 		// サイズ設定
 		pObj->SetSize(20.0f, 20.0f);
+
 		// 位置設定
-		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 250.0f, 32.0f, 0.0f));
+		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 52.0f, 0.0f));
 
 		// スコア設定
 		CScore::SetScore();
@@ -249,6 +255,7 @@ void CManager::Uninit(void)
 	if (m_pSound != NULL)
 	{
 		// サウンド
+		m_pSound->StopSound();
 		m_pSound->Uninit();
 
 		delete m_pSound;

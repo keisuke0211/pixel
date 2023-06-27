@@ -5,7 +5,6 @@
 //========================================
 #include "main.h"
 #include "manager.h"
-
 //========================================
 // マクロ定義
 //========================================
@@ -61,6 +60,9 @@ Main *GetMain(void)
 //========================================
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine, int nCmdShow)
 {
+	// メモリリーク ログを表示
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	// ウインドウクラスの構造体
 	WNDCLASSEX wcex =
 	{
@@ -187,14 +189,13 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 		g_Physics = NULL;
 	}
 
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-	_CrtDumpMemoryLeaks();
-
 	//分解能を戻す
 	timeEndPeriod(1);
 
 	//ウインドウクラスの登録を解除
 	UnregisterClass(CLASS_NAME, wcex.hInstance);
+
+	_CrtDumpMemoryLeaks();
 
 	return(int)msg.wParam;
 }

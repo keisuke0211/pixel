@@ -10,7 +10,11 @@
 #include "../../sound.h"
 #include "../../csv_file.h"
 
-#define BULLET_ID	(2)	// 弾ID
+//========================================
+// マクロ定義
+//========================================
+#define RADIUS_TIME	(20)	// 半径・推移時間
+#define BULLET_ID	(2)		// 弾ID
 
 // 静的変数
 CBlock::SetInfo *CBlock::pSetInfo = NULL;
@@ -28,9 +32,13 @@ CBlock::CBlock(int nPriority) : CObjectX(nPriority)
 	m_Info.nType = 0;
 	m_Info.nLife = 0;
 	m_Info.nLifeMax = 0;
+	m_Info.fRadius = 0.0f;
+	m_Info.nCntRadius = 0;
+	m_Info.fRadiusRate = 0.0f;
 	m_Info.Width = 0.0f;
 	m_Info.Height = 0.0f;
 	m_Info.Depth = 0.0f;
+	m_Info.bSet = false;
 }
 
 //========================================
@@ -58,11 +66,15 @@ CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 
 	if (nType == BULLET_ID)
 	{
+		pBlock->m_Info.nCntRadius = RADIUS_TIME;
+		pBlock->m_Info.fRadiusRate = 0.0f;
 		pBlock->SetModel(2);
+		pBlock->m_Info.bSet = false;
 	}
 	else
 	{
 		pBlock->SetModel(nType);
+		pBlock->m_Info.bSet = false;
 	}
 
 	// 初期化処理
@@ -88,9 +100,10 @@ HRESULT CBlock::Init(void)
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_Info.size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	m_Info.size = D3DXVECTOR3(0.0f,0.0f,0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.nType = 0;
+	m_Info.fRadius = 1.0f;
 
 	// 生成
 	SetPos(m_Info.pos);
@@ -106,6 +119,12 @@ HRESULT CBlock::Init(void)
 //========================================
 void CBlock::Uninit(void)
 {
+	/*if (pSetInfo != NULL)
+	{
+		delete[] pSetInfo;
+		pSetInfo = NULL;
+	}*/
+
 	CObjectX::Uninit();
 }
 
@@ -115,22 +134,40 @@ void CBlock::Uninit(void)
 void CBlock::Update(void)
 {
 
+	// 半径推移
+	if (m_Info.bSet == false && m_Info.nType == BULLET_ID)
+	{
+		m_Info.fRadiusRate = (float)m_Info.nCntRadius / (float)RADIUS_TIME;
+		m_Info.fRadius = 1 * (1.0f - m_Info.fRadiusRate);
+
+		if (--m_Info.nCntRadius <= 0)
+		{
+			m_Info.bSet = true;
+		}
+	}
+
 	// 寿命
-	if (--m_Info.nLife <= 0 && m_Info.nType == BULLET_ID)
+	if (--m_Info.nLife <= 0 && m_Info.bSet == true)
 	{
 		Uninit();
 		return;
 	}
-	else
+	else if (m_Info.nLife <= RADIUS_TIME && m_Info.bSet == true)
 	{
+		m_Info.fRadius -= m_Info.fRadius / m_Info.nLife;
+		m_Info.col.a *= ((float)m_Info.nLife / RADIUS_TIME);
 
+		SetColor(m_Info.col);
 	}
+
+	// サイズの更新
+	m_Info.size = D3DXVECTOR3(m_Info.fRadius, m_Info.fRadius, m_Info.fRadius);
 
 	SetPos(m_Info.pos);
 	SetRot(m_Info.rot);
 	SetScale(m_Info.size);
-	SetColor(m_Info.col);
-	//CObjectX::Update();
+
+	CObjectX::Update();
 }
 
 //========================================
@@ -157,8 +194,6 @@ void CBlock::Load(void)
 
 	for (int nLine = 0; nLine < data.cell.size(); nLine++)
 	{
-		int nRowMax = data.cell.at(nLine).size();
-
 		for (int nRow = 0; nRow < data.cell.at(nLine).size(); nRow++)
 		{
 			switch (nRow)
@@ -166,7 +201,7 @@ void CBlock::Load(void)
 				// 種類
 			case SET_TYPE:
 			{
-				pSetInfo[nLine].nType = data.cell.at(nLine).at(nRow);
+				pSetInfo[nLine].nType = (int)data.cell.at(nLine).at(nRow);
 			}
 				break;
 

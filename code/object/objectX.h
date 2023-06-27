@@ -43,8 +43,8 @@ public:
 	virtual void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }				// 向き
 	virtual void SetSize(const D3DXVECTOR3 &size) { m_size = size; }	// 当たり判定
 	virtual void SetScale(D3DXVECTOR3 scale) { m_scale = scale; };		// スケール
-	virtual void SetColor(D3DXCOLOR color) { m_color = color; }			// 色
 	virtual void SetModel(int  nModelID) { m_nModelID = nModelID; }		// モデルID
+	virtual void SetColor(D3DXCOLOR color) { m_color = color; }			// 色
 
 	D3DXVECTOR3 GetPos() { return m_pos; }								// 位置
 	D3DXVECTOR3 GetPosOld() { return m_posOld; }						// 位置(過去)
@@ -68,6 +68,7 @@ private:
 	D3DXVECTOR3	m_size;		// 当たり判定
 	D3DXVECTOR3	m_scale;	// スケール
 	D3DXCOLOR m_color;		// 色
+	bool m_bColor;			// 色変更フラグ
 	int m_nModelID;			// モデルID
 	float m_Width;
 	float m_Height;

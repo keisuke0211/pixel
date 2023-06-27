@@ -22,6 +22,7 @@ CObjectX::CObjectX(int nPriority) : CObject(nPriority)
 	m_rot = INIT_D3DXVECTOR3;		// 向き
 	m_scale = INIT_D3DXVECTOR3;		// スケール
 	m_color = INIT_D3DXCOLOR;		// 色
+	m_bColor = false;
 }
 
 //========================================
@@ -63,8 +64,7 @@ HRESULT CObjectX::Init(void)
 	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);	// スケール
 	SetColor({ 1.0f,1.0f,1.0f,1.0f });			// 色
 
-	m_pModel = new CModel;
-	m_pModel->Create();
+	m_pModel = CModel::Create();
 
 	m_pModel->SetPos(m_pos);
 	m_pModel->SetRot(m_rot);
@@ -87,8 +87,15 @@ HRESULT CObjectX::Init(void)
 //========================================
 void CObjectX::Uninit(void)
 {
+	if (m_pModel != NULL)
+	{
+		m_pModel->Uninit();
+		delete m_pModel;	//メモリ開放
+		m_pModel = NULL;	//ポインタをNULLにする
+	}
+
 	// オブジェクトの解放
-	Release();
+	this->Release();
 }
 
 //========================================
@@ -96,10 +103,12 @@ void CObjectX::Uninit(void)
 //========================================
 void CObjectX::Update(void)
 {
-	// 位置・向き・サイズの更新
-	m_pModel->SetPos(m_pos);
-	m_pModel->SetRot(m_rot);
-	m_pModel->SetScale(m_scale);
+	//// 位置・向き・サイズの更新
+	//m_pModel->SetPos(m_pos);
+	//m_pModel->SetRot(m_rot);
+	//m_pModel->SetScale(m_scale);
+
+	m_pModel->SetColor(m_color);
 }
 
 //========================================
@@ -137,7 +146,7 @@ void CObjectX::Draw(void)
 		pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
 		// モデルの描画設定
-		m_pModel->Draw(m_mtxWorld, false);
+		m_pModel->Draw(m_mtxWorld, true);
 	}
 
 	// 保存していたマテリアルを戻す

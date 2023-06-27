@@ -9,18 +9,16 @@
 #define _ENEMY_H_
 
 #include "../../main.h"
-#include "../object2D.h"
+#include "../objectX.h"
 
 //****************************************
 // クラス
 //****************************************
-class CEnemy : public CObject2D
+class CEnemy : public CObjectX
 {
 public:
 
 	// ***** 定義 *****
-	static const int MAX_TEXTURE = 50;	// テクスチャの最大数
-
 	static const int MAX_ENEMY = 30;	// 敵の最大数
 
 	// ***** 関数 *****
@@ -29,41 +27,75 @@ public:
 
 	// ***** 構造体 *****
 
-	// 弾情報
+	// 敵情報
 	typedef struct
 	{
 		D3DXVECTOR3 pos;	// 位置
+		D3DXVECTOR3 posOld;	// 位置(過去)
 		D3DXVECTOR3 rot;	// 向き
 		D3DXVECTOR3 move;	// 移動量
+		D3DCOLOR col;		// 頂点カラー
 		int nType;			// 種類
 		int nLife;			// 寿命
-		float fWidth;		// 幅
-		float fHeight;		// 高さ
 	} Info;
 
 	/* メイン */
-	static HRESULT Load(char *pPath);			// テクスチャの生成 
-	static void Unload(void);					// テクスチャの破棄
 
 	// 生成
-	static CEnemy *Create(D3DXVECTOR3 pos);
+	static CEnemy *Create(void);
 
 	HRESULT Init(void);	// 初期化
 	void Uninit(void);	// 終了
 	void Update(void);	// 更新
 	void Draw(void);	// 描画
 
+	static void SetEnemy(int nStage, int nUnit);	// 配置
 	void HitLife(int nDamage);
 
 	/* 取得 */
-	Info GetInfo() { return m_Info; }				// プレイヤー情報
-	D3DXVECTOR3 GetPos() { return m_Info.pos; }		// 位置
+	Info GetInfo() { return m_Info; }					// エネミー情報
+	D3DXVECTOR3 GetPos() { return m_Info.pos; }			// 位置
+	D3DXVECTOR3 GetPosOld() { return m_Info.posOld; }	// 位置(過去)
 
 private:
 
+	// ***** 列挙型 *****
+
+	// 設定項目
+	typedef enum
+	{
+		SET_TYPE,	// 種類
+		SET_POS,	// 位置
+		SET_POS_Y,	// 位置 Y
+		SET_POS_Z,	// 位置 Z
+		SET_SPEED,	// 移動量
+		SET_STAGE,	// ステージID
+		SET_UNIT,	// 部隊ID
+		SET_MAX,
+	}SET;
+
+	// ***** 構造体 *****
+
+	// 配置情報
+	typedef struct
+	{
+		D3DXVECTOR3 pos;	// 位置
+		D3DXVECTOR3 rot;	// 向き
+		int nType;			// 種類
+		int nSpeed;			// 移動量
+		int nStage;			// ステージID
+		int nUnit;			// 部隊ID
+		bool bSet;			// 配置したかどうか
+
+	} SetInfo;
+
+	// ***** 関数 *****
+	static void Load(void);	// 読み込み
+
 	// ***** 変数 *****
-	static LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE];		// 共有テクスチャ
-	static int m_nTexture;									// テクスチャの総数
-	Info m_Info;	// 情報
+	Info m_Info;			// 情報
+	static SetInfo *pSet;	// 配置
+
+	static int nNumSet;		// 敵の配置数
 };
 #endif

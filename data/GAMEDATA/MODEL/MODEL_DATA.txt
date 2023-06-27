@@ -6,7 +6,7 @@
 #========================================
 #モデルの最大数
 #========================================
-NUM_MODEL = 9
+NUM_MODEL = 10
 #========================================
 #ファイル名
 #========================================
@@ -19,6 +19,7 @@ MODEL = data\\MODEL\\Player\\Player_left_arm.x 		#05 プレイヤー 左手
 MODEL = data\\MODEL\\Player\\Player_right_arm.x 	#06 プレイヤー 右手
 MODEL = data\\MODEL\\Player\\Player_left_foot.x 	#07 プレイヤー 左足
 MODEL = data\\MODEL\\Player\\Player_right_foot.x 	#08 プレイヤー 右足
+MODEL = data\\MODEL\\Enemy\\Ghost999.x 				#09 仮エネミー 999
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||

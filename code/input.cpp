@@ -61,6 +61,8 @@ HRESULT CInput::Init(HINSTANCE hInstance, HWND hWnd)
 //========================================
 void CInput::Uninit(void)
 {
+
+	return;
 	// キーボード
 	{
 		// 入力デバイスの放棄

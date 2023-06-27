@@ -10,8 +10,6 @@
 #include "renderer.h"
 #include "object\2D\bg2D.h"
 #include "object\3D\floor.h"
-#include "object\2D\block2D.h"
-#include "object\3D\player2D.h"
 #include "object\3D\enemy.h"
 #include "object\3D\bullet.h"
 #include "object\2D\effect2D.h"
@@ -99,9 +97,6 @@ void CTexture::Unload(void)
 	}
 
 	CBg::Unload();			// 背景
-	CBlock2D::Unload();		// ブロック
-	CPlayer2D::Unload();	// プレイヤー
-	CEnemy::Unload();		// エネミー
 	CEffect2D::Unload();	// エフェクト
 }
 

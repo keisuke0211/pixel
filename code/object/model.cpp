@@ -10,8 +10,6 @@
 #include "../renderer.h"
 #include "../texture.h"
 
-
-
 //========================================
 // 静的変数
 //========================================
@@ -52,20 +50,19 @@ CModel::~CModel()
 //========================================
 CModel *CModel::Create(void)
 {
-	CModel *pModel = NULL;
+	CModel *pModel = new CModel;
 
+	//ポインタが確保された
 	if (pModel != NULL)
 	{
+		// 初期化処理
+		pModel->Init();
+
 		return pModel;
 	}
 
-	// モデルの生成
-	pModel = new CModel;
-
-	// 初期化処理
-	pModel->Init();
-
-	return pModel;
+	//ポインタが確保されていなければ、NULLを返す
+	return NULL;
 }
 
 //========================================
@@ -142,12 +139,12 @@ void CModel::UninitModel(void)
 		}
 
 		// メモリの解放
-		delete[] m_material[nCnt].pIdxTex;
+		delete m_material[nCnt].pIdxTex;
 		m_material[nCnt].pIdxTex = NULL;
 	}
 
 	// メモリの解放
-	delete[] m_material;
+	delete m_material;
 	m_material = NULL;
 }
 
@@ -219,7 +216,7 @@ HRESULT CModel::Init()
 //========================================
 void CModel::Uninit(void)
 {
-	
+
 }
 
 //========================================

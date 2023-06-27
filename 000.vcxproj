@@ -26,7 +26,6 @@
     <ClCompile Include="code\manager.cpp" />
     <ClCompile Include="code\object\2D\bg2D.cpp" />
     <ClCompile Include="code\object\2D\bg_Multi2D.cpp" />
-    <ClCompile Include="code\object\2D\block2D.cpp" />
     <ClCompile Include="code\object\2D\effect2D.cpp" />
     <ClCompile Include="code\object\2D\particle2D.cpp" />
     <ClCompile Include="code\object\2D\score.cpp" />
@@ -37,7 +36,6 @@
     <ClCompile Include="code\object\3D\enemy.cpp" />
     <ClCompile Include="code\object\3D\floor.cpp" />
     <ClCompile Include="code\object\3D\player.cpp" />
-    <ClCompile Include="code\object\3D\player2D.cpp" />
     <ClCompile Include="code\object\motion.cpp" />
     <ClCompile Include="code\object\motion_model.cpp" />
     <ClCompile Include="code\object\object.cpp" />
@@ -60,7 +58,6 @@
     <ClInclude Include="code\manager.h" />
     <ClInclude Include="code\object\2D\bg2D.h" />
     <ClInclude Include="code\object\2D\bg_Multi2D.h" />
-    <ClInclude Include="code\object\2D\block2D.h" />
     <ClInclude Include="code\object\2D\effect2D.h" />
     <ClInclude Include="code\object\2D\particle2D.h" />
     <ClInclude Include="code\object\2D\score.h" />
@@ -71,7 +68,6 @@
     <ClInclude Include="code\object\3D\enemy.h" />
     <ClInclude Include="code\object\3D\floor.h" />
     <ClInclude Include="code\object\3D\player.h" />
-    <ClInclude Include="code\object\3D\player2D.h" />
     <ClInclude Include="code\object\motion.h" />
     <ClInclude Include="code\object\motion_model.h" />
     <ClInclude Include="code\object\object.h" />
@@ -108,7 +104,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>

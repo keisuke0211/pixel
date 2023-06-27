@@ -140,6 +140,7 @@ void CSVFILE<T>::csv_read(string filepath, bool bHeader, bool bIndex, char delim
 // 書き出し処理
 // ファイルパス / 区切り文字
 //================================================================================
+
 template <typename T>
 void CSVFILE<T>::csv_write(string filepath, char delim)
 {
@@ -174,6 +175,7 @@ void CSVFILE<T>::csv_write(string filepath, char delim)
 //================================================================================
 // コンソール出力理
 //================================================================================
+
 template <typename T>
 void CSVFILE<T>::csv_show(void)
 {

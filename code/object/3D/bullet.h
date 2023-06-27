@@ -56,7 +56,7 @@ public:
 private:
 
 	// ***** ŠÖ” *****
-	bool Collsion(D3DXVECTOR3 pos);					// “–‚½‚è”»’è
+	bool Collsion(VECTOR vector,D3DXVECTOR3 pos);	// “–‚½‚è”»’è
 
 	// ***** •Ï” *****
 	Info m_Info;	// î•ñ
