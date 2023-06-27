@@ -26,8 +26,11 @@ public:
 		D3DXVECTOR3 pos;	// 位置
 		D3DXVECTOR3 rot;	// 向き
 		D3DXVECTOR3 move;	// 移動量
+		D3DXVECTOR3	size;	// サイズ
+		D3DCOLOR col;		// 頂点カラー
 		int nType;			// 種類
 		int nLife;			// 寿命
+
 		float fWidth;		// 幅
 		float fHeight;		// 高さ
 		bool bHit;			// ヒットフラグ
@@ -57,7 +60,5 @@ private:
 
 	// ***** 変数 *****
 	Info m_Info;	// 情報
-
-
 };
 #endif

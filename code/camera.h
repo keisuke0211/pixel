@@ -18,6 +18,17 @@ class CCamera : public CPhysics
 {
 public:
 
+	// ***** 列挙型 *****
+
+	// カメラの投影種類
+	typedef enum
+	{
+		SCREEN_NONE = 0,	// 無し
+		SCREEN_2D,			// 平行投影
+		SCREEN_3D,			// 透視投影
+		SCREEN_MAX
+	}SCREEN;
+
 	// ***** 構造体 *****
 
 	// カメラ情報
@@ -34,6 +45,8 @@ public:
 		D3DXVECTOR3 rot;			// 向き
 		D3DXVECTOR3 spin;			// 回転量
 
+		int nScreen;				// 投影モード
+
 		float fDistance;			// 距離
 		float fHeight;				// 高さ
 		float fVerticalMove;		// 縦の移動量
@@ -49,6 +62,7 @@ public:
 
 	/* 設定 */
 	void SetCamera(void);							// カメラ
+	void SetScreen(void);							// 画面設定
 	void SetPosV(D3DXVECTOR3 pos, int nIdx = 0);	// 視点
 	void SetPosR(D3DXVECTOR3 pos, int nIdx = 0);	// 注視点
 
@@ -57,11 +71,27 @@ public:
 
 private:
 
+	// ***** 構造体 *****
+
+	// カメラの保存情報
+	typedef struct
+	{
+		D3DXVECTOR3 posV;			// 視点
+		D3DXVECTOR3 posR;			// 注視点
+		D3DXVECTOR3 rot;			// 向き
+		D3DXVECTOR3 spin;			// 回転量
+
+		float fDistance;			// 距離
+		float fHeight;				// 高さ
+		float fVerticalMove;		// 縦の移動量
+	} Save;
+
 	// ***** 関数 *****
 	void AxisRotationCamera(DIRECTION drct, float fRot, int nIdx = 0); //回転処理
 
 	// ***** 変数 *****
 	Info m_Info;		// カメラ
+	Save m_Save;		// 保存 
 
 };
 

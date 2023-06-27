@@ -23,6 +23,7 @@
 //========================================
 CCamera::CCamera()
 {
+	/* カメラ情報 */
 	m_Info.posR = INIT_D3DXVECTOR3;		// 現在の視点
 	m_Info.posV = INIT_D3DXVECTOR3;		// 現在の注視点
 	m_Info.posOldR = INIT_D3DXVECTOR3;	// 前回の視点R3;
@@ -33,6 +34,16 @@ CCamera::CCamera()
 	m_Info.fDistance = INIT_FLOAT;		// 距離
 	m_Info.fHeight = INIT_FLOAT;		// 高さ
 	m_Info.fVerticalMove = INIT_FLOAT;	// 縦の移動量
+	m_Info.nScreen = SCREEN_NONE;		// 投影モード
+
+	/* 保存情報 */
+	m_Save.posV = INIT_D3DXVECTOR3;		// 視点
+	m_Save.posR = INIT_D3DXVECTOR3;		// 注視点
+	m_Save.rot = INIT_D3DXVECTOR3;		// 向き
+	m_Save.spin = INIT_D3DXVECTOR3;		// 回転量
+	m_Save.fVerticalMove = INIT_FLOAT;	// 縦の移動量
+	m_Save.fHeight = INIT_FLOAT;		// 高さ
+	m_Save.fDistance = INIT_FLOAT;		// 距離
 }
 
 //========================================
@@ -48,8 +59,9 @@ CCamera::~CCamera()
 //========================================
 HRESULT CCamera::lnit(void)
 {
-	m_Info.posV = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//カメラの位置
-	m_Info.posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//見る場所
+	/* カメラ情報 */
+	m_Info.posV = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// カメラの位置
+	m_Info.posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 見る場所
 	m_Info.posOldR = INIT_D3DXVECTOR3;				// 前回の視点R3;
 	m_Info.posOldV = INIT_D3DXVECTOR3;				// 前回の注視点R3;
 	m_Info.vecU = INIT_VEC;							// 上方向ベクトル
@@ -58,6 +70,7 @@ HRESULT CCamera::lnit(void)
 	m_Info.fDistance = 100.0f;						// 距離
 	m_Info.fHeight = 0.05f;							// 高さ
 	m_Info.fVerticalMove = INIT_FLOAT;				// 縦の移動量
+	m_Info.nScreen = SCREEN_3D;						// 投影モード
 
 	return S_OK;
 }
@@ -93,8 +106,19 @@ void CCamera::Update(void)
 	{// マウスの右ボタンが押されている間
 
 		 // カーソルの移動量に応じて回転
-		AxisRotationCamera(DIRECTION_UP, pInputMouse->GetCursorMove().y * CAMERA_ROT_FORCE_BY_CURSOR.x);
+
+		if (m_Info.nScreen == SCREEN_3D)
+		{
+			AxisRotationCamera(DIRECTION_UP, pInputMouse->GetCursorMove().y * CAMERA_ROT_FORCE_BY_CURSOR.x);
+		}
 		AxisRotationCamera(DIRECTION_LEFT, pInputMouse->GetCursorMove().x * CAMERA_ROT_FORCE_BY_CURSOR.y);
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_Q) == true || pInputMouse->GetTrigger(CInputMouse::MOUSE_5) == true)
+	{// マウスのサイドボタン2を押したら
+
+		// 画面設定
+		SetScreen();
 	}
 }
 
@@ -110,11 +134,27 @@ void CCamera::SetCamera(void)
 	D3DXMatrixIdentity(&m_Info.mtxProjection);
 
 	//プロジェクションマトリックスを作成
-	D3DXMatrixPerspectiveFovLH(&m_Info.mtxProjection,
-		D3DXToRadian(90.0f),						/* 視野角 */
-		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,	/*画面のアスペクト比*/
-		10.0f,										/*Z値の最小値*/
-		1000.0f);									/*Z値の最大値*/
+
+	switch (m_Info.nScreen)
+	{
+	case SCREEN_2D: {	// 平行投影
+		D3DXMatrixOrthoLH(&m_Info.mtxProjection,
+			SCREEN_WIDTH / 2,						/* 画面の幅 */
+			SCREEN_HEIGHT / 2,						/* 画面の高さ */
+			1.0f,									/* Z値の最小値 */
+			1000.0f);								/* Z値の最大値 */
+	}
+		break;
+
+	case SCREEN_3D: {	// 透視投影
+		D3DXMatrixPerspectiveFovLH(&m_Info.mtxProjection,
+			D3DXToRadian(90.0f),							/* 視野角 */
+			(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,		/*画面のアスペクト比*/
+			10.0f,											/*Z値の最小値*/
+			1500.0f);										/*Z値の最大値*/
+	}
+		break;
+	}
 
 	//プロジェクションマトリックスの設定
 	pDevice->SetTransform(D3DTS_PROJECTION, &m_Info.mtxProjection);
@@ -130,6 +170,50 @@ void CCamera::SetCamera(void)
 
 	//ビューマトリックスの設定
 	pDevice->SetTransform(D3DTS_VIEW, &m_Info.mtxView);
+}
+
+//========================================
+// カメラの画面設定
+//========================================
+void CCamera::SetScreen(void)
+{
+	// 投影モードの切り替え
+
+	switch (m_Info.nScreen)
+	{
+	case SCREEN_2D: {	// 平行投影
+		
+		// 保存情報を代入する
+		m_Info.posV = m_Save.posV;						// 視点
+		m_Info.posR = m_Save.posR;						// 注視点
+		m_Info.rot  = m_Save.rot;						// 向き
+		m_Info.spin = m_Save.spin;						// 回転量
+		m_Info.fHeight = m_Save.fHeight;				// 高さ
+		m_Info.fDistance = m_Save.fDistance;			// 距離
+		m_Info.fVerticalMove = m_Save.fVerticalMove;	// 縦の移動量
+
+		m_Info.nScreen = SCREEN_3D;
+	}
+	 break;
+
+	case SCREEN_3D: {	// 透視投影
+		
+		// 情報を保存する
+		m_Save.posV = m_Info.posV;						// 視点
+		m_Save.posR = m_Info.posR;						// 注視点
+		m_Save.rot	= m_Info.rot;						// 向き
+		m_Save.spin	= m_Info.spin;						// 回転量
+		m_Save.fHeight = m_Info.fHeight;				// 高さ
+		m_Save.fDistance = m_Info.fDistance;			// 距離
+		m_Save.fVerticalMove = m_Info.fVerticalMove;	// 縦の移動量
+
+		// 向きを初期化
+		m_Info.rot.y = 0.0f;
+
+		m_Info.nScreen = SCREEN_2D;
+	}
+	 break;
+	}
 }
 
 //========================================

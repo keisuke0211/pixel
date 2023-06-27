@@ -16,7 +16,7 @@
 //========================================
 // マクロ定義
 //========================================
-#define BULLET_SPEED (3.5f)	// 弾の速度
+#define BULLET_SPEED (6.0f)	// 弾の速度
 
 //========================================
 // コンストラクタ
@@ -56,9 +56,10 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	pBullet = new CBullet;
 
 	pBullet->m_Info.pos = pos;
-	//pBullet->m_Info.move = D3DXVECTOR3(0.0f,0.0f,-10.0f);
 	pBullet->m_Info.rot = rot;
 	pBullet->m_Info.nLife = 70;
+	pBullet->m_Info.size = D3DXVECTOR3(0.2f, 0.2f, 0.2f);
+	pBullet->SetModel(2);
 
 	// 初期化処理
 	pBullet->Init();
@@ -79,6 +80,7 @@ HRESULT CBullet::Init(void)
 	m_Info.move.z = cosf(m_Info.rot.y) * BULLET_SPEED;
 
 	SetPos(m_Info.pos);
+	SetScale(m_Info.size);
 	SetColor(INIT_D3DXCOLOR);
 
 	return S_OK;
@@ -127,8 +129,9 @@ void CBullet::Update(void)
 	}
 
 	SetPos(m_Info.pos);
+	SetScale(m_Info.size);
 
-	/*CObjectX::Update();*/
+	//CObjectX::Update();
 }
 
 //========================================
@@ -226,7 +229,7 @@ bool CBullet::Collsion(D3DXVECTOR3 pos)
 					if (m_Info.bHit)
 					{
 						// ブロックの生成
-						CBlock::Create(99, D3DXVECTOR3(pos.x, pos.y, pos.z));
+						CBlock::Create(2, D3DXVECTOR3(pos.x, pos.y, pos.z));
 
 						// 弾の破棄
 						Uninit();

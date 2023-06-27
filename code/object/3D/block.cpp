@@ -10,6 +10,8 @@
 #include "../../sound.h"
 #include "../../csv_file.h"
 
+#define BULLET_ID	(2)	// 弾ID
+
 // 静的変数
 CBlock::SetInfo *CBlock::pSetInfo = NULL;
 
@@ -54,9 +56,9 @@ CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 	// オブジェクト2Dの生成
 	pBlock = new CBlock;
 
-	if (nType == 99)
+	if (nType == BULLET_ID)
 	{
-		pBlock->SetModel(0);
+		pBlock->SetModel(2);
 	}
 	else
 	{
@@ -67,8 +69,8 @@ CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 	pBlock->Init();
 
 	pBlock->m_Info.nType = nType;
-	pBlock->m_Info.nLife = 180;
-	pBlock->m_Info.nLifeMax = 180;
+	pBlock->m_Info.nLife = 300;
+	pBlock->m_Info.nLifeMax = 300;
 	pBlock->BlockSetPos(pos);
 
 	return pBlock;
@@ -114,7 +116,7 @@ void CBlock::Update(void)
 {
 
 	// 寿命
-	if (--m_Info.nLife <= 0 && m_Info.nType == 99)
+	if (--m_Info.nLife <= 0 && m_Info.nType == BULLET_ID)
 	{
 		Uninit();
 		return;
