@@ -11,7 +11,7 @@
 #include "enemy.h"
 #include "block.h"
 #include "../2D/score.h"
-#include "../2D/effect2D.h"
+#include "../3D/effectX.h"
 
 //========================================
 // マクロ定義
@@ -26,6 +26,7 @@ CBullet::CBullet(int nPriority) : CObjectX(nPriority)
 {
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
+	m_Info.posOld = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
 	m_Info.move = INIT_D3DXVECTOR3;
 	m_Info.nType = 0;
@@ -60,7 +61,7 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	pBullet->m_Info.rot = rot;
 	pBullet->m_Info.nLife = 70;
 	pBullet->m_Info.size = D3DXVECTOR3(0.2f, 0.2f, 0.2f);
-	pBullet->SetModel(2);
+	pBullet->SetModel(MODEL_BULLET);
 
 	// 初期化処理
 	pBullet->Init();
@@ -100,6 +101,9 @@ void CBullet::Uninit(void)
 //========================================
 void CBullet::Update(void)
 {
+	// 位置(過去)の更新
+	m_Info.posOld = m_Info.pos;
+
 	// 寿命の減衰
 	if (--m_Info.nLife <= 0)
 	{// 寿命が尽きた時
@@ -144,18 +148,20 @@ void CBullet::Update(void)
 		}
 	}
 
-	//SetRot(m_Info.rot);
-
-	/*CEffect2D *pObj = CEffect2D::Create();
-	pObj->SetPos(m_Info.pos);
-	pObj->SetRot(m_Info.rot);
-	pObj->SetSize(10.0f, 15.0f);
-	pObj->SetLife(10);*/
-
 	SetPos(m_Info.pos);
 	SetScale(m_Info.size);
 
 	CObjectX::Update();
+
+	CEffectX *pObj = CEffectX::Create();
+	pObj->Eff_SetPos(GetPosOld());
+	pObj->Eff_SetRot(GetRot());
+	pObj->Eff_SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pObj->Eff_SetType(0);
+	pObj->Eff_SetLife(10);
+	pObj->Eff_SetCol(D3DXCOLOR(0.1f, 0.8f, 0.8f, 1.0f));
+	pObj->Eff_SetRadius(0.35f);
+
 }
 
 //========================================
@@ -285,7 +291,7 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 					if (m_Info.bHit)
 					{
 						// ブロックの生成
-						CBlock::Create(2, D3DXVECTOR3(pos.x, pos.y, pos.z));
+						CBlock::Create(MODEL_BULLET, D3DXVECTOR3(pos.x, pos.y, pos.z));
 
 						// 弾の破棄
 						Uninit();

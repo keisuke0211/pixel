@@ -10,9 +10,6 @@
 #include "../../renderer.h"
 #include "../object2D.h"
 
-// 静的メンバ変数
-LPDIRECT3DTEXTURE9 CBg::m_pTexture[MAX_TEXTURE] = { NULL };	// 共有テクスチャ
-int CBg::m_nTexture = -1;
 
 //========================================
 // コンストラクタ
@@ -21,7 +18,6 @@ CBg::CBg(int nPriority) : CObject2D(nPriority)
 {
 	m_texPos = INIT_D3DXVECTOR3;
 	m_texMove = INIT_D3DXVECTOR3;
-	m_nTexture = -1;
 	m_Type = 0;
 }
 
@@ -31,44 +27,6 @@ CBg::CBg(int nPriority) : CObject2D(nPriority)
 CBg::~CBg()
 {
 
-}
-
-//========================================
-// テクスチャの読み込み
-//========================================
-HRESULT CBg::Load(char *pPath)
-{
-	if (pPath != NULL)
-	{
-		m_nTexture++;	// テクスチャ数加算
-
-		// デバイス取得
-		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-		// テクスチャの読み込み
-		if (FAILED(D3DXCreateTextureFromFile(pDevice, pPath, &m_pTexture[m_nTexture])))
-		{
-			m_pTexture[m_nTexture] = NULL;
-		}
-	}
-
-	return S_OK;
-}
-
-//========================================
-// テクスチャの破棄
-//========================================
-void CBg::Unload(void)
-{
-	// テクスチャの破棄
-	for (int nCntTex = 0; nCntTex < m_nTexture; nCntTex++)
-	{
-		if (m_pTexture[nCntTex] != NULL)
-		{
-			m_pTexture[nCntTex]->Release();
-			m_pTexture[nCntTex] = NULL;
-		}
-	}
 }
 
 //========================================

@@ -1,6 +1,6 @@
 //========================================
 // 
-// 物理関連
+// 物理関連 & 共有情報
 // 
 //========================================
 //  *** physics.h ***
@@ -17,6 +17,23 @@ class CPhysics
 public:
 
 	// ***** 列挙型 *****
+
+	// モデル種類
+	typedef enum
+	{
+		MODEL_GRASS_00 = 0,	// 草ブロック 1×１×1
+		MODEL_SOIL_00,		// 土ブロック 1×１×1
+		MODEL_BULLET,		// 弾
+		MODEL_PLAYER_00,	// プレイヤー 体
+		MODEL_PLAYER_01,	// プレイヤー 頭
+		MODEL_PLAYER_02,	// プレイヤー 左手
+		MODEL_PLAYER_03,	// プレイヤー 右手
+		MODEL_PLAYER_04,	// プレイヤー 左足
+		MODEL_PLAYER_05,	// プレイヤー 右足
+		MODEL_ENEMY_00,		// 仮エネミー
+		MODEL_EFFECT_00,	// エフェクト　粒子
+		MODEL_MAX
+	}MODEL;
 
 	// ベクトルの種類
 	typedef enum

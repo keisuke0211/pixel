@@ -10,6 +10,7 @@
 #include "../../renderer.h"
 #include "../../sound.h"
 #include "../2D/score.h"
+#include "../3D/particleX.h"
 
 
 // 静的変数
@@ -28,6 +29,8 @@ CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 	m_Info.move = INIT_D3DXVECTOR3;
 	m_Info.nType = 0;
 	m_Info.nLife = 0;
+	m_Info.state = STATE_NORMAL;
+	m_Info.nCntState = 0;
 }
 
 //========================================
@@ -41,14 +44,16 @@ CEnemy::~CEnemy()
 //========================================
 // 生成
 //========================================
-CEnemy *CEnemy::Create(void)
+CEnemy *CEnemy::Create(D3DXVECTOR3 pos)
 {
 	CEnemy *pEnemy = new CEnemy;
 
-	pEnemy->SetModel(9);
+	pEnemy->SetModel(MODEL_ENEMY_00);
 
 	// 初期化処理
 	pEnemy->Init();
+
+	pEnemy->m_Info.pos = pos;
 
 	return pEnemy;
 }
@@ -63,10 +68,10 @@ HRESULT CEnemy::Init(void)
 	// 種類の設定
 	SetType(TYPE_ENEMY);
 
-	m_Info.pos = D3DXVECTOR3(0.0f, -20.0f, -150.0f);
+	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, -0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 3.14f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
-	m_Info.nLife = 1;
+	m_Info.nLife = 3;
 	m_Info.nType = 0;
 
 	// 生成
@@ -82,6 +87,10 @@ HRESULT CEnemy::Init(void)
 //========================================
 void CEnemy::Uninit(void)
 {
+	CSound *pSound = CManager::GetSound();
+
+	pSound->StopSound();
+
 	CObjectX::Uninit();
 }
 
@@ -92,6 +101,13 @@ void CEnemy::Update(void)
 {
 	// 位置を代入
 	m_Info.posOld = m_Info.pos;
+
+	// 状態推移
+	StateShift();
+
+	SetPos(m_Info.pos);
+	SetRot(m_Info.rot);
+	SetColor(m_Info.col);
 
 	CObjectX::Update();
 }
@@ -113,21 +129,17 @@ void CEnemy::HitLife(int nDamage)
 
 	m_Info.nLife -= nDamage;
 
-	if (m_Info.nLife >= 0)
+	if (m_Info.nLife <= 0)
 	{
-		//for (int nCntPtcl = 0; nCntPtcl < 16; nCntPtcl++) 
-		//{
-		//	// エフェクト2D生成
-		//	CParticle2D *pObj = CParticle2D::Create();
-		//	// 位置設定
-		//	pObj->SetPos(GetPos());
-		//	// 向き設定
-		//	pObj->SetRot(D3DXVECTOR3(0.0f, 0.0f, ((float)rand() / RAND_MAX) * D3DX_PI * 2.0f));
-		//	// 移動量設定
-		//	pObj->SetMove(5.0f + (5.0f * ((float)rand() / RAND_MAX)));
-		//	// 寿命設定
-		//	pObj->SetLife(8 + (rand() % 24));
-		//}
+		// パーティクル生成
+		CParticleX *pObj = CParticleX::Create();
+		pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 20, m_Info.pos.z));
+		pObj->Par_SetRot(INIT_D3DXVECTOR3);
+		pObj->Par_SetMove(D3DXVECTOR3(10.0f, 3.0f, 10.0f));
+		pObj->Par_SetType(0);
+		pObj->Par_SetLife(100);
+		pObj->Par_SetCol(D3DXCOLOR(0.3, 0.8f, 0.8f, 1.0f));
+		pObj->Par_SetForm(15);
 
 		// 敵の破棄
 		Uninit();
@@ -135,79 +147,144 @@ void CEnemy::HitLife(int nDamage)
 		// スコア設定
 		CScore::SetScore(300);
 
+		// 爆発のSE再生
 		pSound->PlaySound(3);
 
 		return;
 	}
 	else
 	{
+		// ヒットSEの再生
 		pSound->PlaySound(2);
+
+		// ダメージ状態
+		SetState(STATE_DAMAGE);
+		
+
+		// パーティクル生成
+		CParticleX *pObj = CParticleX::Create();
+		pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z));
+		pObj->Par_SetRot(INIT_D3DXVECTOR3);
+		pObj->Par_SetMove(D3DXVECTOR3(10.0f, 3.0f,10.0f));
+		pObj->Par_SetType(0);
+		pObj->Par_SetLife(50);
+		pObj->Par_SetCol(D3DXCOLOR(0.3,0.8f,0.8f,1.0f));
+		pObj->Par_SetForm(15);
 	}
+}
+
+//========================================
+// 状態設定
+//========================================
+void CEnemy::SetState(STATE state)
+{
+	// 状態
+	switch (state)
+	{
+	case STATE_NORMAL: { /* 通常状態 */
+
+		// 状態の設定
+		m_Info.state = STATE_NORMAL;
+
+		// ダメージ色の設定
+		m_Info.col = D3DXCOLOR(1.0f, 1.0f, 1.1f, 1.0f);
+	}
+	   break;
+	case STATE_DAMAGE: { /* ダメージ状態 */
+
+		m_Info.state = STATE_DAMAGE;	// 状態設定
+		m_Info.nCntState = 10;			// 時間
+
+		// ダメージ色の設定
+		m_Info.col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+
+	}
+	   break;
+	}
+}
+
+//========================================
+// 状態推移
+//========================================
+void CEnemy::StateShift(void)
+{
+	// 状態
+	switch (m_Info.state)
+	{
+	case STATE_NORMAL: { /* 通常状態 */
+
+	}
+	   break;
+	case STATE_DAMAGE: { /* ダメージ状態 */
+
+		// 状態を切替える
+		if (--m_Info.nCntState <= 0)
+		{
+			// 通常状態にする
+			SetState(STATE_NORMAL);
+		}
+
+	}
+	   break;
+	}
+
 }
 
 //========================================
 // 読み込み
 //========================================
+void CEnemy::Load(void)
+{
+	//// 読み込み
 
-//void CEnemy::Load(void)
-//{
-//	CSVFILE<int> data;
-//
-//	// 読み込み
-//	data.csv_read("data\\GAMEDATA\\BLOCK\\BLOCK_DATA.csv", true, true, ',');
-//
-//	// 動的確保
-//	int nLineMax = data.cell.size() - 1;
-//	pSet = new SetInfo[nLineMax];
-//
-//	for (int nLine = 0; nLine < data.cell.size(); nLine++)
-//	{
-//		int nRowMax = data.cell.at(nLine).size();
-//
-//		for (int nRow = 0; nRow < data.cell.at(nLine).size(); nRow++)
-//		{
-//			switch (nRow)
-//			{
-//				// 種類
-//			case SET_TYPE:
-//			{
-//				pSet[nLine].nType = (int)data.cell.at(nLine).at(nRow);
-//			}
-//			break;
-//
-//			// 位置
-//			case SET_POS:
-//			{
-//				pSet[nLine].pos.x = (int)data.cell.at(nLine).at(nRow); nRow++;
-//				pSet[nLine].pos.y = (int)data.cell.at(nLine).at(nRow); nRow++;
-//				pSet[nLine].pos.z = (int)data.cell.at(nLine).at(nRow);
-//			}
-//			break;
-//
-//			// 移動量
-//			case SET_SPEED:
-//			{
-//				pSet[nLine].nSpeed = data.cell.at(nLine).at(nRow);
-//			}
-//			break;
-//
-//			// 部隊ID
-//			case SET_UNIT:
-//			{
-//				pSet[nLine].nStage = (int)data.cell.at(nLine).at(nRow);
-//			}
-//			break;
-//
-//			// ステージID
-//			case SET_STAGE:
-//			{
-//				pSet[nLine].nStage = (int)data.cell.at(nLine).at(nRow);
-//			}
-//			break;
-//			}
-//		}
-//	}
-//}
+	//// 動的確保
+
+	//for (int nRow1 = 0; nRow1 < 0; nRow1++)
+	//{
+	//	for (int nLine = 0; nLine < 0; nLine++)
+	//	{
+	//		switch (nLine)
+	//		{
+	//			// 種類
+	//		case SET_TYPE:
+	//		{
+	//			pSet[nRow1].nType = 0;
+	//		}
+	//		break;
+
+	//		// 位置
+	//		case SET_POS:
+	//		{
+	//			pSet[nRow1].pos.x = 0.0f; nLine++;
+	//			pSet[nRow1].pos.y = 0.0f; nLine++;
+	//			pSet[nRow1].pos.z = 0.0f;
+	//		}
+	//		break;
+
+	//		// 移動量
+	//		case SET_SPEED:
+	//		{
+	//			pSet[nRow1].nSpeed = 0;
+	//		}
+	//		break;
+
+	//		// 部隊ID
+	//		case SET_UNIT:
+	//		{
+	//			pSet[nRow1].nStage = 0;
+	//		}
+	//		break;
+
+	//		// ステージID
+	//		case SET_STAGE:
+	//		{
+	//			pSet[nRow1].nStage = 0;
+	//		}
+	//		break;
+	//		}
+	//	}
+	//}
+}
 
 //========================================
 // 配置

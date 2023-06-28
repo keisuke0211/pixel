@@ -61,21 +61,22 @@ CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 		return pBlock;
 	}
 
-	// オブジェクト2Dの生成
+	// ブロックの生成
 	pBlock = new CBlock;
 
-	if (nType == BULLET_ID)
+	if (nType == MODEL_BULLET)
 	{
 		pBlock->m_Info.nCntRadius = RADIUS_TIME;
 		pBlock->m_Info.fRadiusRate = 0.0f;
-		pBlock->SetModel(2);
 		pBlock->m_Info.bSet = false;
 	}
 	else
 	{
-		pBlock->SetModel(nType);
+		
 		pBlock->m_Info.bSet = false;
 	}
+
+	pBlock->SetModel(nType);
 
 	// 初期化処理
 	pBlock->Init();
@@ -135,7 +136,7 @@ void CBlock::Update(void)
 {
 
 	// 半径推移
-	if (m_Info.bSet == false && m_Info.nType == BULLET_ID)
+	if (m_Info.bSet == false && m_Info.nType == MODEL_BULLET)
 	{
 		m_Info.fRadiusRate = (float)m_Info.nCntRadius / (float)RADIUS_TIME;
 		m_Info.fRadius = 1 * (1.0f - m_Info.fRadiusRate);
@@ -192,34 +193,32 @@ void CBlock::Load(void)
 	int nLineMax = data.cell.size() - 1;
 	pSetInfo = new SetInfo[nLineMax];
 
-	for (int nLine = 0; nLine < data.cell.size(); nLine++)
+	for (int nRow = 0; nRow < data.cell.size(); nRow++)
 	{
-		for (int nRow = 0; nRow < data.cell.at(nLine).size(); nRow++)
+		for (int nLine = 0; nLine < data.cell.at(nRow).size(); nLine++)
 		{
-			switch (nRow)
+			switch (nLine)
 			{
-				// 種類
-			case SET_TYPE:
+
+			case SET_TYPE:	// 種類
 			{
-				pSetInfo[nLine].nType = (int)data.cell.at(nLine).at(nRow);
+				pSetInfo[nRow].nType = (int)data.cell.at(nRow).at(nLine);
 			}
 				break;
 
-				// 位置
-			case SET_POS:
+			case SET_POS:	// 位置
 			{
-				pSetInfo[nLine].pos.x = (int)data.cell.at(nLine).at(nRow); nRow++;
-				pSetInfo[nLine].pos.y = (int)data.cell.at(nLine).at(nRow); nRow++;
-				pSetInfo[nLine].pos.z = (int)data.cell.at(nLine).at(nRow);
+				pSetInfo[nRow].pos.x = (int)data.cell.at(nRow).at(nLine); nLine++;
+				pSetInfo[nRow].pos.y = (int)data.cell.at(nRow).at(nLine); nLine++;
+				pSetInfo[nRow].pos.z = (int)data.cell.at(nRow).at(nLine);
 			}
 				break;
 
-				// ブロック数
-			case SET_NUM:
+			case SET_NUM:	// ブロック数
 			{
-				pSetInfo[nLine].nNumX = data.cell.at(nLine).at(nRow); nRow++;
-				pSetInfo[nLine].nNumY = data.cell.at(nLine).at(nRow); nRow++;
-				pSetInfo[nLine].nNumZ = data.cell.at(nLine).at(nRow);
+				pSetInfo[nRow].nNumX = data.cell.at(nRow).at(nLine); nLine++;
+				pSetInfo[nRow].nNumY = data.cell.at(nRow).at(nLine); nLine++;
+				pSetInfo[nRow].nNumZ = data.cell.at(nRow).at(nLine);
 			}
 				break;
 			}
@@ -235,20 +234,19 @@ void CBlock::Load(void)
 //========================================
 void CBlock::SetBlock(int nNumSet)
 {
-	float fWidth = CModel::GetWidth(0);			// 幅
-	float fHeight = CModel::GetHeight(0);		// 高さ
-	float fDepth = CModel::GetDepth(0);			// 奥行き
-	
-
 	for (int nCntSet = 0; nCntSet < nNumSet; nCntSet++, pSetInfo++)
 	{
+		float fWidth = CModel::GetWidth(pSetInfo->nType);		// 幅
+		float fHeight = CModel::GetHeight(pSetInfo->nType);		// 高さ
+		float fDepth = CModel::GetDepth(pSetInfo->nType);		// 奥行き
+
 		for (int nCntX = 0; nCntX < pSetInfo->nNumX; nCntX++)
 		{
 			for (int nCntY = 0; nCntY < pSetInfo->nNumY; nCntY++)
 			{
 				for (int nCntZ = 0; nCntZ < pSetInfo->nNumZ; nCntZ++)
 				{
-					CBlock::Create(pSetInfo->nType, 
+					CBlock::Create(pSetInfo->nType,
 						D3DXVECTOR3((
 							pSetInfo->pos.x + (nCntX * (fWidth * 2))),
 							pSetInfo->pos.y + (nCntY * (fHeight * 2)),

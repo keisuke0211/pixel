@@ -21,9 +21,15 @@ public:
 	// ***** 定義 *****
 	static const int MAX_ENEMY = 30;	// 敵の最大数
 
-	// ***** 関数 *****
-	CEnemy(int nPriority = PRIO_OBJX);
-	virtual~CEnemy();
+	// ***** 列挙型 *****
+
+	// 状態
+	typedef enum
+	{
+		STATE_NORMAL,	// 通常
+		STATE_DAMAGE,	// ダメージ
+		STATE_MAX,
+	}STATE;
 
 	// ***** 構造体 *****
 
@@ -37,12 +43,18 @@ public:
 		D3DCOLOR col;		// 頂点カラー
 		int nType;			// 種類
 		int nLife;			// 寿命
+		STATE state;		//状態
+		int nCntState;	//状態管理カウンター
 	} Info;
+
+	// ***** 関数 *****
+	CEnemy(int nPriority = PRIO_OBJX);
+	virtual~CEnemy();
 
 	/* メイン */
 
 	// 生成
-	static CEnemy *Create(void);
+	static CEnemy *Create(D3DXVECTOR3 pos);
 
 	HRESULT Init(void);	// 初期化
 	void Uninit(void);	// 終了
@@ -90,7 +102,9 @@ private:
 	} SetInfo;
 
 	// ***** 関数 *****
-	static void Load(void);	// 読み込み
+	void SetState(STATE state);	// 状態設定
+	void StateShift(void);		// 状態推移
+	static void Load(void);		// 読み込み
 
 	// ***** 変数 *****
 	Info m_Info;			// 情報

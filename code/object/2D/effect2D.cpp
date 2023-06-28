@@ -9,10 +9,6 @@
 #include "../../manager.h"
 #include "../../renderer.h"
 
-// 静的メンバ変数
-LPDIRECT3DTEXTURE9 CEffect2D::m_pTexture[MAX_TEXTURE] = { NULL };	// 共有テクスチャ
-int CEffect2D::m_nTexture = -1;
-
 // コンストラクタ
 CEffect2D::CEffect2D(int nPriority) : CObject2D(nPriority)
 {
@@ -26,44 +22,6 @@ CEffect2D::CEffect2D(int nPriority) : CObject2D(nPriority)
 CEffect2D::~CEffect2D()
 {
 
-}
-
-//========================================
-// テクスチャの読み込み
-//========================================
-HRESULT CEffect2D::Load(char *pPath)
-{
-	if (pPath != NULL)
-	{
-		m_nTexture++;	// テクスチャ数加算
-
-		// デバイス取得
-		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-		// テクスチャの読み込み
-		if (FAILED(D3DXCreateTextureFromFile(pDevice, pPath, &m_pTexture[m_nTexture])))
-		{
-			m_pTexture[m_nTexture] = NULL;
-		}
-	}
-
-	return S_OK;
-}
-
-//========================================
-// テクスチャの破棄
-//========================================
-void CEffect2D::Unload(void)
-{
-	// テクスチャの破棄
-	for (int nCntTex = 0; nCntTex < m_nTexture; nCntTex++)
-	{
-		if (m_pTexture[nCntTex] != NULL)
-		{
-			m_pTexture[nCntTex]->Release();
-			m_pTexture[nCntTex] = NULL;
-		}
-	}
 }
 
 //========================================
