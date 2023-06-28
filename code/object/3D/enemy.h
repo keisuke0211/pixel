@@ -42,7 +42,7 @@ public:
 	/* ƒƒCƒ“ */
 
 	// ¶¬
-	static CEnemy *Create(void);
+	static CEnemy *Create(D3DXVECTOR3 pos);
 
 	HRESULT Init(void);	// ‰Šú‰»
 	void Uninit(void);	// I—¹

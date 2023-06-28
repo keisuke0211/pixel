@@ -96,41 +96,41 @@ void CSVFILE<T>::csv_read(string filepath, bool bHeader, bool bIndex, char delim
 	ifstream ifs_csv_file(filepath);
 
 	// １行ずつ読み込む (読み込んだ内容を str_buf に格納)
-	for (int nLine = 0; getline(ifs_csv_file, str_buf); nLine++)
+	for (int nRow = 0; getline(ifs_csv_file, str_buf); nRow++)
 	{
 		cell.push_back(vector<T>());
 
 		// delim 区切りごとにデータを読み込むために istringstream にする
 		istringstream i_stream(str_buf);
 
-		for (int nRow = 0; getline(i_stream, str_comma_buf, delim); nRow++)
+		for (int nLine = 0; getline(i_stream, str_comma_buf, delim); nLine++)
 		{
 			// -- 読み込み------------------------
 			if (bHeader && bIndex)
 			{// ヘッダーとインデックスがある時
 
-				/* 折り返す		*/if (nLine == 0 && nRow == 0) continue;
-				/* ヘッダー		*/if (nLine == 0 && nRow != 0) header.push_back(str_comma_buf);
-				/* インデックス */if (nLine != 0 && nRow == 0) index.push_back(str_comma_buf);
-				/* 要素			*/if (nLine != 0 && nRow != 0) cell.at(nLine - 1).push_back(cast_cell(str_comma_buf));
+				/* 折り返す		*/if (nRow == 0 && nLine == 0) continue;
+				/* ヘッダー		*/if (nRow == 0 && nLine != 0) header.push_back(str_comma_buf);
+				/* インデックス */if (nRow != 0 && nLine == 0) index.push_back(str_comma_buf);
+				/* 要素			*/if (nRow != 0 && nLine != 0) cell.at(nRow - 1).push_back(cast_cell(str_comma_buf));
 			}
 			else if (bHeader)
 			{// ヘッダーがある時
-				/* ヘッダー		*/if (nLine == 0)				header.push_back(str_comma_buf);
-				/* インデックス */if (nLine != 0 && nRow == 0)	index.push_back(string());
-				/* 要素			*/if (nLine != 0)				cell.at(nLine - 1).push_back(cast_cell(str_comma_buf));
+				/* ヘッダー		*/if (nRow == 0)				header.push_back(str_comma_buf);
+				/* インデックス */if (nRow != 0 && nLine == 0)	index.push_back(string());
+				/* 要素			*/if (nRow != 0)				cell.at(nRow - 1).push_back(cast_cell(str_comma_buf));
 			}
 			else if (bIndex)
 			{// インデックスがある時
-				/* ヘッダー		*/if (nLine == 0 && nRow != 0)	header.push_back(str_comma_buf);
-				/* インデックス */if (nRow == 0)				index.push_back(str_comma_buf);
-				/* 要素			*/if (nRow != 0)				cell.at(nLine).push_back(cast_cell(str_comma_buf));
+				/* ヘッダー		*/if (nRow == 0 && nLine != 0)	header.push_back(str_comma_buf);
+				/* インデックス */if (nLine == 0)				index.push_back(str_comma_buf);
+				/* 要素			*/if (nLine != 0)				cell.at(nRow).push_back(cast_cell(str_comma_buf));
 			}
 			else
 			{// 要素のみ
-				/* ヘッダー		*/if (nLine == 0)	header.push_back(str_comma_buf);
-				/* インデックス */if (nRow == 0)	index.push_back(str_comma_buf);
-				/* 要素			*/					cell.at(nLine).push_back(cast_cell(str_comma_buf));
+				/* ヘッダー		*/if (nRow == 0)	header.push_back(str_comma_buf);
+				/* インデックス */if (nLine == 0)	index.push_back(str_comma_buf);
+				/* 要素			*/					cell.at(nRow).push_back(cast_cell(str_comma_buf));
 			}
 		}
 	}

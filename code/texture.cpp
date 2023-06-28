@@ -95,9 +95,6 @@ void CTexture::Unload(void)
 			m_apTexture[nCntTex] = NULL;
 		}
 	}
-
-	CBg::Unload();			// 背景
-	CEffect2D::Unload();	// エフェクト
 }
 
 //========================================

@@ -90,7 +90,7 @@ HRESULT CPlayer::Init(void)
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	
-	// 生成 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+	// 生成
 	SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 	SetPos(m_Info.pos);
 	SetRot(m_Info.rot);
@@ -182,8 +182,6 @@ void CPlayer::KeyInput(void)
 	// 攻撃
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_B))
 	{
-		//CBullet::Create(D3DXVECTOR3(0.0f, 10, 0.0f), D3DXVECTOR3(0.0f,3.14f,0.0f));
-
 		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z),m_Info.rot);
 	}
 
@@ -298,7 +296,7 @@ void CPlayer::UpdatePos(void)
 }
 
 //========================================
-// ブロックとの当たり判定
+// モデルとの当たり判定
 //========================================
 D3DXVECTOR3 CPlayer::Collision(VECTOR vector,D3DXVECTOR3 pos)
 {
@@ -321,17 +319,13 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector,D3DXVECTOR3 pos)
 				D3DXVECTOR3 Scale = GetSize();
 				float fSize = 10.0f;
 
-
 				// ブロックの取得
 				D3DXVECTOR3 PairPos = pObj->GetPos();	// 位置
 				float fPairWidth = pObj->GetWidth();	// 幅
 				float fPairHeight = pObj->GetHeight();	// 高さ
 				float fPairDepth = pObj->GetDepth();	// 奥行き
 
-
 				// --- 当たり判定 ----------------------------------------------
-
-
 				switch (vector)
 				{
 				case VECTOR_X: {	/* X方向 */
@@ -415,6 +409,94 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector,D3DXVECTOR3 pos)
 				   break;
 				}
 			}
+			else if (type = TYPE_ENEMY)
+			{// 種類がエネミーの時
+			 // プレイヤーの各パーツの取得
+				D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
+				D3DXVECTOR3 Scale = GetSize();
+				float fSize = 10.0f;
+
+				// ブロックの取得
+				D3DXVECTOR3 PairPos = pObj->GetPos();	// 位置
+				float fPairWidth = pObj->GetWidth();	// 幅
+				float fPairHeight = pObj->GetHeight();	// 高さ
+				float fPairDepth = pObj->GetDepth();	// 奥行き
+
+				// --- 当たり判定 ----------------------------------------------
+				switch (vector)
+				{
+				case VECTOR_X: {	/* X方向 */
+
+					if ((pos.z + fSize) > (PairPos.z - fPairDepth) &&
+						(pos.z - fSize) < (PairPos.z + fPairDepth) &&
+						(pos.y + fSize) > (PairPos.y - fPairHeight) &&
+						(pos.y - fSize) < (PairPos.y + fPairHeight))
+					{// 奥辺と手前辺が相手の幅の内側の時、
+
+						if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
+							(PosOld.x + fSize) <= (PairPos.x - fPairWidth))
+						{// 左からめり込んでいる時
+
+							pos.x = (PairPos.x - fPairWidth) - fSize;
+						}
+						else if ((pos.x - fSize) < (PairPos.x + fPairWidth) &&
+							(PosOld.x - fSize) >= (PairPos.x + fPairWidth))
+						{// 右からめり込んでいる時
+
+							pos.x = (PairPos.x + fPairWidth) + fSize;
+						}
+					}
+				}
+				   break;
+				case VECTOR_Y: {	/* Y方向 */
+
+					if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
+						(pos.x - fSize) < (PairPos.x + fPairWidth) &&
+						(pos.z + fSize) > (PairPos.z - fPairDepth) &&
+						(pos.z - fSize) < (PairPos.z + fPairDepth))
+					{// 左辺と右辺が相手の幅の内側の時、
+
+						if ((pos.y + fSize) > (PairPos.y - fPairHeight) &&
+							(PosOld.y + fSize) <= (PairPos.y - fPairHeight))
+						{// 下からめり込んでいる時
+
+							pos.y = (PairPos.y - fPairHeight) - fSize;
+						}
+						else if ((pos.y - fSize) < (PairPos.y + fPairHeight) &&
+							(PosOld.y - fSize) >= (PairPos.y + fPairHeight))
+						{// 上からめり込んでいる時
+
+							pos.y = (PairPos.y + fPairHeight) + fSize;
+						}
+					}
+				}
+				   break;
+				case VECTOR_Z: {	/* Z方向 */
+
+					if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
+						(pos.x - fSize) < (PairPos.x + fPairWidth) &&
+						(pos.y + fSize) > (PairPos.y - fPairHeight) &&
+						(pos.y - fSize) < (PairPos.y + fPairHeight))
+					{// 奥辺と手前辺が相手の幅の内側の時、
+
+						if ((pos.z + fSize) > (PairPos.z - fPairDepth) &&
+							(PosOld.z + fSize) <= (PairPos.z - fPairDepth))
+						{// 左からめり込んでいる時
+
+							pos.z = (PairPos.z - fPairDepth) - fSize;
+						}
+						else if ((pos.z - fSize) < (PairPos.z + fPairDepth) &&
+							(PosOld.z - fSize) >= (PairPos.z + fPairDepth))
+						{// 右からめり込んでいる時
+
+							pos.z = (PairPos.z + fPairDepth) + fSize;
+						}
+					}
+				}
+				   break;
+				}
+			}
+
 		}
 	}
 	return pos;
