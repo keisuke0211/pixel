@@ -103,7 +103,11 @@ void CObjectX::Uninit(void)
 //========================================
 void CObjectX::Update(void)
 {
-	// 色の更新
+	//// 位置・向き・サイズの更新
+	//m_pModel->SetPos(m_pos);
+	//m_pModel->SetRot(m_rot);
+	//m_pModel->SetScale(m_scale);
+
 	m_pModel->SetColor(m_color);
 }
 

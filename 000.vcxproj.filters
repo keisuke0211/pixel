@@ -22,23 +22,14 @@
     <Filter Include="ソース ファイル\02_system">
       <UniqueIdentifier>{7ec71532-be61-4830-9e8f-1b2d6ca4c027}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\01_object\00_2D">
+    <Filter Include="ソース ファイル\01_object\2D">
       <UniqueIdentifier>{4df6a426-8001-47bd-b007-a4ecf0d5c231}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\01_object\01_3D">
+    <Filter Include="ソース ファイル\01_object\3D">
       <UniqueIdentifier>{a518ef8b-4263-4dd1-9d4a-b11ce452f40b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\01_object\02_model">
+    <Filter Include="ソース ファイル\01_object\00_model">
       <UniqueIdentifier>{ce93420b-a7c8-4db5-bd5f-aec0b8e1ae22}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\01_object\02_model\00_system">
-      <UniqueIdentifier>{10122d12-6218-4255-b74a-30e1faef53c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\02_system\00_render">
-      <UniqueIdentifier>{a04cc2e7-0a71-4fdc-abb8-23b36e13c640}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\01_object\02_model\01_effect">
-      <UniqueIdentifier>{72f1b92f-f204-40e1-a57d-556bc793e8b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="code\main.cpp">
       <Filter>ソース ファイル\00_main</Filter>
+    </ClCompile>
+    <ClCompile Include="code\renderer.cpp">
+      <Filter>ソース ファイル\02_system</Filter>
     </ClCompile>
     <ClCompile Include="code\texture.cpp">
       <Filter>ソース ファイル\02_system</Filter>
@@ -60,85 +54,79 @@
     <ClCompile Include="code\input.cpp">
       <Filter>ソース ファイル\02_system</Filter>
     </ClCompile>
+    <ClCompile Include="code\sound.cpp">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClCompile>
     <ClCompile Include="code\object\object3D.cpp">
       <Filter>ソース ファイル\01_object</Filter>
     </ClCompile>
     <ClCompile Include="code\object\2D\score.cpp">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\3D\bullet.cpp">
+      <Filter>ソース ファイル\01_object\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\3D\enemy.cpp">
+      <Filter>ソース ファイル\01_object\3D</Filter>
     </ClCompile>
     <ClCompile Include="code\object\2D\text2D.cpp">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
     </ClCompile>
     <ClCompile Include="code\object\2D\effect2D.cpp">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
     </ClCompile>
     <ClCompile Include="code\object\2D\particle2D.cpp">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
     </ClCompile>
     <ClCompile Include="code\object\2D\bg_Multi2D.cpp">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
     </ClCompile>
     <ClCompile Include="code\object\2D\bg2D.cpp">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\camera.cpp">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClCompile>
+    <ClCompile Include="code\light.cpp">
+      <Filter>ソース ファイル\02_system</Filter>
     </ClCompile>
     <ClCompile Include="code\object\3D\floor.cpp">
-      <Filter>ソース ファイル\01_object\01_3D</Filter>
+      <Filter>ソース ファイル\01_object\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\3D\player.cpp">
+      <Filter>ソース ファイル\01_object\3D</Filter>
     </ClCompile>
     <ClCompile Include="code\physics.cpp">
       <Filter>ソース ファイル\02_system</Filter>
     </ClCompile>
+    <ClCompile Include="code\object\model.cpp">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\parts.cpp">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\motion.cpp">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\motion_model.cpp">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
+    </ClCompile>
     <ClCompile Include="code\object\2D\time.cpp">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\3D\block.cpp">
+      <Filter>ソース ファイル\01_object\3D</Filter>
     </ClCompile>
     <ClCompile Include="code\object\objectX.cpp">
       <Filter>ソース ファイル\01_object</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\3D\effectX.cpp">
-      <Filter>ソース ファイル\01_object\02_model\01_effect</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\3D\particleX.cpp">
-      <Filter>ソース ファイル\01_object\02_model\01_effect</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\motion.cpp">
-      <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\motion_model.cpp">
-      <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\parts.cpp">
-      <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\3D\block.cpp">
-      <Filter>ソース ファイル\01_object\02_model</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\3D\bullet.cpp">
-      <Filter>ソース ファイル\01_object\02_model</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\3D\enemy.cpp">
-      <Filter>ソース ファイル\01_object\02_model</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\3D\player.cpp">
-      <Filter>ソース ファイル\01_object\02_model</Filter>
-    </ClCompile>
-    <ClCompile Include="code\camera.cpp">
-      <Filter>ソース ファイル\02_system\00_render</Filter>
-    </ClCompile>
-    <ClCompile Include="code\light.cpp">
-      <Filter>ソース ファイル\02_system\00_render</Filter>
-    </ClCompile>
-    <ClCompile Include="code\renderer.cpp">
-      <Filter>ソース ファイル\02_system\00_render</Filter>
-    </ClCompile>
-    <ClCompile Include="code\sound.cpp">
-      <Filter>ソース ファイル\02_system\00_render</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\model.cpp">
-      <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\main.h">
       <Filter>ソース ファイル\00_main</Filter>
+    </ClInclude>
+    <ClInclude Include="code\renderer.h">
+      <Filter>ソース ファイル\02_system</Filter>
     </ClInclude>
     <ClInclude Include="code\texture.h">
       <Filter>ソース ファイル\02_system</Filter>
@@ -155,86 +143,77 @@
     <ClInclude Include="code\manager.h">
       <Filter>ソース ファイル\00_main</Filter>
     </ClInclude>
+    <ClInclude Include="code\sound.h">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClInclude>
     <ClInclude Include="code\object\object3D.h">
       <Filter>ソース ファイル\01_object</Filter>
     </ClInclude>
     <ClInclude Include="code\object\2D\score.h">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\3D\bullet.h">
+      <Filter>ソース ファイル\01_object\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\3D\enemy.h">
+      <Filter>ソース ファイル\01_object\3D</Filter>
     </ClInclude>
     <ClInclude Include="code\object\2D\text2D.h">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
     </ClInclude>
     <ClInclude Include="code\object\2D\effect2D.h">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
     </ClInclude>
     <ClInclude Include="code\object\2D\particle2D.h">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="code\object\2D\bg_Multi2D.h">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
     </ClInclude>
     <ClInclude Include="code\object\2D\bg2D.h">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\camera.h">
+      <Filter>ソース ファイル\02_system</Filter>
+    </ClInclude>
+    <ClInclude Include="code\light.h">
+      <Filter>ソース ファイル\02_system</Filter>
     </ClInclude>
     <ClInclude Include="code\object\3D\floor.h">
-      <Filter>ソース ファイル\01_object\01_3D</Filter>
+      <Filter>ソース ファイル\01_object\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\3D\player.h">
+      <Filter>ソース ファイル\01_object\3D</Filter>
     </ClInclude>
     <ClInclude Include="code\physics.h">
       <Filter>ソース ファイル\02_system</Filter>
     </ClInclude>
+    <ClInclude Include="code\object\model.h">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\parts.h">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\motion.h">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\motion_model.h">
+      <Filter>ソース ファイル\01_object\00_model</Filter>
+    </ClInclude>
     <ClInclude Include="code\object\2D\time.h">
-      <Filter>ソース ファイル\01_object\00_2D</Filter>
+      <Filter>ソース ファイル\01_object\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\3D\block.h">
+      <Filter>ソース ファイル\01_object\3D</Filter>
     </ClInclude>
     <ClInclude Include="code\object\objectX.h">
       <Filter>ソース ファイル\01_object</Filter>
     </ClInclude>
     <ClInclude Include="code\csv_file.h">
       <Filter>ソース ファイル\02_system</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\3D\effectX.h">
-      <Filter>ソース ファイル\01_object\02_model\01_effect</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\3D\particleX.h">
-      <Filter>ソース ファイル\01_object\02_model\01_effect</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\model.h">
-      <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\motion.h">
-      <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\motion_model.h">
-      <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\parts.h">
-      <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\3D\block.h">
-      <Filter>ソース ファイル\01_object\02_model</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\3D\bullet.h">
-      <Filter>ソース ファイル\01_object\02_model</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\3D\enemy.h">
-      <Filter>ソース ファイル\01_object\02_model</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\3D\player.h">
-      <Filter>ソース ファイル\01_object\02_model</Filter>
-    </ClInclude>
-    <ClInclude Include="code\camera.h">
-      <Filter>ソース ファイル\02_system\00_render</Filter>
-    </ClInclude>
-    <ClInclude Include="code\light.h">
-      <Filter>ソース ファイル\02_system\00_render</Filter>
-    </ClInclude>
-    <ClInclude Include="code\renderer.h">
-      <Filter>ソース ファイル\02_system\00_render</Filter>
-    </ClInclude>
-    <ClInclude Include="code\sound.h">
-      <Filter>ソース ファイル\02_system\00_render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

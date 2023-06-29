@@ -36,7 +36,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 {
 	D3DDISPLAYMODE d3ddm;        //ディスプレイモード
 
-	 //Direct3Dオブジェクトの生成
+								 //Direct3Dオブジェクトの生成
 	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 
 	if (m_pD3D == NULL)

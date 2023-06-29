@@ -91,7 +91,6 @@ private:
 	typedef struct
 	{
 		D3DXVECTOR3 pos;	// 位置
-		D3DXVECTOR3 rot;	// 向き
 		int nType;			// 種類
 		int nNumX;			// X ブロック数
 		int nNumY;			// Y ブロック数

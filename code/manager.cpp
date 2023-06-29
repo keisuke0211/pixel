@@ -23,7 +23,6 @@
 #include "object\3D\block.h"
 #include "object\3D\player.h"
 #include "object\3D\enemy.h"
-#include "object\3D\effectX.h"
 
 // 静的メンバ変数
 CRenderer *CManager::m_pRenderer = NULL;
@@ -127,7 +126,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 		// サウンドの初期化
 		m_pSound->Init(hWnd);
 	}
-
+	
 	if (m_pTexture == NULL)
 	{
 		// テクスチャの生成
@@ -145,7 +144,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	//{
 	//	/*CBgMulti::Create(D3DXVECTOR3((nCntBg + 1)* 0.0005f, 0.0f, 0.0f), nCntBg);*/
 	//}
-
+	
 	//CFloor::Create();
 
 	// ブロックの生成
@@ -154,20 +153,8 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	CPlayer::Create();
 
 	// 敵の生成
+	CEnemy::Create();
 
-	for (int nCnt = 0; nCnt < 10; nCnt++)
-	{
-		CEnemy::Create(D3DXVECTOR3(300.0f + (nCnt * -75), -20.0f, -150.0f));
-	}
-
-	/*CEffectX *pObj = CEffectX::Create();
-	pObj->Eff_SetPos(D3DXVECTOR3(0.0f, 20.0f, 0.0f));
-	pObj->Eff_SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	pObj->Eff_SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	pObj->Eff_SetType(1);
-	pObj->Eff_SetLife(1000);
-	pObj->Eff_SetCol(D3DXCOLOR(0.1f, 0.f, 0.8f, 1.0f));
-	pObj->Eff_SetRadius(1.0f);*/
 
 	{
 		// タイム生成

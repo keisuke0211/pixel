@@ -109,28 +109,28 @@ void CSVFILE<T>::csv_read(string filepath, bool bHeader, bool bIndex, char delim
 			if (bHeader && bIndex)
 			{// ヘッダーとインデックスがある時
 
-				/* 折り返す		*/if (nRow == 0 && nLine == 0) continue;
-				/* ヘッダー		*/if (nRow == 0 && nLine != 0) header.push_back(str_comma_buf);
-				/* インデックス */if (nRow != 0 && nLine == 0) index.push_back(str_comma_buf);
-				/* 要素			*/if (nRow != 0 && nLine != 0) cell.at(nRow - 1).push_back(cast_cell(str_comma_buf));
+				/* 折り返す		*/if (nLine == 0 && nRow == 0) continue;
+				/* ヘッダー		*/if (nLine == 0 && nRow != 0) header.push_back(str_comma_buf);
+				/* インデックス */if (nLine != 0 && nRow == 0) index.push_back(str_comma_buf);
+				/* 要素			*/if (nLine != 0 && nRow != 0) cell.at(nLine - 1).push_back(cast_cell(str_comma_buf));
 			}
 			else if (bHeader)
 			{// ヘッダーがある時
-				/* ヘッダー		*/if (nRow == 0)				header.push_back(str_comma_buf);
-				/* インデックス */if (nRow != 0 && nLine == 0)	index.push_back(string());
-				/* 要素			*/if (nRow != 0)				cell.at(nRow - 1).push_back(cast_cell(str_comma_buf));
+				/* ヘッダー		*/if (nLine == 0)				header.push_back(str_comma_buf);
+				/* インデックス */if (nLine != 0 && nRow == 0)	index.push_back(string());
+				/* 要素			*/if (nLine != 0)				cell.at(nLine - 1).push_back(cast_cell(str_comma_buf));
 			}
 			else if (bIndex)
 			{// インデックスがある時
-				/* ヘッダー		*/if (nRow == 0 && nLine != 0)	header.push_back(str_comma_buf);
-				/* インデックス */if (nLine == 0)				index.push_back(str_comma_buf);
-				/* 要素			*/if (nLine != 0)				cell.at(nRow).push_back(cast_cell(str_comma_buf));
+				/* ヘッダー		*/if (nLine == 0 && nRow != 0)	header.push_back(str_comma_buf);
+				/* インデックス */if (nRow == 0)				index.push_back(str_comma_buf);
+				/* 要素			*/if (nRow != 0)				cell.at(nLine).push_back(cast_cell(str_comma_buf));
 			}
 			else
 			{// 要素のみ
-				/* ヘッダー		*/if (nRow == 0)	header.push_back(str_comma_buf);
-				/* インデックス */if (nLine == 0)	index.push_back(str_comma_buf);
-				/* 要素			*/					cell.at(nRow).push_back(cast_cell(str_comma_buf));
+				/* ヘッダー		*/if (nLine == 0)	header.push_back(str_comma_buf);
+				/* インデックス */if (nRow == 0)	index.push_back(str_comma_buf);
+				/* 要素			*/					cell.at(nLine).push_back(cast_cell(str_comma_buf));
 			}
 		}
 	}

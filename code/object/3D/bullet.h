@@ -24,7 +24,6 @@ public:
 	typedef struct
 	{
 		D3DXVECTOR3 pos;	// 位置
-		D3DXVECTOR3 posOld;	// 位置(過去)
 		D3DXVECTOR3 rot;	// 向き
 		D3DXVECTOR3 move;	// 移動量
 		D3DXVECTOR3	size;	// サイズ
@@ -52,11 +51,7 @@ public:
 	void Draw(void);				// 描画
 
 	/* 取得 */
-	Info GetInfo() { return m_Info; }					// 弾情報
-	D3DXVECTOR3 GetPos() { return m_Info.pos; }			// 位置
-	D3DXVECTOR3 GetPosOld() { return m_Info.posOld; }	// 位置(過去)
-	D3DXVECTOR3 GetRot() { return m_Info.rot; }			// 向き
-	D3DXVECTOR3 GetMove() { return m_Info.move; }		// 移動量
+	Info GetInfo() { return m_Info; }				// プレイヤー情報
 
 private:
 

@@ -21,7 +21,7 @@ public:
 
 	// ***** 定義 *****
 	const DWORD  FVF_VERTEX_3D = (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1);		// 頂点フォーマット【2D】
-	
+
 	// ***** 構造体 *****
 
 	//頂点情報【 3D 】
@@ -49,74 +49,70 @@ public:
 	} MODEL_MATERIAL;
 
 	// ***** 静的関数 *****
-
-	/* 生成			*/static CModel *Create(void);
-	/* 初期化		*/static void InitModel(void);
-	/* 終了			*/static void UninitModel(void);
-	/* 読み込み		*/static void LoadModel(const char *pFileName);
-	/* サイズの算出 */static void CalcSize(int nCntModel);
-
-	/* 取得 */
-	/* マテリアル情報	*/static MODEL_MATERIAL *GetMaterial() { return m_material; }
-	/* モデル数			*/static int GetMaxModel(void) { return m_nMaxModel; } 
+	static CModel *Create(void);									// 生成
+	static void InitModel(void);									// 初期化
+	static void UninitModel(void);									// 終了
+	static void LoadModel(const char *pFileName);					// 読み込み
+	static void CalcSize(int nCntModel);							// 頂点座標の最小値・最大値の算出
+	static MODEL_MATERIAL *GetMaterial() { return m_material; }		// マテリアル情報の取得
+	static int GetMaxModel(void) { return m_nMaxModel; }			// モデル数 
 
 	// ***** 関数 *****
 	CModel();
 	~CModel();
 
-	// -- メイン ------------------------------------------
+	/* メイン */
+	HRESULT Init(void);								// 初期化
+	void Uninit(void);								// 終了
+	void Update(void);								// 更新
+	void Draw(bool Color);							// 描画
+	void Draw(D3DXMATRIX mtxParent, bool Color);	// 描画(オーバーロード)
 
-	/* 初期化	*/HRESULT Init(void);
-	/* 終了		*/void Uninit(void);
-	/* 更新		*/void Update(void);
-	/* 描画		*/void Draw(bool Color);
-	/* 描画		*/void Draw(D3DXMATRIX mtxParent, bool Color);
+	/* 設定 */
+	virtual void SetPos(const D3DXVECTOR3 pos) { m_pos = m_posOld = pos; }	// 位置
+	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }						// 向き
+	void SetColor(const D3DXCOLOR color) { m_color = color; }				// 色
+	void SetScale(const D3DXVECTOR3 &scale) { m_scale = scale; }			// スケール
+	void SetMtxWorld(D3DXMATRIX mtxWorld) { m_mtxWorld = mtxWorld; }		// ワールドマトリックス
+	void SetParent(CModel *pParent) { m_pParent = pParent; }				// 親モデル
+	void SetModelID(const int nModelID) { m_nModelID = nModelID; }			// モデルID
 
-	// -- 設定 ------------------------------------------
+	/* 取得 */
+	D3DXVECTOR3 GetPos(void) { return m_pos; }								// 位置
+	D3DXVECTOR3 GetRot(void) { return m_rot; }								// 向き
+	D3DXCOLOR GetColor(void) { return m_color; }							// 色
+	D3DXVECTOR3 GetSize(const int nModelID);								// 大きさ
+	D3DXVECTOR3 GetScale(void) { return m_scale; }							// サイズ
+	D3DXMATRIX GetMtxWorld(void) { return m_mtxWorld; }						// ワールドマトリックス
+	CModel *GetParent(void) { return m_pParent; }							// 親モデル
+	int GetModelID(void) { return m_nModelID; }								// モデルID
 
-	/* 位置					*/virtual void SetPos(const D3DXVECTOR3 pos) { m_pos = m_posOld = pos; }
-	/* 向き					*/void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }
-	/* 色					*/void SetColor(const D3DXCOLOR color) { m_color = color; }
-	/* スケール				*/void SetScale(const D3DXVECTOR3 &scale) { m_scale = scale; }
-	/* ワールドマトリックス	*/void SetMtxWorld(D3DXMATRIX mtxWorld) { m_mtxWorld = mtxWorld; }
-	/* 親モデル				*/void SetParent(CModel *pParent) { m_pParent = pParent; }
-	/* モデルID				*/void SetModelID(const int nModelID) { m_nModelID = nModelID; }
-
-	// -- 所得 ------------------------------------------
-
-	/* 位置					*/D3DXVECTOR3 GetPos(void) { return m_pos; }
-	/* 向き					*/D3DXVECTOR3 GetRot(void) { return m_rot; }
-	/* 色					*/D3DXCOLOR GetColor(void) { return m_color; }
-	/* サイズ				*/D3DXVECTOR3 GetSize(const int nModelID);
-	/* スケール				*/D3DXVECTOR3 GetScale(void) { return m_scale; }
-	/* ワールドマトリックス	*/D3DXMATRIX GetMtxWorld(void) { return m_mtxWorld; }
-	/* 親モデル				*/CModel *GetParent(void) { return m_pParent; }
-	/* モデルID				*/int GetModelID(void) { return m_nModelID; }
-	/* 幅					*/static float GetWidth(const int nModelID);
-	/* 高さ					*/static float GetHeight(const int nModelID);
-	/* 奥行き				*/static float GetDepth(const int nModelID);
+	static float GetWidth(const int nModelID);	// 幅
+	static float GetHeight(const int nModelID); // 高さ
+	static float GetDepth(const int nModelID);	// 奥行き
 
 private:
 
 	// ***** 静的変数 *****
-	/* マテリアル情報	*/static MODEL_MATERIAL	*m_material;
-	/* モデル数			*/static int m_nMaxModel;
+	static MODEL_MATERIAL	*m_material;		// マテリアル情報
+	static int				m_nMaxModel;		// モデル数
 
 	// ***** 変数 *****
-	/* テクスチャポインタ	*/LPDIRECT3DTEXTURE9 m_pTexture;
-	/* ワールドマトリックス	*/D3DXMATRIX  m_mtxWorld;
+	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
+	D3DXMATRIX  m_mtxWorld;					//ワールドマトリックス
 
 
-	/* 親モデルの情報		*/CModel	*m_pParent;
-	/* 位置					*/D3DXVECTOR3 m_pos;
-	/* 位置(過去)			*/D3DXVECTOR3 m_posOld;
-	/* 向き					*/D3DXVECTOR3 m_rot;
-	/* サイズ				*/D3DXVECTOR3	m_size;
-	/* スケール				*/D3DXVECTOR3	m_scale;
-	/* 色					*/D3DXCOLOR m_color;
-	/* モデルID				*/int	m_nModelID;
-	/* 幅					*/static float m_Width;
-	/* 高さ					*/static float m_Height;
-	/* 奥行き				*/static float m_Depth;
+	CModel	*m_pParent;		// 親モデルの情報
+	D3DXVECTOR3 m_pos;		// 位置
+	D3DXVECTOR3 m_posOld;	// 位置(過去)
+	D3DXVECTOR3 m_rot;		// 向き
+	D3DXVECTOR3	m_size;		// 大きさ
+	D3DXVECTOR3	m_scale;	// スケール
+	D3DXCOLOR m_color;		// 色
+	int	m_nModelID;			// モデルID
+
+	static float m_Width;
+	static float m_Height;
+	static float m_Depth;
 };
 #endif
