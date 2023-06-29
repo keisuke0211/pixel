@@ -91,7 +91,7 @@ HRESULT CPlayer::Init(void)
 	m_Info.col = INIT_D3DXCOLOR;
 	
 	// ê∂ê¨
-	//SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
+	SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 	SetPos(m_Info.pos);
 	SetRot(m_Info.rot);
 
