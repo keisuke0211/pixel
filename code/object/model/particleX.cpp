@@ -119,6 +119,7 @@ void CParticleX::Update(void)
 			break;
 		}
 
+
 		// エフェクトの生成
 		CEffectX *pObj = CEffectX::Create();
 		pObj->Eff_SetPos(m_Info.pos);

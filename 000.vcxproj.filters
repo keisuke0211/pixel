@@ -34,7 +34,7 @@
     <Filter Include="ソース ファイル\01_object\02_model\00_system">
       <UniqueIdentifier>{10122d12-6218-4255-b74a-30e1faef53c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\01_object\02_model\00_effect">
+    <Filter Include="ソース ファイル\01_object\02_model\01_effect">
       <UniqueIdentifier>{72f1b92f-f204-40e1-a57d-556bc793e8b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -102,34 +102,34 @@
     <ClCompile Include="code\object\objectX.cpp">
       <Filter>ソース ファイル\01_object</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\3D\effectX.cpp">
-      <Filter>ソース ファイル\01_object\02_model\00_effect</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\3D\particleX.cpp">
-      <Filter>ソース ファイル\01_object\02_model\00_effect</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\model.cpp">
+    <ClCompile Include="code\object\model\model.cpp">
       <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\motion.cpp">
+    <ClCompile Include="code\object\model\motion.cpp">
       <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\motion_model.cpp">
+    <ClCompile Include="code\object\model\motion_model.cpp">
       <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\parts.cpp">
+    <ClCompile Include="code\object\model\parts.cpp">
       <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\3D\block.cpp">
+    <ClCompile Include="code\object\model\effectX.cpp">
+      <Filter>ソース ファイル\01_object\02_model\01_effect</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\model\particleX.cpp">
+      <Filter>ソース ファイル\01_object\02_model\01_effect</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\model\block.cpp">
       <Filter>ソース ファイル\01_object\02_model</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\3D\bullet.cpp">
+    <ClCompile Include="code\object\model\bullet.cpp">
       <Filter>ソース ファイル\01_object\02_model</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\3D\enemy.cpp">
+    <ClCompile Include="code\object\model\enemy.cpp">
       <Filter>ソース ファイル\01_object\02_model</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\3D\player.cpp">
+    <ClCompile Include="code\object\model\player.cpp">
       <Filter>ソース ファイル\01_object\02_model</Filter>
     </ClCompile>
   </ItemGroup>
@@ -203,34 +203,34 @@
     <ClInclude Include="code\csv_file.h">
       <Filter>ソース ファイル\02_system</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\3D\effectX.h">
-      <Filter>ソース ファイル\01_object\02_model\00_effect</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\3D\particleX.h">
-      <Filter>ソース ファイル\01_object\02_model\00_effect</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\model.h">
+    <ClInclude Include="code\object\model\model.h">
       <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\motion.h">
+    <ClInclude Include="code\object\model\motion.h">
       <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\motion_model.h">
+    <ClInclude Include="code\object\model\motion_model.h">
       <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\parts.h">
+    <ClInclude Include="code\object\model\parts.h">
       <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\3D\block.h">
+    <ClInclude Include="code\object\model\effectX.h">
+      <Filter>ソース ファイル\01_object\02_model\01_effect</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\model\particleX.h">
+      <Filter>ソース ファイル\01_object\02_model\01_effect</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\model\block.h">
       <Filter>ソース ファイル\01_object\02_model</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\3D\bullet.h">
+    <ClInclude Include="code\object\model\bullet.h">
       <Filter>ソース ファイル\01_object\02_model</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\3D\enemy.h">
+    <ClInclude Include="code\object\model\enemy.h">
       <Filter>ソース ファイル\01_object\02_model</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\3D\player.h">
+    <ClInclude Include="code\object\model\player.h">
       <Filter>ソース ファイル\01_object\02_model</Filter>
     </ClInclude>
   </ItemGroup>

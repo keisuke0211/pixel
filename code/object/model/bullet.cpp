@@ -11,7 +11,7 @@
 #include "enemy.h"
 #include "block.h"
 #include "../2D/score.h"
-#include "../3D/effectX.h"
+#include "../model/effectX.h"
 
 //========================================
 // マクロ定義
@@ -61,7 +61,7 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	pBullet->m_Info.rot = rot;
 	pBullet->m_Info.nLife = 70;
 	pBullet->m_Info.size = D3DXVECTOR3(0.2f, 0.2f, 0.2f);
-	pBullet->SetModel(2);
+	pBullet->SetModel(MODEL_BULLET);
 
 	// 初期化処理
 	pBullet->Init();
@@ -291,7 +291,7 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 					if (m_Info.bHit)
 					{
 						// ブロックの生成
-						CBlock::Create(2, D3DXVECTOR3(pos.x, pos.y, pos.z));
+						CBlock::Create(MODEL_BULLET, D3DXVECTOR3(pos.x, pos.y, pos.z));
 
 						// 弾の破棄
 						Uninit();

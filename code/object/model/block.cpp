@@ -68,14 +68,14 @@ CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 	{
 		pBlock->m_Info.nCntRadius = RADIUS_TIME;
 		pBlock->m_Info.fRadiusRate = 0.0f;
-		pBlock->SetModel(MODEL_BULLET);
 		pBlock->m_Info.bSet = false;
 	}
 	else
 	{
-		pBlock->SetModel(nType);
 		pBlock->m_Info.bSet = false;
 	}
+
+	pBlock->SetModel(nType);
 
 	// ‰Šú‰»ˆ—
 	pBlock->Init();

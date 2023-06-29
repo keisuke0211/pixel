@@ -55,7 +55,7 @@ public:
 	void Uninit(void);		// 終了
 	void Update(void);		// 更新
 
-							// 生成
+	// 生成
 	static CParticleX *Create(void);
 
 	/* 設定 */
@@ -63,8 +63,8 @@ public:
 	void Par_SetRot(D3DXVECTOR3 rot) { m_Info.rot = rot; }						// 向き
 	void Par_SetMove(D3DXVECTOR3 move) { m_Info.speed = move; }					// 移動量
 	void Par_SetType(int nType) { m_Info.nType = nType; }						// 種類
-	void Par_SetForm(int nForm) { m_Info.nForm = nForm; }						// 生成数
-	void Par_SetLife(int nLife) { m_Info.nLife = nLife; }						// 寿命
+	void Par_SetForm(int nForm) { m_Info.nForm = nForm;	}						// 生成数
+	void Par_SetLife(int nLife) { m_Info.nLife  = nLife; }						// 寿命
 	void Par_SetCol(D3DXCOLOR col) { m_Info.aColor.col = col; }					// 色
 	void Par_SetRadius(float fRadius) { m_Info.fRadius = fRadius; }				// 半径
 

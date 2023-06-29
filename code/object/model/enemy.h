@@ -21,9 +21,9 @@ public:
 	// ***** ’è‹` *****
 	static const int MAX_ENEMY = 30;	// “G‚ÌÅ‘å”
 
-	// ***** —ñ‹“Œ^ *****
+										// ***** —ñ‹“Œ^ *****
 
-	// ó‘Ô
+										// ó‘Ô
 	typedef enum
 	{
 		STATE_NORMAL,	// ’Êí

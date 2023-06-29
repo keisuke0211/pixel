@@ -49,7 +49,7 @@ public:
 	void Update(void);	// 更新
 	void Draw(void);	// 描画
 
-						/* 設定 */
+	/* 設定 */
 	void Eff_SetPos(D3DXVECTOR3 pos) { m_Info.pos = pos; }						// 位置
 	void Eff_SetRot(D3DXVECTOR3 rot) { m_Info.rot = rot; }						// 向き
 	void Eff_SetMove(D3DXVECTOR3 move) { m_Info.move = move; }					// 移動量
@@ -58,7 +58,7 @@ public:
 	void Eff_SetCol(D3DXCOLOR col) { m_Info.col = col; }						// 色
 	void Eff_SetRadius(float fRadius) { m_Info.fRadius = fRadius; }				// 半径
 
-																				/* 取得 */
+	/* 取得 */
 	Info GetInfo() { return m_Info; }					// エネミー情報
 	D3DXVECTOR3 GetPos() { return m_Info.pos; }			// 位置
 	D3DXVECTOR3 GetPosOld() { return m_Info.posOld; }	// 位置(過去)

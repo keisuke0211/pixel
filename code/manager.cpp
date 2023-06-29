@@ -12,7 +12,7 @@
 #include "sound.h"
 #include "texture.h"
 #include "input.h"
-#include "object\model.h"
+#include "object\model\model.h"
 #include "object\object.h"
 #include "object\2D\score.h"
 #include "object\2D\time.h"
@@ -20,10 +20,10 @@
 #include "object\2D\bg2D.h"
 #include "object\2D\bg_Multi2D.h"
 #include "object\3D\floor.h"
-#include "object\3D\block.h"
-#include "object\3D\player.h"
-#include "object\3D\enemy.h"
-#include "object\3D\effectX.h"
+#include "object\model\block.h"
+#include "object\model\player.h"
+#include "object\model\enemy.h"
+#include "object\model\effectX.h"
 
 // ê√ìIÉÅÉìÉoïœêî
 CRenderer *CManager::m_pRenderer = NULL;

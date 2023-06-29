@@ -10,7 +10,7 @@
 #include "../../renderer.h"
 #include "../../sound.h"
 #include "../2D/score.h"
-#include "../3D/particleX.h"
+#include "particleX.h"
 
 
 // 静的変数
@@ -29,6 +29,8 @@ CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 	m_Info.move = INIT_D3DXVECTOR3;
 	m_Info.nType = 0;
 	m_Info.nLife = 0;
+	m_Info.state = STATE_NORMAL;
+	m_Info.nCntState = 0;
 }
 
 //========================================
@@ -46,7 +48,7 @@ CEnemy *CEnemy::Create(D3DXVECTOR3 pos)
 {
 	CEnemy *pEnemy = new CEnemy;
 
-	pEnemy->SetModel(9);
+	pEnemy->SetModel(MODEL_ENEMY_00);
 
 	// 初期化処理
 	pEnemy->Init();
@@ -69,7 +71,7 @@ HRESULT CEnemy::Init(void)
 	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, -0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 3.14f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
-	m_Info.nLife = 2;
+	m_Info.nLife = 3;
 	m_Info.nType = 0;
 
 	// 生成
@@ -100,6 +102,9 @@ void CEnemy::Update(void)
 	// 位置を代入
 	m_Info.posOld = m_Info.pos;
 
+	// 状態推移
+	StateShift();
+
 	SetPos(m_Info.pos);
 	SetRot(m_Info.rot);
 	SetColor(m_Info.col);
@@ -126,6 +131,7 @@ void CEnemy::HitLife(int nDamage)
 
 	if (m_Info.nLife <= 0)
 	{
+		// パーティクル生成
 		CParticleX *pObj = CParticleX::Create();
 		pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 20, m_Info.pos.z));
 		pObj->Par_SetRot(INIT_D3DXVECTOR3);
@@ -141,23 +147,88 @@ void CEnemy::HitLife(int nDamage)
 		// スコア設定
 		CScore::SetScore(300);
 
+		// 爆発のSE再生
 		pSound->PlaySound(3);
 
 		return;
 	}
 	else
 	{
+		// ヒットSEの再生
 		pSound->PlaySound(2);
 
+		// ダメージ状態
+		SetState(STATE_DAMAGE);
+
+
+		// パーティクル生成
 		CParticleX *pObj = CParticleX::Create();
-		pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z));
+		pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 20, m_Info.pos.z));
 		pObj->Par_SetRot(INIT_D3DXVECTOR3);
-		pObj->Par_SetMove(D3DXVECTOR3(10.0f, 3.0f,10.0f));
+		pObj->Par_SetMove(D3DXVECTOR3(10.0f, 3.0f, 10.0f));
 		pObj->Par_SetType(0);
 		pObj->Par_SetLife(50);
-		pObj->Par_SetCol(D3DXCOLOR(0.3,0.8f,0.8f,1.0f));
+		pObj->Par_SetCol(D3DXCOLOR(0.3, 0.8f, 0.8f, 1.0f));
 		pObj->Par_SetForm(15);
 	}
+}
+
+//========================================
+// 状態設定
+//========================================
+void CEnemy::SetState(STATE state)
+{
+	// 状態
+	switch (state)
+	{
+	case STATE_NORMAL: { /* 通常状態 */
+
+		 // 状態の設定
+		m_Info.state = STATE_NORMAL;
+
+		// ダメージ色の設定
+		m_Info.col = D3DXCOLOR(1.0f, 1.0f, 1.1f, 1.0f);
+	}
+	   break;
+
+	case STATE_DAMAGE: { /* ダメージ状態 */
+
+		m_Info.state = STATE_DAMAGE;	// 状態設定
+		m_Info.nCntState = 10;			// 時間
+
+		// ダメージ色の設定
+		m_Info.col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+
+	}
+	   break;
+	}
+}
+
+//========================================
+// 状態推移
+//========================================
+void CEnemy::StateShift(void)
+{
+	// 状態
+	switch (m_Info.state)
+	{
+	case STATE_NORMAL: { /* 通常状態 */
+
+	}
+	   break;
+	case STATE_DAMAGE: { /* ダメージ状態 */
+
+		 // 状態を切替える
+		if (--m_Info.nCntState <= 0)
+		{
+			// 通常状態にする
+			SetState(STATE_NORMAL);
+		}
+
+	}
+	   break;
+	}
+
 }
 
 //========================================
