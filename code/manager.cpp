@@ -372,12 +372,10 @@ void CManager::Update(void)
 	m_pLight->Update();			// ライト
 	m_pRenderer->Update();		// レンダラー
 
+	// リセットボタン
 	if (m_InputKeyboard->GetTrigger(DIK_R))
 	{
-		for (int nCnt = 0; nCnt < 11; nCnt++)
-		{
-			CEnemy::Uninit();
-		}
+		SetEnemy();
 	}
 
 }
@@ -388,4 +386,18 @@ void CManager::Update(void)
 void CManager::Draw(void)
 {
 	m_pRenderer->Draw();	// レンダラー
+}
+
+//========================================
+// セットエネミー
+//========================================
+void CManager::SetEnemy(void)
+{
+	// 敵を全て破棄
+	CObject::ReleaseAll(CObject::TYPE_ENEMY);
+
+	for (int nCnt = 0; nCnt < 11; nCnt++)
+	{
+		CEnemy::Create(D3DXVECTOR3(400.0f + (nCnt * -75), -20.0f, -150.0f));
+	}
 }

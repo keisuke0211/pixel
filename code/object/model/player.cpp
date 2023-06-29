@@ -17,9 +17,9 @@
 //****************************************
 // マクロ定義
 //****************************************
-#define JUMP_POWER		(7.5f)		// ジャンプ量
+#define JUMP_POWER		(7.0f)		// ジャンプ量
 #define GRAVITY_MAG		(0.08f)		// 重力係数 0.08
-#define GRAVITY_POWER	(8.5f)		// 重力加速度
+#define GRAVITY_POWER	(9.5f)		// 重力加速度
 #define ROT_DIAMETER	(0.15f)		// 回転倍率
 
 #define ROT_FORCE_BY_CURSOR	(D3DXVECTOR3(0.0005f,0.00075f,0.0f))	// カーソルの回転力

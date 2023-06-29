@@ -38,40 +38,40 @@ public:
 	CManager();
 	virtual~CManager();
 
-	/* メイン */
-	HRESULT Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow);	// 初期化
-	void Uninit(void);	// 終了
-	void Update(void);	// 更新
-	void Draw(void);	// 描画
+	/* 初期化	*/HRESULT Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow);
+	/* 終了		*/void Uninit(void);
+	/* 更新		*/void Update(void);
+	/* 描画		*/void Draw(void);
+	/* エネミー	*/void SetEnemy(void);
 
-	/* 取得 */
-	static CRenderer *GetRenderer() { return m_pRenderer; }					// レンダラー
-	static CCamera *GetCamera() { return m_pCamera; }						// カメラ
-	static CLight *GetLight() { return m_pLight; }							// ライト
-	static CSound *GetSound() { return m_pSound; }							// サウンド
-	static CTexture* GetTexture(){ return m_pTexture; }						// テクスチャ
-	static CInputKeyboard* GetInputKeyboard() { return m_InputKeyboard; }	// キーボード
-	static CInputMouse* GetInputMouse() { return m_InputMouse; }			// マウス
-	static CInputJoypad* GetInputJoypad() { return m_InputJoypad; }			// ジョイパット
-	static CBg* GetBg() { return m_pBg; }									// 背景
-	static CPlayer* GetPlayer() { return m_pPlayer; }						// プレイヤー
-	static CBlock* GetBlock() { return m_pBlock; }							// ブロック
-	static CEnemy* GetEnemy() { return m_pEnemy; }							// エネミー
-	static CBullet* GetCBullet() { return m_pBullet; }						// バレット
+	// -- 取得 --------------------------------------
+	/* レンダラー	*/static CRenderer *GetRenderer() { return m_pRenderer; }
+	/* カメラ		*/static CCamera *GetCamera() { return m_pCamera; }
+	/* ライト		*/static CLight *GetLight() { return m_pLight; }
+	/* サウンド		*/static CSound *GetSound() { return m_pSound; }
+	/* テクスチャ	*/static CTexture* GetTexture(){ return m_pTexture; }
+	/* キーボード	*/static CInputKeyboard* GetInputKeyboard() { return m_InputKeyboard; }
+	/* マウス		*/static CInputMouse* GetInputMouse() { return m_InputMouse; }
+	/* ジョイパット	*/static CInputJoypad* GetInputJoypad() { return m_InputJoypad; }
+	/* 背景			*/static CBg* GetBg() { return m_pBg; }
+	/* プレイヤー	*/static CPlayer* GetPlayer() { return m_pPlayer; }
+	/* ブロック		*/static CBlock* GetBlock() { return m_pBlock; }
+	/* エネミー		*/static CEnemy* GetEnemy() { return m_pEnemy; }
+	/* バレット		*/static CBullet* GetCBullet() { return m_pBullet; }
 
 private:
-	static CRenderer *m_pRenderer;			// レンダラー
-	static CCamera *m_pCamera;				// カメラ
-	static CLight *m_pLight;				// ライト
-	static CSound *m_pSound;				// サウンド
-	static CTexture *m_pTexture;			// テクスチャ
-	static CInputKeyboard *m_InputKeyboard;	// キーボード
-	static CInputMouse* m_InputMouse;		// マウス
-	static CInputJoypad* m_InputJoypad;		// ジョイパット
-	static CBg *m_pBg;						// 背景
-	static CPlayer *m_pPlayer;				// プレイヤー
-	static CBlock *m_pBlock;				// ブロック
-	static CEnemy *m_pEnemy;				// エネミー
-	static CBullet *m_pBullet;				// バレット
+	/* レンダラー	*/static CRenderer *m_pRenderer;
+	/* カメラ		*/static CCamera *m_pCamera;
+	/* ライト		*/static CLight *m_pLight;
+	/* サウンド		*/static CSound *m_pSound;
+	/* テクスチャ	*/static CTexture *m_pTexture;
+	/* キーボード	*/static CInputKeyboard *m_InputKeyboard;
+	/* マウス		*/static CInputMouse* m_InputMouse;
+	/* ジョイパット	*/static CInputJoypad* m_InputJoypad;
+	/* 背景			*/static CBg *m_pBg;
+	/* プレイヤー	*/static CPlayer *m_pPlayer;
+	/* ブロック		*/static CBlock *m_pBlock;
+	/* エネミー		*/static CEnemy *m_pEnemy;
+	/* バレット		*/static CBullet *m_pBullet;
 };
 #endif
