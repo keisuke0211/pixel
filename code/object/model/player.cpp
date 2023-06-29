@@ -90,7 +90,7 @@ HRESULT CPlayer::Init(void)
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	
-	// ¶¬ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+	// ¶¬
 	SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 	SetPos(m_Info.pos);
 	SetRot(m_Info.rot);
@@ -182,8 +182,6 @@ void CPlayer::KeyInput(void)
 	// UŒ‚
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_B))
 	{
-		//CBullet::Create(D3DXVECTOR3(0.0f, 10, 0.0f), D3DXVECTOR3(0.0f,3.14f,0.0f));
-
 		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z),m_Info.rot);
 	}
 

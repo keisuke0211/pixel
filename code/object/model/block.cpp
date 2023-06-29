@@ -192,34 +192,34 @@ void CBlock::Load(void)
 	int nLineMax = data.cell.size() - 1;
 	pSetInfo = new SetInfo[nLineMax];
 
-	for (int nLine = 0; nLine < data.cell.size(); nLine++)
+	for (int nRow = 0; nRow < data.cell.size(); nRow++)
 	{
-		for (int nRow = 0; nRow < data.cell.at(nLine).size(); nRow++)
+		for (int nLine = 0; nLine < data.cell.at(nRow).size(); nLine++)
 		{
-			switch (nRow)
+			switch (nLine)
 			{
 				// 種類
 			case SET_TYPE:
 			{
-				pSetInfo[nLine].nType = (int)data.cell.at(nLine).at(nRow);
+				pSetInfo[nRow].nType = (int)data.cell.at(nRow).at(nLine);
 			}
 				break;
 
 				// 位置
 			case SET_POS:
 			{
-				pSetInfo[nLine].pos.x = (int)data.cell.at(nLine).at(nRow); nRow++;
-				pSetInfo[nLine].pos.y = (int)data.cell.at(nLine).at(nRow); nRow++;
-				pSetInfo[nLine].pos.z = (int)data.cell.at(nLine).at(nRow);
+				pSetInfo[nRow].pos.x = (int)data.cell.at(nRow).at(nLine); nLine++;
+				pSetInfo[nRow].pos.y = (int)data.cell.at(nRow).at(nLine); nLine++;
+				pSetInfo[nRow].pos.z = (int)data.cell.at(nRow).at(nLine);
 			}
 				break;
 
 				// ブロック数
 			case SET_NUM:
 			{
-				pSetInfo[nLine].nNumX = data.cell.at(nLine).at(nRow); nRow++;
-				pSetInfo[nLine].nNumY = data.cell.at(nLine).at(nRow); nRow++;
-				pSetInfo[nLine].nNumZ = data.cell.at(nLine).at(nRow);
+				pSetInfo[nRow].nNumX = data.cell.at(nRow).at(nLine); nLine++;
+				pSetInfo[nRow].nNumY = data.cell.at(nRow).at(nLine); nLine++;
+				pSetInfo[nRow].nNumZ = data.cell.at(nRow).at(nLine);
 			}
 				break;
 			}
