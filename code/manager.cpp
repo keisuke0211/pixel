@@ -155,9 +155,9 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 
 	// ìGÇÃê∂ê¨
 
-	for (int nCnt = 0; nCnt < 11; nCnt++)
+	for (int nCnt = 0; nCnt < 10; nCnt++)
 	{
-		CEnemy::Create(D3DXVECTOR3(400.0f + (nCnt * -75), -20.0f, -150.0f));
+		CEnemy::Create(D3DXVECTOR3(330.0f + (nCnt * -75), -20.0f, -150.0f));
 	}
 
 	/*CEffectX *pObj = CEffectX::Create();
@@ -396,8 +396,8 @@ void CManager::SetEnemy(void)
 	// ìGÇëSÇƒîjä¸
 	CObject::ReleaseAll(CObject::TYPE_ENEMY);
 
-	for (int nCnt = 0; nCnt < 11; nCnt++)
+	for (int nCnt = 0; nCnt < 10; nCnt++)
 	{
-		CEnemy::Create(D3DXVECTOR3(400.0f + (nCnt * -75), -20.0f, -150.0f));
+		CEnemy::Create(D3DXVECTOR3(330.0f + (nCnt * -75), -20.0f, -150.0f));
 	}
 }

@@ -119,12 +119,6 @@ HRESULT CBlock::Init(void)
 //========================================
 void CBlock::Uninit(void)
 {
-	/*if (pSetInfo != NULL)
-	{
-		delete[] pSetInfo;
-		pSetInfo = NULL;
-	}*/
-
 	CObjectX::Uninit();
 }
 
@@ -256,4 +250,10 @@ void CBlock::SetBlock(int nNumSet)
 			}
 		}
 	}
+
+	/*if (pSetInfo != NULL)
+	{
+		delete[] pSetInfo;
+		pSetInfo = NULL;
+	}*/
 }

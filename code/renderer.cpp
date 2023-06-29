@@ -194,7 +194,7 @@ void CRenderer::DrawFPS(void)
 	char aStr[521];
 
 	//文字列に代入
-	sprintf(&aStr[0], "FPS:%d\n", GetFps());
+	sprintf(&aStr[0], "FPS:%d\nNumObj:%d\n", GetFps(),CObject::GetNumAll());
 
 	//テキストの描画
 	m_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));

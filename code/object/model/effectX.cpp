@@ -90,7 +90,6 @@ void CEffectX::Update(void)
 	// ˆÊ’u‚Ì‘ã“ü
 	m_Info.posOld = m_Info.pos;
 
-
 	// ˆÊ’u‚Ì‘ã“ü
 	m_Info.pos.x += m_Info.move.x;
 	m_Info.move.x += (0.0f - m_Info.move.x) * 0.05f;
