@@ -8,9 +8,9 @@
 #include "motion.h"
 #include "model.h"
 #include "parts.h"
-#include "../texture.h"
-#include "../manager.h"
-#include "../renderer.h"
+#include "../../texture.h"
+#include "../../manager.h"
+#include "../../renderer.h"
 
 
 //========================================

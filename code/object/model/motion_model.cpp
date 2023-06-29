@@ -7,8 +7,8 @@
 //========================================
 #include "motion.h"
 #include "motion_model.h"
-#include "../manager.h"
-#include "../renderer.h"
+#include "../../manager.h"
+#include "../../renderer.h"
 
 
 //========================================

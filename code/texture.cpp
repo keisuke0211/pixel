@@ -10,8 +10,8 @@
 #include "renderer.h"
 #include "object\2D\bg2D.h"
 #include "object\3D\floor.h"
-#include "object\3D\enemy.h"
-#include "object\3D\bullet.h"
+#include "object\model\enemy.h"
+#include "object\model\bullet.h"
 #include "object\2D\effect2D.h"
 #include "object\2D\text2D.h"
 
@@ -95,9 +95,6 @@ void CTexture::Unload(void)
 			m_apTexture[nCntTex] = NULL;
 		}
 	}
-
-	CBg::Unload();			// 背景
-	CEffect2D::Unload();	// エフェクト
 }
 
 //========================================

@@ -9,7 +9,7 @@
 #include "../manager.h"
 #include "../renderer.h"
 #include "../texture.h"
-#include "model.h"
+#include "model\model.h"
 
 //========================================
 // コンストラクタ

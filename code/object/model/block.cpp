@@ -6,7 +6,7 @@
 // *** block.cpp ***
 //========================================
 #include "block.h"
-#include "../model.h"
+#include "model.h"
 #include "../../sound.h"
 #include "../../csv_file.h"
 
@@ -64,11 +64,11 @@ CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 	// オブジェクト2Dの生成
 	pBlock = new CBlock;
 
-	if (nType == BULLET_ID)
+	if (nType == MODEL_BULLET)
 	{
 		pBlock->m_Info.nCntRadius = RADIUS_TIME;
 		pBlock->m_Info.fRadiusRate = 0.0f;
-		pBlock->SetModel(2);
+		pBlock->SetModel(MODEL_BULLET);
 		pBlock->m_Info.bSet = false;
 	}
 	else
@@ -135,7 +135,7 @@ void CBlock::Update(void)
 {
 
 	// 半径推移
-	if (m_Info.bSet == false && m_Info.nType == BULLET_ID)
+	if (m_Info.bSet == false && m_Info.nType == MODEL_BULLET)
 	{
 		m_Info.fRadiusRate = (float)m_Info.nCntRadius / (float)RADIUS_TIME;
 		m_Info.fRadius = 1 * (1.0f - m_Info.fRadiusRate);
@@ -235,20 +235,19 @@ void CBlock::Load(void)
 //========================================
 void CBlock::SetBlock(int nNumSet)
 {
-	float fWidth = CModel::GetWidth(0);			// 幅
-	float fHeight = CModel::GetHeight(0);		// 高さ
-	float fDepth = CModel::GetDepth(0);			// 奥行き
-	
-
 	for (int nCntSet = 0; nCntSet < nNumSet; nCntSet++, pSetInfo++)
 	{
+		float fWidth = CModel::GetWidth(pSetInfo->nType);		// 幅
+		float fHeight = CModel::GetHeight(pSetInfo->nType);		// 高さ
+		float fDepth = CModel::GetDepth(pSetInfo->nType);		// 奥行き
+
 		for (int nCntX = 0; nCntX < pSetInfo->nNumX; nCntX++)
 		{
 			for (int nCntY = 0; nCntY < pSetInfo->nNumY; nCntY++)
 			{
 				for (int nCntZ = 0; nCntZ < pSetInfo->nNumZ; nCntZ++)
 				{
-					CBlock::Create(pSetInfo->nType, 
+					CBlock::Create(pSetInfo->nType,
 						D3DXVECTOR3((
 							pSetInfo->pos.x + (nCntX * (fWidth * 2))),
 							pSetInfo->pos.y + (nCntY * (fHeight * 2)),

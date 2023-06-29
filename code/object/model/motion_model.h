@@ -8,8 +8,8 @@
 #ifndef _MOTION_MODEL_H_			// このマクロ定義がされてなかったら
 #define _MOTION_MODEL_H_			// 二重インクルード防止のマクロ定義
 
-#include "object.h"
-#include "../main.h"
+#include "../object.h"
+#include "../../main.h"
 
 //****************************************
 // 前方宣言

@@ -6,9 +6,9 @@
 // *** objectX.cpp ***
 //========================================
 #include "model.h"
-#include "../manager.h"
-#include "../renderer.h"
-#include "../texture.h"
+#include "../../manager.h"
+#include "../../renderer.h"
+#include "../../texture.h"
 
 //========================================
 // Ã“I•Ï”

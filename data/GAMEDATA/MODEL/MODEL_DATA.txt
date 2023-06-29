@@ -6,13 +6,13 @@
 #========================================
 #モデルの最大数
 #========================================
-NUM_MODEL = 10
+NUM_MODEL = 11
 #========================================
 #ファイル名
 #========================================
-MODEL = data\\MODEL\\Block\\grass000.x 				#00 草ブロック 1×1
-MODEL = data\\MODEL\\Block\\soil000.x 				#01 土ブロック 1×1
-MODEL = data\\MODEL\\Block\\Bullet.x 				#02 弾ブロック 1×1
+MODEL = data\\MODEL\\Block\\grass000.x 				#00 草ブロック 
+MODEL = data\\MODEL\\Block\\soil000.x 				#01 土ブロック 
+MODEL = data\\MODEL\\Block\\Bullet.x 				#02 弾ブロック 
 MODEL = data\\MODEL\\Player\\Player_body.x 			#03 プレイヤー 体
 MODEL = data\\MODEL\\Player\\Player_head.x 			#04 プレイヤー 頭
 MODEL = data\\MODEL\\Player\\Player_left_arm.x 		#05 プレイヤー 左手
@@ -20,6 +20,7 @@ MODEL = data\\MODEL\\Player\\Player_right_arm.x 	#06 プレイヤー 右手
 MODEL = data\\MODEL\\Player\\Player_left_foot.x 	#07 プレイヤー 左足
 MODEL = data\\MODEL\\Player\\Player_right_foot.x 	#08 プレイヤー 右足
 MODEL = data\\MODEL\\Enemy\\Ghost999.x 				#09 仮エネミー 999
+MODEL = data\\MODEL\\Effect\\Effct000.x 			#10 エフェクト 粒子
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||

@@ -9,7 +9,7 @@
 #define _PARTS_H_			// 二重インクルード防止のマクロ定義
 
 #include "model.h"
-#include "../main.h"
+#include "../../main.h"
 
 //****************************************
 // クラス

@@ -9,7 +9,7 @@
 #define _PLAYER_H_
 
 #include "../../main.h"
-#include "../motion_model.h"
+#include "motion_model.h"
 
 //****************************************
 // ƒNƒ‰ƒX

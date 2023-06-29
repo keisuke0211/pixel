@@ -12,7 +12,7 @@
 #include "sound.h"
 #include "texture.h"
 #include "input.h"
-#include "object\model.h"
+#include "object\model\model.h"
 #include "object\object.h"
 #include "object\2D\score.h"
 #include "object\2D\time.h"
@@ -20,9 +20,9 @@
 #include "object\2D\bg2D.h"
 #include "object\2D\bg_Multi2D.h"
 #include "object\3D\floor.h"
-#include "object\3D\block.h"
-#include "object\3D\player.h"
-#include "object\3D\enemy.h"
+#include "object\model\block.h"
+#include "object\model\player.h"
+#include "object\model\enemy.h"
 
 // 静的メンバ変数
 CRenderer *CManager::m_pRenderer = NULL;
@@ -153,8 +153,10 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	CPlayer::Create();
 
 	// 敵の生成
-	CEnemy::Create();
-
+	for (int nCnt = 0; nCnt < 10; nCnt++)
+	{
+		CEnemy::Create(D3DXVECTOR3(300.0f + (nCnt * -75), -20.0f, -150.0f));
+	}
 
 	{
 		// タイム生成
