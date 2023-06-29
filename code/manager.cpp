@@ -196,6 +196,81 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 		// スコア設定
 		CScore::SetScore();
 	}
+
+	{
+		{// 移動方法テキスト
+		 // テキスト2D生成
+			CText2D *pObj = CText2D::Create();
+
+			// 位置設定
+			pObj->SetPos(D3DXVECTOR3(32.0f, 32.0f, 0.0f));
+			// サイズ設定
+			pObj->SetSize(16.0f, 16.0f);
+			// 文字列設定
+			pObj->SetString("MOVE : W A D S");
+		}
+
+		{// ジャンプ方法テキスト
+		 // テキスト2D生成
+			CText2D *pObj = CText2D::Create();
+
+			// 位置設定
+			pObj->SetPos(D3DXVECTOR3(32.0f, 48.0f, 0.0f));
+			// サイズ設定
+			pObj->SetSize(16.0f, 16.0f);
+			// 文字列設定
+			pObj->SetString("JUMP : SPACE");
+		}
+
+		{// 射撃方法テキスト
+		 // テキスト2D生成
+			CText2D *pObj = CText2D::Create();
+
+			// 位置設定
+			pObj->SetPos(D3DXVECTOR3(32.0f, 64.0f, 0.0f));
+			// サイズ設定
+			pObj->SetSize(16.0f, 16.0f);
+			// 文字列設定
+			pObj->SetString("SHOT : ENTER & MOUSE_LEFT");
+		}
+
+		{// カメラ切り替えテキスト
+		 // テキスト2D生成
+			CText2D *pObj = CText2D::Create();
+
+			// 位置設定
+			pObj->SetPos(D3DXVECTOR3(32.0f, 96.0f, 0.0f));
+			// サイズ設定
+			pObj->SetSize(16.0f, 16.0f);
+			// 文字列設定
+			pObj->SetString("CAMERA_MODE : Q");
+		}
+
+		{// カメラ移動方法テキスト
+		 // テキスト2D生成
+			CText2D *pObj = CText2D::Create();
+
+			// 位置設定
+			pObj->SetPos(D3DXVECTOR3(32.0f, 112.0f, 0.0f));
+			// サイズ設定
+			pObj->SetSize(16.0f, 16.0f);
+			// 文字列設定
+			pObj->SetString("CAMERA_MOVE : MOUSE_RIGHT");
+		}
+
+		{// リセット方法テキスト
+		 // テキスト2D生成
+			CText2D *pObj = CText2D::Create();
+
+			// 位置設定
+			pObj->SetPos(D3DXVECTOR3(32.0f, 144.0f, 0.0f));
+			// サイズ設定
+			pObj->SetSize(16.0f, 16.0f);
+			// 文字列設定
+			pObj->SetString("RESET:R");
+		}
+	}
+
 	return S_OK;
 }
 
@@ -296,6 +371,15 @@ void CManager::Update(void)
 	m_pCamera->Update();		// カメラ
 	m_pLight->Update();			// ライト
 	m_pRenderer->Update();		// レンダラー
+
+	if (m_InputKeyboard->GetTrigger(DIK_R))
+	{
+		for (int nCnt = 0; nCnt < 11; nCnt++)
+		{
+			CEnemy::Uninit();
+		}
+	}
+
 }
 
 //========================================

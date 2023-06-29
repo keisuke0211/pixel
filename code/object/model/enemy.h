@@ -21,9 +21,9 @@ public:
 	// ***** 定義 *****
 	static const int MAX_ENEMY = 30;	// 敵の最大数
 
-										// ***** 列挙型 *****
+	// ***** 列挙型 *****
 
-										// 状態
+	// 状態
 	typedef enum
 	{
 		STATE_NORMAL,	// 通常
@@ -62,7 +62,7 @@ public:
 	void Draw(void);	// 描画
 
 	static void SetEnemy(int nStage, int nUnit);	// 配置
-	void HitLife(int nDamage);
+	void HitLife(int nDamage);						// Hit処理
 
 	/* 取得 */
 	Info GetInfo() { return m_Info; }					// エネミー情報
