@@ -112,6 +112,16 @@ void CCamera::Update(void)
 			AxisRotationCamera(DIRECTION_UP, pInputMouse->GetCursorMove().y * CAMERA_ROT_FORCE_BY_CURSOR.x);
 		}
 		AxisRotationCamera(DIRECTION_LEFT, pInputMouse->GetCursorMove().x * CAMERA_ROT_FORCE_BY_CURSOR.y);
+
+		// ƒJƒƒ‰§Œä
+		if (m_Info.fHeight >= D3DX_PI * 0.49f)
+		{
+			m_Info.fHeight = D3DX_PI * 0.49f;
+		}
+		else if (m_Info.fHeight <= D3DX_PI * 0.01f)
+		{
+			m_Info.fHeight = D3DX_PI * 0.01f;
+		}
 	}
 
 	if (pInputKeyboard->GetTrigger(DIK_Q) == true || pInputMouse->GetTrigger(CInputMouse::MOUSE_5) == true)
