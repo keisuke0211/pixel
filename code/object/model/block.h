@@ -24,7 +24,9 @@ public:
 	typedef struct
 	{
 		D3DXVECTOR3 pos;		// 位置
+		D3DXVECTOR3 posOld;		// 位置(過去)
 		D3DXVECTOR3 rot;		// 向き
+		D3DXVECTOR3 rotOld;		// 向き(過去)
 		D3DXVECTOR3	size;		// サイズ
 		D3DXCOLOR col;			// 頂点カラー
 		int nType;				// 種類
@@ -55,6 +57,8 @@ public:
 	
 	static void Load(void);				// 読み込み
 	static void SetBlock(int nNumSet);	// 配置
+	static void UnLoad(void);			// 破棄
+
 
 	/* 設定 */
 	virtual void BlockSetPos(const D3DXVECTOR3 pos) { m_Info.pos = pos; }	// 位置
@@ -69,21 +73,6 @@ public:
 	D3DXVECTOR3 BlockGetSize(void) { return m_Info.size; }					// 大きさ
 
 private:
-
-	// ***** 列挙型 *****
-
-	// 設定項目
-	typedef enum
-	{
-		SET_TYPE,	// 種類
-		SET_POS,	// 位置
-		SET_POS_Y,	// 位置 Y
-		SET_POS_Z,	// 位置 Z
-		SET_NUM,	// ブロック数
-		SET_NUM_Y,	// ブロック数 Y
-		SET_NUM_Z,	// ブロック数 Z
-		SET_MAX,
-	}SET;
 
 	// ***** 構造体 *****
 

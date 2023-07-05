@@ -319,6 +319,9 @@ void CManager::Uninit(void)
 		m_pRenderer = NULL;
 	}
 
+	// 配置情報の破棄
+	CBlock::UnLoad();
+
 	// ライトの破棄
 	if (m_pLight != NULL)
 	{

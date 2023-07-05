@@ -34,7 +34,9 @@ CPlayer::CPlayer(int nPriority) : CMotionModel(nPriority)
 {
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
+	m_Info.posOld = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
+	m_Info.rotOld = INIT_D3DXVECTOR3;
 	m_Info.moveRot = INIT_D3DXVECTOR3;
 	m_Info.targetRot = INIT_D3DXVECTOR3;
 	m_Info.move = INIT_D3DXVECTOR3;
@@ -111,6 +113,10 @@ void CPlayer::Uninit(void)
 //========================================
 void CPlayer::Update(void)
 {
+	// 過去の位置・向きの更新
+	m_Info.posOld = m_Info.pos;
+	m_Info.rotOld = m_Info.rot;
+
 	// キー入力処理
 	KeyInput();
 
@@ -281,7 +287,7 @@ void CPlayer::UpdatePos(void)
 		m_Info.pos.y += m_Info.move.y;
 
 		//Ｙの移動量に重力を加算
-		m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+		//m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
 
 		// Y方向の当たり判定
 		m_Info.pos = Collision(VECTOR_Y, m_Info.pos);
@@ -314,13 +320,18 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 			if (type == TYPE_BLOCK)
 			{// 種類がブロックの時、
 
-			 // プレイヤーの各パーツの取得
+				// プレイヤーの各パーツの取得
 				D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
+				D3DXVECTOR3 RotOld = GetRotOld();	// 向き(過去)
 				D3DXVECTOR3 Scale = GetSize();
 				float fSize = 10.0f;
 
 				// ブロックの取得
-				D3DXVECTOR3 PairPos = pObj->GetPos();	// 位置
+				D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
+				D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
+				D3DXVECTOR3 PairRot = pObj->GetRot();		// 向き
+				D3DXVECTOR3 PairRotOld = pObj->GetRotOld();	// 向き(過去)
+
 				float fPairWidth = pObj->GetWidth();	// 幅
 				float fPairHeight = pObj->GetHeight();	// 高さ
 				float fPairDepth = pObj->GetDepth();	// 奥行き
@@ -337,13 +348,13 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 					{// 奥辺と手前辺が相手の幅の内側の時、
 
 						if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
-							(PosOld.x + fSize) <= (PairPos.x - fPairWidth))
+							(PosOld.x + fSize) <= (PairPosOld.x - fPairWidth))
 						{// 左からめり込んでいる時
 
 							pos.x = (PairPos.x - fPairWidth) - fSize;
 						}
 						else if ((pos.x - fSize) < (PairPos.x + fPairWidth) &&
-							(PosOld.x - fSize) >= (PairPos.x + fPairWidth))
+							(PosOld.x - fSize) >= (PairPosOld.x + fPairWidth))
 						{// 右からめり込んでいる時
 
 							pos.x = (PairPos.x + fPairWidth) + fSize;
@@ -360,7 +371,7 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 					{// 左辺と右辺が相手の幅の内側の時、
 
 						if ((pos.y + fSize) > (PairPos.y - fPairHeight) &&
-							(PosOld.y + fSize) <= (PairPos.y - fPairHeight))
+							(PosOld.y + fSize) <= (PairPosOld.y - fPairHeight))
 						{// 下からめり込んでいる時
 
 							pos.y = (PairPos.y - fPairHeight) - fSize;
@@ -373,7 +384,7 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 							}
 						}
 						else if ((pos.y - fSize) < (PairPos.y + fPairHeight) &&
-							(PosOld.y - fSize) >= (PairPos.y + fPairHeight))
+							(PosOld.y - fSize) >= (PairPosOld.y + fPairHeight))
 						{// 上からめり込んでいる時
 							pos.y = (PairPos.y + fPairHeight) + fSize;
 
@@ -393,13 +404,13 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 					{// 奥辺と手前辺が相手の幅の内側の時、
 
 						if ((pos.z + fSize) > (PairPos.z - fPairDepth) &&
-							(PosOld.z + fSize) <= (PairPos.z - fPairDepth))
+							(PosOld.z + fSize) <= (PairPosOld.z - fPairDepth))
 						{// 左からめり込んでいる時
 
 							pos.z = (PairPos.z - fPairDepth) - fSize;
 						}
 						else if ((pos.z - fSize) < (PairPos.z + fPairDepth) &&
-							(PosOld.z - fSize) >= (PairPos.z + fPairDepth))
+							(PosOld.z - fSize) >= (PairPosOld.z + fPairDepth))
 						{// 右からめり込んでいる時
 
 							pos.z = (PairPos.z + fPairDepth) + fSize;
@@ -411,13 +422,18 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 			}
 			else if (type = TYPE_ENEMY)
 			{// 種類がエネミーの時
-			 // プレイヤーの各パーツの取得
+			 // エネミーの各パーツの取得
 				D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
+				D3DXVECTOR3 RotOld = GetRotOld();	// 向き(過去)
 				D3DXVECTOR3 Scale = GetSize();
 				float fSize = 10.0f;
 
 				// ブロックの取得
-				D3DXVECTOR3 PairPos = pObj->GetPos();	// 位置
+				D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
+				D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
+				D3DXVECTOR3 PairRot = pObj->GetRot();		// 向き
+				D3DXVECTOR3 PairRotOld = pObj->GetRotOld();	// 向き(過去)
+
 				float fPairWidth = pObj->GetWidth();	// 幅
 				float fPairHeight = pObj->GetHeight();	// 高さ
 				float fPairDepth = pObj->GetDepth();	// 奥行き
@@ -434,13 +450,13 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 					{// 奥辺と手前辺が相手の幅の内側の時、
 
 						if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
-							(PosOld.x + fSize) <= (PairPos.x - fPairWidth))
+							(PosOld.x + fSize) <= (PairPosOld.x - fPairWidth))
 						{// 左からめり込んでいる時
 
 							pos.x = (PairPos.x - fPairWidth) - fSize;
 						}
 						else if ((pos.x - fSize) < (PairPos.x + fPairWidth) &&
-							(PosOld.x - fSize) >= (PairPos.x + fPairWidth))
+							(PosOld.x - fSize) >= (PairPosOld.x + fPairWidth))
 						{// 右からめり込んでいる時
 
 							pos.x = (PairPos.x + fPairWidth) + fSize;
@@ -457,13 +473,13 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 					{// 左辺と右辺が相手の幅の内側の時、
 
 						if ((pos.y + fSize) > (PairPos.y - fPairHeight) &&
-							(PosOld.y + fSize) <= (PairPos.y - fPairHeight))
+							(PosOld.y + fSize) <= (PairPosOld.y - fPairHeight))
 						{// 下からめり込んでいる時
 
 							pos.y = (PairPos.y - fPairHeight) - fSize;
 						}
 						else if ((pos.y - fSize) < (PairPos.y + fPairHeight) &&
-							(PosOld.y - fSize) >= (PairPos.y + fPairHeight))
+							(PosOld.y - fSize) >= (PairPosOld.y + fPairHeight))
 						{// 上からめり込んでいる時
 
 							pos.y = (PairPos.y + fPairHeight) + fSize;
@@ -480,13 +496,13 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 					{// 奥辺と手前辺が相手の幅の内側の時、
 
 						if ((pos.z + fSize) > (PairPos.z - fPairDepth) &&
-							(PosOld.z + fSize) <= (PairPos.z - fPairDepth))
+							(PosOld.z + fSize) <= (PairPosOld.z - fPairDepth))
 						{// 左からめり込んでいる時
 
 							pos.z = (PairPos.z - fPairDepth) - fSize;
 						}
 						else if ((pos.z - fSize) < (PairPos.z + fPairDepth) &&
-							(PosOld.z - fSize) >= (PairPos.z + fPairDepth))
+							(PosOld.z - fSize) >= (PairPosOld.z + fPairDepth))
 						{// 右からめり込んでいる時
 
 							pos.z = (PairPos.z + fPairDepth) + fSize;

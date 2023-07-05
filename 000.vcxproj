@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code\camera.cpp" />
+    <ClCompile Include="code\csv_file.cpp" />
     <ClCompile Include="code\input.cpp" />
     <ClCompile Include="code\light.cpp" />
     <ClCompile Include="code\main.cpp" />

@@ -129,6 +129,9 @@ void CParticleX::Update(void)
 		pObj->Eff_SetLife(m_Info.nLife);
 		pObj->Eff_SetCol(m_Info.aColor.col);
 		pObj->Eff_SetRadius(m_Info.fRadius);
+		pObj->SetPos(m_Info.pos);
+		pObj->SetRot(m_Info.rot);
+		pObj->SetColor(m_Info.aColor.col);
 	}
 
 	Uninit();

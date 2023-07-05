@@ -84,6 +84,8 @@ public:
 	/* サイズ			*/virtual D3DXVECTOR3 GetSize(void) { return INIT_D3DXVECTOR3; }
 	/* 位置				*/virtual D3DXVECTOR3 GetPos(void) { return INIT_D3DXVECTOR3; }
 	/* 位置(過去)		*/virtual D3DXVECTOR3 GetPosOld(void) { return INIT_D3DXVECTOR3; }
+	/* 向き				*/virtual D3DXVECTOR3 GetRot(void) { return INIT_D3DXVECTOR3; }
+	/* 向き(過去)		*/virtual D3DXVECTOR3 GetRotOld(void) { return INIT_D3DXVECTOR3; }
 	/* 種類				*/TYPE GetType() { return m_type; }
 	/* オブジェクト総数	*/static int GetNumAll() { return m_nNumAll; };
 	/* オブジェクト情報	*/static CObject *GetObjectPointer(int nPriority,int nIdx) { return m_apObject[nPriority][nIdx]; }

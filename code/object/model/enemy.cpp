@@ -24,7 +24,9 @@ CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 {
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
+	m_Info.posOld = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
+	m_Info.rotOld = INIT_D3DXVECTOR3;
 	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.move = INIT_D3DXVECTOR3;
 	m_Info.nType = 0;
@@ -99,8 +101,9 @@ void CEnemy::Uninit(void)
 //========================================
 void CEnemy::Update(void)
 {
-	// 位置を代入
+	// 過去の位置・向きの更新
 	m_Info.posOld = m_Info.pos;
+	m_Info.rotOld = m_Info.rot;
 
 	// 状態推移
 	StateShift();

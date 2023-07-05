@@ -30,7 +30,9 @@ public:
 	typedef struct
 	{
 		D3DXVECTOR3 pos;		// ˆÊ’u
+		D3DXVECTOR3 posOld;		// ˆÊ’u(‰ß‹Ž)
 		D3DXVECTOR3 rot;		// Œü‚«
+		D3DXVECTOR3 rotOld;		// Œü‚«(‰ß‹Ž)
 		D3DXVECTOR3 moveRot;	// ˆÚ“®Œü‚«
 		D3DXVECTOR3 targetRot;	// –Ú•WŒü‚«
 		D3DXVECTOR3 move;		// ˆÚ“®—Ê

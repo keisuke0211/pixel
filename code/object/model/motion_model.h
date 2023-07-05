@@ -39,7 +39,7 @@ public:
 
 	/* 設定 */
 	void SetPos(const D3DXVECTOR3 &pos) { m_pos = m_posOld =pos; };		// 位置
-	void SetRot(const D3DXVECTOR3 &rot) { m_rot = rot; };				// 向き
+	void SetRot(const D3DXVECTOR3 &rot) { m_rot = m_rotOld = rot; };	// 向き
 	void SetScale(const D3DXVECTOR3 &scale) { m_scale = scale; }		// サイズ
 	void SetColor(D3DXCOLOR color) { m_color = color; }					// 色
 	void SetIsColor(bool bcolor) { m_bcolor = bcolor; }					// 色変更
@@ -54,6 +54,7 @@ public:
 	D3DXVECTOR3 GetPos() { return m_pos; }								// 位置
 	D3DXVECTOR3 GetPosOld() { return m_posOld; }						// 位置(過去)
 	D3DXVECTOR3 GetRot() { return m_rot; }								// 向き
+	D3DXVECTOR3 GetRotOld() { return m_rotOld; }						// 向き(過去)
 	D3DXVECTOR3 GetScale() { return m_scale; }							// サイズ
 	D3DXCOLOR GetColor() { return m_color; }							// 色
 	bool GetIsColor() { return m_bcolor; }								// 色変更
@@ -67,8 +68,9 @@ private:
 	CMotion			*m_pMotion;				// モーションインスタンス
 	D3DXMATRIX		m_mtxWorld;				// ワールドマトリックス
 	D3DXVECTOR3		m_pos;					// 位置
-	D3DXVECTOR3		m_posOld;				// 過去位置
+	D3DXVECTOR3		m_posOld;				// 位置(過去)
 	D3DXVECTOR3		m_rot;					// 向き
+	D3DXVECTOR3		m_rotOld;				// 向き(過去)
 	D3DXVECTOR3		m_scale;				// スケール
 	D3DXVECTOR3		m_size;					// 当たり判定
 	D3DXCOLOR		m_color;				// 色

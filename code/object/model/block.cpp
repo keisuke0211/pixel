@@ -26,7 +26,9 @@ CBlock::CBlock(int nPriority) : CObjectX(nPriority)
 {
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
+	m_Info.posOld = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
+	m_Info.rotOld = INIT_D3DXVECTOR3;
 	m_Info.size = INIT_D3DXVECTOR3;
 	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.nType = 0;
@@ -107,7 +109,7 @@ HRESULT CBlock::Init(void)
 
 	// 生成
 	SetPos(m_Info.pos);
-	SetRot(m_Info.rot);
+	//SetRot(m_Info.rot);
 	SetScale(m_Info.size);
 	SetColor(m_Info.col);
 
@@ -127,6 +129,9 @@ void CBlock::Uninit(void)
 //========================================
 void CBlock::Update(void)
 {
+	// 過去の位置・向きの更新
+	m_Info.posOld = m_Info.pos;
+	m_Info.rotOld = m_Info.rot;
 
 	// 半径推移
 	if (m_Info.bSet == false && m_Info.nType == MODEL_BULLET)
@@ -158,7 +163,7 @@ void CBlock::Update(void)
 	m_Info.size = D3DXVECTOR3(m_Info.fRadius, m_Info.fRadius, m_Info.fRadius);
 
 	SetPos(m_Info.pos);
-	SetRot(m_Info.rot);
+	//SetRot(m_Info.rot);
 	SetScale(m_Info.size);
 
 	CObjectX::Update();
@@ -177,51 +182,59 @@ void CBlock::Draw(void)
 //========================================
 void CBlock::Load(void)
 {
-	CSVFILE<int> data;
+	CSVFILE *pFile = new CSVFILE;
 
 	// 読み込み
-	data.csv_read("data\\GAMEDATA\\BLOCK\\BLOCK_DATA.csv", true, true, ',');
+	pFile->FileLood("data\\GAMEDATA\\BLOCK\\BLOCK_DATA.csv", true, true, ',');
+
+	// 行数の取得
+	int nRowMax = pFile->GetRowSize();
 
 	// 動的確保
-	int nLineMax = data.cell.size() - 1;
-	pSetInfo = new SetInfo[nLineMax];
+	pSetInfo = new SetInfo;
 
-	for (int nRow = 0; nRow < data.cell.size(); nRow++)
+	SetInfo* keep = pSetInfo;
+
+	for (int nRow = 0; nRow < nRowMax; nRow++)
 	{
-		for (int nLine = 0; nLine < data.cell.at(nRow).size(); nLine++)
+		// 列数の取得
+		int nLineMax = pFile->GetLineSize(nRow);
+
+		for (int nLine = 0; nLine < nLineMax; nLine++)
 		{
+			string sData = pFile->GetData(nRow, nLine);
+
 			switch (nLine)
 			{
-				// 種類
-			case SET_TYPE:
-			{
-				pSetInfo[nRow].nType = (int)data.cell.at(nRow).at(nLine);
-			}
-				break;
-
-				// 位置
-			case SET_POS:
-			{
-				pSetInfo[nRow].pos.x = (int)data.cell.at(nRow).at(nLine); nLine++;
-				pSetInfo[nRow].pos.y = (int)data.cell.at(nRow).at(nLine); nLine++;
-				pSetInfo[nRow].pos.z = (int)data.cell.at(nRow).at(nLine);
-			}
-				break;
-
-				// ブロック数
-			case SET_NUM:
-			{
-				pSetInfo[nRow].nNumX = data.cell.at(nRow).at(nLine); nLine++;
-				pSetInfo[nRow].nNumY = data.cell.at(nRow).at(nLine); nLine++;
-				pSetInfo[nRow].nNumZ = data.cell.at(nRow).at(nLine);
-			}
-				break;
+			case 0:	pFile->ToValue(pSetInfo->nType, sData); break;	// 種類
+			case 1:	pFile->ToValue(pSetInfo->pos.x, sData); break;	// 位置 X
+			case 2:	pFile->ToValue(pSetInfo->pos.y, sData); break;	// 位置 Y
+			case 3:	pFile->ToValue(pSetInfo->pos.z, sData); break;	// 位置 Z
 			}
 		}
+		pSetInfo++;
 	}
 
+	// 先頭位置に戻す
+	pSetInfo = keep;
+
 	// 配置
-	SetBlock(nLineMax);
+	SetBlock(nRowMax - 1);
+
+	delete pFile;
+	pFile = NULL;
+}
+
+//========================================
+// 破棄
+//========================================
+void CBlock::UnLoad(void)
+{
+	if (pSetInfo != NULL)
+	{
+		delete[] pSetInfo;
+		pSetInfo = NULL;
+	}
 }
 
 //========================================
@@ -231,29 +244,11 @@ void CBlock::SetBlock(int nNumSet)
 {
 	for (int nCntSet = 0; nCntSet < nNumSet; nCntSet++, pSetInfo++)
 	{
-		float fWidth = CModel::GetWidth(pSetInfo->nType);		// 幅
-		float fHeight = CModel::GetHeight(pSetInfo->nType);		// 高さ
-		float fDepth = CModel::GetDepth(pSetInfo->nType);		// 奥行き
-
-		for (int nCntX = 0; nCntX < pSetInfo->nNumX; nCntX++)
-		{
-			for (int nCntY = 0; nCntY < pSetInfo->nNumY; nCntY++)
-			{
-				for (int nCntZ = 0; nCntZ < pSetInfo->nNumZ; nCntZ++)
-				{
-					CBlock::Create(pSetInfo->nType,
-						D3DXVECTOR3((
-							pSetInfo->pos.x + (nCntX * (fWidth * 2))),
-							pSetInfo->pos.y + (nCntY * (fHeight * 2)),
-							pSetInfo->pos.z + (nCntZ * (fDepth * 2))));
-				}
-			}
-		}
+		CBlock::Create(pSetInfo->nType,
+			D3DXVECTOR3(
+				pSetInfo->pos.x,
+				pSetInfo->pos.y,
+				pSetInfo->pos.z)/*,
+			pSetInfo->rot*/);
 	}
-
-	/*if (pSetInfo != NULL)
-	{
-		delete[] pSetInfo;
-		pSetInfo = NULL;
-	}*/
 }

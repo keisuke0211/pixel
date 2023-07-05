@@ -28,6 +28,7 @@ CBullet::CBullet(int nPriority) : CObjectX(nPriority)
 	m_Info.pos = INIT_D3DXVECTOR3;
 	m_Info.posOld = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
+	m_Info.rotOld = INIT_D3DXVECTOR3;
 	m_Info.move = INIT_D3DXVECTOR3;
 	m_Info.nType = 0;
 	m_Info.nLife = 0;
@@ -101,8 +102,9 @@ void CBullet::Uninit(void)
 //========================================
 void CBullet::Update(void)
 {
-	// 位置(過去)の更新
+	// 過去の位置・向きの更新
 	m_Info.posOld = m_Info.pos;
+	m_Info.rotOld = m_Info.rot;
 
 	// 寿命の減衰
 	if (--m_Info.nLife <= 0)
