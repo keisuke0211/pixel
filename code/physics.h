@@ -21,12 +21,16 @@ public:
 	// モデル種類
 	typedef enum
 	{
-		MODEL_GRASS_00 = 0,	// 草ブロック 1×1
-		MODEL_GRASS_01,		// 草ブロック 3×1
-		MODEL_GRASS_02,		// 草ブロック 5×1
-		MODEL_SOIL_00,		// 土ブロック 1×1
-		MODEL_SOIL_01,		// 土ブロック 3×1
-		MODEL_SOIL_02,		// 土ブロック 5×1
+		MODEL_GRASS_00 = 0,	// 草ブロック 1×1×1
+		MODEL_GRASS_01,		// 草ブロック 3×1×1
+		MODEL_GRASS_02,		// 草ブロック 5×1×1
+		MODEL_GRASS_03,		// 草ブロック 3×3×1
+		MODEL_GRASS_04,		// 草ブロック 5×5×1
+		MODEL_SOIL_00,		// 土ブロック 1×1×1
+		MODEL_SOIL_01,		// 土ブロック 3×1×1
+		MODEL_SOIL_02,		// 土ブロック 5×1×1
+		MODEL_SOIL_03,		// 土ブロック 1×3×1
+		MODEL_SOIL_04,		// 土ブロック 1×5×1
 		MODEL_BULLET,		// 弾
 		MODEL_PLAYER_00,	// プレイヤー 体
 		MODEL_PLAYER_01,	// プレイヤー 頭

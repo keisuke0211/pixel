@@ -185,16 +185,18 @@ void CBlock::Load(void)
 	CSVFILE *pFile = new CSVFILE;
 
 	// 読み込み
-	pFile->FileLood("data\\GAMEDATA\\BLOCK\\BLOCK_DATA.csv", true, true, ',');
+	pFile->FileLood("data\\GAMEDATA\\BLOCK\\BLOCK_DATA1.csv", true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
 
-	// 動的確保
+	// 配置情報の生成
 	pSetInfo = new SetInfo;
 
+	// 先頭アドレスを保存
 	SetInfo* keep = pSetInfo;
 
+	// 各データに代入
 	for (int nRow = 0; nRow < nRowMax; nRow++)
 	{
 		// 列数の取得
@@ -206,6 +208,7 @@ void CBlock::Load(void)
 
 			switch (nLine)
 			{
+			//case 0:	pSetInfo->nType = stoi(sData); break;	// 種類
 			case 0:	pFile->ToValue(pSetInfo->nType, sData); break;	// 種類
 			case 1:	pFile->ToValue(pSetInfo->pos.x, sData); break;	// 位置 X
 			case 2:	pFile->ToValue(pSetInfo->pos.y, sData); break;	// 位置 Y
@@ -232,7 +235,7 @@ void CBlock::UnLoad(void)
 {
 	if (pSetInfo != NULL)
 	{
-		delete[] pSetInfo;
+		delete pSetInfo;
 		pSetInfo = NULL;
 	}
 }

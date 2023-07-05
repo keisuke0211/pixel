@@ -37,7 +37,7 @@ CObject::CObject(int nPriority)
 //========================================
 CObject::~CObject()
 {
-	
+	m_nNumAll--;
 }
 
 //========================================
@@ -50,12 +50,8 @@ void CObject::Release(void)
 
 	if (m_apObject[nPri][nIdx] != NULL)
 	{
-		if (m_apObject[nPri][nIdx])
-		{
-			delete m_apObject[nPri][nIdx];
-			m_apObject[nPri][nIdx] = NULL;
-			m_nNumAll--;				// 総数のカウントダウン
-		}
+		delete m_apObject[nPri][nIdx];
+		m_apObject[nPri][nIdx] = NULL;
 	}
 }
 

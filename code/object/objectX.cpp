@@ -22,6 +22,7 @@ CObjectX::CObjectX(int nPriority) : CObject(nPriority)
 	m_rot = INIT_D3DXVECTOR3;		// 向き
 	m_scale = INIT_D3DXVECTOR3;		// スケール
 	m_color = INIT_D3DXCOLOR;		// 色
+	m_nModelID = 0;					// モデルID
 	m_bColor = false;
 }
 

@@ -146,10 +146,11 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	//	/*CBgMulti::Create(D3DXVECTOR3((nCntBg + 1)* 0.0005f, 0.0f, 0.0f), nCntBg);*/
 	//}
 	
-	//CFloor::Create();
 
 	// ÉuÉçÉbÉNÇÃê∂ê¨
-	CBlock::Load();
+	//CBlock::Load();
+
+	//CBlock::Create(8,D3DXVECTOR3(0.0f,-40.0f,0.0f));
 
 	CPlayer::Create();
 

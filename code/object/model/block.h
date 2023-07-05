@@ -81,12 +81,6 @@ private:
 	{
 		D3DXVECTOR3 pos;	// 位置
 		int nType;			// 種類
-		int nNumX;			// X ブロック数
-		int nNumY;			// Y ブロック数
-		int nNumZ;			// Z ブロック数
-		float Width;		// 幅
-		float Height;		// 高さ
-		float Depth;		// 奥行き
 	} SetInfo;
 
 	// ***** 変数 *****

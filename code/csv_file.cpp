@@ -12,9 +12,6 @@
 //========================================
 CSVFILE::CSVFILE()
 {
-	/*header = {};
-	index = {};
-	cell = {};*/
 	bHeader = false;	// ヘッダー
 	bIndex = false;		// インデックス
 	delim = ',';		// 区切り文字

@@ -16,6 +16,13 @@
 #include<string>
 #include <assert.h>
 #include"XInput.h"
+#include <iostream>	// 外部の装置と入出力
+#include <fstream>	// ファイル の入出力
+#include <vector>
+#include <string>
+#include <sstream>	// カンマで区切るために必要
+
+using namespace std;
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #include"d3dx9.h"  //描画処理に必要
