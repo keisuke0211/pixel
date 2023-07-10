@@ -31,10 +31,10 @@ public:
 	~CMotionModel();							// デストラクタ
 
 	// ***** 関数 *****
-	HRESULT Init() override;											// 初期化
-	void Uninit() override;												// 終了
-	void Update() override;												// 更新
-	void Draw() override;												// 描画
+	HRESULT Init(void);													// 初期化
+	void Uninit(void);													// 終了
+	void Update(void);													// 更新
+	void Draw(void);													// 描画
 	void ChangeColar(D3DXCOLOR color);									// 色の変更
 
 	/* 設定 */

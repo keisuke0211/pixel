@@ -87,13 +87,8 @@ void CModel::InitModel(void)
 			&m_material[nCntModel].nNumMat,
 			&m_material[nCntModel].pMesh);
 
-		// 必要な数のポインタを動的に確保する
-		if (m_material[nCntModel].nNumMat >= 1)
-		{
-			// マテリアルのテクスチャ情報のメモリ確保
-			m_material[nCntModel].pIdxTex = new int[m_material[nCntModel].nNumMat];
-
-		}
+		// マテリアルのテクスチャ情報のメモリ確保
+		m_material[nCntModel].pIdxTex = new int[m_material[nCntModel].nNumMat];
 
 		// バッファの先頭ポインタをD3DXMATERIALにキャストして取得
 		D3DXMATERIAL *pMat = (D3DXMATERIAL*)m_material[nCntModel].pBuffer->GetBufferPointer();
@@ -139,12 +134,12 @@ void CModel::UninitModel(void)
 		}
 
 		// メモリの解放
-		delete m_material[nCnt].pIdxTex;
+		delete[] m_material[nCnt].pIdxTex;
 		m_material[nCnt].pIdxTex = NULL;
 	}
 
 	// メモリの解放
-	delete m_material;
+	delete[] m_material;
 	m_material = NULL;
 }
 

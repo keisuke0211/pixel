@@ -64,11 +64,11 @@ void CMotion::Uninit(void)
 				{
 					if (m_motion[nCntMotion].pKeySet[nCntKey].pKey != NULL)
 					{
-						delete m_motion[nCntMotion].pKeySet[nCntKey].pKey;
+						delete[] m_motion[nCntMotion].pKeySet[nCntKey].pKey;
 						m_motion[nCntMotion].pKeySet[nCntKey].pKey = NULL;
 					}
 				}
-				delete m_motion[nCntMotion].pKeySet;
+				delete[] m_motion[nCntMotion].pKeySet;
 				m_motion[nCntMotion].pKeySet = NULL;
 			}
 		}
@@ -85,14 +85,14 @@ void CMotion::Uninit(void)
 		if (m_ppParts[nCntParts] != NULL)
 		{
 			delete m_ppParts[nCntParts];
-			m_ppParts[nCntParts] = NULL;
+			m_ppParts[nCntParts] = nullptr;
 		}
 	}
 
-	if (m_ppParts != NULL)
+	if (m_ppParts != nullptr)
 	{
 		delete[] m_ppParts;
-		m_ppParts = NULL;
+		m_ppParts = nullptr;
 	}
 }
 

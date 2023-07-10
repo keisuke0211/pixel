@@ -93,7 +93,6 @@ HRESULT CPlayer::Init(void)
 	m_Info.col = INIT_D3DXCOLOR;
 	
 	// ¶¬
-	SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 	SetPos(m_Info.pos);
 	SetRot(m_Info.rot);
 
@@ -284,7 +283,7 @@ void CPlayer::UpdatePos(void)
 	{
 
 		// ˆÚ“®—Ê‚Ì‘ã“ü
-		m_Info.pos.y += m_Info.move.y;
+		//m_Info.pos.y += m_Info.move.y;
 
 		//‚x‚ÌˆÚ“®—Ê‚Éd—Í‚ð‰ÁŽZ
 		m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;

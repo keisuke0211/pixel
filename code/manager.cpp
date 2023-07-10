@@ -150,6 +150,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	SetBlock();
 
 	CPlayer *pPlayer = CPlayer::Create();
+	pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
 	// ìGÇÃê∂ê¨
 
