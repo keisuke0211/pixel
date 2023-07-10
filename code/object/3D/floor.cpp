@@ -31,15 +31,7 @@ CFloor::~CFloor()
 //========================================
 CFloor *CFloor::Create(void)
 {
-	CFloor *pFloor = NULL;
-
-	if (pFloor != NULL)
-	{
-		return pFloor;
-	}
-
-	// オブジェクト2Dの生成
-	pFloor = new CFloor;
+	CFloor *pFloor = new CFloor;
 
 	// 初期化処理
 	pFloor->Init();

@@ -12,13 +12,12 @@
 #include "sound.h"
 #include "texture.h"
 #include "input.h"
+#include "csv_file.h"
 #include "object\model\model.h"
 #include "object\object.h"
 #include "object\2D\score.h"
 #include "object\2D\time.h"
 #include "object\2D\text2D.h"
-#include "object\2D\bg2D.h"
-#include "object\2D\bg_Multi2D.h"
 #include "object\3D\floor.h"
 #include "object\model\block.h"
 #include "object\model\player.h"
@@ -62,70 +61,70 @@ CManager::~CManager()
 //========================================
 HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 {
-	if (m_pRenderer == NULL)
-	{
-		// レンダラーの生成
-		m_pRenderer = new CRenderer;
+	// レンダラーの生成
+	m_pRenderer = new CRenderer;
 
-		// レンダラーの初期化
-		m_pRenderer->Init(hWnd, bWindow);
+	// レンダラーの初期化処理
+	if (FAILED(m_pRenderer->Init(hWnd, bWindow)))
+	{// 初期化処理が失敗した場合
+		return E_FAIL;
 	}
 
-	if (m_InputKeyboard == NULL)
-	{
-		// キーボードの生成
-		m_InputKeyboard = new CInputKeyboard;
+	// キーボードの生成
+	m_InputKeyboard = new CInputKeyboard;
 
-		// キーボードの初期化
-		m_InputKeyboard->Init(hinstance, hWnd);
+	// キーボードの初期化
+	if (FAILED(m_InputKeyboard->Init(hinstance, hWnd)))
+	{
+		return E_FAIL;
 	}
 
-	if (m_InputMouse == NULL)
-	{
-		// マウスの生成
-		m_InputMouse = new CInputMouse;
+	// マウスの生成
+	m_InputMouse = new CInputMouse;
 
-		// マウスの初期化
-		m_InputMouse->Init(hinstance, hWnd);
+	// マウスの初期化
+	if (FAILED(m_InputMouse->Init(hinstance, hWnd)))
+	{
+		return E_FAIL;
 	}
 
-	if (m_InputJoypad == NULL)
-	{
-		// ジョイパットの生成
-		m_InputJoypad = new CInputJoypad;
+	// ジョイパットの生成
+	m_InputJoypad = new CInputJoypad;
 
-		// ジョイパットの初期化
-		m_InputJoypad->Init();
+	// ジョイパットの初期化
+	if (FAILED(m_InputJoypad->Init()))
+	{
+		return E_FAIL;
 	}
 
-	if (m_pCamera == NULL)
-	{
-		// カメラの生成
-		m_pCamera = new CCamera;
+	// カメラの生成
+	m_pCamera = new CCamera;
 
-		// カメラの初期化
-		m_pCamera->lnit();
+	// カメラの初期化
+	if (FAILED(m_pCamera->Init()))
+	{
+		return E_FAIL;
 	}
 
-	if (m_pLight == NULL)
-	{
-		// ライトの生成
-		m_pLight = new CLight;
+	// ライトの生成
+	m_pLight = new CLight;
 
-		// ライトの初期化
-		m_pLight->lnit();
+	// ライトの初期化
+	if (FAILED(m_pLight->Init()))
+	{
+		return E_FAIL;
 	}
 
-	if (m_pSound == NULL)
+	// サウンドの生成
+	m_pSound = new CSound;
+
+	// サウンドの読み込み
+	m_pSound->Load();
+
+	// サウンドの初期化
+	if (FAILED(m_pSound->Init(hWnd)))
 	{
-		// サウンドの生成
-		m_pSound = new CSound;
-
-		// サウンドの読み込み
-		m_pSound->Load();
-
-		// サウンドの初期化
-		m_pSound->Init(hWnd);
+		return E_FAIL;
 	}
 	
 	if (m_pTexture == NULL)
@@ -148,17 +147,15 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	
 
 	// ブロックの生成
-	//CBlock::Load();
+	SetBlock();
 
-	//CBlock::Create(8,D3DXVECTOR3(0.0f,-40.0f,0.0f));
-
-	CPlayer::Create();
+	CPlayer *pPlayer = CPlayer::Create();
 
 	// 敵の生成
 
 	for (int nCnt = 0; nCnt < 10; nCnt++)
 	{
-		CEnemy::Create(D3DXVECTOR3(330.0f + (nCnt * -75), -20.0f, -150.0f));
+		CEnemy *pObj = CEnemy::Create(D3DXVECTOR3(330.0f + (nCnt * -75), -20.0f, -150.0f));
 	}
 
 	/*CEffectX *pObj = CEffectX::Create();
@@ -320,9 +317,6 @@ void CManager::Uninit(void)
 		m_pRenderer = NULL;
 	}
 
-	// 配置情報の破棄
-	CBlock::UnLoad();
-
 	// ライトの破棄
 	if (m_pLight != NULL)
 	{
@@ -404,4 +398,55 @@ void CManager::SetEnemy(void)
 	{
 		CEnemy::Create(D3DXVECTOR3(330.0f + (nCnt * -75), -20.0f, -150.0f));
 	}
+}
+
+//========================================
+// セットブロック
+//========================================
+void CManager::SetBlock(void)
+{
+	CSVFILE *pFile = new CSVFILE;
+
+	// 読み込み
+	pFile->FileLood("data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv", true, true, ',');
+
+	// 行数の取得
+	int nRowMax = pFile->GetRowSize();
+
+	// 各データに代入
+	for (int nRow = 0; nRow < nRowMax; nRow++)
+	{
+		// 配置情報の生成
+		int nType;				// 種類
+		D3DXVECTOR3 pos;		// 位置
+
+		// 列数の取得
+		int nLineMax = pFile->GetLineSize(nRow);
+
+		for (int nLine = 0; nLine < nLineMax; nLine++)
+		{
+			string sData = pFile->GetData(nRow, nLine);
+
+			switch (nLine)
+			{
+			case 0:	pFile->ToValue(nType, sData); break;	// 種類
+			case 1:	pFile->ToValue(pos.x, sData); break;	// 位置 X
+			case 2:	pFile->ToValue(pos.y, sData); break;	// 位置 Y
+			case 3:	pFile->ToValue(pos.z, sData); break;	// 位置 Z
+			}
+		}
+
+		// 最大数に達したら返す
+		if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
+		{
+			return;
+		}
+
+		// 配置
+		CBlock *pObj = CBlock::Create(nType, pos);
+	}
+
+	// メモリ開放
+	delete pFile;
+	pFile = NULL;
 }

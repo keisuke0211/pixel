@@ -122,29 +122,27 @@ void CObjectX::Draw(void)
 	// 現在のマテリアルを取得
 	pDevice->GetMaterial(&matDef);
 
-	for (int nCntItem = 0; nCntItem < 1; nCntItem++)
-	{
-		// ワールドマトリックスの初期化
-		D3DXMatrixIdentity(&m_mtxWorld);
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
 
-		// サイズを反映
-		D3DXMatrixScaling(&mtxScale, m_scale.y, m_scale.x, m_scale.z);		// スケール拡縮行列
-		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScale);			// 行列掛け算関数 
+	// サイズを反映
+	D3DXMatrixScaling(&mtxScale, m_scale.y, m_scale.x, m_scale.z);		// スケール拡縮行列
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScale);			// 行列掛け算関数 
 
-		// 向きを反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+	// 向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
-		// 位置を反映
-		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
-		// ワールドマトリックスの設定
-		pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+	// ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-		// モデルの描画設定
-		m_pModel->Draw(m_mtxWorld, true);
-	}
+	// モデルの描画設定
+	m_pModel->Draw(m_mtxWorld, true);
+	
 
 	// 保存していたマテリアルを戻す
 	pDevice->SetMaterial(&matDef);

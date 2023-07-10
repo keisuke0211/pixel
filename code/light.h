@@ -31,7 +31,7 @@ public:
 	CLight();	// コンストラクタ
 	~CLight();	// デストラクタ
 
-	HRESULT lnit(void);	// 初期化
+	HRESULT Init(void);	// 初期化
 	void Uninit(void);	// 終了
 	void Update(void);	// 更新
 

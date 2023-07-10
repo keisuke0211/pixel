@@ -55,11 +55,6 @@ public:
 	void Update(void);	// 更新
 	void Draw(void);	// 描画
 	
-	static void Load(void);				// 読み込み
-	static void SetBlock(int nNumSet);	// 配置
-	static void UnLoad(void);			// 破棄
-
-
 	/* 設定 */
 	virtual void BlockSetPos(const D3DXVECTOR3 pos) { m_Info.pos = pos; }	// 位置
 	void BlockSetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }			// 向き
@@ -74,18 +69,8 @@ public:
 
 private:
 
-	// ***** 構造体 *****
-
-	// 配置情報
-	typedef struct
-	{
-		D3DXVECTOR3 pos;	// 位置
-		int nType;			// 種類
-	} SetInfo;
-
 	// ***** 変数 *****
 	Info m_Info;				// プレイヤー情報
-	static SetInfo *pSetInfo;	// セット情報
 
 };
 #endif

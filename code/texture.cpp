@@ -8,11 +8,9 @@
 #include "texture.h"
 #include "manager.h"
 #include "renderer.h"
-#include "object\2D\bg2D.h"
 #include "object\3D\floor.h"
 #include "object\model\enemy.h"
 #include "object\model\bullet.h"
-#include "object\2D\effect2D.h"
 #include "object\2D\text2D.h"
 
 // ’è‹`

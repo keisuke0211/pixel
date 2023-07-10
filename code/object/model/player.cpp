@@ -93,7 +93,7 @@ HRESULT CPlayer::Init(void)
 	m_Info.col = INIT_D3DXCOLOR;
 	
 	// 生成
-	//SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
+	SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 	SetPos(m_Info.pos);
 	SetRot(m_Info.rot);
 
@@ -287,7 +287,7 @@ void CPlayer::UpdatePos(void)
 		m_Info.pos.y += m_Info.move.y;
 
 		//Ｙの移動量に重力を加算
-		//m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+		m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
 
 		// Y方向の当たり判定
 		m_Info.pos = Collision(VECTOR_Y, m_Info.pos);
@@ -420,7 +420,7 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 				   break;
 				}
 			}
-			else if (type = TYPE_ENEMY)
+			else if (type == TYPE_ENEMY)
 			{// 種類がエネミーの時
 			 // エネミーの各パーツの取得
 				D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)

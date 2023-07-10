@@ -61,6 +61,16 @@ HRESULT CText2D::Init(void)
 //========================================
 void CText2D::Uninit(void) 
 {
+	// オブジェクト2Dのポインタ配列解放
+	for (int nCntObj = 0; nCntObj < TXT_MAX; nCntObj++)
+	{
+		if (m_apObject2D[nCntObj] != NULL)
+		{
+			m_apObject2D[nCntObj]->Uninit();
+			m_apObject2D[nCntObj] = NULL;
+		}
+	}
+
 	Release();
 }
 

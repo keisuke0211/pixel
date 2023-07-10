@@ -28,7 +28,7 @@ CLight::~CLight()
 //========================================
 // 初期化
 //========================================
-HRESULT CLight::lnit(void)
+HRESULT CLight::Init(void)
 {
 	//デバイスの所得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();

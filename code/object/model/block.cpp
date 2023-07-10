@@ -16,9 +16,6 @@
 #define RADIUS_TIME	(20)	// 半径・推移時間
 #define BULLET_ID	(2)		// 弾ID
 
-// 静的変数
-CBlock::SetInfo *CBlock::pSetInfo = NULL;
-
 //========================================
 // コンストラクタ
 //========================================
@@ -129,6 +126,11 @@ void CBlock::Uninit(void)
 //========================================
 void CBlock::Update(void)
 {
+	//SetPos(m_Info.pos);
+	////SetRot(m_Info.rot);
+	//SetScale(m_Info.size);
+	//SetColor(m_Info.col);
+
 	// 過去の位置・向きの更新
 	m_Info.posOld = m_Info.pos;
 	m_Info.rotOld = m_Info.rot;
@@ -175,83 +177,4 @@ void CBlock::Update(void)
 void CBlock::Draw(void)
 {
 	CObjectX::Draw();
-}
-
-//========================================
-// 読み込み
-//========================================
-void CBlock::Load(void)
-{
-	CSVFILE *pFile = new CSVFILE;
-
-	// 読み込み
-	pFile->FileLood("data\\GAMEDATA\\BLOCK\\BLOCK_DATA1.csv", true, true, ',');
-
-	// 行数の取得
-	int nRowMax = pFile->GetRowSize();
-
-	// 配置情報の生成
-	pSetInfo = new SetInfo;
-
-	// 先頭アドレスを保存
-	SetInfo* keep = pSetInfo;
-
-	// 各データに代入
-	for (int nRow = 0; nRow < nRowMax; nRow++)
-	{
-		// 列数の取得
-		int nLineMax = pFile->GetLineSize(nRow);
-
-		for (int nLine = 0; nLine < nLineMax; nLine++)
-		{
-			string sData = pFile->GetData(nRow, nLine);
-
-			switch (nLine)
-			{
-			//case 0:	pSetInfo->nType = stoi(sData); break;	// 種類
-			case 0:	pFile->ToValue(pSetInfo->nType, sData); break;	// 種類
-			case 1:	pFile->ToValue(pSetInfo->pos.x, sData); break;	// 位置 X
-			case 2:	pFile->ToValue(pSetInfo->pos.y, sData); break;	// 位置 Y
-			case 3:	pFile->ToValue(pSetInfo->pos.z, sData); break;	// 位置 Z
-			}
-		}
-		pSetInfo++;
-	}
-
-	// 先頭位置に戻す
-	pSetInfo = keep;
-
-	// 配置
-	SetBlock(nRowMax - 1);
-
-	delete pFile;
-	pFile = NULL;
-}
-
-//========================================
-// 破棄
-//========================================
-void CBlock::UnLoad(void)
-{
-	if (pSetInfo != NULL)
-	{
-		delete pSetInfo;
-		pSetInfo = NULL;
-	}
-}
-
-//========================================
-// 配置
-//========================================
-void CBlock::SetBlock(int nNumSet)
-{
-	for (int nCntSet = 0; nCntSet < nNumSet; nCntSet++, pSetInfo++)
-	{
-		CBlock::Create(pSetInfo->nType,
-			D3DXVECTOR3(
-				pSetInfo->pos.x,
-				pSetInfo->pos.y,
-				pSetInfo->pos.z)/*,
-			pSetInfo->rot*/);
-	}
 }

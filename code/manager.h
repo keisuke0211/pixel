@@ -43,6 +43,7 @@ public:
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);
 	/* エネミー	*/void SetEnemy(void);
+	/* ブロック */void SetBlock(void);
 
 	// -- 取得 --------------------------------------
 	/* レンダラー	*/static CRenderer *GetRenderer() { return m_pRenderer; }

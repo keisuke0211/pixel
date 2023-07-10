@@ -57,7 +57,7 @@ CCamera::~CCamera()
 //========================================
 // ‰Šú‰»
 //========================================
-HRESULT CCamera::lnit(void)
+HRESULT CCamera::Init(void)
 {
 	/* ƒJƒƒ‰î•ñ */
 	m_Info.posV = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// ƒJƒƒ‰‚ÌˆÊ’u
