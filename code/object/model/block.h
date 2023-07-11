@@ -36,9 +36,6 @@ public:
 		int nCntRadius;			// 半径・推移時間
 		float fRadiusRate;		// 半径の割合
 		bool bSet;				// 配置フラグ
-		float Width;			// 幅
-		float Height;			// 高さ
-		float Depth;			// 奥行き
 	} Info;
 
 	// ***** 関数 *****

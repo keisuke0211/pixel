@@ -6,6 +6,7 @@
 // *** bullet.cpp ***
 //========================================
 #include "bullet.h"
+#include "bullet_cube.h"
 #include "../../manager.h"
 #include "../../renderer.h"
 #include "enemy.h"
@@ -195,8 +196,8 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 				// 種類を取得
 				type = pObj->GetType();
 
-				if (type == TYPE_BLOCK)
-				{// 種類が敵の場合
+				if (type == TYPE_BLOCK || type == TYPE_CUBE)
+				{// 種類がブロックかキューブの場合
 
 					// バレットの取得
 					D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
@@ -292,8 +293,8 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 
 					if (m_Info.bHit)
 					{
-						// ブロックの生成
-						CBlock::Create(MODEL_BULLET, D3DXVECTOR3(pos.x, pos.y, pos.z));
+						// キューブの生成
+						CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z));
 
 						// 弾の破棄
 						Uninit();

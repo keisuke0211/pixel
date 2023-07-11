@@ -11,12 +11,6 @@
 #include "../../csv_file.h"
 
 //========================================
-// マクロ定義
-//========================================
-#define RADIUS_TIME	(20)	// 半径・推移時間
-#define BULLET_ID	(2)		// 弾ID
-
-//========================================
 // コンストラクタ
 //========================================
 CBlock::CBlock(int nPriority) : CObjectX(nPriority)
@@ -34,9 +28,6 @@ CBlock::CBlock(int nPriority) : CObjectX(nPriority)
 	m_Info.fRadius = 0.0f;
 	m_Info.nCntRadius = 0;
 	m_Info.fRadiusRate = 0.0f;
-	m_Info.Width = 0.0f;
-	m_Info.Height = 0.0f;
-	m_Info.Depth = 0.0f;
 	m_Info.bSet = false;
 }
 
@@ -63,17 +54,6 @@ CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 	// オブジェクト2Dの生成
 	pBlock = new CBlock;
 
-	if (nType == MODEL_BULLET)
-	{
-		pBlock->m_Info.nCntRadius = RADIUS_TIME;
-		pBlock->m_Info.fRadiusRate = 0.0f;
-		pBlock->m_Info.bSet = false;
-	}
-	else
-	{
-		pBlock->m_Info.bSet = false;
-	}
-
 	pBlock->SetModel(nType);
 
 	// 初期化処理
@@ -99,7 +79,7 @@ HRESULT CBlock::Init(void)
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_Info.size = D3DXVECTOR3(0.0f,0.0f,0.0f);
+	m_Info.size = D3DXVECTOR3(1.0f,1.0f,1.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.nType = 0;
 	m_Info.fRadius = 1.0f;
@@ -129,35 +109,6 @@ void CBlock::Update(void)
 	// 過去の位置・向きの更新
 	m_Info.posOld = m_Info.pos;
 	m_Info.rotOld = m_Info.rot;
-
-	// 半径推移
-	if (m_Info.bSet == false && m_Info.nType == MODEL_BULLET)
-	{
-		m_Info.fRadiusRate = (float)m_Info.nCntRadius / (float)RADIUS_TIME;
-		m_Info.fRadius = 1 * (1.0f - m_Info.fRadiusRate);
-
-		if (--m_Info.nCntRadius <= 0)
-		{
-			m_Info.bSet = true;
-		}
-	}
-
-	// 寿命
-	if (--m_Info.nLife <= 0 && m_Info.bSet == true)
-	{
-		Uninit();
-		return;
-	}
-	else if (m_Info.nLife <= RADIUS_TIME && m_Info.bSet == true)
-	{
-		m_Info.fRadius -= m_Info.fRadius / m_Info.nLife;
-		m_Info.col.a *= ((float)m_Info.nLife / RADIUS_TIME);
-
-		SetColor(m_Info.col);
-	}
-
-	// サイズの更新
-	m_Info.size = D3DXVECTOR3(m_Info.fRadius, m_Info.fRadius, m_Info.fRadius);
 
 	SetPos(m_Info.pos);
 	//SetRot(m_Info.rot);

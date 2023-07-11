@@ -321,7 +321,7 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 		 // 種類を取得
 			TYPE type = pObj->GetType();
 
-			if (type == TYPE_BLOCK)
+			if (type == TYPE_BLOCK || type == TYPE_CUBE)
 			{// 種類がブロックの時、
 
 				// プレイヤーの各パーツの取得

@@ -48,6 +48,7 @@ public:
 		TYPE_BG_MULTI,	// マルチ背景
 		TYPE_FLOOR,		// 床
 		TYPE_BLOCK,		// ブロック
+		TYPE_CUBE,		// キューブ
 		TYPE_PLAYER,	// プレイヤー
 		TYPE_ENEMY,		// エネミー
 		TYPE_BULLET,	// バレット
@@ -86,8 +87,9 @@ public:
 	/* 位置(過去)		*/virtual D3DXVECTOR3 GetPosOld(void) { return INIT_D3DXVECTOR3; }
 	/* 向き				*/virtual D3DXVECTOR3 GetRot(void) { return INIT_D3DXVECTOR3; }
 	/* 向き(過去)		*/virtual D3DXVECTOR3 GetRotOld(void) { return INIT_D3DXVECTOR3; }
-	/* 種類				*/TYPE GetType() { return m_type; }
-	/* オブジェクト総数	*/static int GetNumAll() { return m_nNumAll; };
+	/* 種類				*/TYPE GetType(void) { return m_type; }
+	/* 自分自身ID		*/int GetID(void) { return m_nID; }
+	/* オブジェクト総数	*/static int GetNumAll(void) { return m_nNumAll; };
 	/* オブジェクト情報	*/static CObject *GetObjectPointer(int nPriority,int nIdx) { return m_apObject[nPriority][nIdx]; }
 	/* スコア情報		*/static CScore *GetScore(int nPriority,int nIdx);
 	/* タイム情報		*/static CTime *GetTime(int nPriority, int nIdx);
