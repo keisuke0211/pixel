@@ -126,11 +126,6 @@ void CBlock::Uninit(void)
 //========================================
 void CBlock::Update(void)
 {
-	//SetPos(m_Info.pos);
-	////SetRot(m_Info.rot);
-	//SetScale(m_Info.size);
-	//SetColor(m_Info.col);
-
 	// 過去の位置・向きの更新
 	m_Info.posOld = m_Info.pos;
 	m_Info.rotOld = m_Info.rot;

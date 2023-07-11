@@ -190,6 +190,12 @@ void CPlayer::KeyInput(void)
 		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z),m_Info.rot);
 	}
 
+	if (pInputMouse->GetPress(CInputMouse::MOUSE_RIGHT))
+	{
+		int n;
+		n = 1;
+	}
+
 	// 位置更新
 	MovePos(PLAYER_SPEED);
 }
@@ -227,12 +233,11 @@ void CPlayer::MovePos(float fMove)
 {
 	// --- 取得 ---------------------------------
 	CCamera *pCamera = CManager::GetCamera();				// カメラ
-	CInputMouse *pInputMouse = CManager::GetInputMouse();	// マウス
 
 	D3DXVECTOR3 posV = pCamera->GetInfo().posV;	// 視点
 	D3DXVECTOR3 posR = pCamera->GetInfo().posR;	// 注視点
 
-	if (!m_Info.bMove || pInputMouse->GetPress(CInputMouse::MOUSE_RIGHT))
+	if (!m_Info.bMove)
 	{
 		fMove = 0.0f;
 	}

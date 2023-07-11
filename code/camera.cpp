@@ -102,7 +102,7 @@ void CCamera::Update(void)
 	m_Info.posOldV = m_Info.posV;
 	m_Info.posOldR = m_Info.posR;
 
-	if (pInputMouse->GetPress(CInputMouse::MOUSE_RIGHT) == true)
+	if (pInputMouse->GetPress(CInputMouse::MOUSE_RIGHT))
 	{// マウスの右ボタンが押されている間
 
 		 // カーソルの移動量に応じて回転

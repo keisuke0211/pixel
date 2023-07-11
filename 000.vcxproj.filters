@@ -126,6 +126,9 @@
     <ClCompile Include="code\object\model\motion.cpp">
       <Filter>ソース ファイル\01_object\02_model\00_system</Filter>
     </ClCompile>
+    <ClCompile Include="code\object\model\bullet_cube.cpp">
+      <Filter>ソース ファイル\01_object\02_model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\main.h">
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="code\csv_file.h">
       <Filter>ソース ファイル\02_system</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\model\bullet_cube.h">
+      <Filter>ソース ファイル\01_object\02_model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
