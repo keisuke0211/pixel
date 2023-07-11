@@ -9,24 +9,14 @@
 #define _INPUT_H_
 
 #include "main.h"
-
-//****************************************
-// 構造体
-//****************************************
-
-// スティックの入力情報構造体
-typedef struct
-{
-	float fTplDiameter;	// スティックの倒し具合
-	float fAngle;		// スティックの角度
-}STICK_INPUT;
+#include "physics.h"
 
 //****************************************
 // クラス
 //****************************************
 
 // 入力
-class CInput
+class CInput : public CPhysics
 {
 public:
 	// ***** 定義 *****
@@ -164,8 +154,6 @@ public:
 		JOYKEY_B,					//Bボタン
 		JOYKEY_X,					//Xボタン
 		JOYKEY_Y,					//Yボタン
-		JOYKEY_LEFT_STICK,			//左スティック
-		JOYKEY_RIGHT_STICK,			//右スティック
 		JOYKEY_MAX
 	}JOYKEY;
 
@@ -177,6 +165,31 @@ public:
 		STICK_TYPE_MAX
 	}STICK_TYPE;
 
+	// スティックの方向
+	typedef enum
+	{
+		STICK_ANGLE_UP = 0,
+		STICK_ANGLE_DOWN,
+		STICK_ANGLE_LEFT,
+		STICK_ANGLE_RIGHT,
+		STICK_ANGLE_MAX,
+	}STICK_ANGLE;
+
+	// ***** 構造体 *****
+
+	// スティックの入力情報
+	typedef struct
+	{
+		float aTplDiameter[STICK_TYPE_MAX];						// スティックの倒し具合
+		float aAngle[STICK_TYPE_MAX];							// スティックの角度
+		bool aAnglePress[STICK_TYPE_MAX][STICK_ANGLE_MAX];		// スティックの方向プレス情報
+		bool aAngleTrigger[STICK_TYPE_MAX][STICK_ANGLE_MAX];	// スティックの方向トリガー情報
+		bool aAngleRepeat[STICK_TYPE_MAX][STICK_ANGLE_MAX];		// スティックの方向リピート情報
+		bool aAngleRelease[STICK_TYPE_MAX][STICK_ANGLE_MAX];	// スティックの方向リリース情報
+
+	}STICK_INPUT;
+
+
 	// ***** 関数 *****
 	CInputJoypad();
 	~CInputJoypad();
@@ -185,33 +198,38 @@ public:
 	HRESULT Init(void);												// 初期化
 	void Uninit(void);												// 終了
 	void Update(void);												// 更新
-	bool GetJoypadPress(JOYKEY Key, int nPlayer = 0);				// プレス情報を取得
-	bool GetJoypadTrigger(JOYKEY Key, int nPlayer = 0);				// トリガー情報を取得
-	bool GetJoypadRelese(JOYKEY Key, int nPlayer = 0);				// リリース情報を取得
-	bool GetJoypadRepeat(JOYKEY Key, int nPlayer = 0);				// リピート情報を取得
+	void UpdateStick(void);											// 更新
+	bool GetJoypadPress(JOYKEY Key, int nPatNum = 0);				// プレス情報を取得
+	bool GetJoypadTrigger(JOYKEY Key, int nPatNum = 0);				// トリガー情報を取得
+	bool GetJoypadRelese(JOYKEY Key, int nPatNum = 0);				// リリース情報を取得
+	bool GetJoypadRepeat(JOYKEY Key, int nPatNum = 0);				// リピート情報を取得
 
-	D3DXVECTOR3 GetJoypadStick(JOYKEY Key, int nPlayer = 0);			// スティックプレス情報を取得
-	int GetJoypadTriggerPedal(JOYKEY Key, int nPlayer = 0);				// トリガーペダル情報を取得
-	void JoypadVibration(int nTime, WORD nStrength, int nPlayer = 0);	// コントローラーの振動制御
-	void GetStick(int type);											// スティックの入力情報を取得
+	int GetJoypadTriggerPedal(JOYKEY Key, int nPatNum = 0);				// トリガーペダル情報を取得
+	void JoypadVibration(int nTime, WORD nStrength, int nPatNum = 0);	// コントローラーの振動制御
+	STICK_INPUT GetStick(int nPatNum = 0) { return m_stick[nPatNum]; }	// スティックの入力情報を取得
 	XINPUT_STATE *GetXInputState(void);									// ジョイパットの入力情報の取得
 
 private:
 	// ***** 定義 *****
-	static const int PLAYER_MAX = 4;		// プレイヤーの最大数
+	static const int MAX_PAT = 4;		// コントローラの最大数
 
 	// ***** 変数 *****
-	XINPUT_STATE m_JoyKeyState[PLAYER_MAX];			// プレス情報
-	XINPUT_STATE m_JoyKeyStateTrigger[PLAYER_MAX];	// トリガー情報
-	XINPUT_STATE m_JoyKeyStateRelease[PLAYER_MAX];	// リリース情報
-	XINPUT_STATE m_aJoyKeyStateRepeat[PLAYER_MAX];	// リピート情報
-	XINPUT_STATE m_aJoyKeyCurrentTime[PLAYER_MAX];	// 現在の時間
-	XINPUT_STATE m_aJoyKeyExecLastTime[PLAYER_MAX];	// 最後に真を返した時間
-	D3DXVECTOR3 m_JoyStickPos[PLAYER_MAX];			// ジョイスティックの傾き
-	XINPUT_VIBRATION m_JoyMoter[PLAYER_MAX];		// ジョイパッドのモーター
-	int m_nTime[PLAYER_MAX];						// 振動持続時間
-	WORD m_nStrength[PLAYER_MAX];					// 振動の強さ (0 - 65535)
+	STICK_INPUT m_stick[MAX_PAT];					// スティックの入力情報
+	XINPUT_STATE m_JoyKeyState[MAX_PAT];			// プレス情報
+	XINPUT_STATE m_JoyKeyStateTrigger[MAX_PAT];		// トリガー情報
+	XINPUT_STATE m_JoyKeyStateRelease[MAX_PAT];		// リリース情報
+	XINPUT_STATE m_aJoyKeyStateRepeat[MAX_PAT];		// リピート情報
+	XINPUT_STATE m_aJoyKeyCurrentTime[MAX_PAT];		// 現在の時間
+	XINPUT_STATE m_aJoyKeyExecLastTime[MAX_PAT];	// 最後に真を返した時間
+	D3DXVECTOR3 m_JoyStickPos[MAX_PAT];				// ジョイスティックの傾き
+	XINPUT_VIBRATION m_JoyMoter[MAX_PAT];			// ジョイパッドのモーター
+	int m_nTime[MAX_PAT];							// 振動持続時間
+	WORD m_nStrength[MAX_PAT];						// 振動の強さ (0 - 65535)
 	XINPUT_STATE m_xInput;							// 入力情報
+
+	bool m_bAngle[MAX_PAT][STICK_TYPE_MAX][STICK_ANGLE_MAX];					// スティックの入力情報
+	DWORD m_aStickCurrentTime[MAX_PAT][STICK_TYPE_MAX][STICK_ANGLE_MAX];	// スティックの現在の時間
+	DWORD m_aStickExecLastTime[MAX_PAT][STICK_TYPE_MAX][STICK_ANGLE_MAX];	// スティックの現在の時間
 
 };
 #endif

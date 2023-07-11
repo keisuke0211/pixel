@@ -155,7 +155,13 @@ void CPlayer::KeyInput(void)
 
 	m_Info.bMove = true;
 
-	if (pInputKeyboard->GetPress(DIK_A))
+	if (pInputJoypad->GetStick().aTplDiameter[CInputJoypad::STICK_TYPE_LEFT] > 0.35f)
+	{// 左スティックが倒されている時、
+
+	 // 目標向きにスティックの角度を代入
+		m_Info.moveRot.y = -pInputJoypad->GetStick().aAngle[CInputJoypad::STICK_TYPE_LEFT] + D3DX_PI;
+	}
+	else if (pInputKeyboard->GetPress(DIK_A))
 	{
 		if (pInputKeyboard->GetPress(DIK_W)) { MoveKeyboard(DIRECTION_LEFT_BACK); }			// 左奥移動
 		else if (pInputKeyboard->GetPress(DIK_S)) { MoveKeyboard(DIRECTION_LEFT_FRONT); }	// 左手前移動
@@ -189,13 +195,7 @@ void CPlayer::KeyInput(void)
 	{
 		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z),m_Info.rot);
 	}
-
-	if (pInputMouse->GetPress(CInputMouse::MOUSE_RIGHT))
-	{
-		int n;
-		n = 1;
-	}
-
+	
 	// 位置更新
 	MovePos(PLAYER_SPEED);
 }

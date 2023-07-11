@@ -428,11 +428,10 @@ int CInputMouse::GetWheel(void)
 // コンストラクタ
 CInputJoypad::CInputJoypad()
 {
-	for (int nCntPat = 0; nCntPat < PLAYER_MAX; nCntPat++)
+	for (int nCntPat = 0; nCntPat < MAX_PAT; nCntPat++)
 	{
 		m_JoyKeyState[nCntPat].Gamepad.wButtons = false;
 		m_JoyKeyStateTrigger[nCntPat].Gamepad.wButtons = false;
-		m_JoyKeyStateRelease[nCntPat].Gamepad.wButtons = false;
 		m_JoyKeyStateRelease[nCntPat].Gamepad.wButtons = false;
 		m_aJoyKeyStateRepeat[nCntPat].Gamepad.wButtons = false;
 		m_aJoyKeyCurrentTime[nCntPat].Gamepad.wButtons = false;
@@ -454,7 +453,7 @@ HRESULT CInputJoypad::Init(void)
 	//XInputのステートを設定（有効にする）
 	XInputEnable(true);
 
-	for (int nCnt = 0; nCnt < PLAYER_MAX; nCnt++)
+	for (int nCnt = 0; nCnt < MAX_PAT; nCnt++)
 	{
 		//メモリーのクリア
 		memset(&m_JoyKeyState[nCnt], 0, sizeof(XINPUT_STATE));
@@ -484,15 +483,15 @@ void CInputJoypad::Uninit(void)
 //========================================
 void CInputJoypad::Update(void)
 {
-	XINPUT_STATE JoyKeyState[PLAYER_MAX];		//ジョイパッド入力情報
+	XINPUT_STATE JoyKeyState[MAX_PAT];		//ジョイパッド入力情報
 
-	for (int nCnt = 0; nCnt < PLAYER_MAX; nCnt++)
+	for (int nCnt = 0; nCnt < MAX_PAT; nCnt++)
 	{
 		//ジョイパッドの状態を取得
 		if (XInputGetState(nCnt, &JoyKeyState[nCnt]) == ERROR_SUCCESS)
 		{
 			WORD wButtons = m_JoyKeyState[nCnt].Gamepad.wButtons;
-			WORD wOldButtons = m_JoyKeyState[nCnt].Gamepad.wButtons;
+			WORD wOldButtons = JoyKeyState[nCnt].Gamepad.wButtons;
 			m_JoyKeyStateTrigger[nCnt].Gamepad.wButtons = ~wButtons & wOldButtons; //トリガー情報を保存
 			m_JoyKeyStateRelease[nCnt].Gamepad.wButtons = wButtons & ~wOldButtons; //リリース情報を保存
 			m_JoyKeyState[nCnt] = JoyKeyState[nCnt];  //プレス処理
@@ -513,6 +512,7 @@ void CInputJoypad::Update(void)
 				// リピート情報を保存
 				m_aJoyKeyStateRepeat[nCnt].Gamepad.wButtons = 0;
 			}
+
 		}
 
 		// 振動
@@ -542,66 +542,48 @@ void CInputJoypad::Update(void)
 //========================================
 // プレス情報
 //========================================
-bool CInputJoypad::GetJoypadPress(JOYKEY Key, int nPlayer)
+bool CInputJoypad::GetJoypadPress(JOYKEY Key, int nPatNum)
 {
-	return (m_JoyKeyState[nPlayer].Gamepad.wButtons & (0x01 << Key)) ? true : false;
+	return (m_JoyKeyState[nPatNum].Gamepad.wButtons & (0x01 << Key)) ? true : false;
 }
 
 //========================================
 // トリガー情報
 //========================================
-bool CInputJoypad::GetJoypadTrigger(JOYKEY Key, int nPlayer)
+bool CInputJoypad::GetJoypadTrigger(JOYKEY Key, int nPatNum)
 {
-	return (m_JoyKeyStateTrigger[nPlayer].Gamepad.wButtons & (0x01 << Key)) ? true : false;
+	return (m_JoyKeyStateTrigger[nPatNum].Gamepad.wButtons & (0x01 << Key)) ? true : false;
 }
 
 //========================================
 // リリース情報
 //========================================
-bool CInputJoypad::GetJoypadRelese(JOYKEY Key, int nPlayer)
+bool CInputJoypad::GetJoypadRelese(JOYKEY Key, int nPatNum)
 {
-	return (m_JoyKeyStateRelease[nPlayer].Gamepad.wButtons & (0x01 << Key)) ? true : false;
+	return (m_JoyKeyStateRelease[nPatNum].Gamepad.wButtons & (0x01 << Key)) ? true : false;
 }
 
 //========================================
 // リピート情報
 //========================================
-bool CInputJoypad::GetJoypadRepeat(JOYKEY Key, int nPlayer)
+bool CInputJoypad::GetJoypadRepeat(JOYKEY Key, int nPatNum)
 {
-	return (m_aJoyKeyStateRepeat[nPlayer].Gamepad.wButtons & (0x01 << Key)) ? true : false;
-}
-
-//========================================
-// スティックプレス処理
-//========================================
-D3DXVECTOR3 CInputJoypad::GetJoypadStick(JOYKEY Key, int nPlayer)
-{
-	switch (Key)
-	{
-	case JOYKEY_LEFT_STICK:
-		m_JoyStickPos[nPlayer] = D3DXVECTOR3(m_JoyKeyState[nPlayer].Gamepad.sThumbLX / 32767.0f, -m_JoyKeyState[nPlayer].Gamepad.sThumbLY / 32767.0f, 0.0f);
-		break;
-	case JOYKEY_RIGHT_STICK:
-		m_JoyStickPos[nPlayer] = D3DXVECTOR3(m_JoyKeyState[nPlayer].Gamepad.sThumbRX / 32767.0f, -m_JoyKeyState[nPlayer].Gamepad.sThumbRY / 32767.0f, 0.0f);
-		break;
-	}
-
-	return m_JoyStickPos[nPlayer];
+	return (m_aJoyKeyStateRepeat[nPatNum].Gamepad.wButtons & (0x01 << Key)) ? true : false;
 }
 
 //========================================
 // トリガーペダル処理
 //========================================
-int CInputJoypad::GetJoypadTriggerPedal(JOYKEY Key, int nPlayer)
+int CInputJoypad::GetJoypadTriggerPedal(JOYKEY Key, int nPatNum)
 {
 	int nJoypadTriggerPedal = 0;
 	switch (Key)
 	{
 	case JOYKEY_LEFT_TRIGGER:
-		nJoypadTriggerPedal = m_JoyKeyState[nPlayer].Gamepad.bLeftTrigger;
+		nJoypadTriggerPedal = m_JoyKeyState[nPatNum].Gamepad.bLeftTrigger;
 		break;
 	case JOYKEY_RIGHT_TRIGGER:
-		nJoypadTriggerPedal = m_JoyKeyState[nPlayer].Gamepad.bRightTrigger;
+		nJoypadTriggerPedal = m_JoyKeyState[nPatNum].Gamepad.bRightTrigger;
 		break;
 	}
 
@@ -611,46 +593,113 @@ int CInputJoypad::GetJoypadTriggerPedal(JOYKEY Key, int nPlayer)
 //========================================
 // コントローラーの振動制御
 //========================================
-void CInputJoypad::JoypadVibration(int nTime, WORD nStrength, int nPlayer)
+void CInputJoypad::JoypadVibration(int nTime, WORD nStrength, int nPatNum)
 {
-	m_nTime[nPlayer] = nTime;			//振動持続時間
-	m_nStrength[nPlayer] = nStrength;	//振動の強さ
+	m_nTime[nPatNum] = nTime;			//振動持続時間
+	m_nStrength[nPatNum] = nStrength;	//振動の強さ
 }
 
 //========================================
 // スティックの入力情報を取得
 //========================================
-void CInputJoypad::GetStick(int type)
+void CInputJoypad::UpdateStick(void)
 {
-	STICK_INPUT stick;	// スティックの入力情報
-	float X = 0;		// スティックのX軸
-	float Y = 0;		// スティックのY軸
-						// 種類に応じたスティックの軸の値を取得
-	switch (type)
+	for (int nPatNum = 0; nPatNum < MAX_PAT; nPatNum++)
 	{
-		//========== *** 左スティック ***
-	case STICK_TYPE_LEFT:
-		X = GetXInputState()->Gamepad.sThumbLX;
-		Y = GetXInputState()->Gamepad.sThumbLY;
-		break;
-		//========== *** 右スティック ***
-	case STICK_TYPE_RIGHT:
-		X = GetXInputState()->Gamepad.sThumbRX;
-		Y = GetXInputState()->Gamepad.sThumbRY;
-		break;
-	}
-	// 角度を取得
+		if (XInputGetState(nPatNum, &m_xInput) == ERROR_SUCCESS)
+		{
+			for (int nCntStick = 0; nCntStick < STICK_TYPE_MAX; nCntStick++)
+			{
+				float X;		// スティックのX軸
+				float Y;		// スティックのY軸
 
-	stick.fAngle = atan2f(-Y, -X);
-	stick.fAngle -= (D3DX_PI * 0.5f);
+				// 種類に応じたスティックの軸の値を取得
+				switch (nCntStick)
+				{
+					//========== *** 左スティック ***
+				case STICK_TYPE_LEFT:
+					X = (GetXInputState())->Gamepad.sThumbLX;
+					Y = (GetXInputState())->Gamepad.sThumbLY;
+					break;
+					//========== *** 右スティック ***
+				case STICK_TYPE_RIGHT:
+					X = (GetXInputState())->Gamepad.sThumbRX;
+					Y = (GetXInputState())->Gamepad.sThumbRY;
+					break;
+				}
 
-	// スティックの倒し具合を取得
-	stick.fTplDiameter = fabsf(X);
-	if (stick.fTplDiameter < fabsf(Y))
-	{
-		stick.fTplDiameter = fabsf(Y);
+				// 角度を取得
+				m_stick[nPatNum].aAngle[nCntStick] = FindAngle(D3DXVECTOR3(X, Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f)) * -1;
+
+				// スティックの倒し具合を取得
+				m_stick[nPatNum].aTplDiameter[nCntStick] = fabsf(X);
+				if (m_stick[nPatNum].aTplDiameter[nCntStick] < fabsf(Y)) {
+					m_stick[nPatNum].aTplDiameter[nCntStick] = fabsf(Y);
+				}
+				m_stick[nPatNum].aTplDiameter[nCntStick] /= 32768.0f;
+
+				// 方向入力フラグを初期化
+				for (int nCntAngle = 0; nCntAngle < STICK_ANGLE_MAX; nCntAngle++)
+				{
+					m_bAngle[nPatNum][nCntStick][nCntAngle] = false;
+				}
+
+				if (m_stick[nPatNum].aTplDiameter[nCntStick] > 0.1f)
+				{// スティックが倒されている時、
+
+					if ((m_stick[nPatNum].aAngle[nCntStick] < D3DX_PI * -0.75)
+						|| (m_stick[nPatNum].aAngle[nCntStick] > D3DX_PI * 0.75))
+					{// 角度が四分割で上に位置する時、上フラグを真にする
+						m_bAngle[nPatNum][nCntStick][STICK_ANGLE_UP] = true;
+					}
+					else if ((m_stick[nPatNum].aAngle[nCntStick] > D3DX_PI * -0.25)
+						&& (m_stick[nPatNum].aAngle[nCntStick] < D3DX_PI * 0.25))
+					{// 角度が四分割で下に位置する時、下フラグを真にする
+						m_bAngle[nPatNum][nCntStick][STICK_ANGLE_DOWN] = true;
+					}
+					else if ((m_stick[nPatNum].aAngle[nCntStick] > D3DX_PI * -0.75)
+						&& (m_stick[nPatNum].aAngle[nCntStick] < D3DX_PI * -0.25))
+					{// 角度が四分割で左に位置する時、左フラグを真にする
+						m_bAngle[nPatNum][nCntStick][STICK_ANGLE_LEFT] = true;
+					}
+					else if ((m_stick[nPatNum].aAngle[nCntStick] > D3DX_PI * 0.25)
+						&& (m_stick[nPatNum].aAngle[nCntStick] < D3DX_PI * 0.75))
+					{// 角度が四分割で右に位置する時、右フラグを真にする
+						m_bAngle[nPatNum][nCntStick][STICK_ANGLE_RIGHT] = true;
+					}
+				}
+
+				for (int nCntAngle = 0; nCntAngle < STICK_ANGLE_MAX; nCntAngle++)
+				{
+					// スティックのトリガー情報を保存
+					m_stick[nPatNum].aAngleTrigger[nCntStick][nCntAngle] = (m_stick[nPatNum].aAnglePress[nCntStick][nCntAngle] ^ m_bAngle[nPatNum][nCntStick][nCntAngle])&m_bAngle[nPatNum][nCntStick][nCntAngle];
+
+					// スティックのリリース情報を保存
+					m_stick[nPatNum].aAngleRelease[nCntStick][nCntAngle] = (m_stick[nPatNum].aAnglePress[nCntStick][nCntAngle] ^ m_bAngle[nPatNum][nCntStick][nCntAngle])&~m_bAngle[nPatNum][nCntStick][nCntAngle];
+
+					// 現在の時間を取得
+					m_aStickCurrentTime[nPatNum][nCntStick][nCntAngle] = timeGetTime();
+
+					if (m_bAngle[nPatNum][nCntStick][nCntAngle] && ((m_aStickCurrentTime[nPatNum][nCntStick][nCntAngle] - m_aStickExecLastTime[nPatNum][nCntStick][nCntAngle]) > REPEATE_INTERVAL))
+					{// キーが入力されていて、かつ現在の時間と最後に真を返した時間の差がリピートの間隔を越えていた時、
+					 // 最後に真を返した時間を保存
+						m_aStickExecLastTime[nPatNum][nCntStick][nCntAngle] = m_aStickCurrentTime[nPatNum][nCntStick][nCntAngle];
+
+						// スティックのリピート情報を保存
+						m_stick[nPatNum].aAngleRepeat[nCntStick][nCntAngle] = m_bAngle[nPatNum][nCntStick][nCntAngle];
+					}
+					else
+					{
+						// スティックのリピート情報を保存
+						m_stick[nPatNum].aAngleRepeat[nCntStick][nCntAngle] = 0;
+					}
+
+					// スティックのプレス情報を保存
+					m_stick[nPatNum].aAnglePress[nCntStick][nCntAngle] = m_bAngle[nPatNum][nCntStick][nCntAngle];
+				}
+			}
+		}
 	}
-	stick.fTplDiameter /= 32768.0f;
 }
 
 //========================================

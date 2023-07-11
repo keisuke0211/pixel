@@ -364,12 +364,13 @@ void CManager::Uninit(void)
 //========================================
 void CManager::Update(void)
 {
-	m_InputKeyboard->Update();	// キーボード
-	m_InputMouse->Update();		// マウス
-	m_InputJoypad->Update();	// ジョイパット
-	m_pCamera->Update();		// カメラ
-	m_pLight->Update();			// ライト
-	m_pRenderer->Update();		// レンダラー
+	m_InputKeyboard->Update();		// キーボード
+	m_InputMouse->Update();			// マウス
+	m_InputJoypad->Update();		// ジョイパット(ボタン)
+	m_InputJoypad->UpdateStick();	// ジョイパット(スティック)	
+	m_pCamera->Update();			// カメラ
+	m_pLight->Update();				// ライト
+	m_pRenderer->Update();			// レンダラー
 
 	// リセットボタン
 	if (m_InputKeyboard->GetTrigger(DIK_R))

@@ -111,17 +111,22 @@ void CCamera::Update(void)
 		{
 			AxisRotationCamera(DIRECTION_UP, pInputMouse->GetCursorMove().y * CAMERA_ROT_FORCE_BY_CURSOR.x);
 		}
-		AxisRotationCamera(DIRECTION_LEFT, pInputMouse->GetCursorMove().x * CAMERA_ROT_FORCE_BY_CURSOR.y);
+		AxisRotationCamera(DIRECTION_LEFT, pInputMouse->GetCursorMove().x * CAMERA_ROT_FORCE_BY_CURSOR.y);	
+	}
+	else if (pInputJoypad->GetStick().aTplDiameter[CInputJoypad::STICK_TYPE_RIGHT] > 0.1f)
+	{
+		AxisRotationCamera(DIRECTION_UP, (cosf(pInputJoypad->GetStick().aAngle[CInputJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CInputJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.x);
+		AxisRotationCamera(DIRECTION_LEFT, (sinf(pInputJoypad->GetStick().aAngle[CInputJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CInputJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.y);
+	}
 
-		// ƒJƒƒ‰§Œä
-		if (m_Info.fHeight >= D3DX_PI * 0.49f)
-		{
-			m_Info.fHeight = D3DX_PI * 0.49f;
-		}
-		else if (m_Info.fHeight <= D3DX_PI * 0.01f)
-		{
-			m_Info.fHeight = D3DX_PI * 0.01f;
-		}
+	// ƒJƒƒ‰§Œä
+	if (m_Info.fHeight >= D3DX_PI * 0.30f)
+	{
+		m_Info.fHeight = D3DX_PI * 0.30f;
+	}
+	else if (m_Info.fHeight <= D3DX_PI * 0.01f)
+	{
+		m_Info.fHeight = D3DX_PI * 0.01f;
 	}
 
 	if (pInputKeyboard->GetTrigger(DIK_Q) == true || pInputMouse->GetTrigger(CInputMouse::MOUSE_5) == true)
