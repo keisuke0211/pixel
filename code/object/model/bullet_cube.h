@@ -70,7 +70,8 @@ public:
 
 private:
 
-	// ***** ŠÖ” *****
+	// ***** ŠÖ” ***** correction
+	/* ˆÊ’u•â³		*/bool Correction(DIRECTION direction, D3DXVECTOR3 pos);
 	/* ÚG”»’è		*/bool Contact(VECTOR vector, D3DXVECTOR3 pos);
 	/* “–‚½‚è”»’è	*/bool Collsion(DIRECTION direction,CObject *pObj);
 
