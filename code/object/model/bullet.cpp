@@ -82,28 +82,10 @@ HRESULT CBullet::Init(void)
 
 	m_Info.move.x = sinf(m_Info.rot.y) * BULLET_SPEED;
 	m_Info.move.z = cosf(m_Info.rot.y) * BULLET_SPEED;
-	m_Info.posOld = m_Info.pos;
-
 
 	SetPos(m_Info.pos);
 	SetScale(m_Info.size);
 	SetColor(INIT_D3DXCOLOR);
-
-	// X•ûŒü‚Ì“–‚½‚è”»’è
-	if (Collsion(VECTOR_X, m_Info.pos))
-	{
-		return S_OK;
-	}
-	// Z•ûŒü‚Ì“–‚½‚è”»’è
-	if (Collsion(VECTOR_Z, m_Info.pos))
-	{
-		return S_OK;
-	}
-	// Y•ûŒü‚Ì“–‚½‚è”»’è
-	if (Collsion(VECTOR_Y, m_Info.pos))
-	{
-		return S_OK;
-	}
 
 	return S_OK;
 }

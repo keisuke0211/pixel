@@ -108,7 +108,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 	DWORD dwFrameCount;		//フレームカウント
 	DWORD dwFPSLastTime;	//最後にFPSを計測した時刻
 
-	//ウインドウモードの切り替え
+							//ウインドウモードの切り替え
 	WindowMode(WINDOW_MODE);
 
 	if (g_Physics == NULL)
