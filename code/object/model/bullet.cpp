@@ -17,8 +17,10 @@
 //========================================
 // マクロ定義
 //========================================
-#define BULLET_SPEED	(7.5f)	// 弾の速度
-#define BULLET_DAMAGE	(1)		// ダメージ量
+#define BULLET_SPEED		(7.5f)	// 弾の速度
+#define BULLET_DAMAGE		(1)		// ダメージ量
+#define COLLSION_DIAMETER	(1.00f)	// 当たり判定の倍率
+#define BULLET_DIAMETER		(0.2f)	// サイズの倍率
 
 //========================================
 // コンストラクタ
@@ -62,7 +64,7 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	pBullet->m_Info.pos = pos;
 	pBullet->m_Info.rot = rot;
 	pBullet->m_Info.nLife = 70;
-	pBullet->m_Info.size = D3DXVECTOR3(0.2f, 0.2f, 0.2f);
+	pBullet->m_Info.size = D3DXVECTOR3(BULLET_DIAMETER, BULLET_DIAMETER, BULLET_DIAMETER);
 	pBullet->SetModel(MODEL_BULLET);
 
 	// 初期化処理
@@ -205,12 +207,22 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 					float fHeight = GetHeight();		// 高さ
 					float fDepth = GetDepth();			// 奥行き
 
+					// 少し小さくする
+					fWidth *= BULLET_DIAMETER;	// 幅
+					fHeight *= BULLET_DIAMETER;	// 高さ
+					fDepth *= BULLET_DIAMETER;	// 奥行き
+
 
 					// ブロックの取得
 					D3DXVECTOR3 PairPos = pObj->GetPos();	// 位置
 					float fPairWidth = pObj->GetWidth();	// 幅
 					float fPairHeight = pObj->GetHeight();	// 高さ
 					float fPairDepth = pObj->GetDepth();	// 奥行き
+
+					// 少し小さくする
+					fPairWidth *= COLLSION_DIAMETER;	// 幅
+					fPairHeight *= COLLSION_DIAMETER;	// 高さ
+					fPairDepth *= COLLSION_DIAMETER;	// 奥行き
 
 					switch (vector)
 					{
@@ -227,14 +239,14 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 							{// 左からめり込んでいる時
 
 								m_Info.bHit = true;
-								pos.x = (PairPos.x - fPairWidth) - fWidth;
+								pos.x = (PairPos.x - (fPairWidth / COLLSION_DIAMETER)) - (fWidth / BULLET_DIAMETER);
 							}
 							else if ((pos.x - fWidth) <= (PairPos.x + fPairWidth) &&
 								(PosOld.x - fWidth) >= (PairPos.x + fPairWidth))
 							{// 右からめり込んでいる時
 
 								m_Info.bHit = true;
-								pos.x = (PairPos.x + fPairWidth) + fWidth;
+								pos.x = (PairPos.x + (fPairWidth / COLLSION_DIAMETER)) + (fWidth / BULLET_DIAMETER);
 							}
 						}
 					}
@@ -252,14 +264,14 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 							{// 下からめり込んでいる時
 
 								m_Info.bHit = true;
-								pos.y = (PairPos.y - fPairHeight) - fHeight;
+								pos.y = (PairPos.y - (fPairHeight / COLLSION_DIAMETER)) - (fHeight / BULLET_DIAMETER);
 							}
 							else if ((pos.y - fHeight) < (PairPos.y + fPairHeight) &&
 								(PosOld.y - fHeight) >= (PairPos.y + fPairHeight))
 							{// 上からめり込んでいる時
 
 								m_Info.bHit = true;
-								pos.y = (PairPos.y + fPairHeight) + fHeight;
+								pos.y = (PairPos.y + (fPairHeight / COLLSION_DIAMETER)) + (fHeight / BULLET_DIAMETER);
 							}
 						}
 					}
@@ -277,14 +289,14 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 							{// 前からめり込んでいる時
 
 								m_Info.bHit = true;
-								pos.z = (PairPos.z - fPairDepth) - fDepth;
+								pos.z = (PairPos.z - (fPairDepth / COLLSION_DIAMETER)) - (fDepth / BULLET_DIAMETER);
 							}
 							else if ((pos.z - fDepth) <= (PairPos.z + fPairDepth) &&
 								(PosOld.z - fDepth) >= (PairPos.z + fPairDepth))
 							{// 奥からめり込んでいる時
 
 								m_Info.bHit = true;
-								pos.z = (PairPos.z + fPairDepth) + fDepth;
+								pos.z = (PairPos.z + (fPairDepth / COLLSION_DIAMETER)) + (fDepth / BULLET_DIAMETER);
 							}
 						}
 					}

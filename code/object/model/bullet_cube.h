@@ -71,9 +71,9 @@ public:
 private:
 
 	// ***** 関数 ***** correction
-	/* 位置補正		*/bool Correction(DIRECTION direction, D3DXVECTOR3 pos);
+	/* 位置補正		*/bool Correction(VECTOR vector, D3DXVECTOR3 pos);
 	/* 接触判定		*/bool Contact(VECTOR vector, D3DXVECTOR3 pos);
-	/* 当たり判定	*/bool Collsion(DIRECTION direction,CObject *pObj);
+	/* 当たり判定	*/bool Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3	PairSize);
 
 	// ***** 変数 *****
 	Info m_Info;		// プレイヤー情報
