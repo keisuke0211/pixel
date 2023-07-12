@@ -82,18 +82,18 @@ CCube *CCube::Create(int nType, D3DXVECTOR3 pos)
 	pCube->SetPos(pos);
 
 	// 接触判定
-	/*if (!pCube->Contact(VECTOR_X, pCube->m_Info.pos))
+	if (!pCube->Contact(VECTOR_X, pCube->m_Info.pos))
 	{
 		
-	}*/
-	/*if (!pCube->Contact(VECTOR_Y, pCube->m_Info.pos))
+	}
+	if (!pCube->Contact(VECTOR_Y, pCube->m_Info.pos))
 	{
 
-	}*/
-	/*if (!pCube->Contact(VECTOR_Z, pCube->m_Info.pos))
+	}
+	if (!pCube->Contact(VECTOR_Z, pCube->m_Info.pos))
 	{
 
-	}*/
+	}
 
 	return pCube;
 }
@@ -217,90 +217,46 @@ bool CCube::Contact(VECTOR vector, D3DXVECTOR3 pos)
 			if (type == TYPE_CUBE && m_Info.nID != ID)
 			{// 種類がキューブの場合
 
-				// 自分自身の取得
-				D3DXVECTOR3 posOld = GetPosOld();	// 位置(過去)
-				float fWidth = GetWidth();			// 幅
-				float fHeight = GetHeight();		// 高さ
-				float fDepth = GetDepth();			// 奥行き
-
-				// 相手の取得
-				D3DXVECTOR3 PairPos = pObj->GetPos();	// 位置
-				float fPairWidth = pObj->GetWidth();	// 幅
-				float fPairHeight = pObj->GetHeight();	// 高さ
-				float fPairDepth = pObj->GetDepth();	// 奥行き
-
-				fPairWidth *= SIZE_DIAMETER;	// 幅
-				fPairHeight *= SIZE_DIAMETER;	// 高さ
-				fPairDepth *= SIZE_DIAMETER;	// 奥行き
-
 				switch (vector)
 				{
 				case VECTOR_X: {	/* X方向 */
 
-					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
-						(pos.x - fWidth) < (PairPos.x + fPairWidth))
-					{// ブロックが右側・左側にある時、
+					if (Collsion(DIRECTION_LEFT, pObj))
+					{// 左側
+						break;
+					}
 
-						if ((pos.x + fWidth) >= (PairPos.x - fPairWidth) &&
-							(posOld.x + fWidth) <= (PairPos.x - fPairWidth))
-						{// 左からめり込んでいる時
-
-							bHit = true;
-							pos.x = (PairPos.x - fPairWidth) - (fWidth);
-						}
-						else if ((pos.x - fWidth) <= (PairPos.x + fPairWidth) &&
-							(posOld.x - fWidth) >= (PairPos.x + fPairWidth))
-						{// 右からめり込んでいる時
-
-							bHit = true;
-							pos.x = (PairPos.x + fPairWidth) + (fWidth);
-						}
+					if (Collsion(DIRECTION_RIGHT, pObj))
+					{// 右側
+						break;
 					}
 				}
 				   break;
 				case VECTOR_Y: {	/* Y方向 */
 
-					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
-						(pos.x - fWidth) < (PairPos.x + fPairWidth))
-					{// 左辺と右辺が相手の幅の内側の時、
+					if (Collsion(DIRECTION_UP, pObj))
+					{// 上側
+						break;
+					}
 
-						if ((pos.y + fHeight) > (PairPos.y - fPairHeight) &&
-							(posOld.y + fHeight) <= (PairPos.y - fPairHeight))
-						{// 下からめり込んでいる時
-
-							bHit = true;
-							pos.y = (PairPos.y - (fPairHeight / COLLSION_DIAMETER)) - fHeight;
-						}
-						else if ((pos.y - fHeight) < (PairPos.y + fPairHeight) &&
-							(posOld.y - fHeight) >= (PairPos.y + fPairHeight))
-						{// 上からめり込んでいる時
-
-							bHit = true;
-							pos.y = (PairPos.y + (fPairHeight / COLLSION_DIAMETER)) + fHeight;
-						}
+					// 下側
+					if (Collsion(DIRECTION_DOWN, pObj))
+					{
+						break;
 					}
 				}
 				   break;
 				case VECTOR_Z: {	/* Z方向 */
 
-					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
-						(pos.x - fWidth) < (PairPos.x + fPairWidth))
-					{// 左辺と右辺が相手の幅の内側の時、
+					if (Collsion(DIRECTION_BACK, pObj))
+					{// 奥側
+						break;
+					}
 
-						if ((pos.z + fDepth) >= (PairPos.z - fPairDepth) &&
-							(posOld.z + fDepth) <= (PairPos.z - fPairDepth))
-						{// 前からめり込んでいる時
-
-							bHit = true;
-							pos.z = (PairPos.z - fPairDepth) - fDepth;
-						}
-						else if ((pos.z - fDepth) <= (PairPos.z + fPairDepth) &&
-							(posOld.z - fDepth) >= (PairPos.z + fPairDepth))
-						{// 奥からめり込んでいる時
-
-							bHit = true;
-							pos.z = (PairPos.z + fPairDepth) + fDepth;
-						}
+					// 手前側
+					if (Collsion(DIRECTION_FRONT, pObj))
+					{
+						break;
 					}
 				}
 				   break;
@@ -308,12 +264,151 @@ bool CCube::Contact(VECTOR vector, D3DXVECTOR3 pos)
 
 				if (bHit)
 				{
-					m_Info.pos = pos;
-
 					return TRUE;
 				}
 			}
 		}
 	}
+	return FALSE;
+}
+
+//========================================
+// 当たり判定判定
+//========================================
+bool CCube::Collsion(DIRECTION direction, CObject *pObj)
+{
+	// 判定フラグ
+	bool bHit = false;
+
+	// 自分自身の取得
+	D3DXVECTOR3 pos = GetPos();		// 位置
+	float fWidth = GetWidth();		// 幅
+	float fHeight = GetHeight();	// 高さ
+	float fDepth = GetDepth();		// 奥行き
+
+	// 相手の取得
+	D3DXVECTOR3 PairPos = pObj->GetPos();	// 位置
+	float fPairWidth = pObj->GetWidth();	// 幅
+	float fPairHeight = pObj->GetHeight();	// 高さ
+	float fPairDepth = pObj->GetDepth();	// 奥行き
+
+	//　中心点からの距離
+	float fCubeWidth = fPairWidth * SIZE_DIAMETER;		// 幅
+	float fCubeHeight = fPairHeight * SIZE_DIAMETER;	// 高さ
+	float fCubeDepth = fPairDepth * SIZE_DIAMETER;		// 奥行き
+
+	// 少し小さくする
+	fPairWidth *= 0.5f;		// 幅
+	fPairHeight *= 0.5f;	// 高さ
+	fPairDepth *= 0.5f;		// 奥行き
+
+	// 各方向の当たり判定
+	D3DXVECTOR3 PairUpPos = D3DXVECTOR3(PairPos.x, PairPos.y + fCubeHeight, PairPos.z);		// 上
+	D3DXVECTOR3 PairDownPos = D3DXVECTOR3(PairPos.x, PairPos.y - fCubeHeight, PairPos.z);	// 下
+	D3DXVECTOR3 PairLeftPos = D3DXVECTOR3(PairPos.x + fCubeWidth, PairPos.y, PairPos.z);	// 左
+	D3DXVECTOR3 PairRightPos = D3DXVECTOR3(PairPos.x - fCubeWidth, PairPos.y, PairPos.z);	// 右
+	D3DXVECTOR3 PairBackPos = D3DXVECTOR3(PairPos.x, PairPos.y, PairPos.z + fCubeDepth);	// 奥
+	D3DXVECTOR3 PairFrontPos = D3DXVECTOR3(PairPos.x, PairPos.y, PairPos.z - fCubeDepth);	// 手前
+
+	switch (direction)
+	{
+	case DIRECTION_UP: {	/* 上 */
+
+		if ((pos.x + fWidth) > (PairUpPos.x - fPairWidth) &&
+			(pos.x - fWidth) < (PairUpPos.x + fPairWidth) &&
+			(pos.y + fDepth) > (PairUpPos.y - fPairDepth) &&
+			(pos.y - fDepth) < (PairUpPos.y + fPairDepth) &&
+			(pos.z + fDepth) > (PairUpPos.z - fPairDepth) &&
+			(pos.z - fDepth) < (PairUpPos.z + fPairDepth))
+		{// ブロックが左側にある時、
+
+			bHit = true;
+			m_Info.pos = PairUpPos;
+		}
+	}
+	  break;
+	case DIRECTION_DOWN: {	/* 下 */
+
+		if ((pos.x + fWidth) > (PairDownPos.x - fPairWidth) &&
+			(pos.x - fWidth) < (PairDownPos.x + fPairWidth) &&
+			(pos.y + fDepth) > (PairDownPos.y - fPairDepth) &&
+			(pos.y - fDepth) < (PairDownPos.y + fPairDepth) &&
+			(pos.z + fDepth) > (PairDownPos.z - fPairDepth) &&
+			(pos.z - fDepth) < (PairDownPos.z + fPairDepth))
+		{// ブロックが左側にある時、
+
+			bHit = true;
+			m_Info.pos = PairDownPos;
+		}
+	}
+	 break;
+	case DIRECTION_LEFT: {	/* 左 */
+
+		if ((pos.x + fWidth) > (PairLeftPos.x - fPairWidth) &&
+			(pos.x - fWidth) < (PairLeftPos.x + fPairWidth) &&
+			(pos.y + fDepth) > (PairLeftPos.y - fPairDepth) &&
+			(pos.y - fDepth) < (PairLeftPos.y + fPairDepth) &&
+			(pos.z + fDepth) > (PairLeftPos.z - fPairDepth) &&
+			(pos.z - fDepth) < (PairLeftPos.z + fPairDepth))
+		{// ブロックが左側にある時、
+
+			bHit = true;
+			m_Info.pos = PairLeftPos;
+		}
+	}
+	 break;
+	case DIRECTION_RIGHT: {	/* 右 */
+
+		if ((pos.x + fWidth) > (PairRightPos.x - fPairWidth) &&
+			(pos.x - fWidth) < (PairRightPos.x + fPairWidth) &&
+			(pos.y + fDepth) > (PairRightPos.y - fPairDepth) &&
+			(pos.y - fDepth) < (PairRightPos.y + fPairDepth) &&
+			(pos.z + fDepth) > (PairRightPos.z - fPairDepth) &&
+			(pos.z - fDepth) < (PairRightPos.z + fPairDepth))
+		{// ブロックが左側にある時、
+
+			bHit = true;
+			m_Info.pos = PairRightPos;
+		}
+	}
+	  break;
+	case DIRECTION_BACK: {	/* 奥 */
+
+		if ((pos.x + fWidth) > (PairBackPos.x - fPairWidth) &&
+			(pos.x - fWidth) < (PairBackPos.x + fPairWidth) &&
+			(pos.y + fDepth) > (PairBackPos.y - fPairDepth) &&
+			(pos.y - fDepth) < (PairBackPos.y + fPairDepth) &&
+			(pos.z + fDepth) > (PairBackPos.z - fPairDepth) &&
+			(pos.z - fDepth) < (PairBackPos.z + fPairDepth))
+		{// ブロックが左側にある時、
+
+			bHit = true;
+			m_Info.pos = PairBackPos;
+		}
+	}
+	 break;
+	case DIRECTION_FRONT: {	/* 手前 */
+
+		if ((pos.x + fWidth) > (PairFrontPos.x - fPairWidth) &&
+			(pos.x - fWidth) < (PairFrontPos.x + fPairWidth) &&
+			(pos.y + fDepth) > (PairFrontPos.y - fPairDepth) &&
+			(pos.y - fDepth) < (PairFrontPos.y + fPairDepth) &&
+			(pos.z + fDepth) > (PairFrontPos.z - fPairDepth) &&
+			(pos.z - fDepth) < (PairFrontPos.z + fPairDepth))
+		{// ブロックが左側にある時、
+			
+			bHit = true;
+			m_Info.pos = PairFrontPos;
+		}
+	}
+	  break;
+	}
+
+	// 判定が真なら TRUE を返す
+	if (bHit)
+	{
+		return TRUE;
+	}
+
 	return FALSE;
 }
