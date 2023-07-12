@@ -63,10 +63,11 @@ public:
 	/* 種類		*/void CubeSetType(const int type) { m_Info.nType = type; }
 
 	// -- 取得 -------------------------------
-	/* 位置		*/D3DXVECTOR3 CubeGetPos(void) { return m_Info.pos; }
-	/* 向き		*/D3DXVECTOR3 GetRot(void) { return m_Info.rot; }
-	/* 色		*/D3DXCOLOR CubeGetColor(void) { return m_Info.col; }
-	/* サイズ	*/D3DXVECTOR3 CubeGetSize(void) { return m_Info.size; }
+	/* 位置			*/D3DXVECTOR3 CubeGetPos(void) { return m_Info.pos; }
+	/* 向き			*/D3DXVECTOR3 GetRot(void) { return m_Info.rot; }
+	/* 色			*/D3DXCOLOR CubeGetColor(void) { return m_Info.col; }
+	/* サイズ		*/D3DXVECTOR3 CubeGetSize(void) { return m_Info.size; }
+	/* 配置フラグ	*/bool CubeGetSet(void) { return m_Info.bSet; }
 
 private:
 

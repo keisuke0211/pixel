@@ -6,6 +6,7 @@
 // *** block.cpp ***
 //========================================
 #include "bullet_cube.h"
+#include "particleX.h"
 #include "model.h"
 #include "../../sound.h"
 #include "../../csv_file.h"
@@ -146,6 +147,63 @@ void CCube::Update(void)
 		}
 	}
 
+	if (!m_Info.bActivation && m_Info.bSet)
+	{
+		// 接触判定
+		if (Contact(VECTOR_X, m_Info.pos))
+		{
+			m_Info.bContact = true;
+		}
+
+		if (Contact(VECTOR_Y, m_Info.pos))
+		{
+			m_Info.bContact = true;
+		}
+
+		if (Contact(VECTOR_Z, m_Info.pos))
+		{
+			m_Info.bContact = true;
+		}
+
+		if (m_Info.bContact)
+		{
+			m_Info.col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+			m_Info.nStandTime = 90;
+			m_Info.bActivation = true;
+		}
+	}
+
+	// 発動処理
+	if (m_Info.bActivation)
+	{
+		// 待機時間	
+		if (--m_Info.nStandTime <= 0)
+		{
+			// パーティクル生成
+			CParticleX *pObj = CParticleX::Create();
+			pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 20, m_Info.pos.z));
+			pObj->Par_SetRot(INIT_D3DXVECTOR3);
+			pObj->Par_SetMove(D3DXVECTOR3(10.0f, 3.0f, 10.0f));
+			pObj->Par_SetType(0);
+			pObj->Par_SetLife(100);
+			pObj->Par_SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+			pObj->Par_SetForm(25);
+
+			Uninit();
+			return;
+		}
+		else if (m_Info.nStandTime <= (RADIUS_TIME))
+		{
+			m_Info.fRadius -= m_Info.fRadius / m_Info.nStandTime;
+			m_Info.col.a *= ((float)m_Info.nStandTime / RADIUS_TIME);
+		}
+		else if (m_Info.nStandTime <= (RADIUS_TIME * 2))
+		{
+			m_Info.fRadius -= m_Info.fRadius / m_Info.nStandTime;
+		}
+	}
+
+	// 寿命処理
 	if (m_Info.bSet && !m_Info.bContact)
 	{
 		// 寿命
@@ -158,8 +216,6 @@ void CCube::Update(void)
 		{
 			m_Info.fRadius -= m_Info.fRadius / m_Info.nLife;
 			m_Info.col.a *= ((float)m_Info.nLife / RADIUS_TIME);
-
-			SetColor(m_Info.col);
 		}
 	}
 
@@ -169,6 +225,7 @@ void CCube::Update(void)
 	SetPos(m_Info.pos);
 	//SetRot(m_Info.rot);
 	SetScale(m_Info.size);
+	SetColor(m_Info.col);
 
 	CObjectX::Update();
 }
@@ -319,21 +376,113 @@ bool CCube::Contact(VECTOR vector, D3DXVECTOR3 pos)
 			int ID;
 			TYPE type;
 
-			// IDを取得
-			ID = pObj->GetID();
-
 			// 種類を取得
 			type = pObj->GetType();
 
-			if (type == TYPE_CUBE && m_Info.nID != ID)
+			if (type == TYPE_CUBE)
 			{// 種類がキューブの場合
 
 				// ダイナミックキャストする
-				CCube *pEnemy = dynamic_cast<CCube*>(pObj);
+				CCube *pCube = dynamic_cast<CCube*>(pObj);
 
-				if (bHit)
-				{
-					return TRUE;
+				// IDを取得
+				ID = pCube->GetID();
+
+				// 配置フラグを取得
+				bool bSet = pCube->CubeGetSet();
+
+				if (m_Info.nID != ID && bSet)
+				{// 種類がキューブの場合
+
+					// 自分自身の取得
+					float fWidth = GetWidth();		// 幅
+					float fHeight = GetHeight();	// 高さ
+					float fDepth = GetDepth();		// 奥行き
+
+					// 相手の取得
+					D3DXVECTOR3 PairPos = pCube->GetPos();	// 位置
+					float fPairWidth = pCube->GetWidth();	// 幅
+					float fPairHeight = pCube->GetHeight();	// 高さ
+					float fPairDepth = pCube->GetDepth();	// 奥行き
+
+					//　中心点からの距離
+					float fCubeWidth = fPairWidth * SIZE_DIAMETER;		// 幅
+					float fCubeHeight = fPairHeight * SIZE_DIAMETER;	// 高さ
+					float fCubeDepth = fPairDepth * SIZE_DIAMETER;		// 奥行き
+
+					// サイズ調整
+					fPairWidth *= COLLSION_DIAMETER;	// 幅
+					fPairHeight *= COLLSION_DIAMETER;	// 高さ
+					fPairDepth *= COLLSION_DIAMETER;	// 奥行き
+
+					// 各方向の当たり判定
+					D3DXVECTOR3 PairUpPos = D3DXVECTOR3(PairPos.x, PairPos.y + fCubeHeight, PairPos.z);		// 上
+					D3DXVECTOR3 PairDownPos = D3DXVECTOR3(PairPos.x, PairPos.y - fCubeHeight, PairPos.z);	// 下
+					D3DXVECTOR3 PairLeftPos = D3DXVECTOR3(PairPos.x + fCubeWidth, PairPos.y, PairPos.z);	// 左
+					D3DXVECTOR3 PairRightPos = D3DXVECTOR3(PairPos.x - fCubeWidth, PairPos.y, PairPos.z);	// 右
+					D3DXVECTOR3 PairBackPos = D3DXVECTOR3(PairPos.x, PairPos.y, PairPos.z + fCubeDepth);	// 奥
+					D3DXVECTOR3 PairFrontPos = D3DXVECTOR3(PairPos.x, PairPos.y, PairPos.z - fCubeDepth);	// 手前
+
+					switch (vector)
+					{
+					case VECTOR_X: {	/* X方向 */
+
+						if (Collsion(pos, PairLeftPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+						{// 左側
+
+							bHit = true;
+							break;
+						}
+
+						if (Collsion(pos, PairRightPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+						{// 右側
+
+							bHit = true;
+							break;
+						}
+					}
+								   break;
+					case VECTOR_Y: {	/* Y方向 */
+
+						if (Collsion(pos, PairUpPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+						{// 上側
+
+							bHit = true;
+							break;
+						}
+
+						if (Collsion(pos, PairDownPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+						{// 下側
+
+							bHit = true;
+							break;
+						}
+					}
+								   break;
+					case VECTOR_Z: {	/* Z方向 */
+
+						if (Collsion(pos, PairBackPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+						{// 奥側
+
+							bHit = true;
+							break;
+						}
+
+						if (Collsion(pos, PairFrontPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+						{// 手前側
+
+							bHit = true;
+							break;
+						}
+					}
+								   break;
+					}
+
+					// 判定が真なら TRUE を返す
+					if (bHit)
+					{
+						return TRUE;
+					}
 				}
 			}
 		}
