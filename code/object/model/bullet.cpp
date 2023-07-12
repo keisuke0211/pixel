@@ -207,7 +207,7 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 					float fHeight = GetHeight();		// 高さ
 					float fDepth = GetDepth();			// 奥行き
 
-					// 少し小さくする
+					// サイズ調整
 					fWidth *= BULLET_DIAMETER;	// 幅
 					fHeight *= BULLET_DIAMETER;	// 高さ
 					fDepth *= BULLET_DIAMETER;	// 奥行き

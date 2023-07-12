@@ -227,10 +227,10 @@ bool CCube::Correction(VECTOR vector, D3DXVECTOR3 pos)
 				float fCubeHeight = fPairHeight * SIZE_DIAMETER;	// 高さ
 				float fCubeDepth = fPairDepth * SIZE_DIAMETER;		// 奥行き
 
-				// 少し小さくする
-				fPairWidth *= 0.75f;	// 幅
-				fPairHeight *= 0.75f;	// 高さ
-				fPairDepth *= 0.75f;	// 奥行き
+				// サイズ調整
+				fPairWidth *= COLLSION_DIAMETER;	// 幅
+				fPairHeight *= COLLSION_DIAMETER;	// 高さ
+				fPairDepth *= COLLSION_DIAMETER;	// 奥行き
 
 				// 各方向の当たり判定
 				D3DXVECTOR3 PairUpPos = D3DXVECTOR3(PairPos.x, PairPos.y + fCubeHeight, PairPos.z);		// 上
@@ -328,7 +328,8 @@ bool CCube::Contact(VECTOR vector, D3DXVECTOR3 pos)
 			if (type == TYPE_CUBE && m_Info.nID != ID)
 			{// 種類がキューブの場合
 
-				
+				// ダイナミックキャストする
+				CCube *pEnemy = dynamic_cast<CCube*>(pObj);
 
 				if (bHit)
 				{
