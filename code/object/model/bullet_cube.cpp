@@ -183,9 +183,9 @@ void CCube::Update(void)
 			CParticleX *pObj = CParticleX::Create();
 			pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 20, m_Info.pos.z));
 			pObj->Par_SetRot(INIT_D3DXVECTOR3);
-			pObj->Par_SetMove(D3DXVECTOR3(10.0f, 3.0f, 10.0f));
+			pObj->Par_SetMove(D3DXVECTOR3(10.0f, 5.0f, 10.0f));
 			pObj->Par_SetType(0);
-			pObj->Par_SetLife(100);
+			pObj->Par_SetLife(50);
 			pObj->Par_SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 			pObj->Par_SetForm(25);
 
@@ -441,7 +441,7 @@ bool CCube::Contact(VECTOR vector, D3DXVECTOR3 pos)
 							break;
 						}
 					}
-								   break;
+					   break;
 					case VECTOR_Y: {	/* Yï˚å¸ */
 
 						if (Collsion(pos, PairUpPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
@@ -475,7 +475,7 @@ bool CCube::Contact(VECTOR vector, D3DXVECTOR3 pos)
 							break;
 						}
 					}
-								   break;
+					   break;
 					}
 
 					// îªíËÇ™ê^Ç»ÇÁ TRUE Çï‘Ç∑
