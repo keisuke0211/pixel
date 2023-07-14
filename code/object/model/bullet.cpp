@@ -11,8 +11,12 @@
 #include "../../renderer.h"
 #include "enemy.h"
 #include "block.h"
+#include "../../input.h"
 #include "../2D/score.h"
 #include "../model/effectX.h"
+
+// 静的変数
+int CBullet::m_nNumAll = 0;
 
 //========================================
 // マクロ定義
@@ -21,6 +25,7 @@
 #define BULLET_DAMAGE		(1)		// ダメージ量
 #define COLLSION_DIAMETER	(1.00f)	// 当たり判定の倍率
 #define BULLET_DIAMETER		(0.2f)	// サイズの倍率
+#define BULLET_LIFE			(60)	// 寿命
 
 //========================================
 // コンストラクタ
@@ -37,13 +42,15 @@ CBullet::CBullet(int nPriority) : CObjectX(nPriority)
 	m_Info.nLife = 0;
 	m_Info.fHeight = 0.0f;
 	m_Info.fWidth = 0.0f;
+	m_Info.nID = m_nNumAll;
+	m_nNumAll++;	// 総数加算
 }
 //========================================
 // デストラクタ
 //========================================
 CBullet::~CBullet()
 {
-
+	m_nNumAll--;	// 総数減算
 }
 
 //========================================
@@ -63,7 +70,7 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 
 	pBullet->m_Info.pos = pos;
 	pBullet->m_Info.rot = rot;
-	pBullet->m_Info.nLife = 70;
+	pBullet->m_Info.nLife = BULLET_LIFE;
 	pBullet->m_Info.size = D3DXVECTOR3(BULLET_DIAMETER, BULLET_DIAMETER, BULLET_DIAMETER);
 	pBullet->SetModel(MODEL_BULLET);
 
@@ -105,6 +112,11 @@ void CBullet::Uninit(void)
 //========================================
 void CBullet::Update(void)
 {
+	// --- 取得 ---------------------------------
+	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+
 	// 過去の位置・向きの更新
 	m_Info.posOld = m_Info.pos;
 	m_Info.rotOld = m_Info.rot;
@@ -119,7 +131,6 @@ void CBullet::Update(void)
 		return;
 	}
 
-	
 	{
 		// 移動量を代入
 		m_Info.pos.x += m_Info.move.x;

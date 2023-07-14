@@ -138,6 +138,9 @@ void CObject::ReleaseAll(TYPE type)
 		// オブジェクト分の回す
 		while (pObj != NULL)
 		{
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->m_pNext;
+
 			// 指定した種類かどうか
 			if (pObj->GetType() == type)
 			{
@@ -149,15 +152,11 @@ void CObject::ReleaseAll(TYPE type)
 				}
 				else
 				{
-					// 次のオブジェクト
-					CObject *pObjNext = pObj->m_pNext;
-
 					// 終了処理
 					pObj->Uninit();
-
-					pObj = pObjNext;	// 次のオブジェクトポインタを代入
 				}
 			}
+			pObj = pObjNext;	// 次のオブジェクトポインタを代入
 		}
 	}
 }

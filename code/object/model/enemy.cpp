@@ -56,7 +56,9 @@ CEnemy *CEnemy::Create(D3DXVECTOR3 pos)
 	pEnemy->Init();
 
 	pEnemy->m_Info.pos = pos;
-
+	pEnemy->SetPos(pEnemy->m_Info.pos);
+	pEnemy->SetRot(pEnemy->m_Info.rot);
+	pEnemy->SetColor(pEnemy->m_Info.col);
 	return pEnemy;
 }
 
@@ -141,7 +143,7 @@ void CEnemy::HitLife(int nDamage)
 		pObj->Par_SetMove(D3DXVECTOR3(10.0f, 3.0f, 10.0f));
 		pObj->Par_SetType(0);
 		pObj->Par_SetLife(100);
-		pObj->Par_SetCol(D3DXCOLOR(0.3, 0.8f, 0.8f, 1.0f));
+		pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.8f, 0.8f, 1.0f));
 		pObj->Par_SetForm(15);
 
 		// “G‚Ì”jŠü

@@ -72,6 +72,7 @@ private:
 
 	/* 入力 */
 	void KeyInput(void);	// キー入力処理
+	void BulletStop(void);	// 弾停止
 
 	// ***** 変数 *****
 	Info m_Info;		// プレイヤー情報

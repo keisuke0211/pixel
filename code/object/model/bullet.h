@@ -36,6 +36,7 @@ public:
 		float fWidth;		// 幅
 		float fHeight;		// 高さ
 		bool bHit;			// ヒットフラグ
+		int nID;			// 自身のID
 	} Info;
 
 	// ***** 関数 *****
@@ -58,6 +59,8 @@ public:
 	D3DXVECTOR3 GetPosOld() { return m_Info.posOld; }	// 位置(過去)
 	D3DXVECTOR3 GetRot() { return m_Info.rot; }			// 向き
 	D3DXVECTOR3 GetMove() { return m_Info.move; }		// 移動量
+	/* 種類			*/int GetType(void) { return m_Info.nType; }
+	/* ID			*/int GetID(void) { return m_Info.nID; }
 
 private:
 
@@ -65,6 +68,7 @@ private:
 	bool Collsion(VECTOR vector, D3DXVECTOR3 pos);	// 当たり判定
 
 	// ***** 変数 *****
-	Info m_Info;	// 情報
+	static int m_nNumAll;	// バレットの総数
+	Info m_Info;			// 情報
 };
 #endif

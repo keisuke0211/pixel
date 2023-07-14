@@ -55,7 +55,7 @@ CCube::CCube(int nPriority) : CObjectX(nPriority)
 //========================================
 CCube::~CCube()
 {
-
+	m_nNumAll--;	// 総数減算
 }
 
 //========================================
@@ -153,37 +153,37 @@ void CCube::Update(void)
 
 	if (!m_Info.bActivation && m_Info.bSet)
 	{
-		// 接触判定
-		if (Contact(VECTOR_X, m_Info.pos))
-		{
-			m_Info.bContact = true;
-		}
+		//// 接触判定
+		//if (Contact(VECTOR_X, m_Info.pos))
+		//{
+		//	m_Info.bContact = true;
+		//}
 
-		if (Contact(VECTOR_Y, m_Info.pos))
-		{
-			m_Info.bContact = true;
-		}
+		//if (Contact(VECTOR_Y, m_Info.pos))
+		//{
+		//	m_Info.bContact = true;
+		//}
 
-		if (Contact(VECTOR_Z, m_Info.pos))
-		{
-			m_Info.bContact = true;
-		}
+		//if (Contact(VECTOR_Z, m_Info.pos))
+		//{
+		//	m_Info.bContact = true;
+		//}
 
-		if (m_Info.bContact)
-		{
-			switch (m_Info.nShape)
-			{
-			case SHAPE_LINE:	/* 直線 */
-				m_Info.col = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);
-				break;
-			case SHAPE_SQUARE:	/* 四角 */
-				m_Info.col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-				break;
-			}
+		//if (m_Info.bContact)
+		//{
+		//	switch (m_Info.nShape)
+		//	{
+		//	case SHAPE_LINE:	/* 直線 */
+		//		m_Info.col = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);
+		//		break;
+		//	case SHAPE_SQUARE:	/* 四角 */
+		//		m_Info.col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+		//		break;
+		//	}
 
-			m_Info.nStandTime = 90;
-			m_Info.bActivation = true;
-		}
+		//	m_Info.nStandTime = 90;
+		//	m_Info.bActivation = true;
+		//}
 	}
 
 	// 発動処理
@@ -222,8 +222,23 @@ void CCube::Update(void)
 		// 寿命
 		if (--m_Info.nLife <= 0)
 		{
+			// パーティクル生成
+			CParticleX *pObj = CParticleX::Create();
+			pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 20, m_Info.pos.z));
+			pObj->Par_SetRot(INIT_D3DXVECTOR3);
+			pObj->Par_SetMove(D3DXVECTOR3(10.0f, 5.0f, 10.0f));
+			pObj->Par_SetType(0);
+			pObj->Par_SetLife(50);
+			pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.8f, 0.8f, 1.0f));
+			pObj->Par_SetForm(25);
+
+			// オブジェクト破棄
 			Uninit();
 			return;
+		}
+		else if (m_Info.nLife <= (RADIUS_TIME * 2))
+		{
+			m_Info.fRadius -= m_Info.fRadius / m_Info.nLife;
 		}
 		else if (m_Info.nLife <= RADIUS_TIME)
 		{

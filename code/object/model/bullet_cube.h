@@ -90,7 +90,7 @@ private:
 
 
 	// ***** 変数 *****
-	static int m_nNumAll;	// オブジェクト総数
+	static int m_nNumAll;	// キューブの総数
 	Info m_Info;			// プレイヤー情報
 
 };

@@ -13,6 +13,7 @@
 #include "../../physics.h"
 #include "bullet.h"
 #include "enemy.h"
+#include "bullet_cube.h"
 
 //****************************************
 // マクロ定義
@@ -195,6 +196,9 @@ void CPlayer::KeyInput(void)
 	{
 		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z),m_Info.rot);
 	}
+	
+	// 最初の弾を止める
+	BulletStop();
 	
 	// 位置更新
 	MovePos(PLAYER_SPEED);
@@ -529,4 +533,50 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 		}
 	}
 	return pos;
+}
+
+//========================================
+// 弾停止
+//========================================
+void CPlayer::BulletStop(void)
+{
+	// --- 取得 ---------------------------------
+	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+
+	// 先頭オブジェクトを取得
+	CObject *pObj = CObject::GetTop(PRIO_OBJECT);
+
+	while (pObj != NULL)
+	{// 使用されている時、
+
+		 // 次のオブジェクト
+		CObject *pObjNext = pObj->GetNext();
+
+		TYPE type = pObj->GetType();	// 種類を取得
+
+		if (type == TYPE_BULLET)
+		{// 種類がバレットの時、
+
+			 // ダイナミックキャストする
+			CBullet *pBullet = dynamic_cast<CBullet*>(pObj);
+
+
+			if (pInputKeyboard->GetTrigger(DIK_E)/* || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_X)*/)
+			{
+				// ID取得
+				int nID = pBullet->GetID();
+				if (nID == 0)
+				{
+					// キューブの生成
+					CCube::Create(pBullet->GetType(), pBullet->GetPos());
+
+					// オブジェクト破棄
+					pObj->Uninit();
+				}
+			}
+		}
+		pObj = pObjNext;	// 次のオブジェクトを代入
+	}
 }
