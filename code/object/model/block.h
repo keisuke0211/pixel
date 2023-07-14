@@ -39,7 +39,7 @@ public:
 	} Info;
 
 	// ***** ä÷êî *****
-	CBlock(int nPriority = PRIO_OBJX);
+	CBlock(int nPriority = PRIO_BLOCK);
 	~CBlock();
 
 	/* ÉÅÉCÉì */

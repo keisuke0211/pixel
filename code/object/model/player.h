@@ -45,7 +45,7 @@ public:
 	} Info;
 
 	// ***** ä÷êî *****
-	CPlayer(int nPriority = PRIO_OBJX);
+	CPlayer(int nPriority = PRIO_OBJECT);
 	~CPlayer();
 
 	/* ÉÅÉCÉì */

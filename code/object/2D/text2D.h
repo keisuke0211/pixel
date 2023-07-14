@@ -39,7 +39,7 @@ class CText2D :public CObject
 
 public:
 	// ***** ŠÖ” *****
-	CText2D(int nPriority = PRIO_TEXT);
+	CText2D(int nPriority = PRIO_UI);
 	~CText2D();
 	HRESULT Init(void);	// ‰Šú‰»
 	void Uninit(void);	// I—¹

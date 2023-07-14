@@ -130,7 +130,7 @@ void CText2D::SetString(char *pString)
 			CObject2D *pObject2D = NULL;
 
 			// オブジェクト2Dの生成
-			pObject2D = new CObject2D(PRIO_TEXT);
+			pObject2D = new CObject2D(PRIO_UI);
 
 			// 初期化処理
 			pObject2D->Init();

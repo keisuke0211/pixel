@@ -49,7 +49,7 @@ public:
 	} Info;
 
 	// ***** ŠÖ” *****
-	CEnemy(int nPriority = PRIO_OBJX);
+	CEnemy(int nPriority = PRIO_OBJECT);
 	virtual~CEnemy();
 
 	/* ƒƒCƒ“ */

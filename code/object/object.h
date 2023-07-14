@@ -32,11 +32,11 @@ public:
 	typedef enum
 	{
 		PRIO_NONE = 0,	// 無し
-		PRIO_OBJ2D,		// オブジェクト2D
-		PRIO_OBJ3D,		// オブジェクト3D
-		PRIO_OBJX,		// オブジェクトX
+		PRIO_OBJECT,	// オブジェクト
+		PRIO_BLOCK,		// ブロック
+		PRIO_CUBE,		// キューブ
 		PRIO_EFFECT,	// エフェクト
-		PRIO_TEXT,		// テキスト
+		PRIO_UI,		// UI
 		PRIO_MAX
 	}PRIO;
 

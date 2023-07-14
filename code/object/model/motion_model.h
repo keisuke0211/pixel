@@ -27,7 +27,7 @@ public:
 	//--------------------------------------------------------------------
 	static CMotionModel *Create();			// 3Dモデルの生成
 
-	CMotionModel(int nPriority = PRIO_OBJX);	// コンストラクタ
+	CMotionModel(int nPriority = PRIO_OBJECT);	// コンストラクタ
 	~CMotionModel();							// デストラクタ
 
 	// ***** 関数 *****

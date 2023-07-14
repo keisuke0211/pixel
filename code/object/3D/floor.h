@@ -30,8 +30,8 @@ public:
 	} Info;
 
 	// ***** 関数 *****
-	CFloor(int nPriority = PRIO_OBJ3D);	// コンストラクタ
-	~CFloor();							// デストラクタ
+	CFloor(int nPriority = PRIO_OBJECT);	// コンストラクタ
+	~CFloor();								// デストラクタ
 
 	// 生成
 	static CFloor *Create(void);

@@ -19,11 +19,6 @@ CObject *CObject::m_apObject[CObject::PRIO_MAX][CObject::MAX_OBJECT] = {};	// ÉI
 //========================================
 CObject::CObject(int nPriority)
 {
-	if (nPriority == 5)
-	{
-		nPriority = nPriority;
-	}
-
 	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
 	{
 		if (m_apObject[nPriority][nCntObject] == NULL)

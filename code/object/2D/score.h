@@ -28,7 +28,7 @@ class CScore : public CText2D
 {
 public:
 
-	CScore(int nPriority = PRIO_TEXT);
+	CScore(int nPriority = PRIO_UI);
 	~CScore();
 
 	// *****  ä÷êî *****

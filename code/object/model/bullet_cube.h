@@ -18,6 +18,16 @@ class CCube : public CObjectX
 {
 public:
 
+	// ***** 列挙型 *****
+
+	// モデル種類
+	typedef enum
+	{
+		SHAPE_LINE = 0,	// 直線
+		SHAPE_SQUARE,	// 四角
+		SHAPE_MAX
+	}SHAPE;
+
 	// ***** 構造体 *****
 
 	// プレイヤー情報
@@ -31,7 +41,7 @@ public:
 		D3DXVECTOR3 rotOld;		// 向き(過去)
 		D3DXVECTOR3	size;		// サイズ
 		D3DXCOLOR col;			// 頂点カラー
-		int nType;				// 種類
+		int nShape;				// 形状
 		int nStandTime;			// 待機時間
 		bool bContact;			// 接触フラグ
 		bool bActivation;		// 発動フラグ
@@ -45,7 +55,7 @@ public:
 	} Info;
 
 	// ***** 関数 *****
-	/* コンストラクタ	*/CCube(int nPriority = PRIO_OBJX);
+	/* コンストラクタ	*/CCube(int nPriority = PRIO_CUBE);
 	/* デストラクタ		*/~CCube();
 
 	// -- メイン -------------------------------
@@ -60,7 +70,7 @@ public:
 	/* 向き		*/void CubeSetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
 	/* 色		*/void CubeSetColor(const D3DXCOLOR col) { m_Info.col = col; }
 	/* サイズ	*/void CubeSetSize(const D3DXVECTOR3 size) { m_Info.size = size; }
-	/* 種類		*/void CubeSetType(const int type) { m_Info.nType = type; }
+	/* 種類		*/void CubeSetType(const int type) { m_Info.nShape = type; }
 
 	// -- 取得 -------------------------------
 	/* 位置			*/D3DXVECTOR3 CubeGetPos(void) { return m_Info.pos; }
@@ -72,9 +82,11 @@ public:
 private:
 
 	// ***** 関数 ***** correction
-	/* 位置補正		*/bool Correction(VECTOR vector, D3DXVECTOR3 pos);
-	/* 接触判定		*/bool Contact(VECTOR vector, D3DXVECTOR3 pos);
-	/* 当たり判定	*/bool Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3	PairSize);
+	/* 位置補正			*/bool Correction(VECTOR vector, D3DXVECTOR3 pos);
+	/* 接触判定			*/bool Contact(VECTOR vector, D3DXVECTOR3 pos);
+	/* 当たり判定		*/bool Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3	PairSize);
+	/* 当たり判定(方向)	*/bool Collsion(VECTOR vector,CObject *pObj,CObject *pPairObj);
+
 
 	// ***** 変数 *****
 	Info m_Info;		// プレイヤー情報

@@ -32,7 +32,7 @@ CCube::CCube(int nPriority) : CObjectX(nPriority)
 	m_Info.rotOld = INIT_D3DXVECTOR3;	// 向き(過去)
 	m_Info.size = INIT_D3DXVECTOR3;		// 大きさ
 	m_Info.col = INIT_D3DXCOLOR;		// 色
-	m_Info.nType = 0;					// 種類
+	m_Info.nShape = 0;					// 種類
 	m_Info.nStandTime = 0;				// 待機時間
 	m_Info.bContact = false;			// 接触フラグ
 	m_Info.bActivation = false;			// 発動フラグ
@@ -76,7 +76,7 @@ CCube *CCube::Create(int nType, D3DXVECTOR3 pos)
 	// 初期化処理
 	pCube->Init();
 
-	pCube->m_Info.nType = nType;
+	pCube->m_Info.nShape = nType;
 	pCube->m_Info.nLife = 300;
 	pCube->m_Info.nLifeMax = 300;
 	pCube->CubeSetPos(pos);
@@ -105,7 +105,7 @@ HRESULT CCube::Init(void)
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_Info.col = INIT_D3DXCOLOR;
-	m_Info.nType = 0;
+	m_Info.nShape = 0;
 	m_Info.fRadius = 1.0f;
 	m_Info.nID = GetID();
 
@@ -167,7 +167,16 @@ void CCube::Update(void)
 
 		if (m_Info.bContact)
 		{
-			m_Info.col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+			switch (m_Info.nShape)
+			{
+			case SHAPE_LINE:	/* 直線 */
+				m_Info.col = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);
+				break;
+			case SHAPE_SQUARE:	/* 四角 */
+				m_Info.col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+				break;
+			}
+
 			m_Info.nStandTime = 90;
 			m_Info.bActivation = true;
 		}
@@ -252,7 +261,7 @@ bool CCube::Correction(VECTOR vector, D3DXVECTOR3 pos)
 		CObject *pObj;
 
 		// オブジェクトを取得
-		pObj = GetObjectPointer(PRIO_OBJX, nCntObj);
+		pObj = GetObjectPointer(PRIO_CUBE, nCntObj);
 
 		if (pObj != NULL)
 		{
@@ -369,7 +378,7 @@ bool CCube::Contact(VECTOR vector, D3DXVECTOR3 pos)
 		CObject *pObj;
 
 		// オブジェクトを取得
-		pObj = GetObjectPointer(PRIO_OBJX, nCntObj);
+		pObj = GetObjectPointer(PRIO_CUBE, nCntObj);
 
 		if (pObj != NULL)
 		{
