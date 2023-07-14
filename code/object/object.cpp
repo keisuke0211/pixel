@@ -11,25 +11,31 @@
 #include "../camera.h"
 
 // 静的変数
-int CObject::m_nNumAll = 0;													// オブジェクト総数
-CObject *CObject::m_apObject[CObject::PRIO_MAX][CObject::MAX_OBJECT] = {};	// オブジェクトのポインタ
+CObject *CObject::m_apTop[] = {};
+CObject* CObject::m_apCir[] = {};
 
 //========================================
 // コンストラクタ
 //========================================
 CObject::CObject(int nPriority)
 {
-	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+	m_pNext = NULL;
+	m_pPrev = NULL;
+	m_type = TYPE_NONE;
+
+	// 先頭オブジェクトがNULLか
+	if (m_apTop[nPriority] == NULL)
 	{
-		if (m_apObject[nPriority][nCntObject] == NULL)
-		{
-			m_apObject[nPriority][nCntObject] = this;	// 自分自身を代入
-			m_nPriority = nPriority;					// 自分自身の優先順位を代入
-			m_nID = nCntObject;							// 自分自身のIDを代入
-			m_nNumAll++;								// 総数の加算
-			break;
-		}
+		m_apTop[nPriority] = this;	// 自分自身を代入(先頭)
+		m_apCir[nPriority] = this;	// 自分自身を代入(最後尾)
 	}
+	else
+	{
+		this->m_pPrev = m_apCir[nPriority];	// 最後尾のオブジェクトを代入
+		m_apCir[nPriority]->m_pNext = this;	// 自分自身を代入
+		m_apCir[nPriority] = this;			// 自分自身を代入
+	}
+	m_nPriority = nPriority;		// 自分自身の優先順位を代入
 }
 
 //========================================
@@ -37,7 +43,7 @@ CObject::CObject(int nPriority)
 //========================================
 CObject::~CObject()
 {
-	m_nNumAll--;
+	
 }
 
 //========================================
@@ -45,14 +51,36 @@ CObject::~CObject()
 //========================================
 void CObject::Release(void)
 {
-	int nIdx = m_nID;
-	int nPri = m_nPriority;
+	// 自分自身
+	CObject *pObj = this;
 
-	if (m_apObject[nPri][nIdx] != NULL)
-	{
-		delete m_apObject[nPri][nIdx];
-		m_apObject[nPri][nIdx] = NULL;
+	if (pObj == NULL)
+	{// 消す奴が使われているかどうか、
+		return;
 	}
+	else if (m_pPrev == NULL && m_pNext == NULL)
+	{// オブジェクトが１つしかない時、
+		m_apTop[m_nPriority] = NULL;
+		m_apCir[m_nPriority] = NULL;
+	}
+	else if (m_pPrev == NULL)
+	{// Topが消えた時、
+		m_apTop[m_nPriority] = pObj->m_pNext;	// 先頭のポインタを代入
+		m_apTop[m_nPriority]->m_pPrev = NULL;	// 前のポインタを NULL
+	}
+	else if (m_pNext == NULL)
+	{// Cirが消えた時、
+		m_apCir[m_nPriority] = pObj->m_pPrev;	// 最後尾のポインタを代入
+		m_apCir[m_nPriority]->m_pNext = NULL;	// 次のポインタを NULL
+	}
+	else
+	{// 間のオブジェクトが消えた時、
+		pObj->m_pPrev->m_pNext = pObj->m_pNext;	// 次のポインタを代入
+		pObj->m_pNext->m_pPrev = pObj->m_pPrev;	// 前のポインタを代入
+	}
+
+	delete pObj;
+	pObj = NULL;
 }
 
 //========================================
@@ -60,13 +88,38 @@ void CObject::Release(void)
 //========================================
 void CObject::ReleaseAll(void)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIO_MAX; nCntPriority++)
+	for (int nPrio = 0; nPrio < PRIO_MAX; nPrio++)
 	{
-		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+		// 先頭オブジェクト
+		CObject *pObj = m_apTop[nPrio];
+
+		// オブジェクト分の回す
+		while (pObj != NULL)
 		{
-			if (m_apObject[nCntPriority][nCntObject] != NULL)
+			// 次のオブジェクトがあるか
+			if (pObj->m_pNext == NULL)
 			{
-				m_apObject[nCntPriority][nCntObject]->Uninit();
+				// 終了処理
+				pObj->Uninit();
+				break;
+			}
+			else
+			{
+				// 次のオブジェクト
+				CObject *pObjNext = pObj->m_pNext;
+
+				// 終了処理
+				pObj->Uninit();
+
+				// 一時的の処理
+				// ※ 原因　テキストcppの オブジェクト配列　一個目のポインタで全て破棄して
+				//			２個目から何もないまま処理を通ってエラーが出る
+				if (nPrio == PRIO_UI)
+				{
+					break;
+				}
+
+				pObj = pObjNext;	// 次のオブジェクトポインタを代入
 			}
 		}
 	}
@@ -77,15 +130,32 @@ void CObject::ReleaseAll(void)
 //========================================
 void CObject::ReleaseAll(TYPE type)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIO_MAX; nCntPriority++)
+	for (int nPrio = 0; nPrio < PRIO_MAX; nPrio++)
 	{
-		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+		// 先頭オブジェクト
+		CObject *pObj = m_apTop[nPrio];
+
+		// オブジェクト分の回す
+		while (pObj != NULL)
 		{
-			if (m_apObject[nCntPriority][nCntObject] != NULL)
+			// 指定した種類かどうか
+			if (pObj->GetType() == type)
 			{
-				if (m_apObject[nCntPriority][nCntObject]->m_type == type)
+				// 次のオブジェクトがあるか
+				if (pObj->m_pNext == NULL)
 				{
-					m_apObject[nCntPriority][nCntObject]->Uninit();	// 終了処理
+					// 終了処理
+					pObj->Uninit();
+				}
+				else
+				{
+					// 次のオブジェクト
+					CObject *pObjNext = pObj->m_pNext;
+
+					// 終了処理
+					pObj->Uninit();
+
+					pObj = pObjNext;	// 次のオブジェクトポインタを代入
 				}
 			}
 		}
@@ -97,14 +167,22 @@ void CObject::ReleaseAll(TYPE type)
 //========================================
 void CObject::UpdateAll(void)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIO_MAX; nCntPriority++)
+	for (int nPrio = 0; nPrio < PRIO_MAX; nPrio++)
 	{
-		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+		// 先頭オブジェクト
+		CObject *pObj = m_apTop[nPrio];
+
+		// オブジェクト分の回す
+		while (pObj != NULL)
 		{
-			if (m_apObject[nCntPriority][nCntObject] != NULL)
-			{
-				m_apObject[nCntPriority][nCntObject]->Update();
-			}
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->m_pNext;
+
+			// 更新処理
+			pObj->Update();
+
+			// 次のオブジェクトを代入
+			pObj = pObjNext;
 		}
 	}
 }
@@ -122,13 +200,26 @@ void CObject::DrawAll(void)
 	// カメラの設定
 	pCamera->SetCamera();
 
-	for (int nCntPriority = 0; nCntPriority < PRIO_MAX; nCntPriority++)
+	for (int nPrio = 0; nPrio < PRIO_MAX; nPrio++)
 	{
-		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+		// 先頭オブジェクト
+		CObject *pObj = m_apTop[nPrio];
+
+		// オブジェクト分の回す
+		while (pObj != NULL)
 		{
-			if (m_apObject[nCntPriority][nCntObject] != NULL)
+			// 描画処理
+			pObj->Draw();
+
+			// 次のオブジェクトがあるかどうか、
+			if (pObj->m_pNext == NULL)
 			{
-				m_apObject[nCntPriority][nCntObject]->Draw();
+				break;
+			}
+			else
+			{
+				// 次のオブジェクトを代入
+				pObj = pObj->m_pNext;
 			}
 		}
 	}
@@ -145,33 +236,77 @@ void CObject::SetType(TYPE type)
 //========================================
 // Score情報取得
 //========================================
-CScore *CObject::GetScore(int nPriority,int nIdx)
+CScore *CObject::GetScore(int nPrio,int Idx)
 {
-	if (m_apObject[nPriority][nIdx] == NULL)
-	{
-		return NULL;
-	}
-	else if (m_apObject[nPriority][nIdx]->m_type != TYPE_SCORE)
+	int nIdx = 0;
+
+	// 先頭オブジェクト
+	CObject *pObj = m_apTop[nPrio];
+
+	if (pObj == NULL)
 	{
 		return NULL;
 	}
 
-	return (CScore*)m_apObject[nPriority][nIdx];
+	while (pObj != NULL)
+	{
+		if (pObj->m_type == TYPE_SCORE)
+		{
+			if (pObj->m_pNext == NULL)
+			{
+				return NULL;
+			}
+			else
+			{
+				if (nIdx == Idx)
+				{
+					break;
+				}
+				nIdx++;
+			}
+		}
+		pObj = pObj->m_pNext;
+	}
+	
+	return (CScore*)pObj;
 }
 
 //========================================
 // Time情報取得
 //========================================
-CTime *CObject::GetTime(int nPriority, int nIdx)
+CTime *CObject::GetTime(int nPrio, int Idx)
 {
-	if (m_apObject[nPriority][nIdx] == NULL)
+	int nIdx = 0;
+
+	// 先頭オブジェクト
+	CObject *pObj = m_apTop[nPrio];
+
+	if (pObj == NULL)
 	{
 		return NULL;
 	}
-	else if (m_apObject[nPriority][nIdx]->m_type != TYPE_TIME)
+	else if (pObj->m_type != TYPE_TIME)
 	{
 		return NULL;
 	}
 
-	return (CTime*)m_apObject[nPriority][nIdx];
+	while (pObj != NULL)
+	{
+		if (pObj->m_pNext == NULL)
+		{
+			return NULL;
+		}
+		else
+		{
+			pObj = pObj->m_pNext;
+
+			if (nIdx == Idx)
+			{
+				break;
+			}
+			nIdx++;
+		}
+	}
+
+	return (CTime*)pObj;
 }

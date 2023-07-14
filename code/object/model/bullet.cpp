@@ -182,14 +182,16 @@ void CBullet::Draw(void)
 //========================================
 bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIO_MAX; nCntPriority++)
+	for (int nCntPrio = 0; nCntPrio < PRIO_MAX; nCntPrio++)
 	{
-		for (int nCntObj = 0; nCntObj < GetNumAll(); nCntObj++)
-		{
-			CObject *pObj;
+		// 先頭オブジェクトを取得
+		CObject *pObj = CObject::GetTop(nCntPrio);
 
-			// オブジェクトを取得
-			pObj = GetObjectPointer(nCntPriority, nCntObj);
+		while (pObj != NULL)
+		{// 使用されている時、
+		 
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->GetNext();
 
 			if (pObj != NULL)
 			{
@@ -419,6 +421,8 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 					}
 				}
 			}
+
+			pObj = pObjNext;	// 次のオブジェクトを代入
 		}
 	}
 	return FALSE;

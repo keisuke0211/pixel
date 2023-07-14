@@ -23,8 +23,6 @@ class CTime;	// タイム
 class CObject : public CPhysics
 {
 public:
-	/* 定義 */
-	static const int MAX_OBJECT = 2048;	// オブジェクトの最大数
 
 	// ***** 列挙型 *****
 
@@ -79,30 +77,36 @@ public:
 	/* 種類設定*/void SetType(TYPE type);
 
 	// -- 取得 ------------------------------------------
-	/* 幅				*/virtual float GetWidth(void) { return 0.0f; }
-	/* 高さ				*/virtual float GetHeight(void) { return 0.0f; }
-	/* 奥行き			*/virtual float GetDepth(void) { return 0.0f; }
-	/* サイズ			*/virtual D3DXVECTOR3 GetSize(void) { return INIT_D3DXVECTOR3; }
-	/* 位置				*/virtual D3DXVECTOR3 GetPos(void) { return INIT_D3DXVECTOR3; }
-	/* 位置(過去)		*/virtual D3DXVECTOR3 GetPosOld(void) { return INIT_D3DXVECTOR3; }
-	/* 向き				*/virtual D3DXVECTOR3 GetRot(void) { return INIT_D3DXVECTOR3; }
-	/* 向き(過去)		*/virtual D3DXVECTOR3 GetRotOld(void) { return INIT_D3DXVECTOR3; }
-	/* 種類				*/TYPE GetType(void) { return m_type; }
-	/* 自分自身ID		*/int GetID(void) { return m_nID; }
-	/* オブジェクト総数	*/static int GetNumAll(void) { return m_nNumAll; };
-	/* オブジェクト情報	*/static CObject *GetObjectPointer(int nPriority,int nIdx) { return m_apObject[nPriority][nIdx]; }
-	/* スコア情報		*/static CScore *GetScore(int nPriority,int nIdx);
-	/* タイム情報		*/static CTime *GetTime(int nPriority, int nIdx);
+	/* 先頭の情報				*/static CObject *GetTop(int nPriority) { return m_apTop[nPriority]; }
+	/* 最後尾の情報				*/static CObject *GetCur(int nPriority) { return m_apCir[nPriority]; }
+	/* 前のオブジェクト情報		*/CObject *GetPrev(void) { return m_pPrev; }
+	/* 前のオブジェクト情報		*/CObject *GetNext(void) { return m_pNext; }
+	/* 幅						*/virtual float GetWidth(void) { return 0.0f; }
+	/* 高さ						*/virtual float GetHeight(void) { return 0.0f; }
+	/* 奥行き					*/virtual float GetDepth(void) { return 0.0f; }
+	/* サイズ					*/virtual D3DXVECTOR3 GetSize(void) { return INIT_D3DXVECTOR3; }
+	/* 位置						*/virtual D3DXVECTOR3 GetPos(void) { return INIT_D3DXVECTOR3; }
+	/* 位置(過去)				*/virtual D3DXVECTOR3 GetPosOld(void) { return INIT_D3DXVECTOR3; }
+	/* 向き						*/virtual D3DXVECTOR3 GetRot(void) { return INIT_D3DXVECTOR3; }
+	/* 向き(過去)				*/virtual D3DXVECTOR3 GetRotOld(void) { return INIT_D3DXVECTOR3; }
+	/* 種類						*/TYPE GetType(void) { return m_type; }
+	/* スコア情報				*/static CScore *GetScore(int nPriority,int nIdx);
+	/* タイム情報				*/static CTime *GetTime(int nPriority, int nIdx);
 
 protected:
+	
+	// ***** 関数 ****
 	/* 解放処理 */void Release(void);
 
+	// ***** 変数 *****
+	CObject *m_pPrev;					// 前のオブジェクトへのポインタ
+	CObject *m_pNext;					// 次のオブジェクトへのポインタ
 private:
-	static CObject *m_apObject[PRIO_MAX][MAX_OBJECT];	// オブジェクトのポインタ配列
-	static int m_nNumAll;								// オブジェクト総数
-	int m_nPriority;									// 優先順位の位置
-	int m_nID;											// 自分自身のID
-	TYPE m_type;										// 自分自身の種類
+	// ***** 変数 *****
+	static CObject *m_apTop[PRIO_MAX];	// 先頭のオブジェクトへのポインタ
+	static CObject *m_apCir[PRIO_MAX];	// 最後尾のオブジェクトへのポインタ
+	int m_nPriority;					// 優先順位の位置
+	TYPE m_type;						// 自分自身の種類
 
 };
 #endif

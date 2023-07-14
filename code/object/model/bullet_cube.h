@@ -78,6 +78,7 @@ public:
 	/* 色			*/D3DXCOLOR CubeGetColor(void) { return m_Info.col; }
 	/* サイズ		*/D3DXVECTOR3 CubeGetSize(void) { return m_Info.size; }
 	/* 配置フラグ	*/bool CubeGetSet(void) { return m_Info.bSet; }
+	/* ID			*/int GetID(void) { return m_Info.nID; }
 
 private:
 
@@ -89,7 +90,8 @@ private:
 
 
 	// ***** 変数 *****
-	Info m_Info;		// プレイヤー情報
+	static int m_nNumAll;	// オブジェクト総数
+	Info m_Info;			// プレイヤー情報
 
 };
 #endif

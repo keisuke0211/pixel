@@ -312,10 +312,14 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 {
 	for (int nCntPrio = 0; nCntPrio < PRIO_MAX; nCntPrio++)
 	{
-		for (int nCntObj = 0; nCntObj < GetNumAll(); nCntObj++)
-		{
-			// オブジェクトを取得
-			CObject *pObj = GetObjectPointer(nCntPrio, nCntObj);
+		// 先頭オブジェクトを取得
+		CObject *pObj = CObject::GetTop(nCntPrio);
+
+		while (pObj != NULL)
+		{// 使用されている時、
+
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->GetNext();
 
 			if (pObj != NULL)
 			{// 使用されている時、
@@ -520,6 +524,8 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 				}
 
 			}
+
+			pObj = pObjNext;	// 次のオブジェクトを代入
 		}
 	}
 	return pos;

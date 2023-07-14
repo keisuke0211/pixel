@@ -94,6 +94,8 @@ void CScore::Draw(void)
 //========================================
 void CScore::SetScore(int nScore)
 {
+	int nCntObj = 0;
+	
 	// スコア加算
 	m_nScore += nScore;
 
@@ -101,25 +103,29 @@ void CScore::SetScore(int nScore)
 	char aString[TXT_MAX];
 	sprintf(aString, "SCORE:%06d", m_nScore);
 
-	for (int nCntObj = 0; nCntObj < GetNumAll(); nCntObj++)
-	{
-		// オブジェクトを取得
-		CObject *pObj = GetObjectPointer(PRIO_UI,nCntObj);
+	// 先頭オブジェクトを取得
+	CObject *pObj = CObject::GetTop(PRIO_UI);
 
-		if (pObj != NULL)
-		{// 使用されている時、
-			TYPE type = pObj->GetType();	// 種類を取得
+	while (pObj != NULL)
+	{// 使用されている時、
 
-			if (type == TYPE_SCORE)
-			{// 種類がスコアの時、
-				CScore *pScore = pObj->GetScore(PRIO_UI,nCntObj);
+		// 次のオブジェクト
+		CObject *pObjNext = pObj->GetNext();
 
-				// NULLでなければ文字列設定
-				if (pScore != NULL)
-				{
-					pScore->SetString(aString);
-				}
+		TYPE type = pObj->GetType();	// 種類を取得
+
+		if (type == TYPE_SCORE)
+		{// 種類がスコアの時、
+			CScore *pScore = pObj->GetScore(PRIO_UI, nCntObj);
+
+			// NULLでなければ文字列設定
+			if (pScore != NULL)
+			{
+				pScore->SetString(aString);
 			}
+
+			nCntObj++;
 		}
+		pObj = pObjNext;	// 次のオブジェクトを代入
 	}
 }
