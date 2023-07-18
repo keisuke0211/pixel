@@ -61,15 +61,7 @@ CPlayer::~CPlayer()
 //========================================
 CPlayer *CPlayer::Create(void)
 {
-	CPlayer *pPlayer = NULL;
-
-	if (pPlayer != NULL)
-	{
-		return pPlayer;
-	}
-
-	// オブジェクト2Dの生成
-	pPlayer = new CPlayer;
+	CPlayer *pPlayer  = new CPlayer;
 
 	// 初期化処理
 	pPlayer->Init();
@@ -96,7 +88,7 @@ HRESULT CPlayer::Init(void)
 	// 生成
 	SetPos(m_Info.pos);
 	SetRot(m_Info.rot);
-
+	SetColor(m_Info.col);
 	return S_OK;
 }
 
@@ -225,6 +217,8 @@ void CPlayer::MoveKeyboard(DIRECTION drct)
 //========================================
 void CPlayer::MovePos(float fMove)
 {
+	float p;
+
 	// --- 取得 ---------------------------------
 	CCamera *pCamera = CManager::GetCamera();				// カメラ
 
@@ -241,6 +235,23 @@ void CPlayer::MovePos(float fMove)
 		// 視点から注視点までの角度
 		float fAngle
 			= FindAngle(D3DXVECTOR3(posV.x, posV.z, 0.0f), D3DXVECTOR3(posR.x, posR.z, 0.0f));
+		
+		//if (fAngle >= 2.14f && 3.925f >= fAngle)
+		//{// 前
+		//	fAngle = 3.14f;
+		//}
+		//else if(fAngle >= -0.96f && 0.35f >= fAngle)// 1.57 0.785
+		//{// 後ろ
+		//	fAngle = 0.0f;
+		//}
+		//else if (fAngle >= 0.35f && 3.925f >= fAngle)
+		//{// 左
+		//	fAngle = 1.57f;
+		//}
+		//else if ((fAngle >= 4.7f || 3.925f >= fAngle) && (fAngle >= 0.7f  || -0.96f >= fAngle))
+		//{// 右
+		//	fAngle = -1.57f;
+		//}
 
 		m_Info.moveRot.y += fAngle;
 	}

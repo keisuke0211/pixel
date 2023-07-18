@@ -99,6 +99,8 @@ float CPhysics::FindAngle(D3DXVECTOR3 pos, D3DXVECTOR3 targetPos)
 
 	fAngle = atan2f(targetPos.y - pos.y, targetPos.x - pos.x);
 
+	fAngle = fAngle;
+
 	fAngle -= (D3DX_PI * 0.5f);
 	fAngle *= -1;
 

@@ -233,12 +233,24 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 			pObj->SetString("SHOT : ENTER & MOUSE_LEFT");
 		}
 
+		{// 配置テキスト
+		 // テキスト2D生成
+			CText2D *pObj = CText2D::Create();
+
+			// 位置設定
+			pObj->SetPos(D3DXVECTOR3(32.0f, 80.0f, 0.0f));
+			// サイズ設定
+			pObj->SetSize(16.0f, 16.0f);
+			// 文字列設定
+			pObj->SetString("SET_CUBE : E");
+		}
+
 		{// カメラ切り替えテキスト
 		 // テキスト2D生成
 			CText2D *pObj = CText2D::Create();
 
 			// 位置設定
-			pObj->SetPos(D3DXVECTOR3(32.0f, 96.0f, 0.0f));
+			pObj->SetPos(D3DXVECTOR3(32.0f, 128.0f, 0.0f));
 			// サイズ設定
 			pObj->SetSize(16.0f, 16.0f);
 			// 文字列設定
@@ -250,7 +262,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 			CText2D *pObj = CText2D::Create();
 
 			// 位置設定
-			pObj->SetPos(D3DXVECTOR3(32.0f, 112.0f, 0.0f));
+			pObj->SetPos(D3DXVECTOR3(32.0f, 144.0f, 0.0f));
 			// サイズ設定
 			pObj->SetSize(16.0f, 16.0f);
 			// 文字列設定
@@ -262,7 +274,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 			CText2D *pObj = CText2D::Create();
 
 			// 位置設定
-			pObj->SetPos(D3DXVECTOR3(32.0f, 144.0f, 0.0f));
+			pObj->SetPos(D3DXVECTOR3(32.0f, 176.0f, 0.0f));
 			// サイズ設定
 			pObj->SetSize(16.0f, 16.0f);
 			// 文字列設定
@@ -372,9 +384,31 @@ void CManager::Update(void)
 	m_pLight->Update();				// ライト
 	m_pRenderer->Update();			// レンダラー
 
+	// エネミーが全滅したら
+	if (CEnemy::GetEnemyAll() <= 0)
+	{
+		CPlayer::ReleaseAll(CObject::TYPE_PLAYER);
+
+		CPlayer *pPlayer = CPlayer::Create();
+		pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
+
+		// スコア設定
+		CScore::SetScore();
+
+		SetEnemy();
+	}
+
 	// リセットボタン
 	if (m_InputKeyboard->GetTrigger(DIK_R))
 	{
+		CPlayer::ReleaseAll(CObject::TYPE_PLAYER);
+
+		CPlayer *pPlayer = CPlayer::Create();
+		pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
+
+		// スコア設定
+		CScore::SetScore();
+
 		SetEnemy();
 	}
 

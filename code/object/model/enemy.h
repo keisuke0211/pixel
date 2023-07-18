@@ -66,9 +66,10 @@ public:
 	void HitLife(int nDamage);						// Hit処理
 
 	/* 取得 */
-	Info GetInfo() { return m_Info; }					// エネミー情報
-	D3DXVECTOR3 GetPos() { return m_Info.pos; }			// 位置
-	D3DXVECTOR3 GetPosOld() { return m_Info.posOld; }	// 位置(過去)
+	Info GetInfo(void) { return m_Info; }					// エネミー情報
+	D3DXVECTOR3 GetPos(void) { return m_Info.pos; }			// 位置
+	D3DXVECTOR3 GetPosOld(void) { return m_Info.posOld; }	// 位置(過去)
+	static int GetEnemyAll(void) { return m_nNumAll; }
 
 private:
 
@@ -111,6 +112,6 @@ private:
 	Info m_Info;			// 情報
 	static SetInfo *pSet;	// 配置
 
-	static int nNumSet;		// 敵の配置数
+	static int m_nNumAll;		// 敵の総数
 };
 #endif

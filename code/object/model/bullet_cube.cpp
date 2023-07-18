@@ -586,7 +586,7 @@ bool CCube::Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3D
 void CCube::Destruction(CCube *pCube)
 {
 	// オブジェクト破棄
-	pCube->m_Info.nLife = 10 + m_nNumBom;
+	pCube->m_Info.nLife = 20 + m_nNumBom;
 	pCube->m_Info.bBom = true;
 
 	m_nNumBom++;

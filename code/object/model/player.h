@@ -36,7 +36,7 @@ public:
 		D3DXVECTOR3 moveRot;	// 移動向き
 		D3DXVECTOR3 targetRot;	// 目標向き
 		D3DXVECTOR3 move;		// 移動量
-		D3DCOLOR col;			// 頂点カラー
+		D3DXCOLOR col;			// 頂点カラー
 		float fWidth;			// 幅
 		float fHeight;			// 高さ
 		float fDepth;			// 奥行き
@@ -57,6 +57,9 @@ public:
 	void Uninit(void);				// 終了
 	void Update(void);				// 更新
 	void Draw(void);				// 描画
+
+	/* 設定 */
+	void PlayerSetPos(D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
 
 	/* 取得 */
 	D3DXVECTOR3 GetPos() { return m_Info.pos; }

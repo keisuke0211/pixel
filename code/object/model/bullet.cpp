@@ -97,6 +97,7 @@ HRESULT CBullet::Init(void)
 	SetScale(m_Info.size);
 	SetColor(INIT_D3DXCOLOR);
 
+	m_Info.posOld = m_Info.pos;
 
 	// X•ûŒü‚Ì“–‚½‚è”»’è
 	if (Collsion(VECTOR_X, m_Info.pos))

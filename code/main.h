@@ -50,14 +50,24 @@ using namespace std;
 #define SCREEN_WIDTH		(1280.0f)														// ウインドウの幅
 #define SCREEN_HEIGHT		(720.0f)														// ウインドウの高さ
 #define SWITCH_TIME			(600)															// 切り替わる時間(1秒 = 60)
-#define WINDOW_MODE			(false)															// ウインドウモードの切り替え
 #define INIT_FLOAT			(0.0f)															// floatの初期値
 #define INIT_VEC			D3DXVECTOR3(0.0f,1.0f,0.0f)										// VECの初期化
 #define INIT_D3DXVECTOR2	D3DXVECTOR2(0.0f,0.0f)											// D3DXVECTOR2の初期値
 #define INIT_D3DXVECTOR3	D3DXVECTOR3(0.0f,0.0f,0.0f)										// D3DXVECTOR3の初期値
 #define INIT_POSITIONVEC4	PositionVec4(0.0f,1.0f,0.0f,1.0f)								// PositionVec4の初期値
 #define INIT_D3DXCOLOR		D3DXCOLOR(1,1,1,1)												// D3DXCOLORの初期値
-#define TXT_MAX				(256)		// 文字列の最大数(汎用) PositionVec4
+#define TXT_MAX				(256)															// 文字列の最大数(汎用)
+
+
+#ifdef _DEBUG
+
+#define WINDOW_MODE			(false)								// ウインドウモードの切り替え
+
+#else
+
+#define WINDOW_MODE			(true)								// ウインドウモードの切り替え
+
+#endif // _DEBUG
 //========================================
 // 情報構造体
 //========================================

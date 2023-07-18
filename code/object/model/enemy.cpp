@@ -15,7 +15,7 @@
 
 // 静的変数
 CEnemy::SetInfo *CEnemy::pSet = NULL;
-int CEnemy::nNumSet = 0;
+int CEnemy::m_nNumAll = 0;
 
 //========================================
 // コンストラクタ
@@ -33,6 +33,7 @@ CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 	m_Info.nLife = 0;
 	m_Info.state = STATE_NORMAL;
 	m_Info.nCntState = 0;
+	m_nNumAll++;
 }
 
 //========================================
@@ -40,7 +41,7 @@ CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 //========================================
 CEnemy::~CEnemy()
 {
-
+	m_nNumAll--;
 }
 
 //========================================
@@ -297,7 +298,7 @@ void CEnemy::Load(void)
 //========================================
 void CEnemy::SetEnemy(int nStage, int nUnit)
 {
-	for (int nCntSet = 0; nCntSet < nNumSet; nCntSet++, pSet++)
+	for (int nCntSet = 0; nCntSet < m_nNumAll; nCntSet++, pSet++)
 	{
 		if (!pSet->bSet && pSet->nStage == nStage && pSet->nUnit == nUnit)
 		{
