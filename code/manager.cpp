@@ -387,14 +387,17 @@ void CManager::Update(void)
 	// エネミーが全滅したら
 	if (CEnemy::GetEnemyAll() <= 0)
 	{
+		// プレイヤーだけ消す
 		CPlayer::ReleaseAll(CObject::TYPE_PLAYER);
 
+		// プレイヤーの配置
 		CPlayer *pPlayer = CPlayer::Create();
 		pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
 		// スコア設定
 		CScore::SetScore();
 
+		// エネミーの配置
 		SetEnemy();
 	}
 

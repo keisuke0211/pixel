@@ -209,7 +209,7 @@ void CBullet::Draw(void)
 //========================================
 // 当たり判定
 //========================================
-bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
+bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 {
 	for (int nCntPrio = 0; nCntPrio < PRIO_MAX; nCntPrio++)
 	{
@@ -218,236 +218,230 @@ bool CBullet::Collsion(VECTOR vector,D3DXVECTOR3 pos)
 
 		while (pObj != NULL)
 		{// 使用されている時、
-		 
+
 			// 次のオブジェクト
 			CObject *pObjNext = pObj->GetNext();
 
-			if (pObj != NULL)
-			{
-				TYPE type;
+			TYPE type;
 
-				// 種類を取得
-				type = pObj->GetType();
+			// 種類を取得
+			type = pObj->GetType();
 
-				if (type == TYPE_BLOCK || type == TYPE_CUBE)
-				{// 種類がブロックかキューブの場合
+			if (type == TYPE_BLOCK || type == TYPE_CUBE)
+			{// 種類がブロックかキューブの場合
 
-					// バレットの取得
-					D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
-					float fWidth = GetWidth();			// 幅
-					float fHeight = GetHeight();		// 高さ
-					float fDepth = GetDepth();			// 奥行き
+				// バレットの取得
+				D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
+				float fWidth = GetWidth();			// 幅
+				float fHeight = GetHeight();		// 高さ
+				float fDepth = GetDepth();			// 奥行き
 
-					// サイズ調整
-					fWidth *= BULLET_DIAMETER;	// 幅
-					fHeight *= BULLET_DIAMETER;	// 高さ
-					fDepth *= BULLET_DIAMETER;	// 奥行き
+				// サイズ調整
+				fWidth *= BULLET_DIAMETER;	// 幅
+				fHeight *= BULLET_DIAMETER;	// 高さ
+				fDepth *= BULLET_DIAMETER;	// 奥行き
 
 
-					// ブロックの取得
-					D3DXVECTOR3 PairPos = pObj->GetPos();	// 位置
-					float fPairWidth = pObj->GetWidth();	// 幅
-					float fPairHeight = pObj->GetHeight();	// 高さ
-					float fPairDepth = pObj->GetDepth();	// 奥行き
+				// ブロックの取得
+				D3DXVECTOR3 PairPos = pObj->GetPos();	// 位置
+				float fPairWidth = pObj->GetWidth();	// 幅
+				float fPairHeight = pObj->GetHeight();	// 高さ
+				float fPairDepth = pObj->GetDepth();	// 奥行き
 
-					// 少し小さくする
-					fPairWidth *= COLLSION_DIAMETER;	// 幅
-					fPairHeight *= COLLSION_DIAMETER;	// 高さ
-					fPairDepth *= COLLSION_DIAMETER;	// 奥行き
+				// 少し小さくする
+				fPairWidth *= COLLSION_DIAMETER;	// 幅
+				fPairHeight *= COLLSION_DIAMETER;	// 高さ
+				fPairDepth *= COLLSION_DIAMETER;	// 奥行き
 
-					switch (vector)
-					{
-					case VECTOR_X: {	/* X方向 */
+				switch (vector)
+				{
+				case VECTOR_X: {	/* X方向 */
 
-						if ((pos.z + fDepth) > (PairPos.z - fPairDepth) &&
-							(pos.z - fDepth) < (PairPos.z + fPairDepth) &&
-							(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
-							(pos.y - fHeight) < (PairPos.y + fPairHeight))
-						{// 奥辺と手前辺がブロックの幅の内側の時、
+					if ((pos.z + fDepth) > (PairPos.z - fPairDepth) &&
+						(pos.z - fDepth) < (PairPos.z + fPairDepth) &&
+						(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+						(pos.y - fHeight) < (PairPos.y + fPairHeight))
+					{// 奥辺と手前辺がブロックの幅の内側の時、
 
-							if ((pos.x + fWidth) >= (PairPos.x - fPairWidth) &&
-								(PosOld.x + fWidth) <= (PairPos.x - fPairWidth))
-							{// 左からめり込んでいる時
+						if ((pos.x + fWidth) >= (PairPos.x - fPairWidth) &&
+							(PosOld.x + fWidth) <= (PairPos.x - fPairWidth))
+						{// 左からめり込んでいる時
 
-								m_Info.bHit = true;
-								pos.x = (PairPos.x - (fPairWidth / COLLSION_DIAMETER)) - (fWidth / BULLET_DIAMETER);
-							}
-							else if ((pos.x - fWidth) <= (PairPos.x + fPairWidth) &&
-								(PosOld.x - fWidth) >= (PairPos.x + fPairWidth))
-							{// 右からめり込んでいる時
-
-								m_Info.bHit = true;
-								pos.x = (PairPos.x + (fPairWidth / COLLSION_DIAMETER)) + (fWidth / BULLET_DIAMETER);
-							}
+							m_Info.bHit = true;
+							pos.x = (PairPos.x - (fPairWidth / COLLSION_DIAMETER)) - (fWidth / BULLET_DIAMETER);
 						}
-					}
-					   break;
-					case VECTOR_Y: {	/* Y方向 */
+						else if ((pos.x - fWidth) <= (PairPos.x + fPairWidth) &&
+							(PosOld.x - fWidth) >= (PairPos.x + fPairWidth))
+						{// 右からめり込んでいる時
 
-						if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
-							(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
-							(pos.z + fDepth) > (PairPos.z - fPairDepth) &&
-							(pos.z - fDepth) < (PairPos.z + fPairDepth))
-						{// 左辺と右辺が相手の幅の内側の時、
-
-							if ((pos.y + fHeight) > (PairPos.y - fPairHeight) &&
-								(PosOld.y + fHeight) <= (PairPos.y - fPairHeight))
-							{// 下からめり込んでいる時
-
-								m_Info.bHit = true;
-								pos.y = (PairPos.y - (fPairHeight / COLLSION_DIAMETER)) - (fHeight / BULLET_DIAMETER);
-							}
-							else if ((pos.y - fHeight) < (PairPos.y + fPairHeight) &&
-								(PosOld.y - fHeight) >= (PairPos.y + fPairHeight))
-							{// 上からめり込んでいる時
-
-								m_Info.bHit = true;
-								pos.y = (PairPos.y + (fPairHeight / COLLSION_DIAMETER)) + (fHeight / BULLET_DIAMETER);
-							}
+							m_Info.bHit = true;
+							pos.x = (PairPos.x + (fPairWidth / COLLSION_DIAMETER)) + (fWidth / BULLET_DIAMETER);
 						}
-					}
-					   break;
-					case VECTOR_Z: {	/* Z方向 */
-
-						if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
-							(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
-							(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
-							(pos.y - fHeight) < (PairPos.y + fPairHeight))
-						{// 左辺と右辺が相手の幅の内側の時、
-
-							if ((pos.z + fDepth) >= (PairPos.z - fPairDepth) &&
-								(PosOld.z + fDepth) <= (PairPos.z - fPairDepth))
-							{// 前からめり込んでいる時
-
-								m_Info.bHit = true;
-								pos.z = (PairPos.z - (fPairDepth / COLLSION_DIAMETER)) - (fDepth / BULLET_DIAMETER);
-							}
-							else if ((pos.z - fDepth) <= (PairPos.z + fPairDepth) &&
-								(PosOld.z - fDepth) >= (PairPos.z + fPairDepth))
-							{// 奥からめり込んでいる時
-
-								m_Info.bHit = true;
-								pos.z = (PairPos.z + (fPairDepth / COLLSION_DIAMETER)) + (fDepth / BULLET_DIAMETER);
-							}
-						}
-					}
-					   break;
-					}
-
-					if (m_Info.bHit)
-					{
-						// キューブの生成
-						CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z));
-
-						// 弾の破棄
-						Uninit();
-
-						return TRUE;
 					}
 				}
-				else if (type == TYPE_ENEMY)
-				{// 種類が敵だった時
+							   break;
+				case VECTOR_Y: {	/* Y方向 */
 
-					// バレットの取得
-					D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
-					float fWidth = GetWidth();			// 幅
-					float fHeight = GetHeight();		// 高さ
-					float fDepth = GetDepth();			// 奥行き
+					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
+						(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
+						(pos.z + fDepth) > (PairPos.z - fPairDepth) &&
+						(pos.z - fDepth) < (PairPos.z + fPairDepth))
+					{// 左辺と右辺が相手の幅の内側の時、
 
+						if ((pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+							(PosOld.y + fHeight) <= (PairPos.y - fPairHeight))
+						{// 下からめり込んでいる時
 
-					// ブロックの取得
-					D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
-					D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
-					float fPairWidth = pObj->GetWidth();		// 幅
-					float fPairHeight = pObj->GetHeight();		// 高さ
-					float fPairDepth = pObj->GetDepth();		// 奥行き
+							m_Info.bHit = true;
+							pos.y = (PairPos.y - (fPairHeight / COLLSION_DIAMETER)) - (fHeight / BULLET_DIAMETER);
+						}
+						else if ((pos.y - fHeight) < (PairPos.y + fPairHeight) &&
+							(PosOld.y - fHeight) >= (PairPos.y + fPairHeight))
+						{// 上からめり込んでいる時
 
-					switch (vector)
-					{
-					case VECTOR_X: {	/* X方向 */
-
-						if ((pos.z + fDepth) > (PairPos.z - fPairDepth) &&
-							(pos.z - fDepth) < (PairPos.z + fPairDepth) &&
-							(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
-							(pos.y - fHeight) < (PairPos.y + fPairHeight))
-						{// 奥辺と手前辺がブロックの幅の内側の時、
-
-							if ((pos.x + fWidth) >= (PairPos.x - fPairWidth) &&
-								(PosOld.x + fWidth) <= (PairPosOld.x - fPairWidth))
-							{// 左からめり込んでいる時
-
-								m_Info.bHit = true;
-							}
-							else if ((pos.x - fWidth) <= (PairPos.x + fPairWidth) &&
-								(PosOld.x - fWidth) >= (PairPosOld.x + fPairWidth))
-							{// 右からめり込んでいる時
-
-								m_Info.bHit = true;
-							}
+							m_Info.bHit = true;
+							pos.y = (PairPos.y + (fPairHeight / COLLSION_DIAMETER)) + (fHeight / BULLET_DIAMETER);
 						}
 					}
-					   break;
-					case VECTOR_Y: {	/* Y方向 */
+				}
+							   break;
+				case VECTOR_Z: {	/* Z方向 */
 
-						if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
-							(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
-							(pos.z + fDepth) > (PairPos.z - fPairDepth) &&
-							(pos.z - fDepth) < (PairPos.z + fPairDepth))
-						{// 左辺と右辺が相手の幅の内側の時、
+					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
+						(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
+						(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+						(pos.y - fHeight) < (PairPos.y + fPairHeight))
+					{// 左辺と右辺が相手の幅の内側の時、
 
-							if ((pos.y + fHeight) > (PairPos.y - fPairHeight) &&
-								(PosOld.y + fHeight) <= (PairPosOld.y - fPairHeight))
-							{// 下からめり込んでいる時
+						if ((pos.z + fDepth) >= (PairPos.z - fPairDepth) &&
+							(PosOld.z + fDepth) <= (PairPos.z - fPairDepth))
+						{// 前からめり込んでいる時
 
-								m_Info.bHit = true;
-							}
-							else if ((pos.y - fHeight) < (PairPos.y + fPairHeight) &&
-								(PosOld.y - fHeight) >= (PairPosOld.y + fPairHeight))
-							{// 上からめり込んでいる時
+							m_Info.bHit = true;
+							pos.z = (PairPos.z - (fPairDepth / COLLSION_DIAMETER)) - (fDepth / BULLET_DIAMETER);
+						}
+						else if ((pos.z - fDepth) <= (PairPos.z + fPairDepth) &&
+							(PosOld.z - fDepth) >= (PairPos.z + fPairDepth))
+						{// 奥からめり込んでいる時
 
-								m_Info.bHit = true;
-							}
+							m_Info.bHit = true;
+							pos.z = (PairPos.z + (fPairDepth / COLLSION_DIAMETER)) + (fDepth / BULLET_DIAMETER);
 						}
 					}
-					   break;
-					case VECTOR_Z: {	/* Z方向 */
+				}
+				   break;
+				}
 
-						if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
-							(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
-							(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
-							(pos.y - fHeight) < (PairPos.y + fPairHeight))
-						{// 左辺と右辺が相手の幅の内側の時、
+				if (m_Info.bHit)
+				{
+					// キューブの生成
+					CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z));
 
-							if ((pos.z + fDepth) >= (PairPos.z - fPairDepth) &&
-								(PosOld.z + fDepth) <= (PairPosOld.z - fPairDepth))
-							{// 前からめり込んでいる時
+					// 弾の破棄
+					Uninit();
 
-								m_Info.bHit = true;
-							}
-							else if ((pos.z - fDepth) <= (PairPos.z + fPairDepth) &&
-								(PosOld.z - fDepth) >= (PairPosOld.z + fPairDepth))
-							{// 奥からめり込んでいる時
+					return TRUE;
+				}
+			}
+			else if (type == TYPE_ENEMY)
+			{// 種類が敵だった時
 
-								m_Info.bHit = true;
-							}
+				// バレットの取得
+				D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
+				float fWidth = GetWidth();			// 幅
+				float fHeight = GetHeight();		// 高さ
+				float fDepth = GetDepth();			// 奥行き
+
+
+				// ブロックの取得
+				D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
+				D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
+				float fPairWidth = pObj->GetWidth();		// 幅
+				float fPairHeight = pObj->GetHeight();		// 高さ
+				float fPairDepth = pObj->GetDepth();		// 奥行き
+
+				switch (vector)
+				{
+				case VECTOR_X: {	/* X方向 */
+
+					if ((pos.z + fDepth) > (PairPos.z - fPairDepth) &&
+						(pos.z - fDepth) < (PairPos.z + fPairDepth) &&
+						(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+						(pos.y - fHeight) < (PairPos.y + fPairHeight))
+					{// 奥辺と手前辺がブロックの幅の内側の時、
+
+						if ((pos.x + fWidth) >= (PairPos.x - fPairWidth) &&
+							(PosOld.x + fWidth) <= (PairPosOld.x - fPairWidth))
+						{// 左からめり込んでいる時
+
+							m_Info.bHit = true;
+						}
+						else if ((pos.x - fWidth) <= (PairPos.x + fPairWidth) &&
+							(PosOld.x - fWidth) >= (PairPosOld.x + fPairWidth))
+						{// 右からめり込んでいる時
+
+							m_Info.bHit = true;
 						}
 					}
-					   break;
+				}
+							   break;
+				case VECTOR_Y: {	/* Y方向 */
+
+					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
+						(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
+						(pos.z + fDepth) > (PairPos.z - fPairDepth) &&
+						(pos.z - fDepth) < (PairPos.z + fPairDepth))
+					{// 左辺と右辺が相手の幅の内側の時、
+
+						if ((pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+							(PosOld.y + fHeight) <= (PairPosOld.y - fPairHeight))
+						{// 下からめり込んでいる時
+
+							m_Info.bHit = true;
+						}
+						else if ((pos.y - fHeight) < (PairPos.y + fPairHeight) &&
+							(PosOld.y - fHeight) >= (PairPosOld.y + fPairHeight))
+						{// 上からめり込んでいる時
+
+							m_Info.bHit = true;
+						}
 					}
+				}
+				   break;
+				case VECTOR_Z: {	/* Z方向 */
 
-					if (m_Info.bHit)
-					{
-						// ダイナミックキャストする
-						CEnemy *pEnemy = dynamic_cast<CEnemy*>(pObj);
+					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
+						(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
+						(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+						(pos.y - fHeight) < (PairPos.y + fPairHeight))
+					{// 左辺と右辺が相手の幅の内側の時、
 
-						// HIT処理
-						pEnemy->HitLife(BULLET_DAMAGE);
+						if ((pos.z + fDepth) >= (PairPos.z - fPairDepth) &&
+							(PosOld.z + fDepth) <= (PairPosOld.z - fPairDepth))
+						{// 前からめり込んでいる時
 
-						// 弾の破棄
-						Uninit();
+							m_Info.bHit = true;
+						}
+						else if ((pos.z - fDepth) <= (PairPos.z + fPairDepth) &&
+							(PosOld.z - fDepth) >= (PairPosOld.z + fPairDepth))
+						{// 奥からめり込んでいる時
 
-						return TRUE;
+							m_Info.bHit = true;
+						}
 					}
+				}
+				   break;
+				}
+
+				if (m_Info.bHit)
+				{
+					//// キューブの生成
+					//CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z));
+
+					// 弾の破棄
+					Uninit();
+
+					return TRUE;
 				}
 			}
 

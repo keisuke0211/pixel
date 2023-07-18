@@ -89,6 +89,7 @@ private:
 	/* ˆÊ’u•â³			*/bool Correction(VECTOR vector, D3DXVECTOR3 pos);
 	/* ÚG”»’è			*/bool Contact(int mode,VECTOR vector, D3DXVECTOR3 pos);
 	/* “–‚½‚è”»’è		*/bool Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3	PairSize);
+	/* “G‚Æ‚Ì“–‚½‚è”»’è */void EnemyCollsion(D3DXVECTOR3 pos);
 	/* “–‚½‚è”»’è(•ûŒü)	*/bool Collsion(VECTOR vector,CObject *pObj,CObject *pPairObj);
 	/* ”j‰óˆ—			*/void Destruction(CCube *pCube);
 

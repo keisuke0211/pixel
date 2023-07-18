@@ -8,6 +8,7 @@
 #include "bullet_cube.h"
 #include "particleX.h"
 #include "model.h"
+#include "enemy.h"
 #include "../../sound.h"
 #include "../../csv_file.h"
 
@@ -22,6 +23,8 @@ bool CCube::bLeadSet = false;
 #define RADIUS_TIME			(20)	// 半径・推移時間
 #define SIZE_DIAMETER		(2.0f)	// サイズの倍率
 #define COLLSION_DIAMETER	(1.0f)	// 判定の倍率
+#define BOM_COLLSION		(2.0f)	// 爆発の判定
+#define BOM_DAMAGE			(1)		// 爆発ダメージ
 
 //========================================
 // コンストラクタ
@@ -252,6 +255,9 @@ void CCube::Update(void)
 			Contact(0, VECTOR_X, m_Info.pos);
 			Contact(0, VECTOR_Y, m_Info.pos);
 			Contact(0, VECTOR_Z, m_Info.pos);
+
+			// 敵との当たり判定
+			EnemyCollsion(m_Info.pos);
 
 			// オブジェクト破棄
 			Uninit();
@@ -578,6 +584,60 @@ bool CCube::Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3D
 	}
 
 	return FALSE;
+}
+
+//========================================
+// 敵との当たり判定
+//========================================
+void CCube::EnemyCollsion(D3DXVECTOR3 pos)
+{
+	// 先頭オブジェクトを取得
+	CObject *pObj = CObject::GetTop(PRIO_OBJECT);
+
+	while (pObj != NULL)
+	{// 使用されている時、
+
+	 // 次のオブジェクト
+		CObject *pObjNext = pObj->GetNext();
+
+		TYPE type;
+
+		// 種類を取得
+		type = pObj->GetType();
+
+		if (type == TYPE_ENEMY)
+		{// 種類が敵だった時
+
+			// キューブの取得
+			float fWidth = GetWidth();			// 幅
+			float fHeight = GetHeight();		// 高さ
+			float fDepth = GetDepth();			// 奥行き
+
+			// サイズ調整
+			fWidth *= BOM_COLLSION;	// 幅
+			fHeight *= BOM_COLLSION;// 高さ
+			fDepth *= BOM_COLLSION;	// 奥行き
+
+			// エネミーの取得
+			D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
+			D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
+			float fPairWidth = pObj->GetWidth();		// 幅
+			float fPairHeight = pObj->GetHeight();		// 高さ
+			float fPairDepth = pObj->GetDepth();		// 奥行き
+
+			// 当たり判定
+			if (Collsion(pos, PairPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+			{// 当たったら
+
+				// ダイナミックキャストする
+				CEnemy *pEnemy = dynamic_cast<CEnemy*>(pObj);
+
+				// HIT処理
+				pEnemy->HitLife(BOM_DAMAGE);
+			}
+		}
+		pObj = pObjNext;	// 次のオブジェクトを代入
+	}
 }
 
 //========================================

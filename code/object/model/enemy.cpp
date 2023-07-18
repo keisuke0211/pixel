@@ -76,7 +76,7 @@ HRESULT CEnemy::Init(void)
 	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, -0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 3.14f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
-	m_Info.nLife = 3;
+	m_Info.nLife = 2;
 	m_Info.nType = 0;
 
 	// ê∂ê¨
