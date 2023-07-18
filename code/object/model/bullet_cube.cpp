@@ -12,7 +12,8 @@
 #include "../../csv_file.h"
 
 // 静的変数
-int CCube::m_nNumAll = 0;
+int CCube::m_nNumAll = -1;
+bool CCube::bLeadSet = false;
 
 //========================================
 // マクロ定義
@@ -26,6 +27,8 @@ int CCube::m_nNumAll = 0;
 //========================================
 CCube::CCube(int nPriority) : CObjectX(nPriority)
 {
+	m_nNumAll++;	// 総数を加算
+
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;		// 位置
 	m_Info.posOld = INIT_D3DXVECTOR3;	// 位置(過去)
@@ -46,8 +49,6 @@ CCube::CCube(int nPriority) : CObjectX(nPriority)
 	m_Info.fRadiusRate = 0.0f;			// 半径の割合
 	m_Info.bSet = false;				// 配置フラグ
 	m_Info.nID = m_nNumAll;				// 自分自身のID
-
-	m_nNumAll++;	// 総数を加算
 }
 
 //========================================
@@ -92,7 +93,6 @@ CCube *CCube::Create(int nType, D3DXVECTOR3 pos)
 	/* Y軸	*/if (pCube->Correction(VECTOR_Y, pCube->m_Info.pos)) { return pCube; }
 	/* Z軸	*/if (pCube->Correction(VECTOR_Z, pCube->m_Info.pos)) { return pCube; }
 
-	
 	return pCube;
 }
 
@@ -118,6 +118,13 @@ HRESULT CCube::Init(void)
 	//SetRot(m_Info.rot);
 	SetScale(m_Info.size);
 	SetColor(m_Info.col);
+
+	// １つ目のキューブなら
+	if (m_Info.nID == 0)
+	{
+		// 先頭フラグを真にする
+		bLeadSet = true;
+	}
 
 	return S_OK;
 }
@@ -222,6 +229,13 @@ void CCube::Update(void)
 		// 寿命
 		if (--m_Info.nLife <= 0)
 		{
+			// １つ目のキューブなら
+			if (m_Info.nID == 0)
+			{
+				// 先頭フラグを偽にする
+				bLeadSet = false;
+			}
+
 			// パーティクル生成
 			CParticleX *pObj = CParticleX::Create();
 			pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 20, m_Info.pos.z));

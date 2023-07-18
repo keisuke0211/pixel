@@ -66,11 +66,12 @@ public:
 	/* 生成		*/static CCube *Create(int nType, D3DXVECTOR3 pos);
 
 	// -- 設定 -------------------------------
-	/* 位置		*/void CubeSetPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
-	/* 向き		*/void CubeSetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
-	/* 色		*/void CubeSetColor(const D3DXCOLOR col) { m_Info.col = col; }
-	/* サイズ	*/void CubeSetSize(const D3DXVECTOR3 size) { m_Info.size = size; }
-	/* 種類		*/void CubeSetType(const int type) { m_Info.nShape = type; }
+	/* 位置			*/void CubeSetPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
+	/* 向き			*/void CubeSetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
+	/* 色			*/void CubeSetColor(const D3DXCOLOR col) { m_Info.col = col; }
+	/* サイズ		*/void CubeSetSize(const D3DXVECTOR3 size) { m_Info.size = size; }
+	/* 種類			*/void CubeSetType(const int type) { m_Info.nShape = type; }
+	/* 先頭フラグ	*/void CubeLeadSet(const bool bSet) { bLeadSet = bSet; }
 
 	// -- 取得 -------------------------------
 	/* 位置			*/D3DXVECTOR3 CubeGetPos(void) { return m_Info.pos; }
@@ -78,6 +79,7 @@ public:
 	/* 色			*/D3DXCOLOR CubeGetColor(void) { return m_Info.col; }
 	/* サイズ		*/D3DXVECTOR3 CubeGetSize(void) { return m_Info.size; }
 	/* 配置フラグ	*/bool CubeGetSet(void) { return m_Info.bSet; }
+	/* 先頭フラグ	*/static bool GetLeadSet(void) { return bLeadSet; }
 	/* ID			*/int GetID(void) { return m_Info.nID; }
 
 private:
@@ -91,6 +93,7 @@ private:
 
 	// ***** 変数 *****
 	static int m_nNumAll;	// キューブの総数
+	static bool bLeadSet;	// 先頭配置フラグ
 	Info m_Info;			// プレイヤー情報
 
 };

@@ -162,20 +162,10 @@ void CPlayer::KeyInput(void)
 	 // 目標向きにスティックの角度を代入
 		m_Info.moveRot.y = -pInputJoypad->GetStick().aAngle[CInputJoypad::STICK_TYPE_LEFT] + D3DX_PI;
 	}
-	else if (pInputKeyboard->GetPress(DIK_A))
-	{
-		if (pInputKeyboard->GetPress(DIK_W)) { MoveKeyboard(DIRECTION_LEFT_BACK); }			// 左奥移動
-		else if (pInputKeyboard->GetPress(DIK_S)) { MoveKeyboard(DIRECTION_LEFT_FRONT); }	// 左手前移動
-		else { MoveKeyboard(DIRECTION_LEFT); }		// 左移動
-	}
-	else if (pInputKeyboard->GetPress(DIK_D))
-	{
-		if (pInputKeyboard->GetPress(DIK_W)) { MoveKeyboard(DIRECTION_RIGHT_BACK); }		// 右奥移動
-		else if (pInputKeyboard->GetPress(DIK_S)) { MoveKeyboard(DIRECTION_RIGHT_FRONT); }	// 右手前移動
-		else { MoveKeyboard(DIRECTION_RIGHT); }		// 右移動
-	}
-	else if (pInputKeyboard->GetPress(DIK_W)) { MoveKeyboard(DIRECTION_BACK); }				// 奥移動
-	else if (pInputKeyboard->GetPress(DIK_S)) { MoveKeyboard(DIRECTION_FRONT); }			// 手前移動
+	else if (pInputKeyboard->GetPress(DIK_A)) { MoveKeyboard(DIRECTION_LEFT); }		// 左移動
+	else if (pInputKeyboard->GetPress(DIK_D)) { MoveKeyboard(DIRECTION_RIGHT); }	// 右移動
+	else if (pInputKeyboard->GetPress(DIK_W)) { MoveKeyboard(DIRECTION_BACK); }		// 奥移動
+	else if (pInputKeyboard->GetPress(DIK_S)) { MoveKeyboard(DIRECTION_FRONT); }	// 手前移動
 	else
 	{
 		m_Info.bMove = false;
@@ -559,7 +549,7 @@ void CPlayer::BulletStop(void)
 		if (type == TYPE_BULLET)
 		{// 種類がバレットの時、
 
-			 // ダイナミックキャストする
+			// ダイナミックキャストする
 			CBullet *pBullet = dynamic_cast<CBullet*>(pObj);
 
 
@@ -567,7 +557,12 @@ void CPlayer::BulletStop(void)
 			{
 				// ID取得
 				int nID = pBullet->GetID();
-				if (nID == 0)
+				bool nCubeSet = false;
+
+				// 先頭フラグの取得
+				nCubeSet = CCube::GetLeadSet();
+
+				if (nID == 0 && !nCubeSet)
 				{
 					// キューブの生成
 					CCube::Create(pBullet->GetType(), pBullet->GetPos());

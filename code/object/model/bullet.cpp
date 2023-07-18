@@ -43,6 +43,7 @@ CBullet::CBullet(int nPriority) : CObjectX(nPriority)
 	m_Info.fHeight = 0.0f;
 	m_Info.fWidth = 0.0f;
 	m_Info.nID = m_nNumAll;
+
 	m_nNumAll++;	// ëçêîâ¡éZ
 }
 //========================================
