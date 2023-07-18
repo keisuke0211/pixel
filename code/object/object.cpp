@@ -19,9 +19,10 @@ CObject* CObject::m_apCir[] = {};
 //========================================
 CObject::CObject(int nPriority)
 {
-	m_pNext = NULL;
-	m_pPrev = NULL;
-	m_type = TYPE_NONE;
+	m_pNext = NULL;		// 次のオブジェクト
+	m_pPrev = NULL;		// 前のオブジェクト
+	m_bDeath = false;	// 死亡フラグ
+	m_type = TYPE_NONE;	// 種類
 
 	// 先頭オブジェクトがNULLか
 	if (m_apTop[nPriority] == NULL)
@@ -47,9 +48,150 @@ CObject::~CObject()
 }
 
 //========================================
-// 破棄
+// 全体の破棄
+//========================================
+void CObject::ReleaseAll(void)
+{
+	for (int nPrio = 0; nPrio < PRIO_MAX; nPrio++)
+	{
+		// 先頭オブジェクト
+		CObject *pObj = m_apTop[nPrio];
+
+		// オブジェクト分の回す
+		while (pObj != NULL)
+		{
+
+			// 次のオブジェクトがあるか
+			if (pObj->m_pNext == NULL)
+			{
+				pObj->Uninit();		// 終了処理
+				pObj->Release();	// 死亡フラグを真にする
+				pObj = NULL;
+				break;
+			}
+			else
+			{
+				// 次のオブジェクト
+				CObject *pObjNext = pObj->m_pNext;
+
+				pObj->Uninit();		// 終了処理
+				pObj->Release();	// 死亡フラグを真にする
+				pObj = NULL;
+
+				// 一時的の処理
+				// ※ 原因　テキストcppの オブジェクト配列　一個目のポインタで全て破棄して
+				//			２個目から何もないまま処理を通ってエラーが出る
+				if (nPrio == PRIO_UI)
+				{
+					break;
+				}
+
+				pObj = pObjNext;	// 次のオブジェクトポインタを代入
+			}
+		}
+
+		// ポインタを先頭まで戻す
+		pObj = m_apTop[nPrio];
+
+		while (pObj != NULL)
+		{
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->m_pNext;
+
+			// 死亡フラグが真か
+			if (pObj->m_bDeath)
+			{
+				// 破棄
+				pObj->ReleaseList();
+			}
+
+			pObj = pObjNext;	// 次のオブジェクトポインタを代入
+		}
+	}
+}
+
+//========================================
+// 全て破棄(種類毎)
+//========================================
+void CObject::ReleaseAll(TYPE type)
+{
+	for (int nPrio = 0; nPrio < PRIO_MAX; nPrio++)
+	{
+		// 先頭オブジェクト
+		CObject *pObj = m_apTop[nPrio];
+
+		// オブジェクト分の回す
+		while (pObj != NULL)
+		{
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->m_pNext;
+
+			// 指定した種類かどうか
+			if (pObj->GetType() == type)
+			{
+				// 次のオブジェクトがあるか
+				if (pObj->m_pNext == NULL)
+				{
+					pObj->Uninit();		// 終了処理
+					pObj->Release();	// 死亡フラグを真にする
+					pObj = NULL;
+					break;
+				}
+				else
+				{
+					// 次のオブジェクト
+					CObject *pObjNext = pObj->m_pNext;
+
+					pObj->Uninit();		// 終了処理
+					pObj->Release();	// 死亡フラグを真にする
+					pObj = NULL;
+
+					// 一時的の処理
+					// ※ 原因　テキストcppの オブジェクト配列　一個目のポインタで全て破棄して
+					//			２個目から何もないまま処理を通ってエラーが出る
+					if (nPrio == PRIO_UI)
+					{
+						break;
+					}
+
+					pObj = pObjNext;	// 次のオブジェクトポインタを代入
+				}
+			}
+			pObj = pObjNext;	// 次のオブジェクトポインタを代入
+		}
+
+		// ポインタを先頭まで戻す
+		pObj = m_apTop[nPrio];
+
+		while (pObj != NULL)
+		{
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->m_pNext;
+
+			// 死亡フラグが真か
+			if (pObj->m_bDeath)
+			{
+				// 破棄
+				pObj->ReleaseList();
+			}
+
+			pObj = pObjNext;	// 次のオブジェクトポインタを代入
+		}
+	}
+}
+
+//========================================
+// 破棄リスト
 //========================================
 void CObject::Release(void)
+{
+	// 死亡フラグを真にする
+	m_bDeath = true;
+}
+//========================================
+// 破棄
+//========================================
+void CObject::ReleaseList(void)
 {
 	// 自分自身
 	CObject *pObj = this;
@@ -84,84 +226,6 @@ void CObject::Release(void)
 }
 
 //========================================
-// 全体の破棄
-//========================================
-void CObject::ReleaseAll(void)
-{
-	for (int nPrio = 0; nPrio < PRIO_MAX; nPrio++)
-	{
-		// 先頭オブジェクト
-		CObject *pObj = m_apTop[nPrio];
-
-		// オブジェクト分の回す
-		while (pObj != NULL)
-		{
-			// 次のオブジェクトがあるか
-			if (pObj->m_pNext == NULL)
-			{
-				// 終了処理
-				pObj->Uninit();
-				break;
-			}
-			else
-			{
-				// 次のオブジェクト
-				CObject *pObjNext = pObj->m_pNext;
-
-				// 終了処理
-				pObj->Uninit();
-
-				// 一時的の処理
-				// ※ 原因　テキストcppの オブジェクト配列　一個目のポインタで全て破棄して
-				//			２個目から何もないまま処理を通ってエラーが出る
-				if (nPrio == PRIO_UI)
-				{
-					break;
-				}
-
-				pObj = pObjNext;	// 次のオブジェクトポインタを代入
-			}
-		}
-	}
-}
-
-//========================================
-// 全て破棄(種類毎)
-//========================================
-void CObject::ReleaseAll(TYPE type)
-{
-	for (int nPrio = 0; nPrio < PRIO_MAX; nPrio++)
-	{
-		// 先頭オブジェクト
-		CObject *pObj = m_apTop[nPrio];
-
-		// オブジェクト分の回す
-		while (pObj != NULL)
-		{
-			// 次のオブジェクト
-			CObject *pObjNext = pObj->m_pNext;
-
-			// 指定した種類かどうか
-			if (pObj->GetType() == type)
-			{
-				// 次のオブジェクトがあるか
-				if (pObj->m_pNext == NULL)
-				{
-					// 終了処理
-					pObj->Uninit();
-				}
-				else
-				{
-					// 終了処理
-					pObj->Uninit();
-				}
-			}
-			pObj = pObjNext;	// 次のオブジェクトポインタを代入
-		}
-	}
-}
-
-//========================================
 // 全体の更新
 //========================================
 void CObject::UpdateAll(void)
@@ -177,8 +241,30 @@ void CObject::UpdateAll(void)
 			// 次のオブジェクト
 			CObject *pObjNext = pObj->m_pNext;
 
-			// 更新処理
-			pObj->Update();
+			if (!pObj->m_bDeath)
+			{
+				// 更新処理
+				pObj->Update();
+			}
+
+			// 次のオブジェクトを代入
+			pObj = pObjNext;
+		}
+
+		// ポインタを先頭まで戻す
+		pObj = m_apTop[nPrio];
+
+		// オブジェクト分の回す
+		while (pObj != NULL)
+		{
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->m_pNext;
+
+			if (pObj->m_bDeath)
+			{
+				// 破棄
+				pObj->ReleaseList();
+			}
 
 			// 次のオブジェクトを代入
 			pObj = pObjNext;
@@ -207,8 +293,12 @@ void CObject::DrawAll(void)
 		// オブジェクト分の回す
 		while (pObj != NULL)
 		{
-			// 描画処理
-			pObj->Draw();
+			// 死亡フラグが偽か
+			if (!pObj->m_bDeath)
+			{
+				// 描画処理
+				pObj->Draw();
+			}
 
 			// 次のオブジェクトがあるかどうか、
 			if (pObj->m_pNext == NULL)

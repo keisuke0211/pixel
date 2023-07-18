@@ -101,12 +101,17 @@ protected:
 	// ***** 変数 *****
 	CObject *m_pPrev;					// 前のオブジェクトへのポインタ
 	CObject *m_pNext;					// 次のオブジェクトへのポインタ
+
 private:
+	// ***** 関数 *****
+	/* 解放処理	*/void ReleaseList(void);
+
 	// ***** 変数 *****
 	static CObject *m_apTop[PRIO_MAX];	// 先頭のオブジェクトへのポインタ
 	static CObject *m_apCir[PRIO_MAX];	// 最後尾のオブジェクトへのポインタ
 	int m_nPriority;					// 優先順位の位置
 	TYPE m_type;						// 自分自身の種類
+	bool m_bDeath;						// 死亡フラグ
 
 };
 #endif

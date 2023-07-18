@@ -6,8 +6,8 @@
 // *** effectX.cpp ***
 //=======================================
 #include "effectX.h"
-#include "../../sound.h"
-
+#include "../../manager.h"
+#include "../../renderer.h"
 
 //========================================
 // コンストラクタ
@@ -133,5 +133,18 @@ void CEffectX::Update(void)
 //========================================
 void CEffectX::Draw(void)
 {
+	// デバイスの所得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	//アルファブレンディングを加算合成に設定
+	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+
 	CObjectX::Draw();
+
+	//αブレンディングを元に戻す
+	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 }

@@ -94,7 +94,7 @@ void CParticleX::Update(void)
 		float fRot = (float)(rand() % ((int)(100 * 2 * D3DX_PI) + 1) - (int)(D3DX_PI * 100)) / (float)100;
 
 		float fSpeedX = (float)(rand() % (2 * (int)m_Info.speed.x)) / (int)m_Info.speed.x + 1;
-		float fSpeedY = m_Info.speed.y;
+		float fSpeedY = (float)(rand() % (2 * (int)m_Info.speed.y)) / (int)m_Info.speed.y + 1;
 		float fSpeedZ = (float)(rand() % (2 * (int)m_Info.speed.z)) / (int)m_Info.speed.z + 1;
 
 		m_Info.move.x = sinf(fRot) * fSpeedX;

@@ -51,6 +51,7 @@ public:
 		int nCntRadius;			// 半径・推移時間
 		float fRadiusRate;		// 半径の割合
 		bool bSet;				// 配置フラグ
+		bool bBom;				// 爆発フラグ
 		int nID;				// 自身のID
 	} Info;
 
@@ -86,13 +87,15 @@ private:
 
 	// ***** 関数 ***** correction
 	/* 位置補正			*/bool Correction(VECTOR vector, D3DXVECTOR3 pos);
-	/* 接触判定			*/bool Contact(VECTOR vector, D3DXVECTOR3 pos);
+	/* 接触判定			*/bool Contact(int mode,VECTOR vector, D3DXVECTOR3 pos);
 	/* 当たり判定		*/bool Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3	PairSize);
 	/* 当たり判定(方向)	*/bool Collsion(VECTOR vector,CObject *pObj,CObject *pPairObj);
+	/* 破壊処理			*/void Destruction(CCube *pCube);
 
 
 	// ***** 変数 *****
 	static int m_nNumAll;	// キューブの総数
+	static int m_nNumBom;	// 連爆の総数
 	static bool bLeadSet;	// 先頭配置フラグ
 	Info m_Info;			// プレイヤー情報
 
