@@ -147,17 +147,13 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	
 
 	// ブロックの生成
-	SetBlock();
+	LoodBlock();
 
 	CPlayer *pPlayer = CPlayer::Create();
 	pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
 	// 敵の生成
-
-	for (int nCnt = 0; nCnt < 10; nCnt++)
-	{
-		CEnemy *pObj = CEnemy::Create(D3DXVECTOR3(330.0f + (nCnt * -75), -20.0f, -150.0f));
-	}
+	LoodEnemy();
 
 	/*CEffectX *pObj = CEffectX::Create();
 	pObj->Eff_SetPos(D3DXVECTOR3(0.0f, 20.0f, 0.0f));
@@ -433,16 +429,14 @@ void CManager::SetEnemy(void)
 	// 敵を全て破棄
 	CObject::ReleaseAll(CObject::TYPE_ENEMY);
 
-	for (int nCnt = 0; nCnt < 10; nCnt++)
-	{
-		CEnemy::Create(D3DXVECTOR3(330.0f + (nCnt * -75), -20.0f, -150.0f));
-	}
+	// 敵の生成
+	LoodEnemy();
 }
 
 //========================================
-// セットブロック
+// ブロックの読み込み
 //========================================
-void CManager::SetBlock(void)
+void CManager::LoodBlock(void)
 {
 	CSVFILE *pFile = new CSVFILE;
 
@@ -483,6 +477,58 @@ void CManager::SetBlock(void)
 
 		// 配置
 		CBlock *pObj = CBlock::Create(nType, pos);
+	}
+
+	// メモリ開放
+	delete pFile;
+	pFile = NULL;
+}
+
+//========================================
+// エネミーの読み込み
+//========================================
+void CManager::LoodEnemy(void)
+{
+	CSVFILE *pFile = new CSVFILE;
+
+	// 読み込み
+	pFile->FileLood("data\\GAMEDATA\\ENEMY\\ENEMY_DATA.csv", true, true, ',');
+
+	// 行数の取得
+	int nRowMax = pFile->GetRowSize();
+
+	// 各データに代入
+	for (int nRow = 0; nRow < nRowMax; nRow++)
+	{
+		// 配置情報の生成
+		int nType,nMove;	// 種類
+		D3DXVECTOR3 pos;	// 位置
+
+		// 列数の取得
+		int nLineMax = pFile->GetLineSize(nRow);
+
+		for (int nLine = 0; nLine < nLineMax; nLine++)
+		{
+			string sData = pFile->GetData(nRow, nLine);
+
+			switch (nLine)
+			{
+			case 0:	pFile->ToValue(nType, sData); break;	// 種類
+			case 1:	pFile->ToValue(nMove, sData); break;	// 移動種類
+			case 2:	pFile->ToValue(pos.x, sData); break;	// 位置 X
+			case 3:	pFile->ToValue(pos.y, sData); break;	// 位置 Y
+			case 4:	pFile->ToValue(pos.z, sData); break;	// 位置 Z
+			}
+		}
+
+		// 最大数に達したら返す
+		if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
+		{
+			return;
+		}
+
+		// 配置
+		CEnemy *pObj = CEnemy::Create(nType, nMove,pos);
 	}
 
 	// メモリ開放

@@ -23,7 +23,7 @@ bool CCube::bLeadSet = false;
 #define RADIUS_TIME			(20)	// 半径・推移時間
 #define SIZE_DIAMETER		(2.0f)	// サイズの倍率
 #define COLLSION_DIAMETER	(1.0f)	// 判定の倍率
-#define BOM_COLLSION		(2.0f)	// 爆発の判定
+#define BOM_COLLSION		(3.0f)	// 爆発の判定
 #define BOM_DAMAGE			(1)		// 爆発ダメージ
 
 //========================================

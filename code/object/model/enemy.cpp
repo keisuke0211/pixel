@@ -11,7 +11,9 @@
 #include "../../sound.h"
 #include "../2D/score.h"
 #include "particleX.h"
-
+#include "block.h"
+#include "bullet_cube.h"
+#include "../../input.h"
 
 // 静的変数
 CEnemy::SetInfo *CEnemy::pSet = NULL;
@@ -33,6 +35,7 @@ CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 	m_Info.nLife = 0;
 	m_Info.state = STATE_NORMAL;
 	m_Info.nCntState = 0;
+	m_Info.nCntTime = 0;
 	m_nNumAll++;
 }
 
@@ -47,19 +50,26 @@ CEnemy::~CEnemy()
 //========================================
 // 生成
 //========================================
-CEnemy *CEnemy::Create(D3DXVECTOR3 pos)
+CEnemy *CEnemy::Create(int nType, int nMove, D3DXVECTOR3 pos)
 {
 	CEnemy *pEnemy = new CEnemy;
 
-	pEnemy->SetModel(MODEL_ENEMY_00);
+	pEnemy->SetModel(MODEL_ENEMY_00 + nType);
 
 	// 初期化処理
 	pEnemy->Init();
 
 	pEnemy->m_Info.pos = pos;
+	pEnemy->m_Info.nMove = nMove;
 	pEnemy->SetPos(pEnemy->m_Info.pos);
 	pEnemy->SetRot(pEnemy->m_Info.rot);
 	pEnemy->SetColor(pEnemy->m_Info.col);
+
+	if (pEnemy->m_Info.nMove == 1)
+	{
+		pEnemy->m_Info.move = D3DXVECTOR3(0.0f, 0.0f, 3.0f);
+	}
+
 	return pEnemy;
 }
 
@@ -73,7 +83,7 @@ HRESULT CEnemy::Init(void)
 	// 種類の設定
 	SetType(TYPE_ENEMY);
 
-	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, -0.0f);
+	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 3.14f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.nLife = 2;
@@ -111,8 +121,43 @@ void CEnemy::Update(void)
 	// 状態推移
 	StateShift();
 
+	// 移動量の代入
+	m_Info.pos.x += m_Info.move.x;
+
+	 // 当たり判定
+	if (Collsion(VECTOR_X, m_Info.pos))
+	{
+
+	}
+
+	// 移動量の代入
+	m_Info.pos.z += m_Info.move.z;
+
+	if (Collsion(VECTOR_Z, m_Info.pos))
+	{
+		
+	}
+
+	// 仮の移動処理
+	if (++m_Info.nCntTime >= 240 && m_Info.nMove == 1)
+	{
+		m_Info.move.z *= -1;
+		m_Info.nCntTime = 0;
+		
+		if (m_Info.rot.y == 0.0f)
+		{
+			m_Info.rot.y = 3.14f;
+		}
+		else if (m_Info.rot.y = 3.14f)
+		{
+			m_Info.rot.y = 0.0f;
+		}
+		SetRot(m_Info.rot);
+	}
+
+	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+
 	SetPos(m_Info.pos);
-	SetRot(m_Info.rot);
 	SetColor(m_Info.col);
 
 	CObjectX::Update();
@@ -124,6 +169,236 @@ void CEnemy::Update(void)
 void CEnemy::Draw(void)
 {
 	CObjectX::Draw();
+}
+
+//========================================
+// 当たり判定
+//========================================
+bool CEnemy::Collsion(VECTOR vector, D3DXVECTOR3 pos)
+{
+	bool bHit = false;
+
+	for (int nCntPrio = 0; nCntPrio < PRIO_MAX; nCntPrio++)
+	{
+		// 先頭オブジェクトを取得
+		CObject *pObj = CObject::GetTop(nCntPrio);
+
+		while (pObj != NULL)
+		{// 使用されている時、
+
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->GetNext();
+
+			// 種類を取得
+			TYPE type = pObj->GetType();
+
+			// エネミーの各パーツの取得
+			D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
+			D3DXVECTOR3 RotOld = GetRotOld();	// 向き(過去)
+			float fWidth = GetWidth();			// 幅
+			float fHeight = GetHeight();		// 高さ
+			float fDepth = GetDepth();			// 奥行き
+
+			// 各種類の当たり判定
+			if (type == TYPE_BLOCK)
+			{// ブロックだったら
+
+				// ブロックの取得
+				D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
+				D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
+				float fPairWidth = pObj->GetWidth();		// 幅
+				float fPairHeight = pObj->GetHeight();		// 高さ
+				float fPairDepth = pObj->GetDepth();		// 奥行き
+
+				switch (vector)
+				{
+				case VECTOR_X: {	/* X方向 */
+
+					if ((pos.z + fDepth) > (PairPos.z - fPairDepth) &&
+						(pos.z - fDepth) < (PairPos.z + fPairDepth) &&
+						(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+						(pos.y - fHeight) < (PairPos.y + fPairHeight))
+					{// 奥辺と手前辺がブロックの幅の内側の時、
+
+						if ((pos.x + fWidth) >= (PairPos.x - fPairWidth) &&
+							(PosOld.x + fWidth) <= (PairPos.x - fPairWidth))
+						{// 左からめり込んでいる時
+
+							bHit = true;
+							pos.x = (PairPos.x - fPairWidth) - fWidth;
+						}
+						else if ((pos.x - fWidth) <= (PairPos.x + fPairWidth) &&
+							(PosOld.x - fWidth) >= (PairPos.x + fPairWidth))
+						{// 右からめり込んでいる時
+
+							bHit = true;
+							pos.x = (PairPos.x + fPairWidth) + fWidth;
+						}
+					}
+				}
+				   break;
+				case VECTOR_Y: {	/* Y方向 */
+
+					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
+						(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
+						(pos.z + fDepth) > (PairPos.z - fPairDepth) &&
+						(pos.z - fDepth) < (PairPos.z + fPairDepth))
+					{// 左辺と右辺が相手の幅の内側の時、
+
+						if ((pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+							(PosOld.y + fHeight) <= (PairPos.y - fPairHeight))
+						{// 下からめり込んでいる時
+
+							bHit = true;
+							pos.y = (PairPos.y - fPairHeight) - fHeight;
+						}
+						else if ((pos.y - fHeight) < (PairPos.y + fPairHeight) &&
+							(PosOld.y - fHeight) >= (PairPos.y + fPairHeight))
+						{// 上からめり込んでいる時
+
+							bHit = true;
+							pos.y = (PairPos.y + fPairHeight) + fHeight;
+						}
+					}
+				}
+				   break;
+				case VECTOR_Z: {	/* Z方向 */
+
+					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
+						(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
+						(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+						(pos.y - fHeight) < (PairPos.y + fPairHeight))
+					{// 左辺と右辺が相手の幅の内側の時、
+
+						if ((pos.z + fDepth) >= (PairPos.z - fPairDepth) &&
+							(PosOld.z + fDepth) <= (PairPos.z - fPairDepth))
+						{// 前からめり込んでいる時
+
+							bHit = true;
+							pos.z = (PairPos.z - fPairDepth) - fDepth;
+						}
+						else if ((pos.z - fDepth) <= (PairPos.z + fPairDepth) &&
+							(PosOld.z - fDepth) >= (PairPos.z + fPairDepth))
+						{// 奥からめり込んでいる時
+
+							bHit = true;
+							pos.z = (PairPos.z + fPairDepth) + fDepth;
+						}
+					}
+				}
+				   break;
+				}
+
+			}
+			else if (type == TYPE_CUBE)
+			{// キューブだったら
+
+				 // キューブの取得
+				D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
+				D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
+				float fPairWidth = pObj->GetWidth();		// 幅
+				float fPairHeight = pObj->GetHeight();		// 高さ
+				float fPairDepth = pObj->GetDepth();		// 奥行き
+
+				switch (vector)
+				{
+				case VECTOR_X: {	/* X方向 */
+
+					if ((pos.z + fDepth) > (PairPos.z - fPairDepth) &&
+						(pos.z - fDepth) < (PairPos.z + fPairDepth) &&
+						(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+						(pos.y - fHeight) < (PairPos.y + fPairHeight))
+					{// 奥辺と手前辺がブロックの幅の内側の時、
+
+						if ((pos.x + fWidth) >= (PairPos.x - fPairWidth) &&
+							(PosOld.x + fWidth) <= (PairPos.x - fPairWidth))
+						{// 左からめり込んでいる時
+
+							bHit = true;
+							pos.x = (PairPos.x - fPairWidth) - fWidth;
+						}
+						else if ((pos.x - fWidth) <= (PairPos.x + fPairWidth) &&
+							(PosOld.x - fWidth) >= (PairPos.x + fPairWidth))
+						{// 右からめり込んでいる時
+
+							bHit = true;
+							pos.x = (PairPos.x + fPairWidth) + fWidth;
+						}
+					}
+				}
+				   break;
+				case VECTOR_Y: {	/* Y方向 */
+
+					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
+						(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
+						(pos.z + fDepth) > (PairPos.z - fPairDepth) &&
+						(pos.z - fDepth) < (PairPos.z + fPairDepth))
+					{// 左辺と右辺が相手の幅の内側の時、
+
+						if ((pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+							(PosOld.y + fHeight) <= (PairPos.y - fPairHeight))
+						{// 下からめり込んでいる時
+
+							bHit = true;
+							pos.y = (PairPos.y - fPairHeight) - fHeight;
+						}
+						else if ((pos.y - fHeight) < (PairPos.y + fPairHeight) &&
+							(PosOld.y - fHeight) >= (PairPos.y + fPairHeight))
+						{// 上からめり込んでいる時
+
+							bHit = true;
+							pos.y = (PairPos.y + fPairHeight) + fHeight;
+						}
+					}
+				}
+				   break;
+				case VECTOR_Z: {	/* Z方向 */
+
+					if ((pos.x + fWidth) > (PairPos.x - fPairWidth) &&
+						(pos.x - fWidth) < (PairPos.x + fPairWidth) &&
+						(pos.y + fHeight) > (PairPos.y - fPairHeight) &&
+						(pos.y - fHeight) < (PairPos.y + fPairHeight))
+					{// 左辺と右辺が相手の幅の内側の時、
+
+						if ((pos.z + fDepth) >= (PairPos.z - fPairDepth) &&
+							(PosOld.z + fDepth) <= (PairPos.z - fPairDepth))
+						{// 前からめり込んでいる時
+
+							bHit = true;
+							pos.z = (PairPos.z - fPairDepth) - fDepth;
+						}
+						else if ((pos.z - fDepth) <= (PairPos.z + fPairDepth) &&
+							(PosOld.z - fDepth) >= (PairPos.z + fPairDepth))
+						{// 奥からめり込んでいる時
+
+							bHit = true;
+							pos.z = (PairPos.z + fPairDepth) + fDepth;
+						}
+					}
+				}
+				   break;
+				}
+			}
+
+			if (bHit)
+			{
+				if (type == TYPE_BLOCK)
+				{
+
+				}
+				else if (type == TYPE_CUBE)
+				{
+					// ダイナミックキャストする
+					CCube *pCube = dynamic_cast<CCube*>(pObj);
+
+					pCube->CubeSetLife(1);
+				}
+				return TRUE;
+			}
+			pObj = pObjNext;	// 次のオブジェクトを代入
+		}
+	}
+	return FALSE;
 }
 
 //========================================
@@ -230,81 +505,7 @@ void CEnemy::StateShift(void)
 			// 通常状態にする
 			SetState(STATE_NORMAL);
 		}
-
 	}
 	   break;
-	}
-
-}
-
-//========================================
-// 読み込み
-//========================================
-void CEnemy::Load(void)
-{
-	//// 読み込み
-
-	//// 動的確保
-
-	//for (int nRow1 = 0; nRow1 < 0; nRow1++)
-	//{
-	//	for (int nLine = 0; nLine < 0; nLine++)
-	//	{
-	//		switch (nLine)
-	//		{
-	//			// 種類
-	//		case SET_TYPE:
-	//		{
-	//			pSet[nRow1].nType = 0;
-	//		}
-	//		break;
-
-	//		// 位置
-	//		case SET_POS:
-	//		{
-	//			pSet[nRow1].pos.x = 0.0f; nLine++;
-	//			pSet[nRow1].pos.y = 0.0f; nLine++;
-	//			pSet[nRow1].pos.z = 0.0f;
-	//		}
-	//		break;
-
-	//		// 移動量
-	//		case SET_SPEED:
-	//		{
-	//			pSet[nRow1].nSpeed = 0;
-	//		}
-	//		break;
-
-	//		// 部隊ID
-	//		case SET_UNIT:
-	//		{
-	//			pSet[nRow1].nStage = 0;
-	//		}
-	//		break;
-
-	//		// ステージID
-	//		case SET_STAGE:
-	//		{
-	//			pSet[nRow1].nStage = 0;
-	//		}
-	//		break;
-	//		}
-	//	}
-	//}
-}
-
-//========================================
-// 配置
-//========================================
-void CEnemy::SetEnemy(int nStage, int nUnit)
-{
-	for (int nCntSet = 0; nCntSet < m_nNumAll; nCntSet++, pSet++)
-	{
-		if (!pSet->bSet && pSet->nStage == nStage && pSet->nUnit == nUnit)
-		{
-
-
-			pSet->bSet = true;
-		}
 	}
 }

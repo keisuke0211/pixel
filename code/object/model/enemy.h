@@ -43,9 +43,12 @@ public:
 		D3DXVECTOR3 move;	// 移動量
 		D3DCOLOR col;		// 頂点カラー
 		int nType;			// 種類
+		int nMove;			// 移動種類
 		int nLife;			// 寿命
-		STATE state;		//状態
-		int nCntState;	//状態管理カウンター
+		STATE state;		// 状態
+		int nCntState;		// 状態管理カウンター
+		int nCntTime;		// 行動カウンター
+
 	} Info;
 
 	// ***** 関数 *****
@@ -55,14 +58,13 @@ public:
 	/* メイン */
 
 	// 生成
-	static CEnemy *Create(D3DXVECTOR3 pos);
+	static CEnemy *Create(int nType,int nMove,D3DXVECTOR3 pos);
 
 	HRESULT Init(void);	// 初期化
 	void Uninit(void);	// 終了
 	void Update(void);	// 更新
 	void Draw(void);	// 描画
 
-	static void SetEnemy(int nStage, int nUnit);	// 配置
 	void HitLife(int nDamage);						// Hit処理
 
 	/* 取得 */
@@ -106,7 +108,7 @@ private:
 	// ***** 関数 *****
 	void SetState(STATE state);	// 状態設定
 	void StateShift(void);		// 状態推移
-	static void Load(void);		// 読み込み
+	bool Collsion(VECTOR vector, D3DXVECTOR3 pos);	// 当たり判定
 
 	// ***** 変数 *****
 	Info m_Info;			// 情報

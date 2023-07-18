@@ -96,24 +96,7 @@ HRESULT CBullet::Init(void)
 	SetPos(m_Info.pos);
 	SetScale(m_Info.size);
 	SetColor(INIT_D3DXCOLOR);
-
-	m_Info.posOld = m_Info.pos;
-
-	// X方向の当たり判定
-	if (Collsion(VECTOR_X, m_Info.pos))
-	{
-		return S_OK;
-	}
-	// Z方向の当たり判定
-	if (Collsion(VECTOR_Z, m_Info.pos))
-	{
-		return S_OK;
-	}
-	// Y方向の当たり判定
-	if (Collsion(VECTOR_Y, m_Info.pos))
-	{
-		return S_OK;
-	}
+	
 	return S_OK;
 }
 
@@ -138,6 +121,22 @@ void CBullet::Update(void)
 	// 過去の位置・向きの更新
 	m_Info.posOld = m_Info.pos;
 	m_Info.rotOld = m_Info.rot;
+
+	// X方向の当たり判定
+	if (Collsion(VECTOR_X, m_Info.pos))
+	{
+		return;
+	}
+	// Z方向の当たり判定
+	if (Collsion(VECTOR_Z, m_Info.pos))
+	{
+		return;
+	}
+	// Y方向の当たり判定
+	if (Collsion(VECTOR_Y, m_Info.pos))
+	{
+		return;
+	}
 
 	// 寿命の減衰
 	if (--m_Info.nLife <= 0)

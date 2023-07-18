@@ -71,6 +71,7 @@ public:
 	/* 向き			*/void CubeSetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
 	/* 色			*/void CubeSetColor(const D3DXCOLOR col) { m_Info.col = col; }
 	/* サイズ		*/void CubeSetSize(const D3DXVECTOR3 size) { m_Info.size = size; }
+	/* 寿命			*/void CubeSetLife(const int nLife) { m_Info.nLife = nLife; }
 	/* 種類			*/void CubeSetType(const int type) { m_Info.nShape = type; }
 	/* 先頭フラグ	*/void CubeLeadSet(const bool bSet) { bLeadSet = bSet; }
 
