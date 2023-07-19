@@ -181,27 +181,6 @@ HRESULT CBgSide::Init(void)
 //========================================
 void CBgSide::Uninit(void)
 {
-	// テクスチャ1の破棄
-	if (m_pTextureMeshfield1 != NULL)
-	{
-		m_pTextureMeshfield1->Release();
-		m_pTextureMeshfield1 = NULL;
-	}
-
-	// テクスチャ2の破棄
-	if (m_pTextureMeshfield2 != NULL)
-	{
-		m_pTextureMeshfield2->Release();
-		m_pTextureMeshfield2 = NULL;
-	}
-
-	// テクスチャ3の破棄
-	if (m_pTextureMeshfield3 != NULL)
-	{
-		m_pTextureMeshfield3->Release();
-		m_pTextureMeshfield3 = NULL;
-	}
-
 	// 頂点バッファの破棄
 	if (m_pVtxBuff != NULL)
 	{

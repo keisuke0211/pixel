@@ -194,13 +194,6 @@ HRESULT CBgCeiling::Init(void)
 //========================================
 void CBgCeiling::Uninit(void)
 {
-	// テクスチャの破棄
-	if (m_pTexture != NULL)
-	{
-		m_pTexture->Release();
-		m_pTexture = NULL;
-	}
-
 	// 頂点バッファの破棄
 	if (m_pVtxBuff != NULL)
 	{
