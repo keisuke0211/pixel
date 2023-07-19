@@ -553,7 +553,7 @@ void CPlayer::BulletStop(void)
 			CBullet *pBullet = dynamic_cast<CBullet*>(pObj);
 
 
-			if (pInputKeyboard->GetTrigger(DIK_E)/* || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_X)*/)
+			if (pInputKeyboard->GetTrigger(DIK_E) || pInputMouse->GetTrigger(CInputMouse::MOUSE_4) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_X))
 			{
 				// IDŽæ“¾
 				int nID = pBullet->GetID();
