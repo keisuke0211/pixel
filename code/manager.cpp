@@ -18,11 +18,11 @@
 #include "object\2D\score.h"
 #include "object\2D\time.h"
 #include "object\2D\text2D.h"
-#include "object\3D\floor.h"
 #include "object\model\block.h"
 #include "object\model\player.h"
 #include "object\model\enemy.h"
-#include "object\model\effectX.h"
+#include "object\3D\bg_side.h"
+#include "object\3D\bg_ceiling.h"
 
 // 静的メンバ変数
 CRenderer *CManager::m_pRenderer = NULL;
@@ -33,12 +33,9 @@ CTexture *CManager::m_pTexture = NULL;
 CInputKeyboard *CManager::m_InputKeyboard = NULL;
 CInputMouse *CManager::m_InputMouse = NULL;
 CInputJoypad *CManager::m_InputJoypad = NULL;
-CBg *CManager::m_pBg = NULL;
 CPlayer *CManager::m_pPlayer = NULL;
 CBlock *CManager::m_pBlock = NULL;
 CEnemy *CManager::m_pEnemy = NULL;
-CBullet *CManager::m_pBullet = NULL;
-
 
 //========================================
 // コンストラクタ
@@ -139,12 +136,11 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	// モデルの初期化
 	CModel::InitModel();
 
-	// 背景の生成
-	//for (int nCntBg = 0; nCntBg < 3; nCntBg++)
-	//{
-	//	/*CBgMulti::Create(D3DXVECTOR3((nCntBg + 1)* 0.0005f, 0.0f, 0.0f), nCntBg);*/
-	//}
-	
+	// 背景(側面)の生成
+	CBgSide *pBgsky = CBgSide::Create();	
+
+	// 背景(天井)の生成
+	CBgCeiling *pBgCeiling = CBgCeiling::Create();
 
 	// ブロックの生成
 	LoodBlock();
@@ -441,7 +437,7 @@ void CManager::LoodBlock(void)
 	CSVFILE *pFile = new CSVFILE;
 
 	// 読み込み
-	pFile->FileLood("data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv", true, true, ',');
+	pFile->FileLood("data\\GAMEDATA\\BLOCK\\STAGE_DATA.csv", true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
@@ -492,7 +488,7 @@ void CManager::LoodEnemy(void)
 	CSVFILE *pFile = new CSVFILE;
 
 	// 読み込み
-	pFile->FileLood("data\\GAMEDATA\\ENEMY\\ENEMY_DATA.csv", true, true, ',');
+	pFile->FileLood("data\\GAMEDATA\\ENEMY\\STAGE_DATA1.csv", true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();

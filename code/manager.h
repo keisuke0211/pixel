@@ -21,11 +21,9 @@ class CTexture;			// テクスチャ
 class CInputKeyboard;	// キーボード
 class CInputMouse;		// マウス
 class CInputJoypad;		// ジョイパット
-class CBg;				// 背景
 class CPlayer;			// プレイヤー
 class CBlock;			// ブロック
 class CEnemy;			// 敵
-class CBullet;			// 弾
 
 //****************************************
 // クラス
@@ -57,11 +55,9 @@ public:
 	/* キーボード	*/static CInputKeyboard* GetInputKeyboard() { return m_InputKeyboard; }
 	/* マウス		*/static CInputMouse* GetInputMouse() { return m_InputMouse; }
 	/* ジョイパット	*/static CInputJoypad* GetInputJoypad() { return m_InputJoypad; }
-	/* 背景			*/static CBg* GetBg() { return m_pBg; }
 	/* プレイヤー	*/static CPlayer* GetPlayer() { return m_pPlayer; }
 	/* ブロック		*/static CBlock* GetBlock() { return m_pBlock; }
 	/* エネミー		*/static CEnemy* GetEnemy() { return m_pEnemy; }
-	/* バレット		*/static CBullet* GetCBullet() { return m_pBullet; }
 
 private:
 	/* レンダラー	*/static CRenderer *m_pRenderer;
@@ -72,10 +68,8 @@ private:
 	/* キーボード	*/static CInputKeyboard *m_InputKeyboard;
 	/* マウス		*/static CInputMouse* m_InputMouse;
 	/* ジョイパット	*/static CInputJoypad* m_InputJoypad;
-	/* 背景			*/static CBg *m_pBg;
 	/* プレイヤー	*/static CPlayer *m_pPlayer;
 	/* ブロック		*/static CBlock *m_pBlock;
 	/* エネミー		*/static CEnemy *m_pEnemy;
-	/* バレット		*/static CBullet *m_pBullet;
 };
 #endif

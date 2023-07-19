@@ -8,17 +8,12 @@
 #========================================
 #||||||||||||||||||||||||||||||||||||||||
 #========================================
-TEXTURE = data\\TEXTURE\\PixelSky_layer01.png 	#00 平野
-TEXTURE = data\\TEXTURE\\PixelSky_layer02.png 	#01 雲
-TEXTURE = data\\TEXTURE\\PixelSky_layer03.png 	#02 雲
-TEXTURE = data\\TEXTURE\\bullet000.png 			#03 弾00
-TEXTURE = data\\TEXTURE\\bullet001.png 			#04 弾01
-TEXTURE = data\\TEXTURE\\Enemy_a.png 			#05 敵
-TEXTURE = data\\TEXTURE\\eff_circle_000.jpg		#06 光
-TEXTURE = data\\TEXTURE\\font_000.png 			#07 フォント
-TEXTURE = data\\TEXTURE\\Rocks00.png 			#08 岩
-TEXTURE = data\\TEXTURE\\floor001.png 			#09 床
-
+TEXTURE = data\\TEXTURE\\BgSky_layer00.png 		#00 空0
+TEXTURE = data\\TEXTURE\\BgSky_layer01.png 		#01 空１
+TEXTURE = data\\TEXTURE\\BgSky_layer02.png 		#02 空２
+TEXTURE = data\\TEXTURE\\BgSky_layer03.png 		#03 空３
+TEXTURE = data\\TEXTURE\\eff_circle_000.jpg		#04 光
+TEXTURE = data\\TEXTURE\\font_000.png 			#05 フォント
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||

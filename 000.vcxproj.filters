@@ -66,9 +66,6 @@
     <ClCompile Include="code\object\2D\text2D.cpp">
       <Filter>ソース ファイル\01_object\00_2D</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\3D\floor.cpp">
-      <Filter>ソース ファイル\01_object\01_3D</Filter>
-    </ClCompile>
     <ClCompile Include="code\physics.cpp">
       <Filter>ソース ファイル\02_system</Filter>
     </ClCompile>
@@ -129,6 +126,12 @@
     <ClCompile Include="code\object\model\bullet_cube.cpp">
       <Filter>ソース ファイル\01_object\02_model</Filter>
     </ClCompile>
+    <ClCompile Include="code\object\3D\bg_side.cpp">
+      <Filter>ソース ファイル\01_object\01_3D</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\3D\bg_ceiling.cpp">
+      <Filter>ソース ファイル\01_object\01_3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\main.h">
@@ -157,9 +160,6 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\3D\floor.h">
-      <Filter>ソース ファイル\01_object\01_3D</Filter>
     </ClInclude>
     <ClInclude Include="code\physics.h">
       <Filter>ソース ファイル\02_system</Filter>
@@ -220,6 +220,12 @@
     </ClInclude>
     <ClInclude Include="code\object\model\bullet_cube.h">
       <Filter>ソース ファイル\01_object\02_model</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\3D\bg_side.h">
+      <Filter>ソース ファイル\01_object\01_3D</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\3D\bg_ceiling.h">
+      <Filter>ソース ファイル\01_object\01_3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

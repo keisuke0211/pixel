@@ -51,6 +51,7 @@ public:
 		int nCntRadius;			// 半径・推移時間
 		float fRadiusRate;		// 半径の割合
 		bool bSet;				// 配置フラグ
+		int nChain;				// 連鎖カウント
 		bool bBom;				// 爆発フラグ
 		int nID;				// 自身のID
 	} Info;
@@ -82,6 +83,7 @@ public:
 	/* サイズ		*/D3DXVECTOR3 CubeGetSize(void) { return m_Info.size; }
 	/* 配置フラグ	*/bool CubeGetSet(void) { return m_Info.bSet; }
 	/* 先頭フラグ	*/static bool GetLeadSet(void) { return bLeadSet; }
+	/* 連鎖カウント	*/int GetChain(void) { return m_Info.nChain; }
 	/* ID			*/int GetID(void) { return m_Info.nID; }
 
 private:
@@ -97,7 +99,7 @@ private:
 
 	// ***** 変数 *****
 	static int m_nNumAll;	// キューブの総数
-	static int m_nNumBom;	// 連爆の総数
+	static int m_nNumChain;	// 連爆の総数
 	static bool bLeadSet;	// 先頭配置フラグ
 	Info m_Info;			// プレイヤー情報
 

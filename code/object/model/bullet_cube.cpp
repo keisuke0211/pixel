@@ -14,7 +14,7 @@
 
 // 静的変数
 int CCube::m_nNumAll = -1;
-int CCube::m_nNumBom = 1;
+int CCube::m_nNumChain = 0;
 bool CCube::bLeadSet = false;
 
 //========================================
@@ -23,7 +23,8 @@ bool CCube::bLeadSet = false;
 #define RADIUS_TIME			(20)	// 半径・推移時間
 #define SIZE_DIAMETER		(2.0f)	// サイズの倍率
 #define COLLSION_DIAMETER	(1.0f)	// 判定の倍率
-#define BOM_COLLSION		(3.0f)	// 爆発の判定
+#define BOM_COLLSION		(2.5f)	// 爆発の判定
+#define DAMAGE_DIAMETER		(3)		// 連続爆破のダメージの割合		BOM_DAMAGE　+ (連鎖カウント / DAMAGE_DIAMETER)
 #define BOM_DAMAGE			(1)		// 爆発ダメージ
 
 //========================================
@@ -113,7 +114,7 @@ HRESULT CCube::Init(void)
 	m_Info.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	m_Info.col = INIT_D3DXCOLOR;
+	m_Info.col = D3DXCOLOR(0.1f, 0.9f, 0.9f, 1.0f);
 	m_Info.nShape = 0;
 	m_Info.fRadius = 1.0f;
 
@@ -262,7 +263,7 @@ void CCube::Update(void)
 			// オブジェクト破棄
 			Uninit();
 
-			m_nNumBom = 1;
+			m_nNumChain = 1;
 
 			return;
 		}
@@ -633,7 +634,7 @@ void CCube::EnemyCollsion(D3DXVECTOR3 pos)
 				CEnemy *pEnemy = dynamic_cast<CEnemy*>(pObj);
 
 				// HIT処理
-				pEnemy->HitLife(BOM_DAMAGE);
+				pEnemy->HitLife(BOM_DAMAGE + (m_Info.nChain / DAMAGE_DIAMETER));
 			}
 		}
 		pObj = pObjNext;	// 次のオブジェクトを代入
@@ -646,10 +647,14 @@ void CCube::EnemyCollsion(D3DXVECTOR3 pos)
 void CCube::Destruction(CCube *pCube)
 {
 	// オブジェクト破棄
-	pCube->m_Info.nLife = 20 + m_nNumBom;
+	pCube->m_Info.nLife = 20 + m_nNumChain;
 	pCube->m_Info.bBom = true;
 
-	m_nNumBom++;
+	m_nNumChain++;	// 連鎖カウントを加算
+
+	// 連鎖カウントを代入
+	pCube->m_Info.nChain = m_nNumChain;
+
 	// 周囲にキューブがあるか
 	pCube->Contact(0, VECTOR_X, pCube->m_Info.pos);
 	pCube->Contact(0, VECTOR_Y, pCube->m_Info.pos);

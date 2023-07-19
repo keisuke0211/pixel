@@ -301,6 +301,7 @@ void CPlayer::UpdatePos(void)
 		// Y•ûŒü‚Ì“–‚½‚è”»’è
 		m_Info.pos = Collision(VECTOR_Y, m_Info.pos);
 	}
+	// ˆÊ’u‚ÌÝ’è
 	SetPos(m_Info.pos);
 
 	// –Ú•WŒü‚«‚ÉˆÚ“®Œü‚«‚ð‘ã“ü

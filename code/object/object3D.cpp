@@ -182,8 +182,6 @@ void CObject3D::Draw(void)
 	// 頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
-	CTexture* pTexture = CManager::GetTexture();
-
 	// テクスチャ設定
 	pDevice->SetTexture(0, m_pTexture);
 

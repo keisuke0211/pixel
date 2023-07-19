@@ -28,7 +28,8 @@
     <ClCompile Include="code\object\2D\score.cpp" />
     <ClCompile Include="code\object\2D\text2D.cpp" />
     <ClCompile Include="code\object\2D\time.cpp" />
-    <ClCompile Include="code\object\3D\floor.cpp" />
+    <ClCompile Include="code\object\3D\bg_ceiling.cpp" />
+    <ClCompile Include="code\object\3D\bg_side.cpp" />
     <ClCompile Include="code\object\model\block.cpp" />
     <ClCompile Include="code\object\model\bullet.cpp" />
     <ClCompile Include="code\object\model\bullet_cube.cpp" />
@@ -59,7 +60,8 @@
     <ClInclude Include="code\object\2D\score.h" />
     <ClInclude Include="code\object\2D\text2D.h" />
     <ClInclude Include="code\object\2D\time.h" />
-    <ClInclude Include="code\object\3D\floor.h" />
+    <ClInclude Include="code\object\3D\bg_ceiling.h" />
+    <ClInclude Include="code\object\3D\bg_side.h" />
     <ClInclude Include="code\object\model\block.h" />
     <ClInclude Include="code\object\model\bullet.h" />
     <ClInclude Include="code\object\model\bullet_cube.h" />

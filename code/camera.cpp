@@ -93,11 +93,6 @@ void CCamera::Update(void)
 	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
 	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
 
-	m_Info.rot += m_Info.spin;					// 向きを更新
-	m_Info.spin *= CAMERA_SPIN_DAMP;			// 回転量を減衰
-	m_Info.fHeight += m_Info.fVerticalMove;		// 高さを更新
-	m_Info.fVerticalMove *= CAMERA_SPIN_DAMP;	// 縦方向の移動量を減衰
-
 	// 過去の位置を代入
 	m_Info.posOldV = m_Info.posV;
 	m_Info.posOldR = m_Info.posR;
@@ -119,21 +114,32 @@ void CCamera::Update(void)
 		AxisRotationCamera(DIRECTION_LEFT, (sinf(pInputJoypad->GetStick().aAngle[CInputJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CInputJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.y);
 	}
 
-	// カメラ制御
-	if (m_Info.fHeight >= D3DX_PI * 0.30f)
-	{
-		m_Info.fHeight = D3DX_PI * 0.30f;
-	}
-	else if (m_Info.fHeight <= D3DX_PI * 0.01f)
-	{
-		m_Info.fHeight = D3DX_PI * 0.01f;
-	}
+	m_Info.rot += m_Info.spin;					// 向きを更新
+	m_Info.spin *= CAMERA_SPIN_DAMP;			// 回転量を減衰
+	m_Info.fHeight += m_Info.fVerticalMove;		// 高さを更新
+	m_Info.fVerticalMove *= CAMERA_SPIN_DAMP;	// 縦方向の移動量を減衰
+
+	// 向きを制御
+	RotControl(&m_Info.rot);
+
+	// 高さを制御
+	FloatControl(&m_Info.fHeight, D3DX_PI * 0.30f, D3DX_PI * 0.01f);
+
+	//// 視点の位置設定
+	//m_Info.posV.x = m_Info.posR.x + (sinf(m_Info.rot.y + D3DX_PI) * (m_Info.fDistance * (1.0 - fabsf(m_Info.fHeight))));
+	//m_Info.posV.y = m_Info.posR.y + (m_Info.fDistance * m_Info.fHeight);
+	//m_Info.posV.z = m_Info.posR.z + (cosf(m_Info.rot.y + D3DX_PI) * (m_Info.fDistance * (1.0 - fabsf(m_Info.fHeight))));
 
 	if (pInputKeyboard->GetTrigger(DIK_Q) == true || pInputMouse->GetTrigger(CInputMouse::MOUSE_5) == true)
 	{// マウスのサイドボタン2を押したら
 
 		// 画面設定
 		SetScreen();
+	}
+
+	if (pInputKeyboard->GetPress(DIK_UP))
+	{
+		m_Info.posV.z += 1.0f;
 	}
 }
 
@@ -157,7 +163,7 @@ void CCamera::SetCamera(void)
 			SCREEN_WIDTH / 2,						/* 画面の幅 */
 			SCREEN_HEIGHT / 2,						/* 画面の高さ */
 			1.0f,									/* Z値の最小値 */
-			1000.0f);								/* Z値の最大値 */
+			1500.0f);								/* Z値の最大値 */
 	}
 		break;
 
@@ -166,7 +172,7 @@ void CCamera::SetCamera(void)
 			D3DXToRadian(90.0f),							/* 視野角 */
 			(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,		/*画面のアスペクト比*/
 			10.0f,											/*Z値の最小値*/
-			1500.0f);										/*Z値の最大値*/
+			2000.0f);										/*Z値の最大値*/
 	}
 		break;
 	}

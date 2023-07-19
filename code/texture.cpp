@@ -8,10 +8,6 @@
 #include "texture.h"
 #include "manager.h"
 #include "renderer.h"
-#include "object\3D\floor.h"
-#include "object\model\enemy.h"
-#include "object\model\bullet.h"
-#include "object\2D\text2D.h"
 
 // ’è‹`
 const char* CTexture::FILE_PATH = "data\\GAMEDATA\\TEXTURE\\TEXTURE_DATA.txt";
