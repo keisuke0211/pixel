@@ -15,14 +15,14 @@
 #include "csv_file.h"
 #include "object\model\model.h"
 #include "object\object.h"
-#include "object\2D\score.h"
-#include "object\2D\time.h"
-#include "object\2D\text2D.h"
+#include "object\UI\score.h"
+#include "object\UI\time.h"
+#include "object\UI\text2D.h"
 #include "object\model\block.h"
 #include "object\model\player.h"
 #include "object\model\enemy.h"
-#include "object\3D\bg_side.h"
-#include "object\3D\bg_ceiling.h"
+#include "object\BG\bg_side.h"
+#include "object\BG\bg_ceiling.h"
 
 // 静的メンバ変数
 CRenderer *CManager::m_pRenderer = NULL;
@@ -376,25 +376,8 @@ void CManager::Update(void)
 	m_pLight->Update();				// ライト
 	m_pRenderer->Update();			// レンダラー
 
-	// エネミーが全滅したら
-	if (CEnemy::GetEnemyAll() <= 0)
-	{
-		// プレイヤーだけ消す
-		CPlayer::ReleaseAll(CObject::TYPE_PLAYER);
-
-		// プレイヤーの配置
-		CPlayer *pPlayer = CPlayer::Create();
-		pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
-
-		// スコア設定
-		CScore::SetScore();
-
-		// エネミーの配置
-		SetEnemy();
-	}
-
-	// リセットボタン
-	if (m_InputKeyboard->GetTrigger(DIK_R))
+	// エネミーの全滅 かリセットボタン
+	if (CEnemy::GetEnemyAll() <= 0 || m_InputKeyboard->GetTrigger(DIK_R))
 	{
 		CPlayer::ReleaseAll(CObject::TYPE_PLAYER);
 

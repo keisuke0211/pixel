@@ -6,7 +6,7 @@
 // *** block.cpp ***
 //========================================
 #include "bullet_cube.h"
-#include "particleX.h"
+#include "../EFFECT/particleX.h"
 #include "model.h"
 #include "enemy.h"
 #include "../../sound.h"
