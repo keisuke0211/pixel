@@ -20,13 +20,13 @@ public:
 	// ***** 構造体 *****
 
 	//頂点情報【 3D 】
-	typedef struct
+	struct VERTEX_3D
 	{
 		D3DXVECTOR3 pos;	// 頂点座標
 		D3DXVECTOR3 nor;	// 法線ベクトル
 		D3DCOLOR col;		// 頂点カラー
 		D3DXVECTOR2 tex;	// テクスチャ座標
-	} VERTEX_3D;
+	};
 
 	// ***** 関数 *****
 	CBgCeiling(int nPriority = PRIO_OBJECT);

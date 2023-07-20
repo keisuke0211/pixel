@@ -218,14 +218,14 @@ void CInputKeyboard::Update(void)
 //========================================
 bool CInputKeyboard::GetPress(int nKey)
 {
-	return (m_aKeyState[nKey] & 0x80) ? true : false;
+	return (m_aKeyState[nKey] & 0x80);
 }
 //========================================
 // ÉgÉäÉKÅ[èÓïÒÇéÊìæ
 //========================================
 bool CInputKeyboard::GetTrigger(int nKey)
 {
-	return (m_aKeyStateTrigger[nKey] & 0x80) ? true : false;
+	return (m_aKeyStateTrigger[nKey] & 0x80);
 }
 
 //========================================
@@ -233,7 +233,7 @@ bool CInputKeyboard::GetTrigger(int nKey)
 //========================================
 bool CInputKeyboard::GetRepeat(int nKey)
 {
-	return (m_aKeyStateRepeat[nKey] & 0x80) ? true : false;
+	return (m_aKeyStateRepeat[nKey] & 0x80);
 }
 
 //========================================
@@ -241,7 +241,7 @@ bool CInputKeyboard::GetRepeat(int nKey)
 //========================================
 bool CInputKeyboard::GetRelease(int nKey)
 {
-	return (m_aKeyStateRelease[nKey] & 0x80) ? true : false;
+	return (m_aKeyStateRelease[nKey] & 0x80);
 }
 
 //========================================
@@ -368,7 +368,7 @@ void CInputMouse::Update(void)
 //========================================
 bool CInputMouse::GetPress(MOUSE Mouse)
 {
-	return (m_aMouseState.rgbButtons[Mouse] & 0x80) ? true : false;
+	return (m_aMouseState.rgbButtons[Mouse] & 0x80);
 }
 
 //========================================
@@ -376,7 +376,7 @@ bool CInputMouse::GetPress(MOUSE Mouse)
 //========================================
 bool CInputMouse::GetTrigger(MOUSE Mouse)
 {
-	return (m_aMouseStateTrigger.rgbButtons[Mouse] & 0x80) ? true : false;
+	return (m_aMouseStateTrigger.rgbButtons[Mouse] & 0x80);
 }
 
 //========================================
@@ -384,7 +384,7 @@ bool CInputMouse::GetTrigger(MOUSE Mouse)
 //========================================
 bool CInputMouse::GetRepeat(MOUSE Mouse)
 {
-	return (m_aMouseStateRepeat.rgbButtons[Mouse] & 0x80) ? true : false;
+	return (m_aMouseStateRepeat.rgbButtons[Mouse] & 0x80);
 }
 
 //========================================
@@ -392,7 +392,7 @@ bool CInputMouse::GetRepeat(MOUSE Mouse)
 //========================================
 bool CInputMouse::GetRelease(MOUSE Mouse)
 {
-	return (m_aMouseStateRelease.rgbButtons[Mouse] & 0x80) ? true : false;
+	return (m_aMouseStateRelease.rgbButtons[Mouse] & 0x80);
 }
 
 //========================================
@@ -544,7 +544,7 @@ void CInputJoypad::Update(void)
 //========================================
 bool CInputJoypad::GetJoypadPress(JOYKEY Key, int nPatNum)
 {
-	return (m_JoyKeyState[nPatNum].Gamepad.wButtons & (0x01 << Key)) ? true : false;
+	return (m_JoyKeyState[nPatNum].Gamepad.wButtons & (0x01 << Key));
 }
 
 //========================================
@@ -552,7 +552,7 @@ bool CInputJoypad::GetJoypadPress(JOYKEY Key, int nPatNum)
 //========================================
 bool CInputJoypad::GetJoypadTrigger(JOYKEY Key, int nPatNum)
 {
-	return (m_JoyKeyStateTrigger[nPatNum].Gamepad.wButtons & (0x01 << Key)) ? true : false;
+	return (m_JoyKeyStateTrigger[nPatNum].Gamepad.wButtons & (0x01 << Key));
 }
 
 //========================================
@@ -560,7 +560,7 @@ bool CInputJoypad::GetJoypadTrigger(JOYKEY Key, int nPatNum)
 //========================================
 bool CInputJoypad::GetJoypadRelese(JOYKEY Key, int nPatNum)
 {
-	return (m_JoyKeyStateRelease[nPatNum].Gamepad.wButtons & (0x01 << Key)) ? true : false;
+	return (m_JoyKeyStateRelease[nPatNum].Gamepad.wButtons & (0x01 << Key));
 }
 
 //========================================
@@ -568,7 +568,7 @@ bool CInputJoypad::GetJoypadRelese(JOYKEY Key, int nPatNum)
 //========================================
 bool CInputJoypad::GetJoypadRepeat(JOYKEY Key, int nPatNum)
 {
-	return (m_aJoyKeyStateRepeat[nPatNum].Gamepad.wButtons & (0x01 << Key)) ? true : false;
+	return (m_aJoyKeyStateRepeat[nPatNum].Gamepad.wButtons & (0x01 << Key));
 }
 
 //========================================

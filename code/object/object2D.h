@@ -25,17 +25,17 @@ public:
 	// ***** 構造体 *****
 
 	//頂点情報【 2D 】
-	typedef struct
+	struct VERTEX_2D
 	{
 		D3DXVECTOR3 pos;	//頂点座標
 		float rhw;			//座標変換係数（1.0fで固定）
 		D3DCOLOR col;		//頂点カラー
 		D3DXVECTOR2 tex;	//テクスチャ座標
-	} VERTEX_2D;
+	};
 
 	// ***** 関数 *****
 	CObject2D(int nPriority = PRIO_OBJECT);
-	~CObject2D();
+	virtual~CObject2D();
 
 	/* メイン */
 	HRESULT Init(void);				// 初期化

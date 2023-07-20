@@ -25,24 +25,24 @@ public:
 	// ***** 列挙型 *****
 
 	// サウンドの種類
-	typedef enum
+	enum SOUND_TYPE
 	{
 		SOUND_TYPE_BGM,	// 音楽
 		SOUND_TYPE_SE,	// 効果音
 		SOUND_TYPE_MAX,
-	}SOUND_TYPE;
+	};
 
 	// ***** 構造体 *****
 
 	// サウンド情報
-	typedef struct
+	struct SOUNDINFO
 	{
 		char		aFileName	// ファイル名
 			[TXT_MAX];
 		int			nCntLoop;	// ループカウント
 		float		fVolume;	// 音量
 		SOUND_TYPE	type;		// サウンドの種類
-	} SOUNDINFO;
+	};
 
 	// ***** 関数 *****
 	CSound();

@@ -21,17 +21,16 @@ public:
 	// ***** 構造体 *****
 
 	// カラー
-	typedef struct
+	struct Color
 	{
 		D3DXCOLOR col;				// カラー
 		D3DXCOLOR colRandamMax;		// ランダムな色の範囲(最大)
 		D3DXCOLOR colRandamMin;		// ランダムな色の範囲(最小)
 		bool bColRandom;			// ランダムで色を変更するか
-
-	} Color;
+	};
 
 	// パーティクル
-	typedef struct
+	struct Info
 	{
 		D3DXVECTOR3 pos;	// 位置
 		D3DXVECTOR3 rot;	// 向き
@@ -42,11 +41,11 @@ public:
 		int nType;			// 種類
 		int nLife;			// 寿命
 		float fRadius;		// 半径
-	} Info;
+	};
 
 	// コンストラクタ・デストラクタ
 	CParticleX(int nPriority = PRIO_EFFECT);
-	~CParticleX();
+	virtual~CParticleX();
 
 	// *****  関数 *****
 

@@ -381,204 +381,206 @@ void CMotion::LoodMotion(const char *pFileName)
 	int nCntMotion = 0;				// モーション数のカウント
 
 		// ファイルポインタの宣言
-		FILE * pFile;
+	FILE * pFile;
 
-		//ファイルを開く
-		pFile = fopen(pFileName, "r");
+	//ファイルを開く
+	pFile = fopen(pFileName, "r");
 
-		if (pFile != NULL)
-		{//ファイルが開いた場合
+	// ファイルが開けなかったら
+	assert(pFile == NULL);
 
-			// END_SCRIPTが見つかるまで読み込みを繰り返す
-			while (1)
-			{
-				fscanf(pFile, "%s", aDataSearch);	// 検索
+	if (pFile != NULL)
+	{//ファイルが開いた場合
 
-				if (!strcmp(aDataSearch, "END_SCRIPT"))
-				{// 読み込みを終了
-					fclose(pFile);
-					break;
-				}
-				else if (aDataSearch[0] == '#')
-				{// 折り返す
-					continue;
-				}
-				else if (!strcmp(aDataSearch, "MODEL_FILENAME"))
-				{// ファイル名の読み込み
-					fscanf(pFile, "%s", &g_aEqual[0]);
-					fscanf(pFile, "%s", &m_partsFile[nCntFileName][0]);
-					nCntFileName++;
-				}
-				else if (!strcmp(aDataSearch, "CHARACTERSET"))
-				{// キャラクターの読み込み
-					while (1)
-					{
-						fscanf(pFile, "%s", aDataSearch);	// 検索
+		// END_SCRIPTが見つかるまで読み込みを繰り返す
+		while (1)
+		{
+			fscanf(pFile, "%s", aDataSearch);	// 検索
 
-						if (!strcmp(aDataSearch, "END_CHARACTERSET"))
-						{// 読み込みを終了
-							break;
+			if (!strcmp(aDataSearch, "END_SCRIPT"))
+			{// 読み込みを終了
+				fclose(pFile);
+				break;
+			}
+			else if (aDataSearch[0] == '#')
+			{// 折り返す
+				continue;
+			}
+			else if (!strcmp(aDataSearch, "MODEL_FILENAME"))
+			{// ファイル名の読み込み
+				fscanf(pFile, "%s", &g_aEqual[0]);
+				fscanf(pFile, "%s", &m_partsFile[nCntFileName][0]);
+				nCntFileName++;
+			}
+			else if (!strcmp(aDataSearch, "CHARACTERSET"))
+			{// キャラクターの読み込み
+				while (1)
+				{
+					fscanf(pFile, "%s", aDataSearch);	// 検索
+
+					if (!strcmp(aDataSearch, "END_CHARACTERSET"))
+					{// 読み込みを終了
+						break;
+					}
+					else if (!strcmp(aDataSearch, "NUM_PARTS"))
+					{// 読み込むパーツ数
+						fscanf(pFile, "%s", &g_aEqual[0]);
+						fscanf(pFile, "%d", &m_nMaxParts);
+
+						// メモリの解放
+						m_ppParts = new CParts*[m_nMaxParts];
+						m_motion = new Motion[MYMAX_MOTION];
+						for (int i = 0; i < MYMAX_MOTION; i++)
+						{
+							m_motion[i].pKeySet = NULL;
 						}
-						else if (!strcmp(aDataSearch, "NUM_PARTS"))
-						{// 読み込むパーツ数
-							fscanf(pFile, "%s", &g_aEqual[0]);
-							fscanf(pFile, "%d", &m_nMaxParts);
+						assert(m_ppParts != NULL && m_motion != NULL);
 
-							// メモリの解放
-							m_ppParts = new CParts*[m_nMaxParts];
-							m_motion = new Motion[MYMAX_MOTION];
-							for (int i = 0; i < MYMAX_MOTION; i++)
-							{
-								m_motion[i].pKeySet = NULL;
-							}
-							assert(m_ppParts != NULL && m_motion != NULL);
-
-							for (int i = 0; i < m_nMaxParts; i++)
-							{// パーツの生成
-								m_ppParts[i] = CParts::Create();
-							}
+						for (int i = 0; i < m_nMaxParts; i++)
+						{// パーツの生成
+							m_ppParts[i] = CParts::Create();
 						}
-						else if (!strcmp(aDataSearch, "PARTSSET"))
-						{// パーツの読み込み
-							while (1)
-							{
-								fscanf(pFile, "%s", aDataSearch);	// 検索
+					}
+					else if (!strcmp(aDataSearch, "PARTSSET"))
+					{// パーツの読み込み
+						while (1)
+						{
+							fscanf(pFile, "%s", aDataSearch);	// 検索
 
-								if (!strcmp(aDataSearch, "END_PARTSSET"))
-								{// 読み込みを終了
-									nCntParts++;	// パーツ情報の加算
-									break;
+							if (!strcmp(aDataSearch, "END_PARTSSET"))
+							{// 読み込みを終了
+								nCntParts++;	// パーツ情報の加算
+								break;
+							}
+							else if (!strcmp(aDataSearch, "PARENT"))
+							{// 親の読み込み
+								int nIdxParent = -1;
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%d", &nIdxParent);
+
+								if (nIdxParent != -1)
+								{// 親のモデルの設定
+									m_ppParts[nCntParts]->SetParent(m_ppParts[nIdxParent]);
 								}
-								else if (!strcmp(aDataSearch, "PARENT"))
-								{// 親の読み込み
-									int nIdxParent = -1;
-									fscanf(pFile, "%s", &g_aEqual[0]);
-									fscanf(pFile, "%d", &nIdxParent);
+							}
+							else if (!strcmp(aDataSearch, "INDEX"))
+							{// タイプの読み込み
+								int nType = -1;
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%d", &nType);
 
-									if (nIdxParent != -1)
-									{// 親のモデルの設定
-										m_ppParts[nCntParts]->SetParent(m_ppParts[nIdxParent]);
+								// マテリアル情報の取得
+								CModel::MODEL_MATERIAL *pMaterial = CModel::GetMaterial();
+
+								for (int nCntModel = 0; nCntModel < CModel::GetMaxModel(); nCntModel++)
+								{
+									if (strcmp(&m_partsFile[nType][0], &pMaterial[nCntModel].aFileName[0]) == 0)
+									{// モデルのIDの設定
+										m_ppParts[nCntParts]->SetModelID(nCntModel);
+										break;
 									}
 								}
-								else if (!strcmp(aDataSearch, "INDEX"))
-								{// タイプの読み込み
-									int nType = -1;
-									fscanf(pFile, "%s", &g_aEqual[0]);
-									fscanf(pFile, "%d", &nType);
-
-									// マテリアル情報の取得
-									CModel::MODEL_MATERIAL *pMaterial = CModel::GetMaterial();
-
-									for (int nCntModel = 0; nCntModel < CModel::GetMaxModel(); nCntModel++)
-									{
-										if (strcmp(&m_partsFile[nType][0], &pMaterial[nCntModel].aFileName[0]) == 0)
-										{// モデルのIDの設定
-											m_ppParts[nCntParts]->SetModelID(nCntModel);
-											break;
-										}
-									}
-								}
-								else if (!strcmp(aDataSearch, "POS"))
-								{// 位置の読み込み
-									D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-									fscanf(pFile, "%s", &g_aEqual[0]);
-									fscanf(pFile, "%f", &pos.x);
-									fscanf(pFile, "%f", &pos.y);
-									fscanf(pFile, "%f", &pos.z);
-									m_ppParts[nCntParts]->SetPos(pos);
-									m_ppParts[nCntParts]->SetPosOrigin(pos);
-								}
-								else if (!strcmp(aDataSearch, "ROT"))
-								{// 向きの読み込み
-									D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-									fscanf(pFile, "%s", &g_aEqual[0]);
-									fscanf(pFile, "%f", &rot.x);
-									fscanf(pFile, "%f", &rot.y);
-									fscanf(pFile, "%f", &rot.z);
-									m_ppParts[nCntParts]->SetRot(rot);
-									m_ppParts[nCntParts]->SetRotOrigin(rot);
-								}
+							}
+							else if (!strcmp(aDataSearch, "POS"))
+							{// 位置の読み込み
+								D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%f", &pos.x);
+								fscanf(pFile, "%f", &pos.y);
+								fscanf(pFile, "%f", &pos.z);
+								m_ppParts[nCntParts]->SetPos(pos);
+								m_ppParts[nCntParts]->SetPosOrigin(pos);
+							}
+							else if (!strcmp(aDataSearch, "ROT"))
+							{// 向きの読み込み
+								D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%f", &rot.x);
+								fscanf(pFile, "%f", &rot.y);
+								fscanf(pFile, "%f", &rot.z);
+								m_ppParts[nCntParts]->SetRot(rot);
+								m_ppParts[nCntParts]->SetRotOrigin(rot);
 							}
 						}
 					}
 				}
-				else if (!strcmp(aDataSearch, "MOTIONSET"))
-				{// モーションの読み込み
-					while (1)
-					{
-						fscanf(pFile, "%s", aDataSearch);	// 検索
+			}
+			else if (!strcmp(aDataSearch, "MOTIONSET"))
+			{// モーションの読み込み
+				while (1)
+				{
+					fscanf(pFile, "%s", aDataSearch);	// 検索
 
-						if (!strcmp(aDataSearch, "END_MOTIONSET"))
-						{// 読み込みを終了
-							nCntKeySet = 0;	// キー設定の初期化
-							nCntMotion++;	// モーション情報の加算
-							break;
+					if (!strcmp(aDataSearch, "END_MOTIONSET"))
+					{// 読み込みを終了
+						nCntKeySet = 0;	// キー設定の初期化
+						nCntMotion++;	// モーション情報の加算
+						break;
+					}
+					else if (!strcmp(aDataSearch, "LOOP"))
+					{// ループ有無の読み込み
+						fscanf(pFile, "%s", &g_aEqual[0]);
+						fscanf(pFile, "%d", (int*)(&m_motion[nCntMotion].bLoop));
+					}
+					else if (!strcmp(aDataSearch, "NUM_KEY"))
+					{// キー数の読み込み
+						fscanf(pFile, "%s", &g_aEqual[0]);
+						fscanf(pFile, "%d", &m_motion[nCntMotion].nNumKey);
+
+						// メモリの確保
+						m_motion[nCntMotion].pKeySet = new KeySet[m_motion[nCntMotion].nNumKey];
+						assert(m_motion[nCntMotion].pKeySet != NULL);
+
+						for (int nCntNumKeySet = 0; nCntNumKeySet < m_motion[nCntMotion].nNumKey; nCntNumKeySet++)
+						{
+							m_motion[nCntMotion].pKeySet[nCntNumKeySet].pKey = new Key[m_nMaxParts];
+							assert(m_motion[nCntMotion].pKeySet[nCntNumKeySet].pKey != NULL);
 						}
-						else if (!strcmp(aDataSearch, "LOOP"))
-						{// ループ有無の読み込み
-							fscanf(pFile, "%s", &g_aEqual[0]);
-							fscanf(pFile, "%d", (int*)(&m_motion[nCntMotion].bLoop));
-						}
-						else if (!strcmp(aDataSearch, "NUM_KEY"))
-						{// キー数の読み込み
-							fscanf(pFile, "%s", &g_aEqual[0]);
-							fscanf(pFile, "%d", &m_motion[nCntMotion].nNumKey);
 
-							// メモリの確保
-							m_motion[nCntMotion].pKeySet = new KeySet[m_motion[nCntMotion].nNumKey];
-							assert(m_motion[nCntMotion].pKeySet != NULL);
+					}
+					else if (!strcmp(aDataSearch, "KEYSET"))
+					{// キーセットの読み込み
+						while (1)
+						{
+							fscanf(pFile, "%s", aDataSearch);	// 検索
 
-							for (int nCntNumKeySet = 0; nCntNumKeySet < m_motion[nCntMotion].nNumKey; nCntNumKeySet++)
-							{
-								m_motion[nCntMotion].pKeySet[nCntNumKeySet].pKey = new Key[m_nMaxParts];
-								assert(m_motion[nCntMotion].pKeySet[nCntNumKeySet].pKey != NULL);
+							if (!strcmp(aDataSearch, "END_KEYSET"))
+							{// 読み込みを終了
+
+								nCntKey = 0;	// キーカウントの初期化
+								nCntKeySet++;	// キーセットの加算
+								break;
 							}
+							else if (!strcmp(aDataSearch, "FRAME"))
+							{// フレーム数の読み込み
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%d", &m_motion[nCntMotion].pKeySet[nCntKeySet].nFrame);
+							}
+							else if (!strcmp(aDataSearch, "KEY"))
+							{// キーの読み込み
+								while (1)
+								{
+									fscanf(pFile, "%s", aDataSearch);	// 検索
 
-						}
-						else if (!strcmp(aDataSearch, "KEYSET"))
-						{// キーセットの読み込み
-							while (1)
-							{
-								fscanf(pFile, "%s", aDataSearch);	// 検索
-
-								if (!strcmp(aDataSearch, "END_KEYSET"))
-								{// 読み込みを終了
-
-									nCntKey = 0;	// キーカウントの初期化
-									nCntKeySet++;	// キーセットの加算
-									break;
-								}
-								else if (!strcmp(aDataSearch, "FRAME"))
-								{// フレーム数の読み込み
-									fscanf(pFile, "%s", &g_aEqual[0]);
-									fscanf(pFile, "%d", &m_motion[nCntMotion].pKeySet[nCntKeySet].nFrame);
-								}
-								else if (!strcmp(aDataSearch, "KEY"))
-								{// キーの読み込み
-									while (1)
+									if (!strcmp(aDataSearch, "END_KEY"))
+									{// 読み込みを終了
+										nCntKey++;	// キーカウントの加算
+										break;
+									}
+									else if (!strcmp(aDataSearch, "POS"))
+									{// 位置の読み込み
+										fscanf(pFile, "%s", &g_aEqual[0]);
+										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.x);
+										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.y);
+										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.z);
+									}
+									else if (!strcmp(aDataSearch, "ROT"))
 									{
-										fscanf(pFile, "%s", aDataSearch);	// 検索
-
-										if (!strcmp(aDataSearch, "END_KEY"))
-										{// 読み込みを終了
-											nCntKey++;	// キーカウントの加算
-											break;
-										}
-										else if (!strcmp(aDataSearch, "POS"))
-										{// 位置の読み込み
-											fscanf(pFile, "%s", &g_aEqual[0]);
-											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.x);
-											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.y);
-											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].pos.z);
-										}
-										else if (!strcmp(aDataSearch, "ROT"))
-										{
-											// 向きの読み込み
-											fscanf(pFile, "%s", &g_aEqual[0]);
-											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.x);
-											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.y);
-											fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.z);
-										}
+										// 向きの読み込み
+										fscanf(pFile, "%s", &g_aEqual[0]);
+										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.x);
+										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.y);
+										fscanf(pFile, "%f", &m_motion[nCntMotion].pKeySet[nCntKeySet].pKey[nCntKey].rot.z);
 									}
 								}
 							}
@@ -587,16 +589,10 @@ void CMotion::LoodMotion(const char *pFileName)
 				}
 			}
 		}
-		else
-		{//ファイルが開けない場合
-			assert(false);
+	}
 
-			// 処理を終了する
-			return;
-		}
-
-		// 初期化
-		Init();
+	// 初期化
+	Init();
 }
 
 //========================================

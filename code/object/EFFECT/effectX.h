@@ -21,7 +21,7 @@ public:
 	// ***** 構造体 *****
 
 	// エフェクト情報
-	typedef struct
+	struct Info
 	{
 		D3DXVECTOR3 pos;	// 位置
 		D3DXVECTOR3 posOld;	// 位置(過去)
@@ -33,7 +33,7 @@ public:
 		int nLife;			// 寿命
 		int nLifeMax;		// 寿命最大値
 		float fRadius;		// 半径
-	} Info;
+	};
 
 	// ***** 関数 *****
 	CEffectX(int nPriority = PRIO_EFFECT);

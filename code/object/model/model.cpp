@@ -20,6 +20,11 @@ float CModel::m_Height = NULL;
 float CModel::m_Depth = NULL;
 
 //========================================
+//マクロ定義
+//========================================
+#define SHADOW_MINPOS (D3DXVECTOR3(0.0f,-12.5f,0.0f))	// 影の最低位置
+
+//========================================
 // コンストラクタ
 //========================================
 CModel::CModel()
@@ -187,6 +192,7 @@ void CModel::LoadModel(const char *pFileName)
 		{
 			fscanf(pFile, "%s", &aDataSearch[0]);
 			fscanf(pFile, "%s", &m_material[nCntModel].aFileName[0]);	// ファイル名
+			fscanf(pFile, "%d", &m_material[nCntModel].bShadow);		// 影の有無
 			nCntModel++;
 		}
 	}
@@ -306,6 +312,59 @@ void CModel::Draw(bool Color)
 			}
 		}
 
+		// 影の描画
+
+		//if (m_material[m_nModelID].bShadow)
+		//{
+		//	if (m_pos.y >= SHADOW_MINPOS.y)
+		//	{
+		//		D3DXMATRIX	mtxShadow;		//シャドウマトリックス
+		//		D3DLIGHT9	light;			//ライト情報
+		//		D3DXVECTOR4	posLight;		//ライトの位置
+		//		D3DXVECTOR3	pos, normal;	//平面上の任意の点、法線ベクトル
+		//		D3DXPLANE	plane;			//平面情報
+
+		//		//ライトの位置を設定
+		//		pDevice->GetLight(0, &light);
+		//		posLight = D3DXVECTOR4(-light.Direction.x, -light.Direction.y, -light.Direction.z, 0.0f);
+
+		//		//平面情報を生成
+		//		pos = SHADOW_MINPOS;
+		//		normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		//		D3DXPlaneFromPointNormal(&plane, &pos, &normal);
+
+		//		//シャドウマトリックスの初期化
+		//		D3DXMatrixIdentity(&mtxShadow);
+
+		//		//シャドウマトリックスの作成
+		//		D3DXMatrixShadow(&mtxShadow, &posLight, &plane);
+		//		D3DXMatrixMultiply(&mtxShadow, &m_mtxWorld, &mtxShadow);
+
+		//		//シャドウマトリックスの設定
+		//		pDevice->SetTransform(D3DTS_WORLD, &mtxShadow);
+
+		//		for (int nCntMat = 0; nCntMat < (int)m_material[m_nModelID].nNumMat; nCntMat++)
+		//		{
+		//			//マテリアルデータへのポインタを取得
+		//			pMat = (D3DXMATERIAL*)m_material[m_nModelID].pBuffer->GetBufferPointer();
+
+		//			D3DMATERIAL9 MatCopy = pMat[nCntMat].MatD3D;	//マテリアルデータ複製
+
+		//			//黒色に設定											//自己発光を無くす
+		//			MatCopy.Diffuse = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.85f);	MatCopy.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+
+		//			//マテリアル設定
+		//			pDevice->SetMaterial(&MatCopy);
+
+		//			//テクスチャ設定
+		//			pDevice->SetTexture(0, NULL);
+
+		//			// モデルパーツの描画
+		//			m_material[m_nModelID].pMesh->DrawSubset(nCntMat);
+		//		}
+		//	}
+		//}
+
 		// 保存していたマテリアルを戻す
 		pDevice->SetMaterial(&matDef);
 	}
@@ -385,6 +444,59 @@ void CModel::Draw(D3DXMATRIX mtxParent, bool Color)
 				m_material[m_nModelID].pMesh->DrawSubset(nCntMat);
 			}
 		}
+
+		// 影の描画
+
+		//if (m_material[m_nModelID].bShadow)
+		//{
+		//	if (m_pos.y >= SHADOW_MINPOS.y)
+		//	{
+		//		D3DXMATRIX	mtxShadow;		//シャドウマトリックス
+		//		D3DLIGHT9	light;			//ライト情報
+		//		D3DXVECTOR4	posLight;		//ライトの位置
+		//		D3DXVECTOR3	pos, normal;	//平面上の任意の点、法線ベクトル
+		//		D3DXPLANE	plane;			//平面情報
+
+		//		//ライトの位置を設定
+		//		pDevice->GetLight(0, &light);
+		//		posLight = D3DXVECTOR4(-light.Direction.x, -light.Direction.y, -light.Direction.z, 0.0f);
+
+		//		//平面情報を生成
+		//		pos = SHADOW_MINPOS;
+		//		normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		//		D3DXPlaneFromPointNormal(&plane, &pos, &normal);
+
+		//		//シャドウマトリックスの初期化
+		//		D3DXMatrixIdentity(&mtxShadow);
+
+		//		//シャドウマトリックスの作成
+		//		D3DXMatrixShadow(&mtxShadow, &posLight, &plane);
+		//		D3DXMatrixMultiply(&mtxShadow, &m_mtxWorld, &mtxShadow);
+
+		//		//シャドウマトリックスの設定
+		//		pDevice->SetTransform(D3DTS_WORLD, &mtxShadow);
+
+		//		for (int nCntMat = 0; nCntMat < (int)m_material[m_nModelID].nNumMat; nCntMat++)
+		//		{
+		//			//マテリアルデータへのポインタを取得
+		//			pMat = (D3DXMATERIAL*)m_material[m_nModelID].pBuffer->GetBufferPointer();
+
+		//			D3DMATERIAL9 MatCopy = pMat[nCntMat].MatD3D;	//マテリアルデータ複製
+
+		//			//黒色に設定											//自己発光を無くす
+		//			MatCopy.Diffuse = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.85f);	MatCopy.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+
+		//			//マテリアル設定
+		//			pDevice->SetMaterial(&MatCopy);
+
+		//			//テクスチャ設定
+		//			pDevice->SetTexture(0, NULL);
+
+		//			// モデルパーツの描画
+		//			m_material[m_nModelID].pMesh->DrawSubset(nCntMat);
+		//		}
+		//	}
+		//}
 
 		// 保存していたマテリアルを戻す
 		pDevice->SetMaterial(&matDef);

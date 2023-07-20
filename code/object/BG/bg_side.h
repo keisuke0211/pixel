@@ -20,7 +20,7 @@ public:
 	// ***** 構造体 *****
 
 	// 頂点情報[3D_MULTI]の構造体を定義
-	typedef struct
+	struct VERTEX_3D_MULTI
 	{
 		D3DXVECTOR3 pos;	// 頂点座標
 		D3DXVECTOR3 nor;	// 法線ベクトル
@@ -28,7 +28,7 @@ public:
 		D3DXVECTOR2 tex1;	// テクスチャ座標1
 		D3DXVECTOR2 texM;	// テクスチャ座標2
 		D3DXVECTOR2 texM2;	// テクスチャ座標3
-	}VERTEX_3D_MULTI;
+	};
 
 	// ***** 関数 *****
 	CBgSide(int nPriority = PRIO_OBJECT);

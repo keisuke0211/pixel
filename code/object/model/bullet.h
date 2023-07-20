@@ -21,7 +21,7 @@ public:
 	// ***** 構造体 *****
 
 	// 弾情報
-	typedef struct
+	struct Info
 	{
 		D3DXVECTOR3 pos;	// 位置
 		D3DXVECTOR3 posOld;	// 位置(過去)
@@ -37,7 +37,7 @@ public:
 		float fHeight;		// 高さ
 		bool bHit;			// ヒットフラグ
 		int nID;			// 自身のID
-	} Info;
+	};
 
 	// ***** 関数 *****
 	CBullet(int nPriority = PRIO_OBJECT);

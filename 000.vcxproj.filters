@@ -34,11 +34,11 @@
     <Filter Include="ソース ファイル\01_object\03_UI">
       <UniqueIdentifier>{4df6a426-8001-47bd-b007-a4ecf0d5c231}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\01_object\01_bg">
-      <UniqueIdentifier>{a518ef8b-4263-4dd1-9d4a-b11ce452f40b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\01_object\00_system">
       <UniqueIdentifier>{10122d12-6218-4255-b74a-30e1faef53c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\01_object\01_bg">
+      <UniqueIdentifier>{a518ef8b-4263-4dd1-9d4a-b11ce452f40b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -110,9 +110,6 @@
     </ClCompile>
     <ClCompile Include="code\object\objectX.cpp">
       <Filter>ソース ファイル\01_object</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\EFFECT\Shadow.cpp">
-      <Filter>ソース ファイル\01_object\02_effect</Filter>
     </ClCompile>
     <ClCompile Include="code\object\EFFECT\effectX.cpp">
       <Filter>ソース ファイル\01_object\02_effect</Filter>
@@ -208,9 +205,6 @@
     </ClInclude>
     <ClInclude Include="code\object\objectX.h">
       <Filter>ソース ファイル\01_object</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\EFFECT\Shadow.h">
-      <Filter>ソース ファイル\01_object\02_effect</Filter>
     </ClInclude>
     <ClInclude Include="code\object\EFFECT\effectX.h">
       <Filter>ソース ファイル\01_object\02_effect</Filter>

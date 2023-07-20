@@ -25,16 +25,16 @@ public:
 	// ***** 構造体 *****
 
 	//頂点情報【 3D 】
-	typedef struct
+	struct VERTEX_3D
 	{
 		D3DXVECTOR3 pos;	//頂点座標
 		D3DXVECTOR3 nor;	//法線ベクトル
 		D3DCOLOR col;		//頂点カラー
 		D3DXVECTOR2 tex;	//テクスチャ座標
-	} VERTEX_3D;
+	};
 
 
-	typedef struct
+	struct MODEL_MATERIAL
 	{
 		LPD3DXMESH		pMesh;				// メッシュ情報へのポインタ
 		LPD3DXBUFFER	pBuffer;			// マテリアル情報へのポインタ
@@ -42,11 +42,12 @@ public:
 		D3DXVECTOR3		size;				// モデルの大きさ
 		int				*pIdxTex;			// テクスチャ番号
 		char			aFileName[0xff];	// Xファイルのパス
+		bool			bShadow;			// 影使用の有無
 
 		float fWidth;
 		float fHeight;
 		float fDepth;
-	} MODEL_MATERIAL;
+	};
 
 	// ***** 静的関数 *****
 
@@ -62,7 +63,7 @@ public:
 
 	// ***** 関数 *****
 	CModel();
-	~CModel();
+	virtual~CModel();
 
 	// -- メイン ------------------------------------------
 

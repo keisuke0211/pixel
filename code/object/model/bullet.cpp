@@ -12,8 +12,8 @@
 #include "enemy.h"
 #include "block.h"
 #include "../../input.h"
-#include "../2D/score.h"
-#include "../model/effectX.h"
+#include "../UI/score.h"
+#include "../effect/effectX.h"
 
 // Ã“I•Ï”
 int CBullet::m_nNumAll = 0;

@@ -51,7 +51,7 @@ public:
 
 	// ***** 関数 *****
 	CInputKeyboard();
-	~CInputKeyboard();
+	virtual~CInputKeyboard();
 
 	/* メイン */
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd);	// 初期化
@@ -82,7 +82,7 @@ public:
 	// ***** 列挙型 *****
 
 	//キー種類
-	typedef enum
+	enum MOUSE
 	{
 		MOUSE_LEFT = 0,		//マウス左ボタン
 		MOUSE_RIGHT,		//マウス右ボタン
@@ -93,11 +93,11 @@ public:
 		MOUSE_7,			//マウスボタン7
 		MOUSE_8,			//マウスボタン8
 		MOUSE_MAX
-	}MOUSE;
+	};
 
 	// ***** 関数 *****
 	CInputMouse();
-	~CInputMouse();
+	virtual~CInputMouse();
 
 	/* メイン */
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd);				// 初期化
@@ -136,7 +136,7 @@ public:
 	// ***** 列挙型 *****
 
 	//キー種類
-	typedef enum
+	enum JOYKEY
 	{
 		JOYKEY_UP = 0,				//十字ボタン上
 		JOYKEY_DOWN,				//十字ボタン下
@@ -155,25 +155,25 @@ public:
 		JOYKEY_X,					//Xボタン
 		JOYKEY_Y,					//Yボタン
 		JOYKEY_MAX
-	}JOYKEY;
+	};
 
 	// ステック番号
-	typedef enum
+	enum STICK_TYPE
 	{
 		STICK_TYPE_LEFT = 0,
 		STICK_TYPE_RIGHT,
 		STICK_TYPE_MAX
-	}STICK_TYPE;
+	};
 
 	// スティックの方向
-	typedef enum
+	enum STICK_ANGLE
 	{
 		STICK_ANGLE_UP = 0,
 		STICK_ANGLE_DOWN,
 		STICK_ANGLE_LEFT,
 		STICK_ANGLE_RIGHT,
 		STICK_ANGLE_MAX,
-	}STICK_ANGLE;
+	};
 
 	// ***** 構造体 *****
 
@@ -192,7 +192,7 @@ public:
 
 	// ***** 関数 *****
 	CInputJoypad();
-	~CInputJoypad();
+	virtual~CInputJoypad();
 
 	/* メイン */
 	HRESULT Init(void);												// 初期化

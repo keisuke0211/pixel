@@ -21,17 +21,17 @@ public:
 	// ***** 列挙型 *****
 
 	// モデル種類
-	typedef enum
+	enum SHAPE
 	{
 		SHAPE_LINE = 0,	// 直線
 		SHAPE_SQUARE,	// 四角
 		SHAPE_MAX
-	}SHAPE;
+	};
 
 	// ***** 構造体 *****
 
 	// プレイヤー情報
-	typedef struct
+	struct Info
 	{
 		D3DXVECTOR3 pos;		// 位置
 		D3DXVECTOR3 posOld;		// 位置(過去)
@@ -54,7 +54,7 @@ public:
 		int nChain;				// 連鎖カウント
 		bool bBom;				// 爆発フラグ
 		int nID;				// 自身のID
-	} Info;
+	};
 
 	// ***** 関数 *****
 	/* コンストラクタ	*/CCube(int nPriority = PRIO_CUBE);

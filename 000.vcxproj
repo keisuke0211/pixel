@@ -29,7 +29,6 @@
     <ClCompile Include="code\object\BG\bg_side.cpp" />
     <ClCompile Include="code\object\EFFECT\effectX.cpp" />
     <ClCompile Include="code\object\EFFECT\particleX.cpp" />
-    <ClCompile Include="code\object\EFFECT\Shadow.cpp" />
     <ClCompile Include="code\object\model\block.cpp" />
     <ClCompile Include="code\object\model\bullet.cpp" />
     <ClCompile Include="code\object\model\bullet_cube.cpp" />
@@ -62,7 +61,6 @@
     <ClInclude Include="code\object\BG\bg_side.h" />
     <ClInclude Include="code\object\EFFECT\effectX.h" />
     <ClInclude Include="code\object\EFFECT\particleX.h" />
-    <ClInclude Include="code\object\EFFECT\Shadow.h" />
     <ClInclude Include="code\object\model\block.h" />
     <ClInclude Include="code\object\model\bullet.h" />
     <ClInclude Include="code\object\model\bullet_cube.h" />

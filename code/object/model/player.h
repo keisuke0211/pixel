@@ -27,7 +27,7 @@ public:
 	// ***** 構造体 *****
 
 	// プレイヤー情報
-	typedef struct
+	struct Info
 	{
 		D3DXVECTOR3 pos;		// 位置
 		D3DXVECTOR3 posOld;		// 位置(過去)
@@ -42,7 +42,7 @@ public:
 		float fDepth;			// 奥行き
 		bool bMove;				// 移動フラグ
 		bool bJump;				// ジャンプフラグ
-	} Info;
+	};
 
 	// ***** 関数 *****
 	CPlayer(int nPriority = PRIO_OBJECT);

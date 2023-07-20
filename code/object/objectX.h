@@ -28,7 +28,7 @@ public:
 
 	// ***** ŠÖ” *****
 	CObjectX(int nPriority = PRIO_OBJECT);
-	~CObjectX();
+	virtual~CObjectX();
 
 	/* ƒƒCƒ“ */
 	HRESULT Init(void);				// ‰Šú‰»

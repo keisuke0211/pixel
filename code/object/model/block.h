@@ -21,7 +21,7 @@ public:
 	// ***** 構造体 *****
 
 	// プレイヤー情報
-	typedef struct
+	struct Info
 	{
 		D3DXVECTOR3 pos;		// 位置
 		D3DXVECTOR3 posOld;		// 位置(過去)
@@ -36,7 +36,7 @@ public:
 		int nCntRadius;			// 半径・推移時間
 		float fRadiusRate;		// 半径の割合
 		bool bSet;				// 配置フラグ
-	} Info;
+	};
 
 	// ***** 関数 *****
 	CBlock(int nPriority = PRIO_BLOCK);

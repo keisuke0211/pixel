@@ -21,18 +21,18 @@ public:
 	// ***** 列挙型 *****
 
 	// カメラの投影種類
-	typedef enum
+	enum SCREEN
 	{
 		SCREEN_NONE = 0,	// 無し
 		SCREEN_2D,			// 平行投影
 		SCREEN_3D,			// 透視投影
 		SCREEN_MAX
-	}SCREEN;
+	};
 
 	// ***** 構造体 *****
 
 	// カメラ情報
-	typedef struct
+	struct Info
 	{
 		D3DXMATRIX mtxProjection;	// プロジェクションマトリックス
 		D3DXMATRIX mtxView;			// ビューマトリックス
@@ -50,7 +50,7 @@ public:
 		float fDistance;			// 距離
 		float fHeight;				// 高さ
 		float fVerticalMove;		// 縦の移動量
-	} Info;
+	};
 
 	// ***** 関数 *****
 	CCamera();	// コンストラクタ

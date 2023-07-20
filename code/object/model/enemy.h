@@ -24,17 +24,17 @@ public:
 	// ***** 列挙型 *****
 
 	// 状態
-	typedef enum
+	enum STATE
 	{
 		STATE_NORMAL,	// 通常
 		STATE_DAMAGE,	// ダメージ
 		STATE_MAX,
-	}STATE;
+	};
 
 	// ***** 構造体 *****
 
 	// 敵情報
-	typedef struct
+	struct Info
 	{
 		D3DXVECTOR3 pos;	// 位置
 		D3DXVECTOR3 posOld;	// 位置(過去)
@@ -48,8 +48,7 @@ public:
 		STATE state;		// 状態
 		int nCntState;		// 状態管理カウンター
 		int nCntTime;		// 行動カウンター
-
-	} Info;
+	};
 
 	// ***** 関数 *****
 	CEnemy(int nPriority = PRIO_OBJECT);

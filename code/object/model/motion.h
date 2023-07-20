@@ -35,21 +35,21 @@ public:
 	// ***** 構造体 *****
 
 	// キー情報
-	typedef struct
+	struct Key
 	{
 		D3DXVECTOR3		pos;	// 現在位置
 		D3DXVECTOR3		rot;	// 現在の向き
-	}Key;
+	};
 
 	// キー設定
-	typedef struct
+	struct KeySet
 	{
 		int	nFrame;		// フレーム数
 		Key	*pKey;		// キー情報
-	}KeySet;
+	};
 
 	// モーション設定
-	typedef struct
+	struct Motion
 	{
 		int		nNumKey;		// キー数
 		int		nCntKeySet;		// キーセットカウント
@@ -57,14 +57,14 @@ public:
 		bool	bLoop;			// ループ使用状況
 		bool	bMotion;		// モーションを行っているか
 		KeySet	*pKeySet;		// キー設定情報
-	}Motion;
+	};
 
 
 
 	// ***** 関数 *****
 
 	CMotion(const char *pFileName);	// コンストラクタ
-	~CMotion();						// デストラクタ
+	virtual~CMotion();						// デストラクタ
 
 	/* メイン */
 	void Update(void);		// 更新

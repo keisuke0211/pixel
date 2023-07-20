@@ -27,7 +27,7 @@ public:
 	// ***** 列挙型 *****
 
 	// 優先順位種類
-	typedef enum
+	enum PRIO
 	{
 		PRIO_NONE = 0,	// 無し
 		PRIO_OBJECT,	// オブジェクト
@@ -36,10 +36,10 @@ public:
 		PRIO_EFFECT,	// エフェクト
 		PRIO_UI,		// UI
 		PRIO_MAX
-	}PRIO;
+	};
 
 	// オブジェクト種類
-	typedef enum
+	enum TYPE
 	{
 		TYPE_NONE = 0,	// 無し
 		TYPE_BG,		// 背景
@@ -56,7 +56,7 @@ public:
 		TYPE_TIME,		// タイム
 		TYPE_SCORE,		// スコア
 		TYPE_MAX
-	}TYPE;
+	};
 
 	// ***** 静的関数 *****
 	/* 全ての破棄			*/static void ReleaseAll(void);

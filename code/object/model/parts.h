@@ -20,8 +20,8 @@ public:
 	// ***** 静的関数 *****
 	static CParts *Create();	// 生成
 
-	CParts();	// コンストラクタ
-	~CParts();	// デストラクタ
+	CParts();			// コンストラクタ
+	virtual~CParts();	// デストラクタ
 
 	// ***** 関数 *****
 

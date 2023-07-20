@@ -19,7 +19,7 @@ public:
 	// ***** 列挙型 *****
 
 	// モデル種類
-	typedef enum
+	enum MODEL
 	{
 		MODEL_GRASS_00 = 0,	// 草ブロック 1×1×1
 		MODEL_GRASS_01,		// 草ブロック 3×1×1
@@ -45,20 +45,20 @@ public:
 		MODEL_ENEMY_00,		// 仮エネミー
 		MODEL_EFFECT_00,	// エフェクト　粒子
 		MODEL_MAX
-	}MODEL;
+	};
 
 	// ベクトルの種類
-	typedef enum
+	enum VECTOR
 	{
 		VECTOR_X,		// X方向
 		VECTOR_Y,		// Y方向
 		VECTOR_Z,		// Z方向
 		VECTOR_NONE,	// 無し
 		VECTOR_MAX
-	}VECTOR;
+	};
 
 	// 4方向
-	typedef enum
+	enum DIRECTION
 	{
 		DIRECTION_UP,			// 上
 		DIRECTION_DOWN,			// 下
@@ -72,11 +72,11 @@ public:
 		DIRECTION_RIGHT_BACK,	// 右奥
 		DIRECTION_RIGHT_FRONT,	// 右手前
 		DIRECTION_MAX,
-	}DIRECTION;
+	};
 
 	// ***** 関数 *****
 	CPhysics();		// コンストラクタ
-	~CPhysics();	// デストラクタ
+	virtual~CPhysics();	// デストラクタ
 
 	void IntControl(int *pData, int nMax, int nMin);				// int型の値の制御処理
 	void IntLoopControl(int *pData, int nMax, int nMin);			// int型の値のループ制御処理

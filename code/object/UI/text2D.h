@@ -29,18 +29,18 @@ class CText2D :public CObject
 	// ***** 列挙型 *****
 	
 	// 表示形式
-	typedef enum
+	enum DISPLAY
 	{
 		DISPLAY_CENTER,	// 中央揃え
 		DISPLAY_LEFT,	// 左揃え
 		DISPLAY_RIGHT,	// 右揃え
 		DISPLAY_MAX,
-	}DISPLAY;
+	};
 
 public:
 	// ***** 関数 *****
 	CText2D(int nPriority = PRIO_UI);
-	~CText2D();
+	virtual~CText2D();
 	HRESULT Init(void);	// 初期化
 	void Uninit(void);	// 終了
 	void Update(void);	// 更新

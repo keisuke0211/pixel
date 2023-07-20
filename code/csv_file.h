@@ -27,17 +27,17 @@ public:
 	// ***** 列挙型 *****
 
 	// 端数処理
-	typedef enum
+	enum FORMAT
 	{
 		FORMAT_ROUNF,	// 四捨五入
 		FORMAT_CEIL,	// 切り上げ
 		FORMAT_FLOOR,	// 切り捨て
 		FORMAT_MAX,
-	}FORMAT;
+	};
 
 	// ***** コンストラクタ・デストラクタ *****
 	CSVFILE();
-	~CSVFILE();
+	virtual~CSVFILE();
 
 	// ***** 関数 *****
 
