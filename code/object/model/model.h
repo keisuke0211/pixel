@@ -33,7 +33,6 @@ public:
 		D3DXVECTOR2 tex;	//テクスチャ座標
 	};
 
-
 	struct MODEL_MATERIAL
 	{
 		LPD3DXMESH		pMesh;				// メッシュ情報へのポインタ

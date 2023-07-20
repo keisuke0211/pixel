@@ -134,6 +134,9 @@ HRESULT CInputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	CInput::Init(hInstance, hWnd);
 
+	// マウスカーソルを表示
+	ShowCursor(false);
+
 	//　デバイスの生成
 	if (FAILED(m_pInput->CreateDevice(GUID_SysKeyboard, &m_pDevice, NULL)))
 	{
