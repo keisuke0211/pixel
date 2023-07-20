@@ -386,9 +386,8 @@ void CMotion::LoodMotion(const char *pFileName)
 	//ファイルを開く
 	pFile = fopen(pFileName, "r");
 
-	// ファイルが開けなかったら
-	assert(pFile == NULL);
 
+	// ファイルが開けたら
 	if (pFile != NULL)
 	{//ファイルが開いた場合
 
@@ -590,7 +589,13 @@ void CMotion::LoodMotion(const char *pFileName)
 			}
 		}
 	}
+	else
+	{//ファイルが開けない場合
+		assert(false);
 
+		// 処理を終了する
+		return;
+	}
 	// 初期化
 	Init();
 }
