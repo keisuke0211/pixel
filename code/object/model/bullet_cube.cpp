@@ -329,7 +329,7 @@ bool CCube::Correction(VECTOR vector, D3DXVECTOR3 pos)
 			// IDを取得
 			ID = pCube->GetID();
 
-			if (m_Info.nID != ID)
+			if (m_Info.nID != ID) // 0 != 1
 			{// 自分以外のキューブだったら、
 
 				// 自分自身の取得
@@ -598,7 +598,7 @@ void CCube::EnemyCollsion(D3DXVECTOR3 pos)
 	while (pObj != NULL)
 	{// 使用されている時、
 
-	 // 次のオブジェクト
+		 // 次のオブジェクト
 		CObject *pObjNext = pObj->GetNext();
 
 		TYPE type;

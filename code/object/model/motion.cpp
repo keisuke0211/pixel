@@ -232,7 +232,7 @@ void CMotion::PlayMotion(void)
 		D3DXVECTOR3 posDest = m_ppParts[nCntParts]->GetPosDest();	// 目的の位置
 		D3DXVECTOR3 rotDest = m_ppParts[nCntParts]->GetRotDest();	// 目的の向き
 
-		if (motion->nCntFrame == 0)
+		if (motion->nCntFrame)
 		{// フレームカウントが0の時
 		 // 変数宣言
 			D3DXVECTOR3 posOrigin = m_ppParts[nCntParts]->GetPosOrigin();		// 元の位置

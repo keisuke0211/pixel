@@ -98,6 +98,9 @@ public:
 
 private:
 
+	// ***** 関数 *****
+	/* 影	*/void SetShadow(LPDIRECT3DDEVICE9 pDevice, D3DXMATERIAL *pMat,int nModelID);
+
 	// ***** 静的変数 *****
 	/* マテリアル情報	*/static MODEL_MATERIAL	*m_material;
 	/* モデル数			*/static int m_nMaxModel;
