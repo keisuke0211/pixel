@@ -6,6 +6,7 @@
 // *** player.cpp ***
 //========================================
 #include "player.h"
+#include "motion.h"
 #include "../../manager.h"
 #include "../../system/camera.h"
 #include "../../system/input.h"
@@ -46,6 +47,8 @@ CPlayer::CPlayer(int nPriority) : CMotionModel(nPriority)
 	m_Info.fDepth = INIT_FLOAT;
 	m_Info.bMove = false;
 	m_Info.bJump = false;
+	m_Info.bMotion = false;
+	m_Info.bAction = false;
 }
 
 //========================================
@@ -160,7 +163,16 @@ void CPlayer::KeyInput(void)
 	else if (pInputKeyboard->GetPress(DIK_S)) { MoveKeyboard(DIRECTION_FRONT); }	// 手前移動
 	else
 	{
+		if (m_Info.bAction)
+		{
+			CMotion *pMotion = CMotionModel::GetMotion();	// モーション情報
+			pMotion->SetNumMotion(0, true);
+
+			m_Info.bAction = false;
+		}
+
 		m_Info.bMove = false;
+		m_Info.bMotion = false;
 	}
 
 	// ジャンプ
@@ -218,10 +230,11 @@ void CPlayer::MoveKeyboard(DIRECTION drct)
 void CPlayer::MovePos(float fMove)
 {
 	// --- 取得 ---------------------------------
-	CCamera *pCamera = CManager::GetCamera();				// カメラ
-
-	D3DXVECTOR3 posV = pCamera->GetInfo().posV;	// 視点
-	D3DXVECTOR3 posR = pCamera->GetInfo().posR;	// 注視点
+	CCamera *pCamera = CManager::GetCamera();		// カメラ
+	D3DXVECTOR3 posV = pCamera->GetInfo().posV;		// 視点
+	D3DXVECTOR3 posR = pCamera->GetInfo().posR;		// 注視点
+	CMotion *pMotion = CMotionModel::GetMotion();	// モーション情報
+	bool pPlayMotion = pMotion->GetMotion();		// モーション実行しているか
 
 	if (!m_Info.bMove)
 	{
@@ -252,6 +265,26 @@ void CPlayer::MovePos(float fMove)
 		//}
 
 		m_Info.moveRot.y += fAngle;
+
+		if (pMotion != NULL && !m_Info.bMotion)
+		{
+			pMotion->SetNumMotion(1,true);
+
+			m_Info.bMotion = true;
+			m_Info.bAction = true;
+		}
+	}
+	else
+	{
+		if (pMotion != NULL && !m_Info.bMotion && !pPlayMotion)
+		{
+			pMotion->SetNumMotion(0,false);
+		}
+	}
+
+	if (!pPlayMotion)
+	{
+		m_Info.bMotion = false;
 	}
 
 	m_Info.move.x += sinf(m_Info.moveRot.y) * fMove;
@@ -299,6 +332,7 @@ void CPlayer::UpdatePos(void)
 		// Y方向の当たり判定
 		m_Info.pos = Collision(VECTOR_Y, m_Info.pos);
 	}
+
 	// 位置の設定
 	SetPos(m_Info.pos);
 

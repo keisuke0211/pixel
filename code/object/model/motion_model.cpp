@@ -190,7 +190,7 @@ void CMotionModel::SetMotion(const char * pName)
 	m_pMotion->SetMotion(0);
 
 	// ƒ‚[ƒVƒ‡ƒ“”Ô†‚ÌÝ’è
-	m_pMotion->SetNumMotion(0);
+	m_pMotion->SetNumMotion(0,false);
 }
 
 //========================================

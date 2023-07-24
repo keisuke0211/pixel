@@ -204,17 +204,20 @@ void CMotion::SetMotion(const int nCntMotionSet)
 //========================================
 // モーション番号の設定
 //========================================
-void CMotion::SetNumMotion(const int nNumMotion)
+void CMotion::SetNumMotion(const int nNumMotion, bool bStop)
 {
-	// モーションカウントのリセット
-	CntReset(m_nNumMotion);
+	if (!m_bMotion || bStop)
+	{
+		// モーションカウントのリセット
+		CntReset(m_nNumMotion);
 
-	// モーション番号の設定
-	m_nNumMotion = nNumMotion;
+		// モーション番号の設定
+		m_nNumMotion = nNumMotion;
 
-	// モーションブレンドを行う
-	m_bMotionBlend = true;
-	m_bMotion = true;
+		// モーションブレンドを行う
+		m_bMotionBlend = true;
+		m_bMotion = true;
+	}
 }
 
 //========================================

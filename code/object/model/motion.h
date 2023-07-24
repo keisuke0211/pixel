@@ -80,7 +80,7 @@ public:
 
 	/* モーション */
 	void SetMotion(const int nCntMotionSet);	// 初期設定
-	void SetNumMotion(const int nNumMotion);	// モーション番号の設定
+	void SetNumMotion(const int nNumMotion,bool bStop);	// モーション番号の設定
 
 	// モーションを実行しているかの設定
 	void SetUseMotion(bool bMotion) { m_bMotion = bMotion; }

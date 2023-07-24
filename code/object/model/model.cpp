@@ -417,7 +417,6 @@ void CModel::SetShadow(LPDIRECT3DDEVICE9 pDevice, D3DXMATERIAL *pMat, int nModel
 			D3DXVECTOR3	pos, normal;	//平面上の任意の点、法線ベクトル
 			D3DXPLANE	plane;			//平面情報
 
-
 			//ライトの位置を設定
 			pDevice->GetLight(0, &light);
 			posLight = D3DXVECTOR4(-light.Direction.x, -light.Direction.y, -light.Direction.z, 0.0f);
@@ -430,6 +429,7 @@ void CModel::SetShadow(LPDIRECT3DDEVICE9 pDevice, D3DXMATERIAL *pMat, int nModel
 			//シャドウマトリックス
 			{
 				D3DXMATRIX	mtxShadow;
+
 				//シャドウマトリックスの初期化
 				D3DXMatrixIdentity(&mtxShadow);
 
@@ -441,21 +441,20 @@ void CModel::SetShadow(LPDIRECT3DDEVICE9 pDevice, D3DXMATERIAL *pMat, int nModel
 				pDevice->SetTransform(D3DTS_WORLD, &mtxShadow);
 			}
 
-			//αブレンディングを加算合成に設定
-			pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-			pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-
 			for (int nCntMat = 0; nCntMat < (int)m_material[nModelID].nNumMat; nCntMat++)
 			{
 				//マテリアルデータへのポインタを取得
 				pMat = (D3DXMATERIAL*)m_material[nModelID].pBuffer->GetBufferPointer();
 
-				D3DMATERIAL9 MatCopy = pMat[nCntMat].MatD3D;			//マテリアルデータ複製
+				D3DMATERIAL9 MatCopy = InitMtrl(
+					D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
+					D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
+					D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
+					D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
+					0.0f);
 
 				//黒色に設定
-
-				MatCopy.Diffuse = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f);
+				MatCopy.Diffuse.a = 0.5f;
 
 				//マテリアル設定
 				pDevice->SetMaterial(&MatCopy);
@@ -466,10 +465,6 @@ void CModel::SetShadow(LPDIRECT3DDEVICE9 pDevice, D3DXMATERIAL *pMat, int nModel
 				// モデルパーツの描画
 				m_material[nModelID].pMesh->DrawSubset(nCntMat);
 			}
-			//αブレンディングを元に戻す
-			pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-			pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		}
 	}
 
@@ -581,4 +576,18 @@ float CModel::GetDepth(const int nModelID)
 	m_Depth = m_material[nModelID].fDepth;
 
 	return m_Depth;
+}
+
+//========================================
+// マテリアルの初期化
+//========================================
+D3DMATERIAL9 CModel::InitMtrl(D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D3DXCOLOR e, float p)
+{
+	D3DMATERIAL9 mtrl;
+	mtrl.Ambient = a;
+	mtrl.Diffuse = d;
+	mtrl.Specular = s;
+	mtrl.Emissive = e;
+	mtrl.Power = p;
+	return mtrl;
 }

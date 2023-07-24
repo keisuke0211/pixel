@@ -101,6 +101,8 @@ private:
 	// ***** 関数 *****
 	/* 影	*/void SetShadow(LPDIRECT3DDEVICE9 pDevice, D3DXMATERIAL *pMat,int nModelID);
 
+	D3DMATERIAL9 InitMtrl(D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D3DXCOLOR e, float p);
+
 	// ***** 静的変数 *****
 	/* マテリアル情報	*/static MODEL_MATERIAL	*m_material;
 	/* モデル数			*/static int m_nMaxModel;

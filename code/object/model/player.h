@@ -42,6 +42,8 @@ public:
 		float fDepth;			// 奥行き
 		bool bMove;				// 移動フラグ
 		bool bJump;				// ジャンプフラグ
+		bool bMotion;			// モーションフラグ
+		bool bAction;			// 行動フラグ
 	};
 
 	// ***** 関数 *****
