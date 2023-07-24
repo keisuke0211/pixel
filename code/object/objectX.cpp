@@ -7,8 +7,8 @@
 //========================================
 #include "objectX.h"
 #include "../manager.h"
-#include "../renderer.h"
-#include "../texture.h"
+#include "../system/renderer.h"
+#include "../system/texture.h"
 #include "model\model.h"
 
 //========================================

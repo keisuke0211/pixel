@@ -7,7 +7,7 @@
 //========================================
 #ifndef _PHYSICS_H_
 #define _PHYSICS_H_
-#include "main.h"
+#include "../main.h"
 
 //****************************************
 // ƒNƒ‰ƒX

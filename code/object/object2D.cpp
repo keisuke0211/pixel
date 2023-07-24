@@ -7,8 +7,8 @@
 //========================================
 #include "../manager.h"
 #include "object2D.h"
-#include "../renderer.h"
-#include "../texture.h"
+#include "../system/renderer.h"
+#include "../system/texture.h"
 
 //========================================
 // コンストラクタ

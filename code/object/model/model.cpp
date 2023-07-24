@@ -7,8 +7,8 @@
 //========================================
 #include "model.h"
 #include "../../manager.h"
-#include "../../renderer.h"
-#include "../../texture.h"
+#include "../../system/renderer.h"
+#include "../../system/texture.h"
 
 //========================================
 // 静的変数
@@ -412,7 +412,6 @@ void CModel::SetShadow(LPDIRECT3DDEVICE9 pDevice, D3DXMATERIAL *pMat, int nModel
 	{
 		if (m_pos.y >= SHADOW_MINPOS.y)
 		{
-			D3DXMATRIX	mtxShadow;		//シャドウマトリックス
 			D3DLIGHT9	light;			//ライト情報
 			D3DXVECTOR4	posLight;		//ライトの位置
 			D3DXVECTOR3	pos, normal;	//平面上の任意の点、法線ベクトル
@@ -428,20 +427,24 @@ void CModel::SetShadow(LPDIRECT3DDEVICE9 pDevice, D3DXMATERIAL *pMat, int nModel
 			normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 			D3DXPlaneFromPointNormal(&plane, &pos, &normal);
 
+			//シャドウマトリックス
+			{
+				D3DXMATRIX	mtxShadow;
+				//シャドウマトリックスの初期化
+				D3DXMatrixIdentity(&mtxShadow);
+
+				//シャドウマトリックスの作成
+				D3DXMatrixShadow(&mtxShadow, &posLight, &plane);
+				D3DXMatrixMultiply(&mtxShadow, &m_mtxWorld, &mtxShadow);
+
+				//シャドウマトリックスの設定
+				pDevice->SetTransform(D3DTS_WORLD, &mtxShadow);
+			}
+
 			//αブレンディングを加算合成に設定
 			pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 			pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-
-			//シャドウマトリックスの初期化
-			D3DXMatrixIdentity(&mtxShadow);
-
-			//シャドウマトリックスの作成
-			D3DXMatrixShadow(&mtxShadow, &posLight, &plane);
-			D3DXMatrixMultiply(&mtxShadow, &m_mtxWorld, &mtxShadow);
-
-			//シャドウマトリックスの設定
-			pDevice->SetTransform(D3DTS_WORLD, &mtxShadow);
 
 			for (int nCntMat = 0; nCntMat < (int)m_material[nModelID].nNumMat; nCntMat++)
 			{
@@ -450,8 +453,9 @@ void CModel::SetShadow(LPDIRECT3DDEVICE9 pDevice, D3DXMATERIAL *pMat, int nModel
 
 				D3DMATERIAL9 MatCopy = pMat[nCntMat].MatD3D;			//マテリアルデータ複製
 
-				//黒色に設定											//自己発光を無くす
-				MatCopy.Diffuse = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.95f);	MatCopy.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+				//黒色に設定
+
+				MatCopy.Diffuse = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f);
 
 				//マテリアル設定
 				pDevice->SetMaterial(&MatCopy);

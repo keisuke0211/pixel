@@ -6,7 +6,7 @@
 // *** renderer.cpp ***
 //========================================
 #include "renderer.h"
-#include "object\object.h"
+#include "../object\object.h"
 
 // 静的変数
 LPD3DXFONT CRenderer::m_pFont = NULL;	// フォント

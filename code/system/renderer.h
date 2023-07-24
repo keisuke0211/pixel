@@ -5,7 +5,7 @@
 //========================================
 // *** renderer.h ***
 //========================================
-#include "main.h"
+#include "../main.h"
 
 #ifndef _RENDERER_H_
 #define _RENDERER_H_

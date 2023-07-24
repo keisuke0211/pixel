@@ -8,10 +8,10 @@
 #include "bullet.h"
 #include "bullet_cube.h"
 #include "../../manager.h"
-#include "../../renderer.h"
+#include "../../system/renderer.h"
 #include "enemy.h"
 #include "block.h"
-#include "../../input.h"
+#include "../../system/input.h"
 #include "../UI/score.h"
 #include "../effect/effectX.h"
 

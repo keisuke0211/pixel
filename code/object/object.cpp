@@ -7,8 +7,8 @@
 //========================================
 #include "../manager.h"
 #include "object.h"
-#include "../renderer.h"
-#include "../camera.h"
+#include "../system/renderer.h"
+#include "../system/camera.h"
 
 // Ã“I•Ï”
 CObject *CObject::m_apTop[] = {};

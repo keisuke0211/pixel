@@ -7,13 +7,13 @@
 //========================================
 #include "enemy.h"
 #include "../../manager.h"
-#include "../../renderer.h"
-#include "../../sound.h"
+#include "../../system/renderer.h"
+#include "../../system/sound.h"
 #include "../UI/score.h"
 #include "../EFFECT/particleX.h"
 #include "block.h"
 #include "bullet_cube.h"
-#include "../../input.h"
+#include "../../system/input.h"
 
 // ê√ìIïœêî
 CEnemy::SetInfo *CEnemy::pSet = NULL;

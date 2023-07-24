@@ -7,8 +7,8 @@
 //========================================
 #include "bg_side.h"
 #include "../../manager.h"
-#include "../../renderer.h"
-#include "../../texture.h"
+#include "../../system/renderer.h"
+#include "../../system/texture.h"
 
 // Ã“I•Ï”
 float CBgSide::m_aTexV[3] = { 0.0f };

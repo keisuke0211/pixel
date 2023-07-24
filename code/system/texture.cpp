@@ -6,7 +6,7 @@
 // *** texture.cpp ***
 //========================================
 #include "texture.h"
-#include "manager.h"
+#include "../manager.h"
 #include "renderer.h"
 
 // ’è‹`

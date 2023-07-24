@@ -7,8 +7,8 @@
 //========================================
 #include "bg_ceiling.h"
 #include "../../manager.h"
-#include "../../renderer.h"
-#include "../../texture.h"
+#include "../../system/renderer.h"
+#include "../../system/texture.h"
 
 //****************************************
 // ƒ}ƒNƒ’è‹`

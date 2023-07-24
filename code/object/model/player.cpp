@@ -7,10 +7,10 @@
 //========================================
 #include "player.h"
 #include "../../manager.h"
-#include "../../camera.h"
-#include "../../input.h"
-#include "../../sound.h"
-#include "../../physics.h"
+#include "../../system/camera.h"
+#include "../../system/input.h"
+#include "../../system/sound.h"
+#include "../../system/physics.h"
 #include "bullet.h"
 #include "enemy.h"
 #include "bullet_cube.h"
@@ -217,8 +217,6 @@ void CPlayer::MoveKeyboard(DIRECTION drct)
 //========================================
 void CPlayer::MovePos(float fMove)
 {
-	float p;
-
 	// --- éÊìæ ---------------------------------
 	CCamera *pCamera = CManager::GetCamera();				// ÉJÉÅÉâ
 

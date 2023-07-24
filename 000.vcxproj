@@ -19,10 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="code\camera.cpp" />
-    <ClCompile Include="code\csv_file.cpp" />
-    <ClCompile Include="code\input.cpp" />
-    <ClCompile Include="code\light.cpp" />
     <ClCompile Include="code\main.cpp" />
     <ClCompile Include="code\manager.cpp" />
     <ClCompile Include="code\object\BG\bg_ceiling.cpp" />
@@ -45,16 +41,19 @@
     <ClCompile Include="code\object\UI\score.cpp" />
     <ClCompile Include="code\object\UI\text2D.cpp" />
     <ClCompile Include="code\object\UI\time.cpp" />
-    <ClCompile Include="code\physics.cpp" />
-    <ClCompile Include="code\renderer.cpp" />
-    <ClCompile Include="code\sound.cpp" />
-    <ClCompile Include="code\texture.cpp" />
+    <ClCompile Include="code\scene\game.cpp" />
+    <ClCompile Include="code\scene\result.cpp" />
+    <ClCompile Include="code\scene\title.cpp" />
+    <ClCompile Include="code\system\camera.cpp" />
+    <ClCompile Include="code\system\csv_file.cpp" />
+    <ClCompile Include="code\system\input.cpp" />
+    <ClCompile Include="code\system\light.cpp" />
+    <ClCompile Include="code\system\physics.cpp" />
+    <ClCompile Include="code\system\renderer.cpp" />
+    <ClCompile Include="code\system\sound.cpp" />
+    <ClCompile Include="code\system\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="code\camera.h" />
-    <ClInclude Include="code\csv_file.h" />
-    <ClInclude Include="code\input.h" />
-    <ClInclude Include="code\light.h" />
     <ClInclude Include="code\main.h" />
     <ClInclude Include="code\manager.h" />
     <ClInclude Include="code\object\BG\bg_ceiling.h" />
@@ -77,10 +76,17 @@
     <ClInclude Include="code\object\UI\score.h" />
     <ClInclude Include="code\object\UI\text2D.h" />
     <ClInclude Include="code\object\UI\time.h" />
-    <ClInclude Include="code\physics.h" />
-    <ClInclude Include="code\renderer.h" />
-    <ClInclude Include="code\sound.h" />
-    <ClInclude Include="code\texture.h" />
+    <ClInclude Include="code\scene\game.h" />
+    <ClInclude Include="code\scene\result.h" />
+    <ClInclude Include="code\scene\title.h" />
+    <ClInclude Include="code\system\camera.h" />
+    <ClInclude Include="code\system\csv_file.h" />
+    <ClInclude Include="code\system\input.h" />
+    <ClInclude Include="code\system\light.h" />
+    <ClInclude Include="code\system\physics.h" />
+    <ClInclude Include="code\system\renderer.h" />
+    <ClInclude Include="code\system\sound.h" />
+    <ClInclude Include="code\system\texture.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@
 #define _MODEL_H_
 
 #include "../../main.h"
-#include "../../physics.h"
+#include "../../system/physics.h"
 #include "../object.h"
 
 //****************************************

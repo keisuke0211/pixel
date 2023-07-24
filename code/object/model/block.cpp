@@ -7,8 +7,8 @@
 //========================================
 #include "block.h"
 #include "model.h"
-#include "../../sound.h"
-#include "../../csv_file.h"
+#include "../../system/sound.h"
+#include "../../system/csv_file.h"
 
 //========================================
 // コンストラクタ

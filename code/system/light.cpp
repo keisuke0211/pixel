@@ -6,7 +6,7 @@
 // *** light.cpp ***
 //========================================
 #include "light.h"
-#include "manager.h"
+#include "../manager.h"
 #include "renderer.h"
 
 //========================================

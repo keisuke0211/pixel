@@ -7,7 +7,7 @@
 //=======================================
 #include "effectX.h"
 #include "../../manager.h"
-#include "../../renderer.h"
+#include "../../system/renderer.h"
 
 //========================================
 // コンストラクタ

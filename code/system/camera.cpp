@@ -6,7 +6,7 @@
 // *** camera.cpp ***
 //========================================
 #include "camera.h"
-#include "manager.h"
+#include "../manager.h"
 #include "renderer.h"
 #include "input.h"
 

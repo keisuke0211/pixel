@@ -9,7 +9,7 @@
 #define _OBJECT_H_
 
 #include "../main.h"
-#include "../physics.h"
+#include "../system/physics.h"
 
 //****************************************
 // ‘O•ûéŒ¾

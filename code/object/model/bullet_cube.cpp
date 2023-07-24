@@ -9,8 +9,8 @@
 #include "../EFFECT/particleX.h"
 #include "model.h"
 #include "enemy.h"
-#include "../../sound.h"
-#include "../../csv_file.h"
+#include "../../system/sound.h"
+#include "../../system/csv_file.h"
 
 // Ã“I•Ï”
 int CCube::m_nNumAll = -1;

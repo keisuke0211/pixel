@@ -8,7 +8,7 @@
 #ifndef _LIGHT_H_
 #define _LIGHT_H_
 
-#include "main.h"
+#include "../main.h"
 
 #define NUM_LIGHT			(3)		//ライトの数
 #define LIGHT_CLOR			(1.0f)	//全体のライト色
