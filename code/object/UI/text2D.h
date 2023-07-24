@@ -26,8 +26,9 @@ class CText2D :public CObject
 	static const int PTN_HEIGHT = 8;					// パターン高さ
 	static const int PTN_MAX = PTN_WIDTH * PTN_HEIGHT;	// パターン最大値
 
+public:
 	// ***** 列挙型 *****
-	
+
 	// 表示形式
 	enum DISPLAY
 	{
@@ -37,7 +38,6 @@ class CText2D :public CObject
 		DISPLAY_MAX,
 	};
 
-public:
 	// ***** 関数 *****
 	CText2D(int nPriority = PRIO_UI);
 	virtual~CText2D();
@@ -49,6 +49,7 @@ public:
 	/* 設定 */
 	void SetString(char *pString);					// 文字列
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }	// 位置
+	void SetDisp(DISPLAY disp) { m_disp = disp; }	// 表示形式
 
 	// サイズ
 	void SetSize(float fWidth, float fHeight) { m_fWidth = fWidth, m_fHeight = fHeight; }

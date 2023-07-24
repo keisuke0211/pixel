@@ -7,6 +7,8 @@
 //========================================
 #include "result.h"
 #include "../object\model\model.h"
+#include "../system/input.h"
+#include "../object\UI\text2D.h"
 
 //========================================
 // コンストラクタ
@@ -29,7 +31,23 @@ CResult::~CResult()
 //========================================
 HRESULT CResult::Init(void)
 {
+	{// タイトル
+		CText2D *pObj = CText2D::Create();
 
+		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, 100, 0.0f));
+		pObj->SetSize(48.0f, 48.0f);
+		pObj->SetDisp(CText2D::DISPLAY_CENTER);
+		pObj->SetString("RESULT");
+	}
+
+	{// 入力催促
+		CText2D *pObj = CText2D::Create();
+
+		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 0.0f));
+		pObj->SetSize(48.0f, 48.0f);
+		pObj->SetDisp(CText2D::DISPLAY_CENTER);
+		pObj->SetString("PRESS ENTER");
+	}
 	return S_OK;
 }
 
@@ -38,10 +56,18 @@ HRESULT CResult::Init(void)
 //========================================
 void CResult::Uninit(void)
 {
-	// モデル
-	CModel::UninitModel();
+	// --- 取得 ---------------------------------
+	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
 
-	CObject::ReleaseAll(CObject::TYPE_PLAYER);
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_A))
+	{
+		// モデル
+		CModel::UninitModel();
+
+		CObject::ReleaseAll(CObject::TYPE_PLAYER);
+	}
 }
 
 //========================================

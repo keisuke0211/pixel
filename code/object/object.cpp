@@ -83,7 +83,8 @@ void CObject::ReleaseAll(void)
 				//			２個目から何もないまま処理を通ってエラーが出る
 				if (nPrio == PRIO_UI)
 				{
-					break;
+					pObj = pObjNext;	// 次のオブジェクトポインタを代入
+					continue;
 				}
 
 				pObj = pObjNext;	// 次のオブジェクトポインタを代入
@@ -151,7 +152,8 @@ void CObject::ReleaseAll(TYPE type)
 					//			２個目から何もないまま処理を通ってエラーが出る
 					if (nPrio == PRIO_UI)
 					{
-						break;
+						pObj = pObjNext;	// 次のオブジェクトポインタを代入
+						continue;
 					}
 
 					pObj = pObjNext;	// 次のオブジェクトポインタを代入
