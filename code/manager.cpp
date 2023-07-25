@@ -16,7 +16,7 @@
 #include "scene\title.h"
 #include "scene\game.h"
 #include "scene\result.h"
-//#include "scene\fade.h"
+#include "scene\fade.h"
 
 // 静的メンバ変数
 CRenderer *CManager::m_pRenderer = NULL;
@@ -121,13 +121,11 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 
 
 	// フェード
-	/*if (m_pFade == NULL)
+	if (m_pFade == NULL)
 	{
 		m_pFade = new CFade;
 		m_pFade->Init();
-	}*/
-
-	SetMode(CScene::MODE_TITLE);
+	}
 
 	return S_OK;
 }
@@ -225,6 +223,7 @@ void CManager::Uninit(void)
 //========================================
 void CManager::Update(void)
 {
+	m_pScene->Update();				// シーン
 	m_InputKeyboard->Update();		// キーボード
 	m_InputMouse->Update();			// マウス
 	m_InputJoypad->Update();		// ジョイパット(ボタン)
@@ -232,7 +231,6 @@ void CManager::Update(void)
 	m_pCamera->Update();			// カメラ
 	m_pLight->Update();				// ライト
 	m_pRenderer->Update();			// レンダラー
-	m_pScene->Update();				// シーン
 }
 
 //========================================

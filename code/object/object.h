@@ -35,6 +35,7 @@ public:
 		PRIO_CUBE,		// キューブ
 		PRIO_EFFECT,	// エフェクト
 		PRIO_UI,		// UI
+		PRIO_FADE,		// フェード
 		PRIO_MAX
 	};
 

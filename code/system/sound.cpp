@@ -170,6 +170,7 @@ void CSound::Load(void)
 		}
 
 		if (!strcmp(aDataSearch, "END"))	{ fclose(pFile); break; }	// 読み込みを終了
+		if (aDataSearch[0] == '#'){ continue; }				// 折り返す
 		if (!strcmp(aDataSearch, "SOUND"))	{
 			fscanf(pFile, "%s", &pSoundInfo->aFileName);	// ファイル名
 			fscanf(pFile, "%d", &pSoundInfo->nCntLoop);		// ループカウント

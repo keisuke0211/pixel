@@ -9,7 +9,7 @@
 #include "../object\model\model.h"
 #include "../system/input.h"
 #include "../object\UI\text2D.h"
-//#include "fade.h"
+#include "fade.h"
 
 //========================================
 // コンストラクタ
@@ -75,8 +75,7 @@ void CResult::Update(void)
 
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_A))
 	{
-		/*CManager::GetFade()->SetFade(MODE_TITLE);*/
-		CManager::SetMode(MODE_TITLE);
+		CManager::GetFade()->SetFade(MODE_TITLE);
 	}
 }
 
