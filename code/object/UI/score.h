@@ -33,15 +33,18 @@ public:
 
 	// *****  関数 *****
 
-	/* メイン */
-	HRESULT Init(void);		// 初期化
-	void Uninit(void);		// 終了
-	void Update(void);		// 更新
-	void Draw(void);		// 描画
-	static void SetScore(int nScore = 0);	// 設定
+	// -- メイン ---------------------------------
+	/* 初期化	*/HRESULT Init(void);
+	/* 終了		*/void Uninit(void);
+	/* 更新		*/void Update(void);
+	/* 描画		*/void Draw(void);
+	/* 生成		*/static CScore *Create(void);
 
-	// 生成
-	static CScore *Create(void);
+	// -- 設定 ---------------------------------
+	/* スコア	*/static void SetScore(int nScore = 0);
+
+	// -- 取得 ---------------------------------
+	/* スコア	*/int GetScore(void) { return m_nScore; }
 
 private:
 	// ***** 変数 *****

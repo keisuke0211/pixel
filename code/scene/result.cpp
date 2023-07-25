@@ -37,7 +37,7 @@ HRESULT CResult::Init(void)
 	{// タイトル
 		CText2D *pObj = CText2D::Create();
 
-		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH, 100, 0.0f));
+		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, 100, 0.0f));
 		pObj->SetSize(48.0f, 48.0f);
 		pObj->SetDisp(CText2D::DISPLAY_CENTER);
 		pObj->SetString("RESULT");
@@ -46,14 +46,14 @@ HRESULT CResult::Init(void)
 	{// スコア
 		CText2D *pObj = CText2D::Create();
 
-		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 0.0f));
+		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 150, 0.0f));
 		pObj->SetSize(48.0f, 48.0f);
 		pObj->SetDisp(CText2D::DISPLAY_CENTER);
 
 		char tex[TXT_MAX] = { "SCORE:" };
 		char score[TXT_MAX];
 
-		sprintf(score, "%d", CGame::GetScore());
+		sprintf(score, "%d", CGame::GetScore()->GetScore());
 		strcat(tex, score);
 		pObj->SetString(tex);
 	}

@@ -19,7 +19,7 @@ class CFade : public CObject2D
 {
 
 public:
-	static const int FADE_Transition = 25;	// フェード推移値  FADE_Transition / 1000
+	static const int FADE_TRANSITION = 25;	// フェード推移値  FADE_TRANSITION / 1000
 
 	// ***** 列挙型 *****
 

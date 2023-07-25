@@ -69,7 +69,7 @@ HRESULT CGame::Init(void)
 		m_pTime->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 32.0f, 0.0f));
 
 		// ƒ^ƒCƒ€Ý’è
-		m_pTime->SetTime(99);
+		m_pTime->SetTime(MAX_TIME);
 	}
 
 	{

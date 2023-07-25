@@ -39,7 +39,7 @@ HRESULT CFade::Init(void)
 	m_color = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);	// 黒いポリゴン(不透明)にする
 
 	BindTexture(-1);
-	SetType(TYPE_BG);
+	SetType(TYPE_NONE);
 	SetPos(D3DXVECTOR3(640, 360, 0.0f));
 	SetSize(1280, 720);
 	SetColor(m_color);
@@ -66,7 +66,7 @@ void CFade::Update(void)
 	{
 		if (m_fade == FADE_IN)
 		{//　フェードイン
-			m_color.a -= (float)FADE_Transition / 1000;
+			m_color.a -= (float)FADE_TRANSITION / 1000;
 
 			if (m_color.a <= 0.0f)
 			{// 透明度が0以下の時
@@ -77,7 +77,7 @@ void CFade::Update(void)
 		}
 		else if (m_fade == FADE_OUT)
 		{// フェードアウト
-			m_color.a += (float)FADE_Transition / 1000;
+			m_color.a += (float)FADE_TRANSITION / 1000;
 
 			if (m_color.a > 1.0f)
 			{// 透明度が最大値を上回った時、

@@ -22,6 +22,7 @@ class CScore;			// ÉXÉRÉA
 //****************************************
 class CGame : public CScene
 {
+	static const int MAX_TIME = 99;	// êßå¿éûä‘
 public:
 
 	// ***** ä÷êî *****
