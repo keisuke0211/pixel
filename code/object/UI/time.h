@@ -24,11 +24,12 @@ public:
 	// *****  関数 *****
 
 	/* メイン */
-	HRESULT Init(void);				// 初期化
-	void Uninit(void);				// 終了
-	void Update(void);				// 更新
-	void Draw(void);				// 描画
-	void SetTime(int nTime = 0);	// 設定
+	/* 初期化		*/HRESULT Init(void);
+	/* 終了			*/void Uninit(void);
+	/* 更新			*/void Update(void);
+	/* 描画			*/void Draw(void);
+	/* タイム設定	*/void SetTime(int nTime = 0);
+	/* タイム所得	*/int GetTime(void) { return m_nTime; }
 
 	// 生成
 	static CTime *Create(void);

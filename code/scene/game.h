@@ -12,6 +12,12 @@
 #include "../manager.h"
 
 //****************************************
+// 前方宣言
+//****************************************
+class CTime;			// タイム
+class CScore;			// スコア
+
+//****************************************
 // クラス
 //****************************************
 class CGame : public CScene
@@ -33,9 +39,14 @@ public:
 	/* エネミー	*/static void LoodEnemy(void);
 	/* ブロック */static void LoodBlock(void);
 
+	// -- 取得 ------------------------
+	/* タイム		*/static CTime *GetTime() { return m_pTime; }
+	/* スコア		*/static CScore *GetScore() { return m_pScore; };
 private:
 
 	// ***** 変数 *****
+	/* タイム		*/static CTime *m_pTime;
+	/* スコア		*/static CScore *m_pScore;
 
 };
 

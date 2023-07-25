@@ -6,6 +6,8 @@
 // *** result.cpp ***
 //========================================
 #include "result.h"
+#include "game.h"
+#include "../object/UI/score.h"
 #include "../object\model\model.h"
 #include "../system/input.h"
 #include "../object\UI\text2D.h"
@@ -35,10 +37,25 @@ HRESULT CResult::Init(void)
 	{// タイトル
 		CText2D *pObj = CText2D::Create();
 
-		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, 100, 0.0f));
+		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH, 100, 0.0f));
 		pObj->SetSize(48.0f, 48.0f);
 		pObj->SetDisp(CText2D::DISPLAY_CENTER);
 		pObj->SetString("RESULT");
+	}
+
+	{// スコア
+		CText2D *pObj = CText2D::Create();
+
+		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 0.0f));
+		pObj->SetSize(48.0f, 48.0f);
+		pObj->SetDisp(CText2D::DISPLAY_CENTER);
+
+		char tex[TXT_MAX] = { "SCORE:" };
+		char score[TXT_MAX];
+
+		sprintf(score, "%d", CGame::GetScore());
+		strcat(tex, score);
+		pObj->SetString(tex);
 	}
 
 	{// 入力催促
@@ -60,7 +77,9 @@ void CResult::Uninit(void)
 	// モデル
 	CModel::UninitModel();
 
-	CObject::ReleaseAll();
+	CObject::ReleaseAll(CObject::TYPE_TIME);
+	CObject::ReleaseAll(CObject::TYPE_SCORE);
+	CObject::ReleaseAll(CObject::TYPE_TEXT);
 }
 
 //========================================
@@ -75,7 +94,10 @@ void CResult::Update(void)
 
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_A))
 	{
-		CManager::GetFade()->SetFade(MODE_TITLE);
+		if (CFade::GetFade() == CFade::FADE_NONE)
+		{
+			CManager::GetFade()->SetFade(MODE_TITLE);
+		}
 	}
 }
 

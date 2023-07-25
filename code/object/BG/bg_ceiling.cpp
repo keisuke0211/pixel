@@ -65,6 +65,7 @@ HRESULT CBgCeiling::Init(void)
 {
 	m_pos = BG_POS;
 
+	SetType(TYPE_BG);
 	// デバイスの所得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 

@@ -19,7 +19,7 @@ class CFade : public CObject2D
 {
 
 public:
-	static const int FADE_Transition = 15;	// フェード推移値  FADE_Transition / 1000
+	static const int FADE_Transition = 25;	// フェード推移値  FADE_Transition / 1000
 
 	// ***** 列挙型 *****
 
@@ -41,7 +41,13 @@ public:
 	/* 終了		*/void Uninit(void);
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);
+
+	// -- 設定 --------------------------------------------
 	/* フェード	*/void SetFade(CScene::MODE modeNext);
+
+	// -- 取得 --------------------------------------------
+	/* 状態	*/static FADE GetFade(void) { return m_fade; }
+
 
 private:
 

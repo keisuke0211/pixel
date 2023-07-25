@@ -16,7 +16,11 @@
 #include "../object\BG\bg_ceiling.h"
 #include "../object\UI\text2D.h"
 #include "../system/input.h"
-//#include "fade.h"
+#include "fade.h"
+
+// 静的変数
+CTime *CGame::m_pTime = NULL;
+CScore *CGame::m_pScore = NULL;
 
 //========================================
 // コンストラクタ
@@ -56,27 +60,27 @@ HRESULT CGame::Init(void)
 
 	{
 		// タイム生成
-		CTime *pObj = CTime::Create();
+		m_pTime = CTime::Create();
 
 		// サイズ設定
-		pObj->SetSize(20.0f, 20.0f);
+		m_pTime->SetSize(20.0f, 20.0f);
 
 		// 位置設定
-		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 32.0f, 0.0f));
+		m_pTime->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 32.0f, 0.0f));
 
 		// タイム設定
-		pObj->SetTime(99);
+		m_pTime->SetTime(99);
 	}
 
 	{
 		// スコア生成
-		CScore *pObj = CScore::Create();
+		m_pScore = CScore::Create();
 
 		// サイズ設定
-		pObj->SetSize(20.0f, 20.0f);
+		m_pScore->SetSize(20.0f, 20.0f);
 
 		// 位置設定
-		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 52.0f, 0.0f));
+		m_pScore->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 52.0f, 0.0f));
 
 		// スコア設定
 		CScore::SetScore();
@@ -148,15 +152,14 @@ HRESULT CGame::Init(void)
 //========================================
 void CGame::Uninit(void)
 {
+	CObject::ReleaseAll(CObject::TYPE_BG);
 	CObject::ReleaseAll(CObject::TYPE_BLOCK);
 	CObject::ReleaseAll(CObject::TYPE_CUBE);
 	CObject::ReleaseAll(CObject::TYPE_PLAYER);
 	CObject::ReleaseAll(CObject::TYPE_ENEMY);
 	CObject::ReleaseAll(CObject::TYPE_EFFECT);
 	CObject::ReleaseAll(CObject::TYPE_PARTICLE);
-	CObject::ReleaseAll(CObject::TYPE_TIME);
-	CObject::ReleaseAll(CObject::TYPE_SCORE);
-
+	CObject::ReleaseAll(CObject::TYPE_TEXT);
 }
 
 //========================================
@@ -164,11 +167,19 @@ void CGame::Uninit(void)
 //========================================
 void CGame::Update(void)
 {
-	// エネミーの全滅
-	if (CEnemy::GetEnemyAll() <= 0)
+	if (CFade::GetFade() == CFade::FADE_NONE)
 	{
-		//CManager::GetFade()->SetFade(MODE_RESULT);
-		CManager::SetMode(MODE_RESULT);
+		// エネミーの全滅
+		if (CEnemy::GetEnemyAll() <= 0)
+		{
+			CManager::GetFade()->SetFade(MODE_RESULT);
+		}
+
+		// 時間切れ
+		if (m_pTime->GetTime() <= 0)
+		{
+			CManager::GetFade()->SetFade(MODE_RESULT);
+		}
 	}
 }
 

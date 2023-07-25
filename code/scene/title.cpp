@@ -76,7 +76,14 @@ void CTitle::Update(void)
 
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_A))
 	{
-		CManager::GetFade()->SetFade(MODE_GAME);
+		if (CFade::GetFade() == CFade::FADE_NONE)
+		{
+			CManager::GetFade()->SetFade(MODE_GAME);
+		}
+		else if (CFade::GetFade() == CFade::FADE_IN)
+		{
+
+		}
 	}
 }
 
