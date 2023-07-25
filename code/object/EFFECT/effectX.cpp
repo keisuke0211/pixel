@@ -61,7 +61,7 @@ HRESULT CEffectX::Init(void)
 	m_Info.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.nLife = 10;
-	m_Info.fRadius = 1.0f;
+	m_Info.fRadius = 0.0f;
 	m_Info.size = D3DXVECTOR3(m_Info.fRadius, m_Info.fRadius, m_Info.fRadius);
 	m_Info.nType = 0;
 

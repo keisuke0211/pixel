@@ -15,6 +15,8 @@
 #include "../object\BG\bg_side.h"
 #include "../object\BG\bg_ceiling.h"
 #include "../object\UI\text2D.h"
+#include "../system/input.h"
+//#include "fade.h"
 
 //========================================
 // コンストラクタ
@@ -148,9 +150,13 @@ void CGame::Uninit(void)
 {
 	CObject::ReleaseAll(CObject::TYPE_BLOCK);
 	CObject::ReleaseAll(CObject::TYPE_CUBE);
+	CObject::ReleaseAll(CObject::TYPE_PLAYER);
 	CObject::ReleaseAll(CObject::TYPE_ENEMY);
 	CObject::ReleaseAll(CObject::TYPE_EFFECT);
 	CObject::ReleaseAll(CObject::TYPE_PARTICLE);
+	CObject::ReleaseAll(CObject::TYPE_TIME);
+	CObject::ReleaseAll(CObject::TYPE_SCORE);
+
 }
 
 //========================================
@@ -161,6 +167,7 @@ void CGame::Update(void)
 	// エネミーの全滅
 	if (CEnemy::GetEnemyAll() <= 0)
 	{
+		//CManager::GetFade()->SetFade(MODE_RESULT);
 		CManager::SetMode(MODE_RESULT);
 	}
 }

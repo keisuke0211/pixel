@@ -62,9 +62,9 @@ HRESULT CParticleX::Init(void)
 	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_Info.aColor.col = INIT_D3DXCOLOR;
+	m_Info.aColor.col = D3DXCOLOR(0.0f,0.0f,0.0f,0.0f);
 	m_Info.nLife = 10;
-	m_Info.fRadius = 1.0f;
+	m_Info.fRadius = 0.0f;
 	m_Info.nType = 0;
 
 	// 設定
@@ -93,29 +93,37 @@ void CParticleX::Update(void)
 		//角度の設定
 		float fRot = (float)(rand() % ((int)(100 * 2 * D3DX_PI) + 1) - (int)(D3DX_PI * 100)) / (float)100;
 
-		float fSpeedX = (float)(rand() % (2 * (int)m_Info.speed.x)) / (int)m_Info.speed.x + 1;
-		float fSpeedY = (float)(rand() % (2 * (int)m_Info.speed.y)) / (int)m_Info.speed.y + 1;
-		float fSpeedZ = (float)(rand() % (2 * (int)m_Info.speed.z)) / (int)m_Info.speed.z + 1;
+		if (m_Info.speed.x >= 0.1f)
+		{
+			float fSpeedX = (float)(rand() % (2 * (int)m_Info.speed.x)) / (int)m_Info.speed.x + 1;
+			m_Info.move.x = sinf(fRot) * fSpeedX;
+		}
 
-		m_Info.move.x = sinf(fRot) * fSpeedX;
-		m_Info.move.y = fSpeedY;
-		m_Info.move.z = cosf(fRot) * fSpeedZ;
+		if (m_Info.speed.x >= 0.1f)
+		{
+			float fSpeedY = (float)(rand() % (2 * (int)m_Info.speed.y)) / (int)m_Info.speed.y + 1;
+			m_Info.move.y = fSpeedY;
+		}
 
-
+		if (m_Info.speed.x >= 0.1f)
+		{
+			float fSpeedZ = (float)(rand() % (2 * (int)m_Info.speed.z)) / (int)m_Info.speed.z + 1;
+			m_Info.move.z = cosf(fRot) * fSpeedZ;
+		}
+		
+		// サイズ
 		switch (m_Info.nType)
 		{
 		case 0:
-
-			// サイズ
 			m_Info.fRadius = (float)(rand() % ((int)4) + (int)2) / (float)10;
-
 			break;
 
 		case 1:
-
-			// サイズ
 			m_Info.fRadius = (float)(rand() % ((int)7) + (int)2) / (float)10;
+			break;
 
+		case 2:
+			m_Info.fRadius = (float)(rand() % ((int)2) + (int)1) / (float)10;
 			break;
 		}
 

@@ -193,7 +193,7 @@ void CInputKeyboard::Update(void)
 
 			if (aKeyState[nCntKey] && ((m_aKeyCurrentTime[nCntKey] - m_aKeyExecLastTime[nCntKey]) > REPEATE_INTERVAL))
 			{// キーが入力されていて、かつ現在の時間と最後に真を返した時間の差がリピートの間隔を越えていた時、
-			 // 最後に真を返した時間を保存
+				// 最後に真を返した時間を保存
 				m_aKeyExecLastTime[nCntKey] = m_aKeyCurrentTime[nCntKey];
 
 				// キーボードのリピート情報を保存

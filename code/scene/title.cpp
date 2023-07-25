@@ -9,6 +9,9 @@
 #include "../object\model\model.h"
 #include "../system/input.h"
 #include "../object\UI\text2D.h"
+//#include "fade.h"
+#include "../object\BG\bg_side.h"
+#include "../object\BG\bg_ceiling.h"
 
 //========================================
 // コンストラクタ
@@ -33,6 +36,12 @@ HRESULT CTitle::Init(void)
 {
 	// モデル
 	CModel::InitModel();
+
+	// 背景(側面)の生成
+	CBgSide *pBgsky = CBgSide::Create();
+
+	// 背景(天井)の生成
+	CBgCeiling *pBgCeiling = CBgCeiling::Create();
 
 	{// タイトル
 		CText2D *pObj = CText2D::Create();
@@ -75,6 +84,7 @@ void CTitle::Update(void)
 
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_A))
 	{
+		//CManager::GetFade()->SetFade(MODE_GAME);
 		CManager::SetMode(MODE_GAME);
 	}
 }

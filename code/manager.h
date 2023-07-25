@@ -25,6 +25,7 @@ class CInputJoypad;		// ジョイパット
 class CTitle;			// タイトル
 class CGame;			// ゲーム
 class CResult;			// リザルト
+class CFade;			// フェード
 
 //****************************************
 // クラス
@@ -97,7 +98,7 @@ public:
 	/* キーボード	*/static CInputKeyboard* GetInputKeyboard() { return m_InputKeyboard; }
 	/* マウス		*/static CInputMouse* GetInputMouse() { return m_InputMouse; }
 	/* ジョイパット	*/static CInputJoypad* GetInputJoypad() { return m_InputJoypad; }
-	
+	/* フェード		*/static CFade *GetFade() { return m_pFade; };
 
 private:
 	/* レンダラー	*/static CRenderer *m_pRenderer;
@@ -109,6 +110,7 @@ private:
 	/* マウス		*/static CInputMouse* m_InputMouse;
 	/* ジョイパット	*/static CInputJoypad* m_InputJoypad;
 	/* シーン		*/static CScene *m_pScene;
+	/* フェード		*/static CFade *m_pFade;
 
 };
 

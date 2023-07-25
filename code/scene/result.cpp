@@ -9,6 +9,7 @@
 #include "../object\model\model.h"
 #include "../system/input.h"
 #include "../object\UI\text2D.h"
+//#include "fade.h"
 
 //========================================
 // コンストラクタ
@@ -56,18 +57,10 @@ HRESULT CResult::Init(void)
 //========================================
 void CResult::Uninit(void)
 {
-	// --- 取得 ---------------------------------
-	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
-	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	// モデル
+	CModel::UninitModel();
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_A))
-	{
-		// モデル
-		CModel::UninitModel();
-
-		CObject::ReleaseAll(CObject::TYPE_PLAYER);
-	}
+	CObject::ReleaseAll();
 }
 
 //========================================
@@ -75,7 +68,16 @@ void CResult::Uninit(void)
 //========================================
 void CResult::Update(void)
 {
-	CManager::SetMode(MODE_TITLE);
+	// --- 取得 ---------------------------------
+	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_A))
+	{
+		/*CManager::GetFade()->SetFade(MODE_TITLE);*/
+		CManager::SetMode(MODE_TITLE);
+	}
 }
 
 //========================================

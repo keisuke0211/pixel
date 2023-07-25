@@ -83,14 +83,17 @@ struct PositionVec4
 typedef struct
 {
 	HWND				hWnd;		// ウインドウハンドル(識別子)
-	D3DXVECTOR3			windowPos;	// ウインドウの位置
+	HINSTANCE			hinstance;	// インスタンスハンドル
+	D3DXVECTOR3			windowPos;	// 位置
 }Main;
 
 //========================================
 // プロトタイプ宣言
 //========================================
-void WindowMode(bool bScreen);		// ウインドウのモードを切り替える
-HWND *GetWindowHandle(void);
-D3DXVECTOR3 GetWindowPos(void);
-int GetFps(void);
+
+/* ウインドウのモード	*/void WindowMode(bool bScreen);
+/* ウインドウハンドル	*/HWND *GetWindowHandle(void);
+/* インスタンスハンドル	*/HINSTANCE *GetHinstance(void);
+/* ウインドウ位置		*/D3DXVECTOR3 GetWindowPos(void);
+/* FPS					*/int GetFps(void);
 #endif

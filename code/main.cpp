@@ -27,10 +27,17 @@ int g_nCountFPS = 0;							// FPSカウンタ
 Main	g_main;									// メイン処理の情報構造体
 
 CManager *g_Physics = NULL;						// マネージャーオブジェクトへのポインタ
+
 //========== *** ウインドウハンドルを取得 ***
 HWND *GetWindowHandle(void)
 {
 	return &g_main.hWnd;
+}
+
+//========== *** インスタンスハンドルを取得 ***
+HINSTANCE *GetHinstance(void)
+{
+	return &g_main.hinstance;
 }
 
 //========== *** ウインドウの位置を取得 ***
@@ -90,18 +97,18 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	// ウインドウの生成
-	g_main.hWnd = CreateWindowEx(0, //拡張ウィンドウスタイル
-		CLASS_NAME,          //ウインドウクラスの名前
-		WINDOW_NAME,         //ウインドウの名前
-		WS_OVERLAPPEDWINDOW, //ウインドウスタイル
-		CW_USEDEFAULT,       //ウインドウの左上X座標
-		CW_USEDEFAULT,       //ウインドウの左上Y座標
-		SCREEN_WIDTH,        //ウインドウの幅
-		SCREEN_HEIGHT,       //ウインドウの高さ
-		NULL,                //親ウインドウのハンドル
-		NULL,                //メニューハンドルまたは子ウインドウID
-		hinstance,           //インスタンスハンドル
-		NULL);               //ウインドウ作成デー
+	g_main.hWnd = CreateWindowEx(0, // 拡張ウィンドウスタイル
+		CLASS_NAME,					// ウインドウクラスの名前
+		WINDOW_NAME,				// ウインドウの名前
+		WS_OVERLAPPEDWINDOW,		// ウインドウスタイル
+		CW_USEDEFAULT,				// ウインドウの左上X座標
+		CW_USEDEFAULT,				// ウインドウの左上Y座標
+		SCREEN_WIDTH,				// ウインドウの幅
+		SCREEN_HEIGHT,				// ウインドウの高さ
+		NULL,						// 親ウインドウのハンドル
+		NULL,						// メニューハンドルまたは子ウインドウID
+		hinstance,					// インスタンスハンドル
+		NULL);						// ウインドウ作成デー
 
 	DWORD dwCurrentTime;	//現在時刻
 	DWORD dwExecLastTime;	//最後に処理した時刻
@@ -116,7 +123,8 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 		// マネージャーの生成
 		g_Physics = new CManager;
 
-		g_Physics->Init(hinstance, g_main.hWnd, TRUE);
+		g_main.hinstance = hinstance;
+		g_Physics->Init(g_main.hinstance, g_main.hWnd, TRUE);
 	}
 
 	//分解能を設定

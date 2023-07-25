@@ -16,6 +16,7 @@
 #include "scene\title.h"
 #include "scene\game.h"
 #include "scene\result.h"
+//#include "scene\fade.h"
 
 // 静的メンバ変数
 CRenderer *CManager::m_pRenderer = NULL;
@@ -31,6 +32,7 @@ CScene::MODE CScene::m_mode = MODE_TITLE;
 CTitle *CScene::m_pTitle = NULL;
 CGame *CScene::m_pGame = NULL;
 CResult *CScene::m_pResult = NULL;
+CFade *CManager::m_pFade = NULL;
 
 //========================================
 // コンストラクタ
@@ -117,11 +119,15 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 		m_pTexture->Load();
 	}
 
-	// モード設定
-	SetMode(CScene::MODE_TITLE);
 
-	// シーン
-	m_pScene->Init();
+	// フェード
+	/*if (m_pFade == NULL)
+	{
+		m_pFade = new CFade;
+		m_pFade->Init();
+	}*/
+
+	SetMode(CScene::MODE_TITLE);
 
 	return S_OK;
 }
@@ -132,7 +138,13 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 void CManager::Uninit(void)
 {
 	// シーン
-	m_pScene->Uninit();
+	if (m_pScene != NULL)
+	{
+		m_pScene->Uninit();
+
+		delete m_pScene;
+		m_pScene = NULL;
+	}
 
 	// キーボード
 	if (m_InputKeyboard != NULL)
@@ -205,7 +217,7 @@ void CManager::Uninit(void)
 
 		delete m_pTexture;
 		m_pTexture = NULL;
-	}	
+	}
 }
 
 //========================================
@@ -221,7 +233,6 @@ void CManager::Update(void)
 	m_pLight->Update();				// ライト
 	m_pRenderer->Update();			// レンダラー
 	m_pScene->Update();				// シーン
-
 }
 
 //========================================

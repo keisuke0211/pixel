@@ -15,6 +15,7 @@
 #include "bullet.h"
 #include "enemy.h"
 #include "bullet_cube.h"
+#include "../EFFECT/particleX.h"
 
 //****************************************
 // マクロ定義
@@ -23,6 +24,7 @@
 #define GRAVITY_MAG		(0.08f)		// 重力係数 0.08
 #define GRAVITY_POWER	(9.5f)		// 重力加速度
 #define ROT_DIAMETER	(0.15f)		// 回転倍率
+#define DUST_MAXCNT		(15)		// カウントの最大値
 
 #define ROT_FORCE_BY_CURSOR	(D3DXVECTOR3(0.0005f,0.00075f,0.0f))	// カーソルの回転力
 
