@@ -12,6 +12,7 @@
 #include "fade.h"
 
 #include "../system/words/text.h"
+#include "../system/words/font.h"
 
 //========================================
 // マクロ定義
@@ -47,7 +48,8 @@ HRESULT CTitle::Init(void)
 	CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(540.0f, 100.0f, 0.0f),
 		D3DXVECTOR2(220.0f, 100.0f),
-		"ピクパズ",
+		"ピクセル",
+		CFont::FONT_DOTGOTHIC,
 		40.0f,
 		20, 10, -1,false);
 
@@ -56,13 +58,15 @@ HRESULT CTitle::Init(void)
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
 		" ",
+		CFont::FONT_DOTGOTHIC,
 		20.0f,
 		1, 1, -1);
 
 	CText::Create(CText::BOX_NORMAL,
-		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
+		D3DXVECTOR3(640.0f, 400.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
-		"ENTERを押して始めてね!",
+		"ENTERを押して始めてね!(*'▽')",
+		CFont::FONT_DOTGOTHIC,
 		20.0f,
 		5, 10, -1);
 
@@ -115,7 +119,8 @@ void CTitle::Update(void)
 			CText::Create(CText::BOX_NORMAL,
 				D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 				D3DXVECTOR2(1080.0f, 100.0f),
-				"ENTERを押して始めてね!",
+				"ENTERを押して始めてね!(*'▽')",
+				CFont::FONT_DOTGOTHIC,
 				20.0f,
 				5, 10, -1);
 

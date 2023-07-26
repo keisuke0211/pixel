@@ -12,6 +12,11 @@
 #include "words.h"
 
 //****************************************
+// 前方宣言
+//****************************************
+class CFont;
+
+//****************************************
 // クラス
 //****************************************
 class CText : public CObject2D
@@ -42,14 +47,15 @@ public:
 	// 引数1  : Box type            / メッセージボックスの画像
 	// 引数2  : D3DXVECTOR3 pos     / メッセージボックスの位置
 	// 引数3  : D3DXVECTOR2 size    / メッセージボックスのサイズ
-	// 引数4  : const char *Text　　/ テキスト
-	// 引数5  : float TextSize　　　/ サイズ (初期値 20)
-	// 引数6  : int AppearTime　　　/ １文字目が表示されるまでの時間 (初期値 1)
-	// 引数7  : int StandTime　　　 / 待機時間 (初期値 10)
-	// 引数8  : int EraseTime　　　 / 消えるまでの時間 (初期値 1) ※ 0 は消えない
-	// 引数9  : bool bTextBok　　　 / メッセージボックスの表示・非表示 (初期値 true)
+	// 引数4  : CFont::FONT Type　　/ フォント種類
+	// 引数5  : const char *Text　　/ テキスト
+	// 引数6  : float TextSize　　　/ サイズ (初期値 20)
+	// 引数7  : int AppearTime　　　/ １文字目が表示されるまでの時間 (初期値 1)
+	// 引数8  : int StandTime　　　 / 待機時間 (初期値 10)
+	// 引数9  : int EraseTime　　　 / 消えるまでの時間 (初期値 1) ※ 0 は消えない
+	// 引数10  : bool bTextBok　　　 / メッセージボックスの表示・非表示 (初期値 true)
 	//--------------------------------------------------
-	static CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size,const char *Text, float TextSize = 20 ,int AppearTime = 1, int StandTime = 10 , int EraseTime = 1,bool bTextBok = true);
+	static CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size,const char *Text, CFont::FONT FontType, float TextSize = 20 ,int AppearTime = 1, int StandTime = 10 , int EraseTime = 1,bool bTextBok = true);
 
 	/* 削除 */void Disap(bool bDisap);
 
@@ -80,6 +86,7 @@ private:
 		string sText;			// 表示するテキスト
 		string sALLText;		// テキストの全体
 		CWords** words;			// 文字
+		CFont::FONT FontType;	// フォント種類
 	};
 
 	// ***** 関数 *****
