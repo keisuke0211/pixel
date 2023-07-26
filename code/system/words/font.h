@@ -29,19 +29,6 @@ public:
 		FONT_MAX,
 	};
 
-	// ***** 構造体 *****
-
-	// フォントデータ
-
-	//struct Info
-	//{
-	//	char FileName[TXT_MAX];	// ファイルパス
-	//	char FontName[TXT_MAX];	// フォント名
-	//	HFONT  hFont;
-	//	LOGFONT logFont;
-	//	LPDIRECT3DTEXTURE9 texFont;	// テクスチャの情報
-	//};
-
 	// ***** 関数 *****
 	CFont();
 	virtual~CFont();
@@ -51,7 +38,6 @@ public:
 	/* テクスチャ作成	*/void TextureCreate(string nWords, FONT nFont);
 	/* 全て破棄			*/void ReleaseAll(void);
 	/* 指定の破棄		*/void Release(FONT nFont);
-	/* 読み込み			*/void Load(void);
 
 	// -- 取得 ------------------------------------------
 	/* テクスチャ情報の取得 */LPDIRECT3DTEXTURE9 GetFont(string words, FONT nFont);
@@ -66,9 +52,6 @@ private:
 	HFONT  m_hFont[FONT_MAX];
 	LOGFONT m_logFont[FONT_MAX];
 	LPDIRECT3DTEXTURE9 m_texFont[FONT_MAX];	// テクスチャの情報
-
-	///* フォント情報	*/Info m_Font[FONT_MAX];
-
 };
 
 #endif
