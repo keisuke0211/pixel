@@ -109,15 +109,3 @@ void CResult::Draw(void)
 {
 
 }
-
-//========================================
-// ¶¬
-//========================================
-CResult *CResult::Create(void)
-{
-	CResult *pResult = new CResult;
-
-	pResult->Init();
-
-	return pResult;
-}

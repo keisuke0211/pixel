@@ -27,8 +27,6 @@ public:
 	/* I—¹		*/void Uninit(void);
 	/* XV		*/void Update(void);
 	/* •`‰æ		*/void Draw(void);
-	/* ¶¬		*/static CResult *Create(void);
-
 private:
 
 	// ***** •Ï” *****

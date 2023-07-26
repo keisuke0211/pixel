@@ -20,7 +20,7 @@ CText::CText(int nPriority) : CObject2D(nPriority)
 	
 	m_Info.fTextSize = 0.0f;
 	m_Info.nTextLength = 0;
-	m_Info.nAppearTime = 0;
+	m_Info.nAddTime = 0;
 	m_Info.nAddCount = 0;
 	m_Info.nAddLetter = 0;
 	m_Info.nLetterPopCount = 0;
@@ -110,7 +110,7 @@ void CText::Draw()
 //========================================
 // ¶¬
 //========================================
-CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType,float TextSize,int AppearTime, int StandTime, int EraseTime, bool bTextBok)
+CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, float TextSize,int DisapText, int StandTime, int EraseTime, bool bTextBok)
 {
 	CText * pText = new CText;
 
@@ -145,7 +145,7 @@ CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Te
 		pText->SetTextSize(TextSize);
 		pText->SetStandTime(StandTime);
 		pText->EraseTime(EraseTime);
-		pText->TextLetter(Text, AppearTime);
+		pText->TextLetter(Text, DisapText);
 	}
 
 	return pText;
@@ -164,7 +164,7 @@ void CText::LetterForm(void)
 {
 	float fTxtSize = m_Info.fTextSize;
 
-	if (++m_Info.nAddCount >= m_Info.nAppearTime)
+	if (++m_Info.nAddCount >= m_Info.nAddTime)
 	{// •\¦‚·‚éŠÔ‚ğã‰ñ‚Á‚½‚çA
 
 		if (m_Info.nAddLetter <= m_Info.nTextLength)
@@ -319,12 +319,12 @@ void CText::EraseTime(int Time)
 //========================================
 // •\¦‚·‚é‚Ü‚Å‚ÌŠÔ
 //========================================
-void CText::TextLetter(const char * Text, int AppearTime)
+void CText::TextLetter(const char * Text, int SpeedText)
 {
 	m_Info.sALLText = Text;
 	m_Info.nTextLength = m_Info.sALLText.size();
-	m_Info.nAddCount = AppearTime;
-	m_Info.nAppearTime = m_Info.nAddCount;
+	m_Info.nAddCount = SpeedText;
+	m_Info.nAddTime = m_Info.nAddCount;
 	m_Info.nAddLetter = 0;
 	m_Info.words = new CWords*[m_Info.nTextLength];
 

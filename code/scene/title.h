@@ -20,20 +20,17 @@ public:
 
 	// ***** 関数 *****
 	CTitle();
-	~CTitle();
+	virtual~CTitle();
 
 	// -- メイン ------------------------------------------
 	/* 初期化		*/HRESULT Init(void);
 	/* 終了			*/void Uninit(void);
 	/* 更新			*/void Update(void);
 	/* 描画			*/void Draw(void);
-	/* 生成			*/static CTitle *Create(void);
-
 private:
 
 	// ***** 変数 *****
-	int nTextTime;
-	int nStandTime;
+
 };
 
 #endif

@@ -305,19 +305,19 @@ HRESULT CScene::Init()
 	case CScene::MODE_TITLE:
 	{
 		// タイトル
-		m_pTitle = CTitle::Create();
+		m_pTitle->Init();
 		break;
 	}
 	case CScene::MODE_GAME:
 	{
 		// ゲーム 
-		m_pGame = CGame::Create();
+		m_pGame->Init();
 		break;
 	}
 	case CScene::MODE_RESULT:
 	{
 		// リザルト
-		m_pResult = CResult::Create();
+		m_pResult->Init();
 		break;
 	}
 	}
