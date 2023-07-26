@@ -50,7 +50,15 @@ public:
 	/* 終了		*/void Uninit(void);
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);
-	/* 生成		*/static CWords *CWords::Create(const char * Text, D3DXVECTOR3 pos, D3DXVECTOR3 Size, CFont::FONT Type);
+
+	//--------------------------------------------------
+	// 文字生成
+	// 引数1  : const char *Text    / 文字
+	// 引数2  : D3DXVECTOR3 pos     / 位置
+	// 引数3  : D3DXVECTOR2 size    / サイズ
+	// 引数4  : CFont::FONT Type　　/ フォント種類
+	//--------------------------------------------------
+	static CWords *CWords::Create(const char *Text, D3DXVECTOR3 pos, D3DXVECTOR3 Size, CFont::FONT Type);
 
 	// -- 設定 ------------------------------------------
 	/* 位置		*/virtual void SetPos(const D3DXVECTOR3 &pos);

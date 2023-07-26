@@ -159,7 +159,7 @@ void CGame::Uninit(void)
 	CObject::ReleaseAll(CObject::TYPE_ENEMY);
 	CObject::ReleaseAll(CObject::TYPE_EFFECT);
 	CObject::ReleaseAll(CObject::TYPE_PARTICLE);
-	CObject::ReleaseAll(CObject::TYPE_TEXT);
+	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 }
 
 //========================================

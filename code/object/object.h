@@ -53,16 +53,18 @@ public:
 		TYPE_BULLET,	// バレット
 		TYPE_EFFECT,	// エフェクト
 		TYPE_PARTICLE,	// パーティクル
-		TYPE_TEXT,		// テキスト
+		TYPE_TEXT2D,	// テキスト2D
 		TYPE_TIME,		// タイム
 		TYPE_SCORE,		// スコア
 		TYPE_FONT,		// フォント
+		TYPE_TEXT,		// テキスト
 		TYPE_MAX
 	};
 
 	// ***** 静的関数 *****
 	/* 全ての破棄			*/static void ReleaseAll(void);
 	/* 全ての破棄(種類毎)	*/static void ReleaseAll(TYPE type);	// [オーバーロード]
+	/* 指定の破棄			*/static void Release(PRIO prio, TYPE type, int Idx);
 	/* 全ての更新			*/static void UpdateAll(void);
 	/* 全ての描画			*/static void DrawAll(void);
 

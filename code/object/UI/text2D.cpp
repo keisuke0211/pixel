@@ -52,7 +52,7 @@ HRESULT CText2D::Init(void)
 	}
 
 	// ОнЧёРЁТи
-	SetType(TYPE_TEXT);
+	SetType(TYPE_TEXT2D);
 
 	return S_OK;
 }

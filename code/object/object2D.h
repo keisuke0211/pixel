@@ -55,7 +55,7 @@ public:
 
 	/* 取得 */
 	float GetWidth(void) { return m_fWidth; }		// 幅
-	float GetHeight(void) { return m_fHeight; }		// 幅
+	float GetHeight(void) { return m_fHeight; }		// 高さ
 	D3DXVECTOR3 GetPos(void) { return m_pos; }		// 位置
 	D3DXVECTOR3 GetPosOld(void) { return m_posOld; }// 位置(過去)
 	int GetPtn(void) { return m_nPtn; }				// パターン 

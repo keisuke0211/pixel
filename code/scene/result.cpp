@@ -79,7 +79,7 @@ void CResult::Uninit(void)
 
 	CObject::ReleaseAll(CObject::TYPE_TIME);
 	CObject::ReleaseAll(CObject::TYPE_SCORE);
-	CObject::ReleaseAll(CObject::TYPE_TEXT);
+	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 }
 
 //========================================

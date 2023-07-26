@@ -39,16 +39,29 @@ HRESULT CTitle::Init(void)
 	// モデル
 	CModel::InitModel();
 
-	{// タイトル
-		CText2D *pObj = CText2D::Create();
+	//{// タイトル
+	//	CText2D *pObj = CText2D::Create();
 
-		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, 100, 0.0f));
-		pObj->SetSize(48.0f, 48.0f);
-		pObj->SetDisp(CText2D::DISPLAY_CENTER);
-		pObj->SetString("TITLE");
-	}
+	//	pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, 100, 0.0f));
+	//	pObj->SetSize(48.0f, 48.0f);
+	//	pObj->SetDisp(CText2D::DISPLAY_CENTER);
+	//	pObj->SetString("TITLE");
+	//}
 
-	CText::Create(CText::BOX_NORMAL, 500, 5, "ENTERを押して始めてね!");
+	CText::Create(CText::BOX_NORMAL,
+		D3DXVECTOR3(540.0f, 100.0f, 0.0f),
+		D3DXVECTOR2(220.0f, 100.0f),
+		"ピクパズ",
+		40.0f,
+		5, 10, -1,false);
+
+
+	CText::Create(CText::BOX_NORMAL,
+		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
+		D3DXVECTOR2(1080.0f, 100.0f),
+		"ENTERを押して始めてね!",
+		20.0f,
+		5,10,-1);
 
 	return S_OK;
 }
@@ -58,7 +71,7 @@ HRESULT CTitle::Init(void)
 //========================================
 void CTitle::Uninit(void)
 {
-	CObject::ReleaseAll(CObject::TYPE_TEXT);
+	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
 }
 
@@ -82,6 +95,11 @@ void CTitle::Update(void)
 		{
 
 		}
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_P))
+	{
+		CObject::Release(CObject::PRIO_TEXT, CObject::TYPE_FONT, 0);
 	}
 }
 

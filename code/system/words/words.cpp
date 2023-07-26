@@ -234,15 +234,18 @@ void CWords::SetMove(const D3DXVECTOR3 &move)
 //========================================
 void CWords::SetColar(D3DXCOLOR col)
 {
-	VERTEX_2D *pVtx;
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	pVtx[0].col = D3DXCOLOR(col.r, col.g, col.b, col.a);
-	pVtx[1].col = D3DXCOLOR(col.r, col.g, col.b, col.a);
-	pVtx[2].col = D3DXCOLOR(col.r, col.g, col.b, col.a);
-	pVtx[3].col = D3DXCOLOR(col.r, col.g, col.b, col.a);
-
 	m_Info.col = col;
 
+	VERTEX_2D *pVtx; //頂点へのポインタ
+
+	 //頂点バッファをロックし頂点情報へのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	pVtx[0].col = D3DXCOLOR(m_Info.col.r, m_Info.col.g, m_Info.col.b, m_Info.col.a);
+	pVtx[1].col = D3DXCOLOR(m_Info.col.r, m_Info.col.g, m_Info.col.b, m_Info.col.a);
+	pVtx[2].col = D3DXCOLOR(m_Info.col.r, m_Info.col.g, m_Info.col.b, m_Info.col.a);
+	pVtx[3].col = D3DXCOLOR(m_Info.col.r, m_Info.col.g, m_Info.col.b, m_Info.col.a);
+
+	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
 }

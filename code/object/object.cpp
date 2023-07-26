@@ -9,6 +9,7 @@
 #include "object.h"
 #include "../system/renderer.h"
 #include "../system/camera.h"
+#include "../system/words/text.h"
 
 // 静的変数
 CObject *CObject::m_apTop[] = {};
@@ -60,6 +61,8 @@ void CObject::ReleaseAll(void)
 		// オブジェクト分の回す
 		while (pObj != NULL)
 		{
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->m_pNext;
 
 			// 次のオブジェクトがあるか
 			if (pObj->m_pNext == NULL)
@@ -71,24 +74,11 @@ void CObject::ReleaseAll(void)
 			}
 			else
 			{
-				// 次のオブジェクト
-				CObject *pObjNext = pObj->m_pNext;
-
 				pObj->Uninit();		// 終了処理
 				pObj->Release();	// 死亡フラグを真にする
 				pObj = NULL;
-
-				// 一時的の処理
-				// ※ 原因　テキストcppの オブジェクト配列　一個目のポインタで全て破棄して
-				//			２個目から何もないまま処理を通ってエラーが出る
-				if (nPrio == PRIO_UI)
-				{
-					pObj = pObjNext;	// 次のオブジェクトポインタを代入
-					continue;
-				}
-
-				pObj = pObjNext;	// 次のオブジェクトポインタを代入
 			}
+			pObj = pObjNext;	// 次のオブジェクトポインタを代入
 		}
 
 		// ポインタを先頭まで戻す
@@ -140,23 +130,9 @@ void CObject::ReleaseAll(TYPE type)
 				}
 				else
 				{
-					// 次のオブジェクト
-					CObject *pObjNext = pObj->m_pNext;
-
 					pObj->Uninit();		// 終了処理
 					pObj->Release();	// 死亡フラグを真にする
 					pObj = NULL;
-
-					// 一時的の処理
-					// ※ 原因　テキストcppの オブジェクト配列　一個目のポインタで全て破棄して
-					//			２個目から何もないまま処理を通ってエラーが出る
-					if (nPrio == PRIO_UI)
-					{
-						pObj = pObjNext;	// 次のオブジェクトポインタを代入
-						continue;
-					}
-
-					pObj = pObjNext;	// 次のオブジェクトポインタを代入
 				}
 			}
 			pObj = pObjNext;	// 次のオブジェクトポインタを代入
@@ -180,6 +156,51 @@ void CObject::ReleaseAll(TYPE type)
 			pObj = pObjNext;	// 次のオブジェクトポインタを代入
 		}
 	}
+}
+
+//========================================
+// 指定の破棄
+//========================================
+void CObject::Release(PRIO prio,TYPE type, int Idx)
+{
+	int nIdx = 0;
+
+		// 先頭オブジェクト
+		CObject *pObj = m_apTop[prio];
+
+		// オブジェクト分の回す
+		while (pObj != NULL)
+		{
+			// 次のオブジェクト
+			CObject *pObjNext = pObj->m_pNext;
+
+			// 指定した種類かどうか
+			if (pObj->GetType() == type)
+			{
+				// 指定した番号か
+				if (nIdx == Idx)
+				{
+					// 次のオブジェクト
+					CObject *pObjNext = pObj->m_pNext;
+
+					// ダイナミックキャストする
+					CText *pText = dynamic_cast<CText*>(pObj);
+
+					// 次のオブジェクトがあるか
+					if (pObj->m_pNext == NULL)
+					{
+						pText->Disap(true);
+						break;
+					}
+					else
+					{
+						pText->Disap(true);
+					}
+					break;
+				}
+			}
+			pObj = pObjNext;	// 次のオブジェクトポインタを代入
+		}
 }
 
 //========================================
