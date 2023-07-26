@@ -171,9 +171,9 @@ HRESULT CBgSide::Init(void)
 	// テクスチャ設定
 	CTexture *pTexture = CManager::GetTexture();
 
-	m_pTextureMeshfield1 = pTexture->GetAddress(1);
-	m_pTextureMeshfield2 = pTexture->GetAddress(2);
-	m_pTextureMeshfield3 = pTexture->GetAddress(3);
+	m_pTextureMeshfield1 = pTexture->GetAddress(CTexture::TEX_SKY01);
+	m_pTextureMeshfield2 = pTexture->GetAddress(CTexture::TEX_SKY02);
+	m_pTextureMeshfield3 = pTexture->GetAddress(CTexture::TEX_SKY03);
 
 	return S_OK;
 }

@@ -42,7 +42,7 @@ HRESULT CFade::Init(void)
 	SetType(TYPE_NONE);
 	SetPos(D3DXVECTOR3(640, 360, 0.0f));
 	SetSize(1280, 720);
-	SetColor(m_color);
+	SetColar(m_color);
 
 	// ÉÇÅ[Éhê›íË
 	CManager::SetMode(m_modeNext);
@@ -94,7 +94,7 @@ void CFade::Update(void)
 		}
 	}
 
-	SetColor(m_color);
+	SetColar(m_color);
 	CObject2D::Update();
 }
 

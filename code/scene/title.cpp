@@ -11,6 +11,10 @@
 #include "../object\UI\text2D.h"
 #include "fade.h"
 
+#include "../system/words/font.h"
+#include "../system/words/words.h"
+#include "../system/words/text.h"
+
 //========================================
 // コンストラクタ
 //========================================
@@ -44,14 +48,7 @@ HRESULT CTitle::Init(void)
 		pObj->SetString("TITLE");
 	}
 
-	{// 入力催促
-		CText2D *pObj = CText2D::Create();
-
-		pObj->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 0.0f));
-		pObj->SetSize(48.0f, 48.0f);
-		pObj->SetDisp(CText2D::DISPLAY_CENTER);
-		pObj->SetString("PRESS ENTER");
-	}
+	CText::Create(CText::BOX_NORMAL, 500, 5, "ENTERを押して始めてね!");
 
 	return S_OK;
 }
@@ -62,6 +59,7 @@ HRESULT CTitle::Init(void)
 void CTitle::Uninit(void)
 {
 	CObject::ReleaseAll(CObject::TYPE_TEXT);
+	CObject::ReleaseAll(CObject::TYPE_FONT);
 }
 
 //========================================

@@ -24,6 +24,20 @@ public:
 	static const int MAX_TEXTURE = 64;	// テクスチャの最大数
 	static const char* FILE_PATH;		// 読み込むファイルパス
 
+	// ***** 列挙型 *****
+
+	// 画像種類
+	enum Tex
+	{
+		TEX_SKY00 = 0,	// 空00
+		TEX_SKY01,		// 空01
+		TEX_SKY02,		// 空02
+		TEX_SKY03,		// 空03
+		TYPE_FONT,		// フォント
+		TYPE_TEXBOX,	// テキストボックス
+		TEX_MAX
+	};
+
 	// ***** 関数 *****
 	CTexture();		// デフォルトコンストラクタ
 	~CTexture();	// デストラクタ

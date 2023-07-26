@@ -43,6 +43,9 @@
     <Filter Include="ソース ファイル\00_main\00_scene">
       <UniqueIdentifier>{1bfa4822-fb51-435b-b144-d2c4244cbd81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\02_system\01_words">
+      <UniqueIdentifier>{868a7a0a-1781-490f-ac5a-6bb272b63a9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code\manager.cpp">
@@ -146,6 +149,15 @@
     </ClCompile>
     <ClCompile Include="code\scene\fade.cpp">
       <Filter>ソース ファイル\00_main\00_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="code\system\words\font.cpp">
+      <Filter>ソース ファイル\02_system\01_words</Filter>
+    </ClCompile>
+    <ClCompile Include="code\system\words\text.cpp">
+      <Filter>ソース ファイル\02_system\01_words</Filter>
+    </ClCompile>
+    <ClCompile Include="code\system\words\words.cpp">
+      <Filter>ソース ファイル\02_system\01_words</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +265,15 @@
     </ClInclude>
     <ClInclude Include="code\scene\fade.h">
       <Filter>ソース ファイル\00_main\00_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="code\system\words\font.h">
+      <Filter>ソース ファイル\02_system\01_words</Filter>
+    </ClInclude>
+    <ClInclude Include="code\system\words\text.h">
+      <Filter>ソース ファイル\02_system\01_words</Filter>
+    </ClInclude>
+    <ClInclude Include="code\system\words\words.h">
+      <Filter>ソース ファイル\02_system\01_words</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

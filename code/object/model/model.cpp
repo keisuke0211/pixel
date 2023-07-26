@@ -187,8 +187,7 @@ void CModel::LoadModel(const char *pFileName)
 			m_material = new CModel::MODEL_MATERIAL[m_nMaxModel];
 			assert(m_material != NULL);
 		}
-
-		if (!strcmp(aDataSearch, "MODEL"))
+		else if (!strcmp(aDataSearch, "MODEL"))
 		{
 			fscanf(pFile, "%s", &aDataSearch[0]);
 			fscanf(pFile, "%s", &m_material[nCntModel].aFileName[0]);	// ƒtƒ@ƒCƒ‹–¼

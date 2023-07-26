@@ -53,6 +53,9 @@
     <ClCompile Include="code\system\renderer.cpp" />
     <ClCompile Include="code\system\sound.cpp" />
     <ClCompile Include="code\system\texture.cpp" />
+    <ClCompile Include="code\system\words\font.cpp" />
+    <ClCompile Include="code\system\words\text.cpp" />
+    <ClCompile Include="code\system\words\words.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\main.h" />
@@ -89,6 +92,9 @@
     <ClInclude Include="code\system\renderer.h" />
     <ClInclude Include="code\system\sound.h" />
     <ClInclude Include="code\system\texture.h" />
+    <ClInclude Include="code\system\words\font.h" />
+    <ClInclude Include="code\system\words\text.h" />
+    <ClInclude Include="code\system\words\words.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,7 @@
 #include "system/sound.h"
 #include "system/texture.h"
 #include "system/input.h"
+#include "system\words\font.h"
 #include "object\object.h"
 #include "scene\title.h"
 #include "scene\game.h"
@@ -27,6 +28,7 @@ CTexture *CManager::m_pTexture = NULL;
 CInputKeyboard *CManager::m_InputKeyboard = NULL;
 CInputMouse *CManager::m_InputMouse = NULL;
 CInputJoypad *CManager::m_InputJoypad = NULL;
+CFont *CManager::m_pFont = NULL;
 CScene *CManager::m_pScene = NULL;
 CScene::MODE CScene::m_mode = MODE_TITLE;
 CTitle *CScene::m_pTitle = NULL;
@@ -119,6 +121,12 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 		m_pTexture->Load();
 	}
 
+	// フォント
+	if (m_pFont == NULL)
+	{
+		m_pFont = new CFont;
+		//m_pFont->Load();
+	}
 
 	// フェード
 	if (m_pFade == NULL)
@@ -215,6 +223,15 @@ void CManager::Uninit(void)
 
 		delete m_pTexture;
 		m_pTexture = NULL;
+	}
+
+	// フォント
+	if (m_pFont != NULL)
+	{
+		m_pFont->ReleaseAll();
+
+		delete m_pFont;
+		m_pFont = NULL;
 	}
 }
 

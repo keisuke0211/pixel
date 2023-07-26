@@ -271,7 +271,7 @@ void CObject2D::SetTex(PositionVec4 tex)
 //========================================
 // F‚Ìİ’èˆ—
 //========================================
-void CObject2D::SetColor(D3DXCOLOR color)
+void CObject2D::SetColar(D3DXCOLOR color)
 {
 	m_color = color;
 

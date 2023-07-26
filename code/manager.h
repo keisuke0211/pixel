@@ -22,6 +22,7 @@ class CTexture;			// テクスチャ
 class CInputKeyboard;	// キーボード
 class CInputMouse;		// マウス
 class CInputJoypad;		// ジョイパット
+class CFont;			// フォント
 class CTitle;			// タイトル
 class CGame;			// ゲーム
 class CResult;			// リザルト
@@ -98,7 +99,8 @@ public:
 	/* キーボード	*/static CInputKeyboard* GetInputKeyboard() { return m_InputKeyboard; }
 	/* マウス		*/static CInputMouse* GetInputMouse() { return m_InputMouse; }
 	/* ジョイパット	*/static CInputJoypad* GetInputJoypad() { return m_InputJoypad; }
-	/* フェード		*/static CFade *GetFade() { return m_pFade; };
+	/* フォント		*/static CFont*	GetFont() { return m_pFont; }
+	/* フェード		*/static CFade *GetFade() { return m_pFade; }
 
 private:
 	/* レンダラー	*/static CRenderer *m_pRenderer;
@@ -107,6 +109,7 @@ private:
 	/* サウンド		*/static CSound *m_pSound;
 	/* テクスチャ	*/static CTexture *m_pTexture;
 	/* キーボード	*/static CInputKeyboard *m_InputKeyboard;
+	/* フォント		*/static CFont *m_pFont;
 	/* マウス		*/static CInputMouse* m_InputMouse;
 	/* ジョイパット	*/static CInputJoypad* m_InputJoypad;
 	/* シーン		*/static CScene *m_pScene;

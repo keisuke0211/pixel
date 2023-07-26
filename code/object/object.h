@@ -35,6 +35,7 @@ public:
 		PRIO_CUBE,		// キューブ
 		PRIO_EFFECT,	// エフェクト
 		PRIO_UI,		// UI
+		PRIO_TEXT,		// テキスト
 		PRIO_FADE,		// フェード
 		PRIO_MAX
 	};
@@ -55,6 +56,7 @@ public:
 		TYPE_TEXT,		// テキスト
 		TYPE_TIME,		// タイム
 		TYPE_SCORE,		// スコア
+		TYPE_FONT,		// フォント
 		TYPE_MAX
 	};
 

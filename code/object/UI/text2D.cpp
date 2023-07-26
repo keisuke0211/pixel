@@ -7,6 +7,7 @@
 //========================================
 #include "text2D.h"
 #include "../object2D.h"
+#include "../../system/texture.h"
 
 //========================================
 // コンストラクタ
@@ -177,7 +178,7 @@ void CText2D::SetString(char *pString)
 		m_apObject2D[nCntDigit]->SetPtnInfo(PTN_WIDTH, PTN_HEIGHT, PTN_MAX);
 
 		// テクスチャ割り当て
-		m_apObject2D[nCntDigit]->BindTexture(5);
+		m_apObject2D[nCntDigit]->BindTexture(CTexture::TYPE_FONT);
 	}
 }
 

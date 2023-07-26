@@ -185,7 +185,7 @@ HRESULT CBgCeiling::Init(void)
 	// テクスチャ設定
 	CTexture *pTexture = CManager::GetTexture();
 
-	m_pTexture = pTexture->GetAddress(0);
+	m_pTexture = pTexture->GetAddress(CTexture::TEX_SKY00);
 
 	return S_OK;
 }
