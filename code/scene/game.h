@@ -34,6 +34,7 @@ public:
 	/* 終了		*/void Uninit(void);
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);
+	/* 生成		*/static CGame *Create(void);
 	/* エネミー	*/void SetEnemy(void);
 
 	// -- 読み込み ----------
