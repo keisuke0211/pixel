@@ -120,7 +120,7 @@ void CWords::Update(void)
 	D3DXVECTOR3 addPos[4];
 	D3DXMATRIX mtx;	// 計算用マトリックス
 
-					// マトリックス作成
+	// マトリックス作成
 	D3DXMatrixIdentity(&mtx);
 	D3DXMatrixRotationYawPitchRoll(&mtx, 0.0f, 0.0f, m_Info.rot.z);
 

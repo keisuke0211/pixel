@@ -110,7 +110,7 @@ void CText::Draw()
 //========================================
 // 生成
 //========================================
-CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, float TextSize, int AppearTime, int StandTime, int EraseTime, bool bTextBok)
+CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, float TextSize, int AppearTime, int StandTime, int EraseTime, bool bTextBok)
 {
 	CText * pText = new CText;
 
@@ -141,6 +141,7 @@ CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Te
 		}
 
 		// -- テキスト -----------------------
+		pText->m_Info.FontType = FontType;
 		pText->SetTextSize(TextSize);
 		pText->SetStandTime(StandTime);
 		pText->EraseTime(EraseTime);
@@ -188,7 +189,7 @@ void CText::LetterForm(void)
 					m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
 						D3DXVECTOR3((pos.x + 10.0f) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), pos.y + m_Info.nNiCount*40.0f, pos.z),
 						D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
-						CFont::FONT_DOTGOTHIC);
+						m_Info.FontType);
 
 					m_Info.nLetterPopCount++;
 					m_Info.nLetterPopCountX++;
@@ -202,7 +203,7 @@ void CText::LetterForm(void)
 						m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
 							D3DXVECTOR3((pos.x + 10.0f) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), pos.y + m_Info.nNiCount*40.0f, pos.z),
 							D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
-							CFont::FONT_DOTGOTHIC);
+							m_Info.FontType);
 
 						m_Info.nLetterPopCount++;
 						m_Info.nLetterPopCountX++;

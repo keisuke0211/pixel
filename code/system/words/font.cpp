@@ -23,10 +23,6 @@ const char* CFont::s_FontName[] =
 	"meiryob",
 };
 
-// 静的変数
-int CFont::m_nMaxFont = 0;
-//CFont::Info *CFont::m_Font = NULL;	// マテリアル情報
-
 //========================================
 // コンストラクタ
 //========================================
@@ -124,7 +120,7 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();	//デバイスの取得
 
-																		// テクスチャ作成
+	// テクスチャ作成
 	if (FAILED(pDevice->CreateTexture(GM.gmCellIncX, TM.tmHeight, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_texFont[nFont], NULL)))
 		if (FAILED(pDevice->CreateTexture(GM.gmCellIncX, TM.tmHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &m_texFont[nFont], NULL)))
 		{
