@@ -54,10 +54,28 @@ CText::~CText()
 //========================================
 HRESULT CText::Init()
 {
+	m_Info.fTextSize = 0.0f;
+	m_Info.nTextLength = 0;
+	m_Info.nAppearTime = 0;
+	m_Info.nAddCount = 0;
+	m_Info.nAddLetter = 0;
+	m_Info.nLetterPopCount = 0;
+	m_Info.nLetterPopCountX = 0;
+	m_Info.nNiCount = 0;
+	m_Info.sText = "";
+
 	SetType(TYPE_FONT);
+
 	CObject2D::Init();
 
-	m_Info.sText = "";
+	SetColar(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	
+	m_Info.nStandTime = 0;
+	m_Info.bStand = false;
+
+	m_Info.nDisapTime = 0;
+	m_Info.nDisapTimeMax = 0;
+	m_Info.bRelease = false;
 
 	return S_OK;
 }
@@ -104,7 +122,21 @@ void CText::Update()
 //========================================
 void CText::Draw()
 {
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
 	CObject2D::Draw();
+
+	// 新規深度値 <= Zバッファ深度値 (初期設定)
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+
+	// αテストを無効に戻す
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
 //========================================

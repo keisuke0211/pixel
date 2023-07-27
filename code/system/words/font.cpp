@@ -11,17 +11,25 @@
 
 // 定義
 
-const char* CFont::s_FileName[] =
-{// フォントのパス
-	"data/GAMEDATA/DotGothic16-Regular.ttf",
-	"data/GAMEDATA/meiryob.ttc",
-};
 
-const char* CFont::s_FontName[] =
-{// フォントの名前
-	"DotGothic16",
-	"meiryob",
+//　フォントパス
+const char* CFont::s_FileName[] =
+{
+	"data/font/DotGothic16.ttf",
+	"data/font/FZゴンタかな.otf",
+	"data/font/meiryob.ttc",
 };
+static_assert(sizeof(CFont::s_FileName) / sizeof(CFont::s_FileName[0]) == CFont::FONT_MAX, "bagu");
+
+// フォント名
+const char* CFont::s_FontName[] =
+{
+	"ドットゴシック16",
+	"FZゴンタかな",
+	"メイリオ",
+};
+static_assert(sizeof(CFont::s_FontName) / sizeof(CFont::s_FontName[0]) == CFont::FONT_MAX, "aho");
+
 
 //========================================
 // コンストラクタ
@@ -29,10 +37,7 @@ const char* CFont::s_FontName[] =
 CFont::CFont() :
 	m_texFont()
 {
-	for (int nCnt = 0; nCnt < FONT_MAX; nCnt++)
-	{
-		memset(m_texFont, 0, sizeof(m_texFont));
-	}
+	memset(m_texFont, 0, sizeof(m_texFont));
 }
 
 //========================================
@@ -50,13 +55,14 @@ void CFont::FontCreate(FONT nFont)
 {
 	assert(nFont >= 0 && nFont < FONT_MAX);
 
-	if (m_texFont[nFont] != nullptr)
+	if (m_texFont[nFont] != NULL)
 	{// テクスチャの読み込みがされている
 		return;
 	}
 
 	// フォントを使えるようにする
 	DESIGNVECTOR design;
+
 
 	AddFontResourceEx(
 		s_FileName[nFont], //ttfファイルへのパス
@@ -65,9 +71,10 @@ void CFont::FontCreate(FONT nFont)
 	);
 
 	// フォントの生成
-	int fontsize = 64;
+	int fontsize = 60;
 	m_logFont[nFont] = { fontsize, 0, 0, 0, 0, 0, 0, 0, SHIFTJIS_CHARSET, OUT_TT_ONLY_PRECIS,
 		CLIP_DEFAULT_PRECIS, PROOF_QUALITY, FIXED_PITCH | FF_MODERN };
+
 
 	strcpy(m_logFont[nFont].lfFaceName, s_FontName[nFont]);
 }
@@ -120,7 +127,7 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();	//デバイスの取得
 
-	// テクスチャ作成
+																		// テクスチャ作成
 	if (FAILED(pDevice->CreateTexture(GM.gmCellIncX, TM.tmHeight, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_texFont[nFont], NULL)))
 		if (FAILED(pDevice->CreateTexture(GM.gmCellIncX, TM.tmHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &m_texFont[nFont], NULL)))
 		{
@@ -129,8 +136,6 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 
 	// テクスチャにフォントビットマップ書き込み
 	D3DLOCKED_RECT LockedRect;
-
-	// テクスチャのロック
 	if (FAILED(m_texFont[nFont]->LockRect(0, &LockedRect, NULL, D3DLOCK_DISCARD)))
 		if (FAILED(m_texFont[nFont]->LockRect(0, &LockedRect, NULL, 0)))
 		{
@@ -156,7 +161,7 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 			memcpy((BYTE*)LockedRect.pBits + LockedRect.Pitch*y + 4 * x, &Color, sizeof(DWORD));
 		}
 
-	// テクスチャのロック解除
+	// テクスチャのロック
 	m_texFont[nFont]->UnlockRect(0);
 
 	delete[] ptr;
@@ -206,9 +211,9 @@ void CFont::Release(FONT nFont)
 //========================================
 LPDIRECT3DTEXTURE9 CFont::GetFont(string words, FONT nFont)
 {
-	if (nFont == -1)
+	if (nFont == FONT_NONE)
 	{// テクスチャを使用しない
-		return nullptr;
+		return NULL;
 	}
 
 	assert(nFont >= 0 && nFont < FONT_MAX);

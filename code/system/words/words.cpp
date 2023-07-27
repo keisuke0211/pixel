@@ -34,6 +34,7 @@ CWords::~CWords()
 HRESULT CWords::Init(void)
 {
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Info.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.moveRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	SetType(TYPE_FONT);
@@ -83,8 +84,6 @@ HRESULT CWords::Init(void)
 
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
-
-	m_Info.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	return S_OK;
 }
@@ -150,8 +149,8 @@ void CWords::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-	pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+	//pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+	//pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));
@@ -168,8 +167,8 @@ void CWords::Draw(void)
 		2);
 	pDevice->SetTexture(0, NULL);
 
-	pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-	pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+	//pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+	//pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 }
 
 //========================================
@@ -177,7 +176,8 @@ void CWords::Draw(void)
 //========================================
 CWords *CWords::Create(const char*text, D3DXVECTOR3 pos, D3DXVECTOR3 size, CFont::FONT type)
 {
-	CWords * pWords = new CWords;
+	CWords * pWords = NULL;
+	pWords = new CWords;
 
 	if (pWords != NULL)
 	{
@@ -208,7 +208,7 @@ void CWords::SetWords(const char*text, CFont::FONT type)
 	}
 	else
 	{
-		m_pTex = nullptr;
+		m_pTex = NULL;
 		SetColar(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 	}
 }
@@ -238,7 +238,7 @@ void CWords::SetColar(D3DXCOLOR col)
 
 	VERTEX_2D *pVtx; //頂点へのポインタ
 
-					 //頂点バッファをロックし頂点情報へのポインタを取得
+	 //頂点バッファをロックし頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	pVtx[0].col = D3DXCOLOR(m_Info.col.r, m_Info.col.g, m_Info.col.b, m_Info.col.a);

@@ -12,6 +12,8 @@
 #include "fade.h"
 
 #include "../system/words/text.h"
+#include "../system/words/font.h"
+#include "../system/words/words.h"
 
 //========================================
 // マクロ定義
@@ -48,7 +50,7 @@ HRESULT CTitle::Init(void)
 		D3DXVECTOR3(540.0f, 100.0f, 0.0f),
 		D3DXVECTOR2(220.0f, 100.0f),
 		"ピクパズ",
-		CFont::FONT_MEIRIO,
+		CFont::FONT_FZGONTA,
 		40.0f,
 		20, 10, -1, false);
 

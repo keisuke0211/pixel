@@ -121,11 +121,11 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 		m_pTexture->Load();
 	}
 
+	m_pFont = NULL;
 	// フォント
 	if (m_pFont == NULL)
 	{
 		m_pFont = new CFont;
-		//m_pFont->Load();
 	}
 
 	// フェード

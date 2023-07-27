@@ -17,19 +17,25 @@ class CFont
 {
 
 public:
+
+	static const char* s_FileName[];	// ファイルパス
+	static const char* s_FontName[];	// ファイルパス
+
 	// ***** 列挙型 *****
 
 	// フォント
-	enum FONT // DotGothic
+	enum FONT
 	{
 		FONT_DOTGOTHIC = 0,
+		FONT_FZGONTA,
 		FONT_MEIRIO,
 		FONT_MAX,
+		FONT_NONE,
 	};
 
 	// ***** 関数 *****
 	CFont();
-	virtual~CFont();
+	~CFont();
 
 	// -- メイン ------------------------------------------
 	/* フォント作成		*/void FontCreate(FONT nFont);
@@ -39,14 +45,10 @@ public:
 
 	// -- 取得 ------------------------------------------
 	/* テクスチャ情報の取得 */LPDIRECT3DTEXTURE9 GetFont(string words, FONT nFont);
-private:
 
-	// ***** 静的変数 *****
-	static int m_nMaxFont;				// フォント数
-	static const char* s_FileName[];	// ファイルパス
-	static const char* s_FontName[];	// ファイルパス
+private:	
 
-										// ***** 変数 *****
+	// ***** 変数 *****
 	HFONT  m_hFont[FONT_MAX];
 	LOGFONT m_logFont[FONT_MAX];
 	LPDIRECT3DTEXTURE9 m_texFont[FONT_MAX];	// テクスチャの情報
