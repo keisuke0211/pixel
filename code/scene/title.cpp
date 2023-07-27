@@ -32,8 +32,6 @@ CTitle::CTitle()
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
 		m_bMove[nCnt] = false;
-		m_Timer[nCnt] = 0;
-		m_StartTime[nCnt] = 0;
 	}
 }
 
@@ -61,18 +59,12 @@ HRESULT CTitle::Init(void)
 		40.0f,
 		20, 10, -1, false);*/
 
-	m_Words[0] = CWords::Create("ピ", D3DXVECTOR3(440.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
-	m_Words[1] = CWords::Create("ク", D3DXVECTOR3(560.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
+	m_Words[0] = CWords::Create("ブ", D3DXVECTOR3(440.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
+	m_Words[1] = CWords::Create("レ", D3DXVECTOR3(560.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
 	m_Words[2] = CWords::Create("パ", D3DXVECTOR3(680.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
 	m_Words[3] = CWords::Create("ズ", D3DXVECTOR3(800.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
 
 	m_bMove[0] = true;
-
-	for (int nCnt = 0; nCnt < 4; nCnt++)
-	{
-		m_Timer[nCnt] = 60;
-		m_StartTime[nCnt] = 30;
-	}
 
 	CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),

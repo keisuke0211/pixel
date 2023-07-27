@@ -35,6 +35,7 @@ public:
 		MODEL_SOIL_06,		// 土ブロック 5×1×5
 		MODEL_SOIL_07,		// 土ブロック 3×3×1
 		MODEL_SOIL_08,		// 土ブロック 5×5×1
+		MODEL_TNT_00,		// TNT(仮)
 		MODEL_BULLET,		// 弾
 		MODEL_PLAYER_00,	// プレイヤー 体
 		MODEL_PLAYER_01,	// プレイヤー 頭

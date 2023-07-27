@@ -30,6 +30,7 @@ CText::CText(int nPriority) : CObject2D(nPriority)
 	m_Info.nStandTime = 0;
 	m_Info.bStand = false;
 
+	m_Info.bTextBok = true;
 	m_Info.nDisapTime = 0;
 	m_Info.nDisapTimeMax = 0;
 	m_Info.bRelease = false;
@@ -167,7 +168,8 @@ CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Te
 		pText->SetPos(pos);
 		pText->SetSize(size.x, size.y);
 
-		if (!bTextBok)
+		pText->m_Info.bTextBok = bTextBok;
+		if (!pText->m_Info.bTextBok)
 		{
 			pText->SetColar(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 		}
@@ -300,7 +302,11 @@ void CText::DisapTime(void)
 				m_Info.words[wordsCount]->SetColar(m_Info.col);
 			}
 		}
-		CObject2D::SetColar(m_Info.col);
+
+		if (m_Info.bTextBok)
+		{
+			CObject2D::SetColar(m_Info.col);
+		}
 	}
 	CObject2D::Update();
 }

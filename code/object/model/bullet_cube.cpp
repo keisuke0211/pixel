@@ -46,7 +46,6 @@ CCube::CCube(int nPriority) : CObjectX(nPriority)
 	m_Info.nShape = -1;					// 形状
 	m_Info.nStandTime = 0;				// 待機時間
 	m_Info.bContact = false;			// 接触フラグ
-	m_Info.bActivation = false;			// 発動フラグ
 	m_Info.nLife = 0;					// 寿命
 	m_Info.nLifeMax = 0;				// 寿命の最大値
 	m_Info.fRadius = 0.0f;				// 半径
@@ -54,6 +53,7 @@ CCube::CCube(int nPriority) : CObjectX(nPriority)
 	m_Info.fRadiusRate = 0.0f;			// 半径の割合
 	m_Info.bSet = false;				// 配置フラグ
 	m_Info.nID = m_nNumAll;				// 自分自身のID
+	m_Info.bErase = false;
 }
 
 //========================================
@@ -94,9 +94,44 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos)
 	pCube->SetPos(pos);
 
 	// 位置補正
-	/* X軸	*/if (pCube->Correction(VECTOR_X, pCube->m_Info.pos)) { return pCube; }
-	/* Y軸	*/if (pCube->Correction(VECTOR_Y, pCube->m_Info.pos)) { return pCube; }
-	/* Z軸	*/if (pCube->Correction(VECTOR_Z, pCube->m_Info.pos)) { return pCube; }
+	// X軸
+	if (pCube->Correction(VECTOR_X, pCube->m_Info.pos)) 
+	{ 
+		pCube->ModelCollsion(pCube->m_Info.pos, TYPE_PLAYER);
+
+		if (pCube->m_Info.bErase)
+		{
+			pCube->Uninit();
+			return NULL;
+		}
+
+		return pCube; 
+	}
+	// Y軸
+	if (pCube->Correction(VECTOR_Y, pCube->m_Info.pos)) 
+	{
+		pCube->ModelCollsion(pCube->m_Info.pos, TYPE_PLAYER);
+
+		if (pCube->m_Info.bErase)
+		{
+			pCube->Uninit();
+			return NULL;
+		}
+
+		return pCube;
+	}
+	// Z軸
+	if (pCube->Correction(VECTOR_Z, pCube->m_Info.pos))
+	{
+		pCube->ModelCollsion(pCube->m_Info.pos, TYPE_PLAYER);
+
+		if (pCube->m_Info.bErase)
+		{
+			pCube->Uninit();
+			return NULL;
+		}
+		return pCube;
+	}
 
 	return pCube;
 }
@@ -163,72 +198,6 @@ void CCube::Update(void)
 		}
 	}
 
-	// 形による爆発処理
-	if (!m_Info.bActivation && m_Info.bSet)
-	{
-		//// 接触判定
-		//if (Contact(VECTOR_X, m_Info.pos))
-		//{
-		//	m_Info.bContact = true;
-		//}
-
-		//if (Contact(VECTOR_Y, m_Info.pos))
-		//{
-		//	m_Info.bContact = true;
-		//}
-
-		//if (Contact(VECTOR_Z, m_Info.pos))
-		//{
-		//	m_Info.bContact = true;
-		//}
-
-		//if (m_Info.bContact)
-		//{
-		//	switch (m_Info.nShape)
-		//	{
-		//	case SHAPE_LINE:	/* 直線 */
-		//		m_Info.col = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);
-		//		break;
-		//	case SHAPE_SQUARE:	/* 四角 */
-		//		m_Info.col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-		//		break;
-		//	}
-
-		//	m_Info.nStandTime = 90;
-		//	m_Info.bActivation = true;
-		//}
-	}
-
-	// 発動処理
-	if (m_Info.bActivation)
-	{
-		// 待機時間	
-		if (--m_Info.nStandTime <= 0)
-		{
-			// パーティクル生成
-			CParticleX *pObj = CParticleX::Create();
-			pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 20, m_Info.pos.z));
-			pObj->Par_SetRot(INIT_D3DXVECTOR3);
-			pObj->Par_SetMove(D3DXVECTOR3(10.0f, 5.0f, 10.0f));
-			pObj->Par_SetType(0);
-			pObj->Par_SetLife(50);
-			pObj->Par_SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
-			pObj->Par_SetForm(25);
-
-			Uninit();
-			return;
-		}
-		else if (m_Info.nStandTime <= (RADIUS_TIME))
-		{
-			m_Info.fRadius -= m_Info.fRadius / m_Info.nStandTime;
-			m_Info.col.a *= ((float)m_Info.nStandTime / RADIUS_TIME);
-		}
-		else if (m_Info.nStandTime <= (RADIUS_TIME * 2))
-		{
-			m_Info.fRadius -= m_Info.fRadius / m_Info.nStandTime;
-		}
-	}
-
 	// 寿命処理
 	if (m_Info.bSet && !m_Info.bContact)
 	{
@@ -258,7 +227,7 @@ void CCube::Update(void)
 			Contact(0, VECTOR_Z, m_Info.pos);
 
 			// 敵との当たり判定
-			EnemyCollsion(m_Info.pos);
+			ModelCollsion(m_Info.pos, TYPE_ENEMY);
 
 			// オブジェクト破棄
 			Uninit();
@@ -368,12 +337,14 @@ bool CCube::Correction(VECTOR vector, D3DXVECTOR3 pos)
 					if (Collsion(pos, PairLeftPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
 					{// 左側
 						m_Info.pos = PairLeftPos;
+						bHit = true;
 						break;
 					}
 
 					if (Collsion(pos, PairRightPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
 					{// 右側
 						m_Info.pos = PairRightPos;
+						bHit = true;
 						break;
 					}
 				}
@@ -383,12 +354,14 @@ bool CCube::Correction(VECTOR vector, D3DXVECTOR3 pos)
 					if (Collsion(pos, PairUpPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
 					{// 上側
 						m_Info.pos = PairUpPos;
+						bHit = true;
 						break;
 					}
 
 					if (Collsion(pos, PairDownPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
 					{// 下側
 						m_Info.pos = PairDownPos;
+						bHit = true;
 						break;
 					}
 				}
@@ -398,16 +371,18 @@ bool CCube::Correction(VECTOR vector, D3DXVECTOR3 pos)
 					if (Collsion(pos, PairBackPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
 					{// 奥側
 						m_Info.pos = PairBackPos;
+						bHit = true;
 						break;
 					}
 
 					if (Collsion(pos, PairFrontPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
 					{// 手前側
 						m_Info.pos = PairFrontPos;
+						bHit = true;
 						break;
 					}
 				}
-							   break;
+						   break;
 				}
 
 				// 判定が真なら TRUE を返す
@@ -588,9 +563,9 @@ bool CCube::Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3D
 }
 
 //========================================
-// 敵との当たり判定
+// オブジェクトの当たり判定
 //========================================
-void CCube::EnemyCollsion(D3DXVECTOR3 pos)
+void CCube::ModelCollsion(D3DXVECTOR3 pos, TYPE nType)
 {
 	// 先頭オブジェクトを取得
 	CObject *pObj = CObject::GetTop(PRIO_OBJECT);
@@ -598,7 +573,7 @@ void CCube::EnemyCollsion(D3DXVECTOR3 pos)
 	while (pObj != NULL)
 	{// 使用されている時、
 
-		 // 次のオブジェクト
+		// 次のオブジェクト
 		CObject *pObjNext = pObj->GetNext();
 
 		TYPE type;
@@ -606,7 +581,7 @@ void CCube::EnemyCollsion(D3DXVECTOR3 pos)
 		// 種類を取得
 		type = pObj->GetType();
 
-		if (type == TYPE_ENEMY)
+		if (type == nType)
 		{// 種類が敵だった時
 
 			// キューブの取得
@@ -619,7 +594,7 @@ void CCube::EnemyCollsion(D3DXVECTOR3 pos)
 			fHeight *= BOM_COLLSION;// 高さ
 			fDepth *= BOM_COLLSION;	// 奥行き
 
-			// エネミーの取得
+			// 相手の取得
 			D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
 			D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
 			float fPairWidth = pObj->GetWidth();		// 幅
@@ -630,13 +605,27 @@ void CCube::EnemyCollsion(D3DXVECTOR3 pos)
 			if (Collsion(pos, PairPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
 			{// 当たったら
 
-				// ダイナミックキャストする
-				CEnemy *pEnemy = dynamic_cast<CEnemy*>(pObj);
+				switch (nType)
+				{
+				case TYPE_ENEMY:
+				{
+					// ダイナミックキャストする
+					CEnemy *pEnemy = dynamic_cast<CEnemy*>(pObj);
 
-				// HIT処理
-				pEnemy->HitLife(BOM_DAMAGE + (m_Info.nChain / DAMAGE_DIAMETER));
+					// HIT処理
+					pEnemy->HitLife(BOM_DAMAGE + (m_Info.nChain / DAMAGE_DIAMETER));
+				}
+					break;
+				case TYPE_PLAYER:
+				{
+					m_Info.bErase = true;
+				}
+				break;
+				}
+				
 			}
 		}
+
 		pObj = pObjNext;	// 次のオブジェクトを代入
 	}
 }

@@ -44,7 +44,6 @@ public:
 		int nShape;				// 形状
 		int nStandTime;			// 待機時間
 		bool bContact;			// 接触フラグ
-		bool bActivation;		// 発動フラグ
 		int nLife;				// 寿命
 		int nLifeMax;			// 寿命の最大値
 		float fRadius;			// 半径
@@ -53,6 +52,7 @@ public:
 		bool bSet;				// 配置フラグ
 		int nChain;				// 連鎖カウント
 		bool bBom;				// 爆発フラグ
+		bool bErase;			// 消滅フラグ
 		int nID;				// 自身のID
 	};
 
@@ -92,8 +92,7 @@ private:
 	/* 位置補正			*/bool Correction(VECTOR vector, D3DXVECTOR3 pos);
 	/* 接触判定			*/bool Contact(int mode,VECTOR vector, D3DXVECTOR3 pos);
 	/* 当たり判定		*/bool Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3	PairSize);
-	/* 敵との当たり判定 */void EnemyCollsion(D3DXVECTOR3 pos);
-	/* 当たり判定(方向)	*/bool Collsion(VECTOR vector,CObject *pObj,CObject *pPairObj);
+	/* 敵との当たり判定 */void ModelCollsion(D3DXVECTOR3 pos, TYPE type);
 	/* 破壊処理			*/void Destruction(CCube *pCube);
 
 

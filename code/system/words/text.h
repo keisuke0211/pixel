@@ -83,6 +83,7 @@ private:
 		int nDisapTimeMax;		// 消える最大時間
 		bool bRelease;			// 消すフラグ
 
+		bool bTextBok;			// テキストボックスの表示フラグ
 		string sText;			// 表示するテキスト
 		string sALLText;		// テキストの全体
 		CWords** words;			// 文字

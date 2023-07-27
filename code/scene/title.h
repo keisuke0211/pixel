@@ -39,8 +39,6 @@ private:
 	// ***** 変数 *****
 	CWords *m_Words[4]; // ピクパズ
 	bool m_bMove[4];
-	int m_Timer[4];
-	int m_StartTime[4];
 	int m_nTextTime;
 	int m_nStandTime;
 };

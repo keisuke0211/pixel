@@ -190,7 +190,7 @@ void CPlayer::KeyInput(void)
 	// 攻撃
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_B))
 	{
-		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z),m_Info.rot);
+		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 10,m_Info.pos.z),m_Info.rot);
 	}
 	
 	// 最初の弾を止める
@@ -390,7 +390,7 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 
 					if ((pos.z + fSize) > (PairPos.z - fPairDepth) &&
 						(pos.z - fSize) < (PairPos.z + fPairDepth) &&
-						(pos.y + fSize) > (PairPos.y - fPairHeight) &&
+						(pos.y + fSize*5) > (PairPos.y - fPairHeight) &&
 						(pos.y - fSize) < (PairPos.y + fPairHeight))
 					{// 奥辺と手前辺が相手の幅の内側の時、
 
@@ -417,11 +417,11 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 						(pos.z - fSize) < (PairPos.z + fPairDepth))
 					{// 左辺と右辺が相手の幅の内側の時、
 
-						if ((pos.y + fSize) > (PairPos.y - fPairHeight) &&
-							(PosOld.y + fSize) <= (PairPosOld.y - fPairHeight))
+						if ((pos.y + fSize*2) > (PairPos.y - fPairHeight) &&
+							(PosOld.y + fSize*2) <= (PairPosOld.y - fPairHeight))
 						{// 下からめり込んでいる時
 
-							pos.y = (PairPos.y - fPairHeight) - fSize;
+							pos.y = (PairPos.y - fPairHeight) - fSize*2;
 
 							//プレイヤーが上昇中
 							if (m_Info.move.y > 0.0f)
@@ -446,7 +446,7 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 
 					if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
 						(pos.x - fSize) < (PairPos.x + fPairWidth) &&
-						(pos.y + fSize) > (PairPos.y - fPairHeight) &&
+						(pos.y + fSize*5) > (PairPos.y - fPairHeight) &&
 						(pos.y - fSize) < (PairPos.y + fPairHeight))
 					{// 奥辺と手前辺が相手の幅の内側の時、
 
@@ -597,7 +597,7 @@ void CPlayer::BulletStop(void)
 				// 先頭フラグの取得
 				nCubeSet = CCube::GetLeadSet();
 
-				if (nID == 0 && !nCubeSet)
+				if (!nCubeSet)
 				{
 					// キューブの生成
 					CCube::Create(pBullet->GetType(), pBullet->GetPos());

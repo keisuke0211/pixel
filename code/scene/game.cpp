@@ -16,6 +16,8 @@
 #include "../object\BG\bg_ceiling.h"
 #include "../object\UI\text2D.h"
 #include "../system/input.h"
+#include "../system/words/text.h"
+#include "../system/words/font.h"
 #include "fade.h"
 
 // 静的変数
@@ -143,6 +145,15 @@ HRESULT CGame::Init(void)
 			pObj->SetString("RESET:R");
 		}
 	}
+
+
+	CText::Create(CText::BOX_NORMAL,
+		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
+		D3DXVECTOR2(440.0f, 100.0f),
+		"平原ステージ！\n６０秒で脱出せよ！",
+		CFont::FONT_DOTGOTHIC,
+		20.0f,
+		15, 10, 30, false);
 
 	return S_OK;
 }
