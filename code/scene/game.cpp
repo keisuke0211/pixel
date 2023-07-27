@@ -23,13 +23,15 @@
 // 静的変数
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
+bool CGame::m_bStart = false;
 
 //========================================
 // コンストラクタ
 //========================================
 CGame::CGame()
 {
-
+	m_nStartTime = 0;
+	m_bStart = false;
 }
 
 //========================================
@@ -154,6 +156,8 @@ HRESULT CGame::Init(void)
 		CFont::FONT_DOTGOTHIC,
 		20.0f,
 		15, 10, 30, false);
+	m_nStartTime = ((20 * 16) + 10 + 25);
+
 
 	return S_OK;
 }
@@ -178,6 +182,15 @@ void CGame::Uninit(void)
 //========================================
 void CGame::Update(void)
 {
+	// 開始フラグ
+	if (!m_bStart)
+	{
+		if (--m_nStartTime <= 0)
+		{
+			m_bStart = true;
+		}
+	}
+
 	if (CFade::GetFade() == CFade::FADE_NONE)
 	{
 		// エネミーの全滅

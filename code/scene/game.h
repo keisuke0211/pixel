@@ -44,11 +44,15 @@ public:
 	// -- 取得 ------------------------
 	/* タイム		*/static CTime *GetTime() { return m_pTime; }
 	/* スコア		*/static CScore *GetScore() { return m_pScore; };
+	/* 開始			*/static bool IsStart() { return m_bStart; }
 private:
 
 	// ***** 変数 *****
 	/* タイム		*/static CTime *m_pTime;
 	/* スコア		*/static CScore *m_pScore;
+
+	int m_nStartTime;		// 開始時間
+	static bool m_bStart;	// 開始フラグ
 
 };
 

@@ -6,6 +6,7 @@
 // *** player.cpp ***
 //========================================
 #include "player.h"
+#include "../../scene/game.h"
 #include "motion.h"
 #include "../../manager.h"
 #include "../../system/camera.h"
@@ -114,9 +115,13 @@ void CPlayer::Update(void)
 	m_Info.posOld = m_Info.pos;
 	m_Info.rotOld = m_Info.rot;
 
-	// キー入力処理
-	KeyInput();
+	bool bStart = CGame::IsStart();
 
+	if (bStart)
+	{
+		// キー入力処理
+		KeyInput();
+	}
 	// 位置更新処理
 	UpdatePos();
 
