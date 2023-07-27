@@ -26,8 +26,15 @@
 //========================================
 CTitle::CTitle()
 {
-	nTextTime = 0;
-	nStandTime = 0;
+	m_nTextTime = 0;
+	m_nStandTime = 0;
+
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		m_bMove[nCnt] = false;
+		m_Timer[nCnt] = 0;
+		m_StartTime[nCnt] = 0;
+	}
 }
 
 //========================================
@@ -46,14 +53,26 @@ HRESULT CTitle::Init(void)
 	// モデル
 	CModel::InitModel();
 
-	CText::Create(CText::BOX_NORMAL,
+	/*CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(540.0f, 100.0f, 0.0f),
 		D3DXVECTOR2(220.0f, 100.0f),
 		"ピクパズ",
 		CFont::FONT_FZGONTA,
 		40.0f,
-		20, 10, -1, false);
+		20, 10, -1, false);*/
 
+	m_Words[0] = CWords::Create("ピ", D3DXVECTOR3(440.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
+	m_Words[1] = CWords::Create("ク", D3DXVECTOR3(560.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
+	m_Words[2] = CWords::Create("パ", D3DXVECTOR3(680.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
+	m_Words[3] = CWords::Create("ズ", D3DXVECTOR3(800.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
+
+	m_bMove[0] = true;
+
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		m_Timer[nCnt] = 60;
+		m_StartTime[nCnt] = 30;
+	}
 
 	CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
@@ -71,8 +90,8 @@ HRESULT CTitle::Init(void)
 		20.0f,
 		5, 10, -1);
 
-	nTextTime = TEXT_TIME;
-	nStandTime = STAND_MAX;
+	m_nTextTime = TEXT_TIME;
+	m_nStandTime = STAND_MAX;
 
 	return S_OK;
 }
@@ -91,6 +110,59 @@ void CTitle::Uninit(void)
 //========================================
 void CTitle::Update(void)
 {
+	// タイトルアニメーション
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		D3DXVECTOR3 pos = m_Words[nCnt]->GetPos();
+
+		if (pos.y <= 110.0f && m_bMove[nCnt])
+		{
+			D3DXVECTOR3 move;
+
+			move.y = 3.0f;
+
+			m_Words[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
+
+			if (pos.y >= 100.0f)
+			{
+				move.y = 0.0f;
+
+				m_Words[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
+			}
+			else if (pos.y >= 20 && nCnt != 3 && !m_bMove[nCnt + 1])
+			{
+				m_bMove[nCnt + 1] = true;
+			}
+		}
+	}
+
+
+	// 入力催促テキスト
+	if (--m_nTextTime <= 0)
+	{
+		m_nStandTime--;
+		if (m_nStandTime == STAND_MAX)
+		{
+			CObject::Release(CObject::PRIO_TEXT, CObject::TYPE_FONT, 2);
+		}
+		if (m_nStandTime <= 0)
+		{
+			CText::Create(CText::BOX_NORMAL,
+				D3DXVECTOR3(640.0f, 600.0f, 0.0f),
+				D3DXVECTOR2(1080.0f, 100.0f),
+				"ENTERを押して始めてね!",
+				CFont::FONT_DOTGOTHIC,
+				20.0f,
+				5, 10, -1);
+
+			m_nTextTime = TEXT_TIME;
+			m_nStandTime = STAND_MAX;
+		}
+	}
+
+
+
+
 	// --- 取得 ---------------------------------
 	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
@@ -107,30 +179,6 @@ void CTitle::Update(void)
 
 		}
 	}
-
-	if (--nTextTime <= 0)
-	{
-		nStandTime--;
-		if (nStandTime == STAND_MAX)
-		{
-			CObject::Release(CObject::PRIO_TEXT, CObject::TYPE_FONT, 2);
-		}
-		if (nStandTime <= 0)
-		{
-			CText::Create(CText::BOX_NORMAL,
-				D3DXVECTOR3(640.0f, 600.0f, 0.0f),
-				D3DXVECTOR2(1080.0f, 100.0f),
-				"ENTERを押して始めてね!",
-				CFont::FONT_DOTGOTHIC,
-				20.0f,
-				5, 10, -1);
-
-			nTextTime = TEXT_TIME;
-			nStandTime = STAND_MAX;
-		}
-	}
-
-
 }
 
 //========================================

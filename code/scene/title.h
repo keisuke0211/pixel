@@ -12,6 +12,11 @@
 #include "../manager.h"
 
 //****************************************
+// 前方宣言
+//****************************************
+class CWords;
+
+//****************************************
 // クラス
 //****************************************
 class CTitle : public CScene
@@ -32,8 +37,12 @@ public:
 private:
 
 	// ***** 変数 *****
-	int nTextTime;
-	int nStandTime;
+	CWords *m_Words[4]; // ピクパズ
+	bool m_bMove[4];
+	int m_Timer[4];
+	int m_StartTime[4];
+	int m_nTextTime;
+	int m_nStandTime;
 };
 
 #endif
