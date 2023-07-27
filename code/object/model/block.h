@@ -30,39 +30,42 @@ public:
 		D3DXVECTOR3	size;		// サイズ
 		D3DXCOLOR col;			// 頂点カラー
 		int nType;				// 種類
-		int nLife;				// 寿命
-		int nLifeMax;			// 寿命の最大値
 		float fRadius;			// 半径
 		int nCntRadius;			// 半径・推移時間
 		float fRadiusRate;		// 半径の割合
 		bool bSet;				// 配置フラグ
+
+		int nEraseTime;			// 消すまでの時間
+		bool bErase;			// 消すフラグ
 	};
 
 	// ***** 関数 *****
 	CBlock(int nPriority = PRIO_BLOCK);
 	~CBlock();
 
-	/* メイン */
-
 	// 生成
 	static CBlock *Create(int nType,D3DXVECTOR3 pos);
 
-	HRESULT Init(void);	// 初期化
-	void Uninit(void);	// 終了
-	void Update(void);	// 更新
-	void Draw(void);	// 描画
+	/* 初期化		*/HRESULT Init(void);
+	/* 終了			*/void Uninit(void);
+	/* 更新			*/void Update(void);
+	/* 描画			*/void Draw(void);
+	/* HIT			*/void HitBlock(void);
+	/* TNT			*/void TntBlock(void);
+	/* 当たり判定	*/void ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos);
 	
-	/* 設定 */
-	virtual void BlockSetPos(const D3DXVECTOR3 pos) { m_Info.pos = pos; }	// 位置
-	void BlockSetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }			// 向き
-	void BlockSetColor(const D3DXCOLOR col) { m_Info.col = col; }			// 色
-	void BlockSetSize(const D3DXVECTOR3 size) { m_Info.size = size; }		// 大きさ
+	// -- 設定 ---------------------------------------------
+	/* 位置		*/virtual void SetBlockPos(const D3DXVECTOR3 pos) { m_Info.pos = pos; }
+	/* 向き		*/void SetBlockRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
+	/* 色		*/void SetBlockColor(const D3DXCOLOR col) { m_Info.col = col; }
+	/* 大きさ	*/void SetBlockSize(const D3DXVECTOR3 size) { m_Info.size = size; }
 
-	/* 所得 */
-	D3DXVECTOR3 BlockGetPos(void) { return m_Info.pos; }					// 位置
-	D3DXVECTOR3 GetRot(void) { return m_Info.rot; }							// 向き
-	D3DXCOLOR BlockGetColor(void) { return m_Info.col; }					// 色
-	D3DXVECTOR3 BlockGetSize(void) { return m_Info.size; }					// 大きさ
+	// -- 所得 ---------------------------------------------
+	/* 位置		*/D3DXVECTOR3 GetBlockPos(void) { return m_Info.pos; }
+	/* 向き		*/D3DXVECTOR3 GetBlockRot(void) { return m_Info.rot; }
+	/* 色		*/D3DXCOLOR GetBlockColor(void) { return m_Info.col; }
+	/* 大きさ	*/D3DXVECTOR3 GetBlockSize(void) { return m_Info.size; }
+	/* 種類		*/int GetBlockType(void) { return m_Info.nType; }
 
 private:
 

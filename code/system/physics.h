@@ -79,16 +79,21 @@ public:
 	CPhysics();		// コンストラクタ
 	virtual~CPhysics();	// デストラクタ
 
-	void IntControl(int *pData, int nMax, int nMin);				// int型の値の制御処理
-	void IntLoopControl(int *pData, int nMax, int nMin);			// int型の値のループ制御処理
-	void FloatControl(float *pData, float fMax, float fMin);		// float型の値の制御処理
-	void FloatLoopControl(float *pData, float fMax, float fMin);	// float型の値のループ制御処理
+	/* int型の値の制御			*/void IntControl(int *pData, int nMax, int nMin);
+	/* int型の値のループ制御	*/void IntLoopControl(int *pData, int nMax, int nMin);
+	/* float型の値の制御		*/void FloatControl(float *pData, float fMax, float fMin);
+	/* float型の値のループ制御	*/void FloatLoopControl(float *pData, float fMax, float fMin);
 
-	float FindAngle(D3DXVECTOR3 pos, D3DXVECTOR3 targetPos);		// 2点の角度を求める
-	void RotControl(D3DXVECTOR3 *pRot);								// 向きを制御
+	/* 2点の角度を求める		*/float FindAngle(D3DXVECTOR3 pos, D3DXVECTOR3 targetPos);
+	/* 向きを制御				*/void RotControl(D3DXVECTOR3 *pRot);
 
-	float AngleDifference(float fAngle, float fTargetAngle);		// 角度の差を求める
-	void ControlAngle(float *pAngle);								// 角度の制御
+	/* 角度の差を求める			*/float AngleDifference(float fAngle, float fTargetAngle);
+	/* 角度の制御				*/void ControlAngle(float *pAngle);
+	/* 当たり判定(全方向)		*/bool Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3	PairSize);
+	/* 当たり判定(ｘ)			*/bool CollsionX(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize);
+	/* 当たり判定(ｙ)			*/bool CollsionY(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize);
+	/* 当たり判定(ｚ)			*/bool CollsionZ(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize);
+	/* 当たり判定(指定方向)		*/bool CollsionDirection(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 PosOld, D3DXVECTOR3 PairPosOld, D3DXVECTOR3 size, D3DXVECTOR3 PairSize, DIRECTION nDirection);
 
 private:
 

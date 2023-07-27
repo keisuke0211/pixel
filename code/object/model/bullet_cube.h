@@ -68,20 +68,20 @@ public:
 	/* 生成		*/static CCube *Create(int nType, D3DXVECTOR3 pos);
 
 	// -- 設定 -------------------------------
-	/* 位置			*/void CubeSetPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
-	/* 向き			*/void CubeSetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
-	/* 色			*/void CubeSetColor(const D3DXCOLOR col) { m_Info.col = col; }
-	/* サイズ		*/void CubeSetSize(const D3DXVECTOR3 size) { m_Info.size = size; }
-	/* 寿命			*/void CubeSetLife(const int nLife) { m_Info.nLife = nLife; }
-	/* 種類			*/void CubeSetType(const int type) { m_Info.nShape = type; }
-	/* 先頭フラグ	*/void CubeLeadSet(const bool bSet) { bLeadSet = bSet; }
+	/* 位置			*/void SetCubePos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
+	/* 向き			*/void SetCubeRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
+	/* 色			*/void SetCubeColor(const D3DXCOLOR col) { m_Info.col = col; }
+	/* サイズ		*/void SetCubeSize(const D3DXVECTOR3 size) { m_Info.size = size; }
+	/* 寿命			*/void SetCubeLife(const int nLife) { m_Info.nLife = nLife; }
+	/* 種類			*/void SetCubeType(const int type) { m_Info.nShape = type; }
+	/* 先頭フラグ	*/void SetCubeLead(const bool bSet) { bLeadSet = bSet; }
 
 	// -- 取得 -------------------------------
-	/* 位置			*/D3DXVECTOR3 CubeGetPos(void) { return m_Info.pos; }
-	/* 向き			*/D3DXVECTOR3 GetRot(void) { return m_Info.rot; }
-	/* 色			*/D3DXCOLOR CubeGetColor(void) { return m_Info.col; }
-	/* サイズ		*/D3DXVECTOR3 CubeGetSize(void) { return m_Info.size; }
-	/* 配置フラグ	*/bool CubeGetSet(void) { return m_Info.bSet; }
+	/* 位置			*/D3DXVECTOR3 GetCubeos(void) { return m_Info.pos; }
+	/* 向き			*/D3DXVECTOR3 GetCubeRot(void) { return m_Info.rot; }
+	/* 色			*/D3DXCOLOR GetCubeColor(void) { return m_Info.col; }
+	/* サイズ		*/D3DXVECTOR3 GetCubeSize(void) { return m_Info.size; }
+	/* 配置フラグ	*/bool GetCubeSet(void) { return m_Info.bSet; }
 	/* 先頭フラグ	*/static bool GetLeadSet(void) { return bLeadSet; }
 	/* 連鎖カウント	*/int GetChain(void) { return m_Info.nChain; }
 	/* ID			*/int GetID(void) { return m_Info.nID; }
@@ -91,10 +91,8 @@ private:
 	// ***** 関数 ***** correction
 	/* 位置補正			*/bool Correction(VECTOR vector, D3DXVECTOR3 pos);
 	/* 接触判定			*/bool Contact(int mode,VECTOR vector, D3DXVECTOR3 pos);
-	/* 当たり判定		*/bool Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3	PairSize);
-	/* 敵との当たり判定 */void ModelCollsion(D3DXVECTOR3 pos, TYPE type);
+	/* 当たり判定		*/void ModelCollsion(PRIO nPrio, TYPE nType,D3DXVECTOR3 pos);
 	/* 破壊処理			*/void Destruction(CCube *pCube);
-
 
 	// ***** 変数 *****
 	static int m_nNumAll;	// キューブの総数

@@ -68,7 +68,7 @@ public:
 
 private:
 	// ***** 関数 *****
-	D3DXVECTOR3 Collision(VECTOR vector,D3DXVECTOR3 pos);	// ブロックの当たり判定
+	D3DXVECTOR3 Collision(PRIO nPrio, TYPE nType,VECTOR vector,D3DXVECTOR3 pos);	// ブロックの当たり判定
 
 	/* 移動 */
 	void MoveKeyboard(DIRECTION drct);	// キーボードの移動処理

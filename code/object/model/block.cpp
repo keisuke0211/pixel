@@ -6,9 +6,16 @@
 // *** block.cpp ***
 //========================================
 #include "block.h"
+#include "bullet_cube.h"
 #include "model.h"
+#include "../EFFECT/particleX.h"
 #include "../../system/sound.h"
 #include "../../system/csv_file.h"
+
+//========================================
+// マクロ定義
+//========================================
+#define TNT_COLLSION		(3.0f)	// TNTの爆発の判定
 
 //========================================
 // コンストラクタ
@@ -23,12 +30,12 @@ CBlock::CBlock(int nPriority) : CObjectX(nPriority)
 	m_Info.size = INIT_D3DXVECTOR3;
 	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.nType = 0;
-	m_Info.nLife = 0;
-	m_Info.nLifeMax = 0;
 	m_Info.fRadius = 0.0f;
 	m_Info.nCntRadius = 0;
 	m_Info.fRadiusRate = 0.0f;
 	m_Info.bSet = false;
+	m_Info.nEraseTime = 0;
+	m_Info.bErase = false;
 }
 
 //========================================
@@ -60,9 +67,7 @@ CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 	pBlock->Init();
 
 	pBlock->m_Info.nType = nType;
-	pBlock->m_Info.nLife = 300;
-	pBlock->m_Info.nLifeMax = 300;
-	pBlock->BlockSetPos(pos);
+	pBlock->SetBlockPos(pos);
 
 	return pBlock;
 }
@@ -114,6 +119,24 @@ void CBlock::Update(void)
 	//SetRot(m_Info.rot);
 	SetScale(m_Info.size);
 
+	if (m_Info.bErase)
+	{// フラグが真の時、
+
+		if (--m_Info.nEraseTime <= 0)
+		{
+			if (m_Info.nType == MODEL_TNT_00)
+			{
+				// TNTの処理
+				TntBlock();
+			}
+
+			// 破棄
+			Uninit();
+
+			return;
+		}
+	}
+
 	CObjectX::Update();
 }
 
@@ -123,4 +146,101 @@ void CBlock::Update(void)
 void CBlock::Draw(void)
 {
 	CObjectX::Draw();
+}
+
+//========================================
+// Hit処理
+//========================================
+void CBlock::HitBlock(void)
+{
+	if (m_Info.nType == MODEL_TNT_00)
+	{
+		m_Info.nEraseTime = 20;
+		m_Info.bErase = true;
+	}
+}
+
+//========================================
+// TNTブロック
+//========================================
+void CBlock::TntBlock(void)
+{
+	// パーティクル生成
+	CParticleX *pObj = CParticleX::Create();
+	pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y, m_Info.pos.z));
+	pObj->Par_SetRot(INIT_D3DXVECTOR3);
+	pObj->Par_SetMove(D3DXVECTOR3(25.0f, 15.0f, 25.0f));
+	pObj->Par_SetType(0);
+	pObj->Par_SetLife(100);
+	pObj->Par_SetCol(D3DXCOLOR(0.9f, 0.0f, 0.0f, 1.0f));
+	pObj->Par_SetForm(10);
+
+	// キューブとの当たり判定
+	ModelCollsion(PRIO_CUBE, TYPE_CUBE,m_Info.pos);
+}
+
+//========================================
+// オブジェクトの当たり判定
+//========================================
+void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
+{
+	// 先頭オブジェクトを取得
+	CObject *pObj = CObject::GetTop(nPrio);
+
+	while (pObj != NULL)
+	{// 使用されている時、
+
+		 // 次のオブジェクト
+		CObject *pObjNext = pObj->GetNext();
+
+		TYPE type;
+
+		// 種類を取得
+		type = pObj->GetType();
+
+		if (type == nType)
+		{// 選択した種類の時、
+
+			 // ブロックの取得
+			int nBlockType = GetBlockType();	// 種類
+			float fWidth = GetWidth();			// 幅
+			float fHeight = GetHeight();		// 高さ
+			float fDepth = GetDepth();			// 奥行き
+
+			if (nBlockType == MODEL_TNT_00)
+			{
+				// サイズ調整
+				fWidth *= TNT_COLLSION;	// 幅
+				fHeight *= TNT_COLLSION;// 高さ
+				fDepth *= TNT_COLLSION;	// 奥行き
+			}
+
+			// 相手の取得
+			D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
+			D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
+			float fPairWidth = pObj->GetWidth();		// 幅
+			float fPairHeight = pObj->GetHeight();		// 高さ
+			float fPairDepth = pObj->GetDepth();		// 奥行き
+
+			// 当たり判定
+			if (Collsion(pos, PairPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+			{// 当たったら
+
+				switch (nType)
+				{
+				case TYPE_CUBE:
+				{
+					// ダイナミックキャストする
+					CCube *pCube = dynamic_cast<CCube*>(pObj);
+
+					// HIT処理
+					pCube->SetCubeLife(20);
+				}
+				break;
+				}
+			}
+		}
+
+		pObj = pObjNext;	// 次のオブジェクトを代入
+	}
 }

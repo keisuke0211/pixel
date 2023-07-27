@@ -391,7 +391,7 @@ bool CEnemy::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 					// ダイナミックキャストする
 					CCube *pCube = dynamic_cast<CCube*>(pObj);
 
-					pCube->CubeSetLife(1);
+					pCube->SetCubeLife(1);
 				}
 				return TRUE;
 			}

@@ -187,3 +187,139 @@ void CPhysics::ControlAngle(float *pAngle)
 		*pAngle = (D3DX_PI + (*pAngle + D3DX_PI));
 	}
 }
+
+//========================================
+// 当たり判定(全方向)
+//========================================
+bool CPhysics::Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize)
+{
+	// 判定フラグ
+	bool bHit = false;
+
+	if ((pos.x + size.x) > (PairPos.x - PairSize.x) &&
+		(pos.x - size.x) < (PairPos.x + PairSize.x) &&
+		(pos.y + size.y) > (PairPos.y - PairSize.y) &&
+		(pos.y - size.y) < (PairPos.y + PairSize.y) &&
+		(pos.z + size.z) > (PairPos.z - PairSize.z) &&
+		(pos.z - size.z) < (PairPos.z + PairSize.z))
+	{// ブロックが判定内にある時、
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+//========================================
+// 当たり判定(ｘ)
+//========================================
+bool CPhysics::CollsionX(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize)
+{
+	if ((pos.z + size.z) > (PairPos.z - PairSize.z) &&
+		(pos.z - size.z) < (PairPos.z + PairSize.z) &&
+		(pos.y + size.y) > (PairPos.y - PairSize.y) &&
+		(pos.y - size.y) < (PairPos.y + PairSize.y))
+	{// 奥辺と手前辺が相手の幅の内側の時、
+
+		return TRUE;
+	}
+	return FALSE;
+}
+
+//========================================
+// 当たり判定(ｙ)
+//========================================
+bool CPhysics::CollsionY(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize)
+{
+	if ((pos.x + size.x) > (PairPos.x - PairSize.x) &&
+		(pos.x - size.x) < (PairPos.x + PairSize.x) &&
+		(pos.z + size.z) > (PairPos.z - PairSize.z) &&
+		(pos.z - size.z) < (PairPos.z + PairSize.z))
+	{// 左辺と右辺が相手の幅の内側の時、
+
+		return TRUE;
+	}
+	return FALSE;
+}
+
+//========================================
+// 当たり判定(ｚ)
+//========================================
+bool CPhysics::CollsionZ(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize)
+{
+	if ((pos.x + size.x) > (PairPos.x - PairSize.x) &&
+		(pos.x - size.x) < (PairPos.x + PairSize.x) &&
+		(pos.y + size.y) > (PairPos.y - PairSize.y) &&
+		(pos.y - size.y) < (PairPos.y + PairSize.y))
+	{// 奥辺と手前辺が相手の幅の内側の時、
+
+		return TRUE;
+	}
+	return FALSE;
+}
+
+//========================================
+// 当たり判定(指定方向)
+//========================================
+bool CPhysics::CollsionDirection(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 PosOld, D3DXVECTOR3 PairPosOld, D3DXVECTOR3 size, D3DXVECTOR3 PairSize, DIRECTION nDirection)
+{
+	switch (nDirection)
+	{
+	case CPhysics::DIRECTION_UP:
+	{
+		if ((pos.y - size.y) < (PairPos.y + PairSize.y) &&
+			(PosOld.y - size.y) >= (PairPosOld.y + PairSize.y))
+		{// 上からめり込んでいる時
+			return TRUE;
+		}
+	}
+		break;
+	case CPhysics::DIRECTION_DOWN:
+	{
+		if ((pos.y + size.y) > (PairPos.y - PairSize.y) &&
+			(PosOld.y + size.y) <= (PairPosOld.y - PairSize.y))
+		{// 下からめり込んでいる時
+			return TRUE;
+		}
+	}
+		break;
+	case CPhysics::DIRECTION_LEFT:
+	{
+		if ((pos.x + size.x) > (PairPos.x - PairSize.x) &&
+			(PosOld.x + size.x) <= (PairPosOld.x - PairSize.x))
+		{// 左からめり込んでいる時
+			return TRUE;
+		}
+	}
+		break;
+	case CPhysics::DIRECTION_RIGHT:
+	{
+		if ((pos.x - size.x) < (PairPos.x + PairSize.x) &&
+			(PosOld.x - size.x) >= (PairPosOld.x + PairSize.x))
+		{// 右からめり込んでいる時
+			return TRUE;
+		}
+	}
+		break;
+	case CPhysics::DIRECTION_BACK:
+	{
+		if ((pos.z + size.z) > (PairPos.z - PairSize.z) &&
+			(PosOld.z + size.z) <= (PairPosOld.z - PairSize.z))
+		{// 後ろからめり込んでいる時
+			return TRUE;
+		}
+	}
+		break;
+	case CPhysics::DIRECTION_FRONT:
+	{
+		if ((pos.z - size.z) < (PairPos.z + PairSize.z) &&
+			(PosOld.z - size.z) >= (PairPosOld.z + PairSize.z))
+		{// 前からめり込んでいる時
+			return TRUE;
+		}
+	}
+		break;
+	}
+
+	return FALSE;
+}

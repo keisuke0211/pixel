@@ -9,6 +9,7 @@
 #include "../EFFECT/particleX.h"
 #include "model.h"
 #include "enemy.h"
+#include "block.h"
 #include "../../system/sound.h"
 #include "../../system/csv_file.h"
 
@@ -90,14 +91,16 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos)
 	pCube->m_Info.nShape = nShape;
 	pCube->m_Info.nLife = 300;
 	pCube->m_Info.nLifeMax = 300;
-	pCube->CubeSetPos(pos);
+	pCube->SetCubePos(pos);
 	pCube->SetPos(pos);
+
+	pCube->m_Info.posOld = pCube->m_Info.pos;
 
 	// 位置補正
 	// X軸
 	if (pCube->Correction(VECTOR_X, pCube->m_Info.pos)) 
 	{ 
-		pCube->ModelCollsion(pCube->m_Info.pos, TYPE_PLAYER);
+		pCube->ModelCollsion(PRIO_OBJECT, TYPE_PLAYER,pCube->m_Info.pos);
 
 		if (pCube->m_Info.bErase)
 		{
@@ -110,7 +113,6 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos)
 	// Y軸
 	if (pCube->Correction(VECTOR_Y, pCube->m_Info.pos)) 
 	{
-		pCube->ModelCollsion(pCube->m_Info.pos, TYPE_PLAYER);
 
 		if (pCube->m_Info.bErase)
 		{
@@ -123,7 +125,7 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos)
 	// Z軸
 	if (pCube->Correction(VECTOR_Z, pCube->m_Info.pos))
 	{
-		pCube->ModelCollsion(pCube->m_Info.pos, TYPE_PLAYER);
+		pCube->ModelCollsion(PRIO_OBJECT, TYPE_PLAYER, pCube->m_Info.pos);
 
 		if (pCube->m_Info.bErase)
 		{
@@ -226,8 +228,9 @@ void CCube::Update(void)
 			Contact(0, VECTOR_Y, m_Info.pos);
 			Contact(0, VECTOR_Z, m_Info.pos);
 
-			// 敵との当たり判定
-			ModelCollsion(m_Info.pos, TYPE_ENEMY);
+			// 当たり判定
+			/* 敵		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
+			/* ブロック	*/ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
 
 			// オブジェクト破棄
 			Uninit();
@@ -430,7 +433,7 @@ bool CCube::Contact(int mode, VECTOR vector, D3DXVECTOR3 pos)
 			ID = pCube->GetID();
 
 			// 配置フラグを取得
-			bool bSet = pCube->CubeGetSet();
+			bool bSet = pCube->GetCubeSet();
 
 			if(!pCube->m_Info.bBom)
 			{
@@ -541,34 +544,12 @@ bool CCube::Contact(int mode, VECTOR vector, D3DXVECTOR3 pos)
 }
 
 //========================================
-// 当たり判定
-//========================================
-bool CCube::Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize)
-{
-	// 判定フラグ
-	bool bHit = false;
-
-	if ((pos.x + size.x) > (PairPos.x - PairSize.x) &&
-		(pos.x - size.x) < (PairPos.x + PairSize.x) &&
-		(pos.y + size.y) > (PairPos.y - PairSize.y) &&
-		(pos.y - size.y) < (PairPos.y + PairSize.y) &&
-		(pos.z + size.z) > (PairPos.z - PairSize.z) &&
-		(pos.z - size.z) < (PairPos.z + PairSize.z))
-	{// ブロックが判定内にある時、
-
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-//========================================
 // オブジェクトの当たり判定
 //========================================
-void CCube::ModelCollsion(D3DXVECTOR3 pos, TYPE nType)
+void CCube::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 {
 	// 先頭オブジェクトを取得
-	CObject *pObj = CObject::GetTop(PRIO_OBJECT);
+	CObject *pObj = CObject::GetTop(nPrio);
 
 	while (pObj != NULL)
 	{// 使用されている時、
@@ -582,7 +563,7 @@ void CCube::ModelCollsion(D3DXVECTOR3 pos, TYPE nType)
 		type = pObj->GetType();
 
 		if (type == nType)
-		{// 種類が敵だった時
+		{// 選択した種類の時、
 
 			// キューブの取得
 			float fWidth = GetWidth();			// 幅
@@ -619,6 +600,22 @@ void CCube::ModelCollsion(D3DXVECTOR3 pos, TYPE nType)
 				case TYPE_PLAYER:
 				{
 					m_Info.bErase = true;
+				}
+				break;
+
+				case TYPE_BLOCK:
+				{
+					// ダイナミックキャストする
+					CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
+
+
+					int nBlockType = pBlock->GetBlockType();
+
+					if (nBlockType = MODEL_TNT_00)	// TNT
+					{
+						// Hit処理
+						pBlock->HitBlock();
+					}
 				}
 				break;
 				}

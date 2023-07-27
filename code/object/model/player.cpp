@@ -190,7 +190,7 @@ void CPlayer::KeyInput(void)
 	// 攻撃
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_B))
 	{
-		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 10,m_Info.pos.z),m_Info.rot);
+		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z),m_Info.rot);
 	}
 	
 	// 最初の弾を止める
@@ -306,10 +306,12 @@ void CPlayer::UpdatePos(void)
 		m_Info.pos.x += m_Info.move.x;
 
 		// 移動量の減衰
-		m_Info.move.x *= 0.8f;
+		m_Info.move.x *= 0.8f; 
 
 		// X方向の当たり判定
-		m_Info.pos = Collision(VECTOR_X, m_Info.pos);
+		m_Info.pos = Collision(PRIO_BLOCK,TYPE_BLOCK,VECTOR_X, m_Info.pos);
+		m_Info.pos = Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos);
+		m_Info.pos = Collision(PRIO_OBJECT, TYPE_ENEMY, VECTOR_X, m_Info.pos);
 	}
 
 	{
@@ -320,7 +322,10 @@ void CPlayer::UpdatePos(void)
 		m_Info.move.z *= 0.8f;
 
 		// Z方向の当たり判定
-		m_Info.pos = Collision(VECTOR_Z, m_Info.pos);
+		m_Info.pos = Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos);
+		m_Info.pos = Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos);
+		m_Info.pos = Collision(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Z, m_Info.pos);
+
 	}
 
 	{
@@ -332,7 +337,10 @@ void CPlayer::UpdatePos(void)
 		m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
 
 		// Y方向の当たり判定
-		m_Info.pos = Collision(VECTOR_Y, m_Info.pos);
+		m_Info.pos = Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Y, m_Info.pos);
+		m_Info.pos = Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Y, m_Info.pos);
+		m_Info.pos = Collision(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Y, m_Info.pos);
+
 	}
 
 	// 位置の設定
@@ -348,81 +356,69 @@ void CPlayer::UpdatePos(void)
 //========================================
 // モデルとの当たり判定
 //========================================
-D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
+D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 {
-	for (int nCntPrio = 0; nCntPrio < PRIO_MAX; nCntPrio++)
-	{
-		// 先頭オブジェクトを取得
-		CObject *pObj = CObject::GetTop(nCntPrio);
+	// 先頭オブジェクトを取得
+	CObject *pObj = CObject::GetTop(nPrio);
 
-		while (pObj != NULL)
-		{// 使用されている時、
+	while (pObj != NULL)
+	{// 使用されている時、
 
-			// 次のオブジェクト
-			CObject *pObjNext = pObj->GetNext();
+		// 次のオブジェクト
+		CObject *pObjNext = pObj->GetNext();
 
-			// 種類を取得
-			TYPE type = pObj->GetType();
+		// 種類を取得
+		TYPE type = pObj->GetType();
 
-			// プレイヤーの各パーツの取得
-			D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
-			D3DXVECTOR3 RotOld = GetRotOld();	// 向き(過去)
-			D3DXVECTOR3 Scale = GetSize();
-			float fSize = 10.0f;
+		// プレイヤーの各パーツの取得
+		D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
+		D3DXVECTOR3 RotOld = GetRotOld();	// 向き(過去)
+		D3DXVECTOR3 Scale = GetSize();
+		float fSize = 10.0f;
 
-			if (type == TYPE_BLOCK || type == TYPE_CUBE)
-			{// 種類がブロックの時、
+		if (type == nType)
+		{// 種類がブロックの時、
 
-				// ブロックの取得
-				D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
-				D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
-				D3DXVECTOR3 PairRot = pObj->GetRot();		// 向き
-				D3DXVECTOR3 PairRotOld = pObj->GetRotOld();	// 向き(過去)
+			// ブロックの取得
+			D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
+			D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
+			D3DXVECTOR3 PairRot = pObj->GetRot();		// 向き
+			D3DXVECTOR3 PairRotOld = pObj->GetRotOld();	// 向き(過去)
 
-				float fPairWidth = pObj->GetWidth();	// 幅
-				float fPairHeight = pObj->GetHeight();	// 高さ
-				float fPairDepth = pObj->GetDepth();	// 奥行き
+			float fPairWidth = pObj->GetWidth();	// 幅
+			float fPairHeight = pObj->GetHeight();	// 高さ
+			float fPairDepth = pObj->GetDepth();	// 奥行き
 
-				// --- 当たり判定 ----------------------------------------------
-				switch (vector)
-				{
-				case VECTOR_X: {	/* X方向 */
+			// --- 当たり判定 ----------------------------------------------
+			switch (vector)
+			{
+			case VECTOR_X: {	/* X方向 */
 
-					if ((pos.z + fSize) > (PairPos.z - fPairDepth) &&
-						(pos.z - fSize) < (PairPos.z + fPairDepth) &&
-						(pos.y + fSize*5) > (PairPos.y - fPairHeight) &&
-						(pos.y - fSize) < (PairPos.y + fPairHeight))
-					{// 奥辺と手前辺が相手の幅の内側の時、
+				if (CollsionX(pos, PairPos, D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+				{// 奥辺と手前辺が相手の幅の内側の時、
 
-						if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
-							(PosOld.x + fSize) <= (PairPosOld.x - fPairWidth))
-						{// 左からめり込んでいる時
-
-							pos.x = (PairPos.x - fPairWidth) - fSize;
-						}
-						else if ((pos.x - fSize) < (PairPos.x + fPairWidth) &&
-							(PosOld.x - fSize) >= (PairPosOld.x + fPairWidth))
-						{// 右からめり込んでいる時
-
-							pos.x = (PairPos.x + fPairWidth) + fSize;
-						}
+					if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_LEFT))
+					{// 左からめり込んでいる時
+						pos.x = (PairPos.x - fPairWidth) - fSize;
+					}
+					else if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_RIGHT))
+					{// 右からめり込んでいる時
+						pos.x = (PairPos.x + fPairWidth) + fSize;
 					}
 				}
-							   break;
-				case VECTOR_Y: {	/* Y方向 */
+			}
+						   break;
+			case VECTOR_Y: {	/* Y方向 */
 
-					if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
-						(pos.x - fSize) < (PairPos.x + fPairWidth) &&
-						(pos.z + fSize) > (PairPos.z - fPairDepth) &&
-						(pos.z - fSize) < (PairPos.z + fPairDepth))
-					{// 左辺と右辺が相手の幅の内側の時、
+				if (CollsionY(pos, PairPos, D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+				{// 左辺と右辺が相手の幅の内側の時、
 
-						if ((pos.y + fSize*2) > (PairPos.y - fPairHeight) &&
-							(PosOld.y + fSize*2) <= (PairPosOld.y - fPairHeight))
-						{// 下からめり込んでいる時
+					if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_DOWN))
+					{// 下からめり込んでいる時
+						pos.y = (PairPos.y - fPairHeight) - fSize;
 
-							pos.y = (PairPos.y - fPairHeight) - fSize*2;
-
+						if (nType != TYPE_ENEMY)
+						{
 							//プレイヤーが上昇中
 							if (m_Info.move.y > 0.0f)
 							{
@@ -430,132 +426,44 @@ D3DXVECTOR3 CPlayer::Collision(VECTOR vector, D3DXVECTOR3 pos)
 								m_Info.move.y = 0.0f;
 							}
 						}
-						else if ((pos.y - fSize) < (PairPos.y + fPairHeight) &&
-							(PosOld.y - fSize) >= (PairPosOld.y + fPairHeight))
-						{// 上からめり込んでいる時
-							pos.y = (PairPos.y + fPairHeight) + fSize;
-
-							m_Info.move.y = 0.0f;
-							m_Info.bJump = false;
-
-						}
 					}
-				}
-							   break;
-				case VECTOR_Z: {	/* Z方向 */
+					else if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_UP))
+					{// 上からめり込んでいる時
 
-					if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
-						(pos.x - fSize) < (PairPos.x + fPairWidth) &&
-						(pos.y + fSize*5) > (PairPos.y - fPairHeight) &&
-						(pos.y - fSize) < (PairPos.y + fPairHeight))
-					{// 奥辺と手前辺が相手の幅の内側の時、
-
-						if ((pos.z + fSize) > (PairPos.z - fPairDepth) &&
-							(PosOld.z + fSize) <= (PairPosOld.z - fPairDepth))
-						{// 左からめり込んでいる時
-
-							pos.z = (PairPos.z - fPairDepth) - fSize;
-						}
-						else if ((pos.z - fSize) < (PairPos.z + fPairDepth) &&
-							(PosOld.z - fSize) >= (PairPosOld.z + fPairDepth))
-						{// 右からめり込んでいる時
-
-							pos.z = (PairPos.z + fPairDepth) + fSize;
-						}
-					}
-				}
-							   break;
-				}
-			}
-			else if (type == TYPE_ENEMY)
-			{// 種類がエネミーの時
-
-				// エネミーの取得
-				D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
-				D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
-				D3DXVECTOR3 PairRot = pObj->GetRot();		// 向き
-				D3DXVECTOR3 PairRotOld = pObj->GetRotOld();	// 向き(過去)
-
-				float fPairWidth = pObj->GetWidth();	// 幅
-				float fPairHeight = pObj->GetHeight();	// 高さ
-				float fPairDepth = pObj->GetDepth();	// 奥行き
-
-				// --- 当たり判定 ----------------------------------------------
-				switch (vector)
-				{
-				case VECTOR_X: {	/* X方向 */
-
-					if ((pos.z + fSize) > (PairPos.z - fPairDepth) &&
-						(pos.z - fSize) < (PairPos.z + fPairDepth) &&
-						(pos.y + fSize) > (PairPos.y - fPairHeight) &&
-						(pos.y - fSize) < (PairPos.y + fPairHeight))
-					{// 奥辺と手前辺が相手の幅の内側の時、
-
-						if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
-							(PosOld.x + fSize) <= (PairPosOld.x - fPairWidth))
-						{// 左からめり込んでいる時
-
-							pos.x = (PairPos.x - fPairWidth) - fSize;
-						}
-						else if ((pos.x - fSize) < (PairPos.x + fPairWidth) &&
-							(PosOld.x - fSize) >= (PairPosOld.x + fPairWidth))
-						{// 右からめり込んでいる時
-
-							pos.x = (PairPos.x + fPairWidth) + fSize;
-						}
-					}
-				}
-							   break;
-				case VECTOR_Y: {	/* Y方向 */
-
-					if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
-						(pos.x - fSize) < (PairPos.x + fPairWidth) &&
-						(pos.z + fSize) > (PairPos.z - fPairDepth) &&
-						(pos.z - fSize) < (PairPos.z + fPairDepth))
-					{// 左辺と右辺が相手の幅の内側の時、
-
-						if ((pos.y + fSize) > (PairPos.y - fPairHeight) &&
-							(PosOld.y + fSize) <= (PairPosOld.y - fPairHeight))
-						{// 下からめり込んでいる時
-
-							pos.y = (PairPos.y - fPairHeight) - fSize;
-						}
-						else if ((pos.y - fSize) < (PairPos.y + fPairHeight) &&
-							(PosOld.y - fSize) >= (PairPosOld.y + fPairHeight))
-						{// 上からめり込んでいる時
-
+						if (nType != TYPE_CUBE)
+						{
 							pos.y = (PairPos.y + fPairHeight) + fSize;
 						}
-					}
-				}
-							   break;
-				case VECTOR_Z: {	/* Z方向 */
-
-					if ((pos.x + fSize) > (PairPos.x - fPairWidth) &&
-						(pos.x - fSize) < (PairPos.x + fPairWidth) &&
-						(pos.y + fSize) > (PairPos.y - fPairHeight) &&
-						(pos.y - fSize) < (PairPos.y + fPairHeight))
-					{// 奥辺と手前辺が相手の幅の内側の時、
-
-						if ((pos.z + fSize) > (PairPos.z - fPairDepth) &&
-							(PosOld.z + fSize) <= (PairPosOld.z - fPairDepth))
-						{// 左からめり込んでいる時
-
-							pos.z = (PairPos.z - fPairDepth) - fSize;
+						else
+						{
+							pos.y = (PairPos.y + fPairHeight) + fSize;
 						}
-						else if ((pos.z - fSize) < (PairPos.z + fPairDepth) &&
-							(PosOld.z - fSize) >= (PairPosOld.z + fPairDepth))
-						{// 右からめり込んでいる時
 
-							pos.z = (PairPos.z + fPairDepth) + fSize;
-						}
+						m_Info.move.y = 0.0f;
+						m_Info.bJump = false;
 					}
-				}
-							   break;
 				}
 			}
-			pObj = pObjNext;	// 次のオブジェクトを代入
+						   break;
+			case VECTOR_Z: {	/* Z方向 */
+
+				if (CollsionZ(pos, PairPos, D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+				{// 奥辺と手前辺が相手の幅の内側の時、
+
+					if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_BACK))
+					{// 後ろからめり込んでいる時
+						pos.z = (PairPos.z - fPairDepth) - fSize;
+					}
+					else if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_FRONT))
+					{// 前からめり込んでいる時
+						pos.z = (PairPos.z + fPairDepth) + fSize;
+					}
+				}
+			}
+						   break;
+			}
 		}
+		pObj = pObjNext;	// 次のオブジェクトを代入
 	}
 	return pos;
 }
@@ -599,8 +507,12 @@ void CPlayer::BulletStop(void)
 
 				if (!nCubeSet)
 				{
+
+					int nType = pBullet->GetType();
+					D3DXVECTOR3 pos = pBullet->GetPos();
+
 					// キューブの生成
-					CCube::Create(pBullet->GetType(), pBullet->GetPos());
+					CCube::Create(nType, pos);
 
 					// オブジェクト破棄
 					pObj->Uninit();
