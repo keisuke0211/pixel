@@ -190,7 +190,7 @@ void CPlayer::KeyInput(void)
 	// çUåÇ
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_B))
 	{
-		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 20,m_Info.pos.z),m_Info.rot);
+		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 15,m_Info.pos.z),m_Info.rot);
 	}
 	
 	// ç≈èâÇÃíeÇé~ÇﬂÇÈ

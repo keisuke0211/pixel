@@ -52,6 +52,7 @@ public:
 	/* ï`âÊ			*/void Draw(void);
 	/* HIT			*/void HitBlock(void);
 	/* TNT			*/void TntBlock(void);
+	/* Ç–Ç—äÑÇÍä‚	*/void CrackRock(void);
 	/* ìñÇΩÇËîªíË	*/void ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos);
 	
 	// -- ê›íË ---------------------------------------------

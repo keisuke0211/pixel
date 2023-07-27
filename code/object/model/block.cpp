@@ -124,10 +124,18 @@ void CBlock::Update(void)
 
 		if (--m_Info.nEraseTime <= 0)
 		{
-			if (m_Info.nType == MODEL_TNT_00)
+			switch (m_Info.nType)
 			{
-				// TNTの処理
+			case MODEL_TNT:
+			{
 				TntBlock();
+			}
+				break;
+			case MODEL_CRACK_ROCK:
+			{
+				CrackRock();
+			}
+				break;
 			}
 
 			// 破棄
@@ -153,11 +161,37 @@ void CBlock::Draw(void)
 //========================================
 void CBlock::HitBlock(void)
 {
-	if (m_Info.nType == MODEL_TNT_00)
+	switch (m_Info.nType)
+	{
+	case MODEL_TNT:
 	{
 		m_Info.nEraseTime = 20;
 		m_Info.bErase = true;
 	}
+	break;
+	case MODEL_CRACK_ROCK:
+	{
+		m_Info.nEraseTime = 10;
+		m_Info.bErase = true;
+	}
+	break;
+	}
+}
+
+//========================================
+// ひび割れ岩
+//========================================
+void CBlock::CrackRock(void)
+{
+	// パーティクル生成
+	CParticleX *pObj = CParticleX::Create();
+	pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y, m_Info.pos.z));
+	pObj->Par_SetRot(INIT_D3DXVECTOR3);
+	pObj->Par_SetMove(D3DXVECTOR3(35.0f, 15.0f, 35.0f));
+	pObj->Par_SetType(0);
+	pObj->Par_SetLife(100);
+	pObj->Par_SetCol(D3DXCOLOR(0.49f, 0.49f, 0.49f, 1.0f));
+	pObj->Par_SetForm(20);
 }
 
 //========================================
@@ -207,7 +241,7 @@ void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 			float fHeight = GetHeight();		// 高さ
 			float fDepth = GetDepth();			// 奥行き
 
-			if (nBlockType == MODEL_TNT_00)
+			if (nBlockType == MODEL_TNT)
 			{
 				// サイズ調整
 				fWidth *= TNT_COLLSION;	// 幅
