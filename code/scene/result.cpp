@@ -40,7 +40,6 @@ HRESULT CResult::Init(void)
 		D3DXVECTOR3(540.0f, 100.0f, 0.0f),
 		D3DXVECTOR2(220.0f, 100.0f),
 		"ゲームクリア",
-		CFont::FONT_DOTGOTHIC,
 		40.0f,
 		5, 10, -1, false);
 
@@ -63,7 +62,6 @@ HRESULT CResult::Init(void)
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
 		"ENTERを押して始めてね!",
-		CFont::FONT_DOTGOTHIC,
 		20.0f,
 		5, 10, -1);
 
@@ -108,4 +106,16 @@ void CResult::Update(void)
 void CResult::Draw(void)
 {
 
+}
+
+//========================================
+// 生成
+//========================================
+CResult *CResult::Create(void)
+{
+	CResult *pResult = new CResult;
+
+	pResult->Init();
+
+	return pResult;
 }

@@ -17,10 +17,10 @@
 CText::CText(int nPriority) : CObject2D(nPriority)
 {
 	m_Info.col = INIT_D3DXCOLOR;
-	
+
 	m_Info.fTextSize = 0.0f;
 	m_Info.nTextLength = 0;
-	m_Info.nAddTime = 0;
+	m_Info.nAppearTime = 0;
 	m_Info.nAddCount = 0;
 	m_Info.nAddLetter = 0;
 	m_Info.nLetterPopCount = 0;
@@ -110,7 +110,7 @@ void CText::Draw()
 //========================================
 // 生成
 //========================================
-CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, float TextSize,int DisapText, int StandTime, int EraseTime, bool bTextBok)
+CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, float TextSize, int AppearTime, int StandTime, int EraseTime, bool bTextBok)
 {
 	CText * pText = new CText;
 
@@ -141,11 +141,10 @@ CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Te
 		}
 
 		// -- テキスト -----------------------
-		pText->m_Info.FontType = FontType;
 		pText->SetTextSize(TextSize);
 		pText->SetStandTime(StandTime);
 		pText->EraseTime(EraseTime);
-		pText->TextLetter(Text, DisapText);
+		pText->TextLetter(Text, AppearTime);
 	}
 
 	return pText;
@@ -164,7 +163,7 @@ void CText::LetterForm(void)
 {
 	float fTxtSize = m_Info.fTextSize;
 
-	if (++m_Info.nAddCount >= m_Info.nAddTime)
+	if (++m_Info.nAddCount >= m_Info.nAppearTime)
 	{// 表示する時間を上回ったら、
 
 		if (m_Info.nAddLetter <= m_Info.nTextLength)
@@ -189,7 +188,7 @@ void CText::LetterForm(void)
 					m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
 						D3DXVECTOR3((pos.x + 10.0f) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), pos.y + m_Info.nNiCount*40.0f, pos.z),
 						D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
-						m_Info.FontType);
+						CFont::FONT_DOTGOTHIC);
 
 					m_Info.nLetterPopCount++;
 					m_Info.nLetterPopCountX++;
@@ -203,7 +202,7 @@ void CText::LetterForm(void)
 						m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
 							D3DXVECTOR3((pos.x + 10.0f) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), pos.y + m_Info.nNiCount*40.0f, pos.z),
 							D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
-							m_Info.FontType);
+							CFont::FONT_DOTGOTHIC);
 
 						m_Info.nLetterPopCount++;
 						m_Info.nLetterPopCountX++;
@@ -221,7 +220,7 @@ void CText::LetterForm(void)
 				m_Info.bStand = true;
 			}
 		}
-		
+
 		m_Info.sText = "";
 		m_Info.nAddCount = 0;
 	}
@@ -319,12 +318,12 @@ void CText::EraseTime(int Time)
 //========================================
 // 表示するまでの時間
 //========================================
-void CText::TextLetter(const char * Text, int SpeedText)
+void CText::TextLetter(const char * Text, int AppearTime)
 {
 	m_Info.sALLText = Text;
 	m_Info.nTextLength = m_Info.sALLText.size();
-	m_Info.nAddCount = SpeedText;
-	m_Info.nAddTime = m_Info.nAddCount;
+	m_Info.nAddCount = AppearTime;
+	m_Info.nAppearTime = m_Info.nAddCount;
 	m_Info.nAddLetter = 0;
 	m_Info.words = new CWords*[m_Info.nTextLength];
 

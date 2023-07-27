@@ -15,8 +15,6 @@
 //****************************************
 class CFont
 {
-	// ***** 定義 *****
-	static const char* FILE_PATH;		// 読み込むファイルパス
 
 public:
 	// ***** 列挙型 *****
@@ -48,7 +46,7 @@ private:
 	static const char* s_FileName[];	// ファイルパス
 	static const char* s_FontName[];	// ファイルパス
 
-	// ***** 変数 *****
+										// ***** 変数 *****
 	HFONT  m_hFont[FONT_MAX];
 	LOGFONT m_logFont[FONT_MAX];
 	LPDIRECT3DTEXTURE9 m_texFont[FONT_MAX];	// テクスチャの情報

@@ -19,7 +19,7 @@ class CWords : public CObject
 {
 	const DWORD FVF_VERTEX_2D = (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1);		// 頂点フォーマット【2D】
 
-	// 各頂点の加減値
+																					// 各頂点の加減値
 	const D3DXVECTOR3 CWords::m_Vtx[4] =
 	{
 		D3DXVECTOR3(-1.0f, -1.0f, 0.0f),

@@ -114,13 +114,13 @@ void CWords::Update(void)
 	// 頂点へのポインタ
 	VERTEX_2D *pVtx;
 
-	 // 頂点バッファをロックし頂点情報へのポインタを取得
+	// 頂点バッファをロックし頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	D3DXVECTOR3 addPos[4];
 	D3DXMATRIX mtx;	// 計算用マトリックス
 
-	// マトリックス作成
+					// マトリックス作成
 	D3DXMatrixIdentity(&mtx);
 	D3DXMatrixRotationYawPitchRoll(&mtx, 0.0f, 0.0f, m_Info.rot.z);
 
@@ -238,7 +238,7 @@ void CWords::SetColar(D3DXCOLOR col)
 
 	VERTEX_2D *pVtx; //頂点へのポインタ
 
-	 //頂点バッファをロックし頂点情報へのポインタを取得
+					 //頂点バッファをロックし頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	pVtx[0].col = D3DXCOLOR(m_Info.col.r, m_Info.col.g, m_Info.col.b, m_Info.col.a);

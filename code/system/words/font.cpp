@@ -10,7 +10,6 @@
 #include "../renderer.h"
 
 // 定義
-const char* CFont::FILE_PATH = "data\\GAMEDATA\\FONT\\FONT_DATA.txt";
 
 const char* CFont::s_FileName[] =
 {// フォントのパス
@@ -125,7 +124,7 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();	//デバイスの取得
 
-	// テクスチャ作成
+																		// テクスチャ作成
 	if (FAILED(pDevice->CreateTexture(GM.gmCellIncX, TM.tmHeight, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_texFont[nFont], NULL)))
 		if (FAILED(pDevice->CreateTexture(GM.gmCellIncX, TM.tmHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &m_texFont[nFont], NULL)))
 		{
