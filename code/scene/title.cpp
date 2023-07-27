@@ -160,9 +160,6 @@ void CTitle::Update(void)
 		}
 	}
 
-
-
-
 	// --- 取得 ---------------------------------
 	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
