@@ -286,7 +286,6 @@ bool CCube::Correction(VECTOR vector, D3DXVECTOR3 pos)
 		// 次のオブジェクト
 		CObject *pObjNext = pObj->GetNext();
 
-		int ID;
 		TYPE type;
 
 		// 種類を取得
@@ -299,9 +298,9 @@ bool CCube::Correction(VECTOR vector, D3DXVECTOR3 pos)
 			CCube *pCube = dynamic_cast<CCube*>(pObj);
 
 			// IDを取得
-			ID = pCube->GetID();
+			int ID = pCube->GetID();
 
-			if (m_Info.nID != ID) // 0 != 1
+			if (m_Info.nID != ID)
 			{// 自分以外のキューブだったら、
 
 				// 自分自身の取得
@@ -390,6 +389,73 @@ bool CCube::Correction(VECTOR vector, D3DXVECTOR3 pos)
 
 				// 判定が真なら TRUE を返す
 				if (bHit)
+				{	
+					if (CubeCollsion(m_Info.pos, m_Info.nID))
+					{
+						m_Info.bErase = true;
+					}
+
+					return TRUE;
+				}
+			}
+		}
+
+		pObj = pObjNext;	// 次のオブジェクトを代入
+	}
+	return FALSE;
+}
+
+//========================================
+// キューブの当たり判定
+//========================================
+bool CCube::CubeCollsion(D3DXVECTOR3 pos, int ID)
+{
+	// 先頭オブジェクトを取得
+	CObject *pObj = CObject::GetTop(PRIO_CUBE);
+
+	while (pObj != NULL)
+	{// 使用されている時、
+
+		// 次のオブジェクト
+		CObject *pObjNext = pObj->GetNext();
+
+		TYPE type;
+
+		// 種類を取得
+		type = pObj->GetType();
+
+		if (type == TYPE_CUBE)
+		{// 種類がキューブの場合
+
+			// ダイナミックキャストする
+			CCube *pCube = dynamic_cast<CCube*>(pObj);
+
+			// IDを取得
+			int nID = pCube->GetID();
+
+			if (ID != nID)
+			{// 自分以外のキューブだったら、
+
+				// 自分自身の取得
+				float fWidth = GetWidth();		// 幅
+				float fHeight = GetHeight();	// 高さ
+				float fDepth = GetDepth();		// 奥行き
+
+				// 相手の取得
+				D3DXVECTOR3 PairPos = pObj->GetPos();	// 位置
+				float fPairWidth = pObj->GetWidth();	// 幅
+				float fPairHeight = pObj->GetHeight();	// 高さ
+				float fPairDepth = pObj->GetDepth();	// 奥行き
+
+				// サイズ調整
+				fWidth *= 0.1f;
+				fHeight *= 0.1f;
+				fDepth *= 0.1f;
+				fPairWidth *= 0.5f;
+				fPairHeight *= 0.5f;
+				fPairDepth *= 0.5f;
+
+				if (Collsion(pos, PairPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
 				{
 					return TRUE;
 				}

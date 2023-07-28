@@ -23,7 +23,7 @@
 // 静的変数
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
-bool CGame::m_bStart = false;
+bool CGame::m_bStart = true;
 
 //========================================
 // コンストラクタ
@@ -31,7 +31,6 @@ bool CGame::m_bStart = false;
 CGame::CGame()
 {
 	m_nStartTime = 0;
-	m_bStart = false;
 }
 
 //========================================
@@ -152,11 +151,11 @@ HRESULT CGame::Init(void)
 	CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 		D3DXVECTOR2(440.0f, 100.0f),
-		"平原ステージ！\n６０秒で脱出せよ！",
+		"平原ステージ！\n６０秒以内で攻略せよ！",
 		CFont::FONT_DOTGOTHIC,
 		20.0f,
 		15, 10, 30, false);
-	m_nStartTime = ((20 * 16) + 10 + 25);
+	m_nStartTime = (15 * 18) + 10 + 25;
 
 
 	return S_OK;
