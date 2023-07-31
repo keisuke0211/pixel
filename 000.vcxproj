@@ -43,6 +43,8 @@
     <ClCompile Include="code\object\UI\time.cpp" />
     <ClCompile Include="code\scene\fade.cpp" />
     <ClCompile Include="code\scene\game.cpp" />
+    <ClCompile Include="code\scene\pause.cpp" />
+    <ClCompile Include="code\scene\ranking.cpp" />
     <ClCompile Include="code\scene\result.cpp" />
     <ClCompile Include="code\scene\title.cpp" />
     <ClCompile Include="code\system\camera.cpp" />
@@ -82,6 +84,8 @@
     <ClInclude Include="code\object\UI\time.h" />
     <ClInclude Include="code\scene\fade.h" />
     <ClInclude Include="code\scene\game.h" />
+    <ClInclude Include="code\scene\pause.h" />
+    <ClInclude Include="code\scene\ranking.h" />
     <ClInclude Include="code\scene\result.h" />
     <ClInclude Include="code\scene\title.h" />
     <ClInclude Include="code\system\camera.h" />

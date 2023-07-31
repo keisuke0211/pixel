@@ -10,6 +10,7 @@
 #include "../../system/texture.h"
 #include "../../manager.h"
 #include "../../system/renderer.h"
+#include "../../scene/pause.h"
 
 //========================================
 // コンストラクタ
@@ -108,6 +109,13 @@ void CText::Update()
 	// テキスト生成
 	if (!m_Info.bStand)
 	{
+		bool bPause = CPause::IsPause();
+
+		if (CScene::GetMode() == CScene::MODE_GAME && bPause)
+		{
+			return;
+		}
+
 		LetterForm();
 	}
 

@@ -9,6 +9,7 @@
 #include "../../manager.h"
 #include "../../system/renderer.h"
 #include "../../system/texture.h"
+#include "../../scene/pause.h"
 
 //****************************************
 // ƒ}ƒNƒ’è‹`
@@ -222,8 +223,13 @@ void CBgCeiling::Uninit(void)
 //========================================
 void CBgCeiling::Update(void)
 {
-	m_rot += BG_SPIN;	// ‰ñ“]—Ê‚ğ‰ÁZ
-	RotControl(&m_rot);	// Œü‚«‚ğ§Œä
+	bool bPause = CPause::IsPause();
+
+	if (!bPause)
+	{
+		m_rot += BG_SPIN;	// ‰ñ“]—Ê‚ğ‰ÁZ
+		RotControl(&m_rot);	// Œü‚«‚ğ§Œä
+	}
 }
 
 //========================================

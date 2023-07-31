@@ -159,6 +159,12 @@
     <ClCompile Include="code\system\words\words.cpp">
       <Filter>ソース ファイル\02_system\01_words</Filter>
     </ClCompile>
+    <ClCompile Include="code\scene\pause.cpp">
+      <Filter>ソース ファイル\00_main\00_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="code\scene\ranking.cpp">
+      <Filter>ソース ファイル\00_main\00_scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\main.h">
@@ -274,6 +280,12 @@
     </ClInclude>
     <ClInclude Include="code\system\words\words.h">
       <Filter>ソース ファイル\02_system\01_words</Filter>
+    </ClInclude>
+    <ClInclude Include="code\scene\pause.h">
+      <Filter>ソース ファイル\00_main\00_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="code\scene\ranking.h">
+      <Filter>ソース ファイル\00_main\00_scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

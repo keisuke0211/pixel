@@ -20,12 +20,13 @@
 #include "../system/words/text.h"
 #include "../system/words/font.h"
 #include "../system/camera.h"
+#include "../scene/pause.h"
 #include "fade.h"
 
 // 静的変数
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
-bool CGame::m_bStart = true;
+bool CGame::m_bStart = false;
 bool CGame::m_bClear = false;
 bool CGame::m_bExit = false;
 
@@ -34,6 +35,7 @@ bool CGame::m_bExit = false;
 //========================================
 CGame::CGame()
 {
+	m_rot = INIT_D3DXVECTOR3;
 	m_nStartTime = 0;
 	m_nEndTime = 0;
 	m_bEnd = false;
@@ -162,6 +164,7 @@ HRESULT CGame::Init(void)
 		20.0f,
 		15, 10, 30, false);
 	m_nStartTime = (15 * 18) + 10 + 25;
+	m_nMoveRot = ((D3DX_PI * 2) / m_nStartTime);
 
 
 	return S_OK;
@@ -190,12 +193,24 @@ void CGame::Update(void)
 {
 	// -- 取得 -------------------------------------------
 	CCamera *pCamera = CManager::GetCamera();		// カメラ
+	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+
+	// ポーズ
+	if (pInputKeyboard->GetTrigger(DIK_P) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_START))
+	{
+		CPause::SetPause(true);
+	}
 
 	// 開始フラグ
 	if (!m_bStart)
 	{
+		pCamera->SetRot(m_rot);
+		m_rot.y += m_nMoveRot;
+
 		if (--m_nStartTime <= 0)
 		{
+			pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 			m_bStart = true;
 		}
 	}

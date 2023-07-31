@@ -7,6 +7,7 @@
 //========================================
 #include "player.h"
 #include "../../scene/game.h"
+#include "../../scene/pause.h"
 #include "motion.h"
 #include "../../manager.h"
 #include "../../system/camera.h"
@@ -18,6 +19,7 @@
 #include "block.h"
 #include "bullet_cube.h"
 #include "../EFFECT/particleX.h"
+#include "../../scene/pause.h"
 
 //****************************************
 // マクロ定義
@@ -112,31 +114,36 @@ void CPlayer::Uninit(void)
 //========================================
 void CPlayer::Update(void)
 {
-	// 過去の位置・向きの更新
-	m_Info.posOld = m_Info.pos;
-	m_Info.rotOld = m_Info.rot;
+	bool bPause = CPause::IsPause();
 
-	bool bStart = CGame::IsStart();
-
-	if (bStart)
+	if (!bPause)
 	{
-		// キー入力処理
-		KeyInput();
+		// 過去の位置・向きの更新
+		m_Info.posOld = m_Info.pos;
+		m_Info.rotOld = m_Info.rot;
+
+		bool bStart = CGame::IsStart();
+
+		if (bStart)
+		{
+			// キー入力処理
+			KeyInput();
+		}
+		// 位置更新処理
+		UpdatePos();
+
+		// 向き/移動向き/目標向きを制御
+		RotControl(&m_Info.rot);
+		RotControl(&m_Info.moveRot);
+		RotControl(&m_Info.targetRot);
+
+		// 角度を目標角度に向けて推移する
+		m_Info.rot.y += AngleDifference(m_Info.rot.y, m_Info.targetRot.y) * ROT_DIAMETER;
+
+		SetRot(m_Info.rot);
+
+		CMotionModel::Update();
 	}
-	// 位置更新処理
-	UpdatePos();
-
-	// 向き/移動向き/目標向きを制御
-	RotControl(&m_Info.rot);
-	RotControl(&m_Info.moveRot);
-	RotControl(&m_Info.targetRot);
-
-	// 角度を目標角度に向けて推移する
-	m_Info.rot.y += AngleDifference(m_Info.rot.y, m_Info.targetRot.y) * ROT_DIAMETER;
-
-	SetRot(m_Info.rot);
-
-	CMotionModel::Update();
 }
 
 //========================================

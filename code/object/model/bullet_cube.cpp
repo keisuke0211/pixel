@@ -6,6 +6,7 @@
 // *** block.cpp ***
 //========================================
 #include "bullet_cube.h"
+#include "../../scene/pause.h"
 #include "../EFFECT/particleX.h"
 #include "model.h"
 #include "enemy.h"
@@ -184,81 +185,86 @@ void CCube::Uninit(void)
 //========================================
 void CCube::Update(void)
 {
-	// 過去の位置・向きの更新
-	m_Info.posOld = m_Info.pos;
-	m_Info.rotOld = m_Info.rot;
+	bool bPause = CPause::IsPause();
 
-	// 半径推移
-	if (m_Info.bSet == false)
+	if (!bPause)
 	{
-		m_Info.fRadiusRate = (float)m_Info.nCntRadius / (float)RADIUS_TIME;
-		m_Info.fRadius = 1 * (1.0f - m_Info.fRadiusRate);
+		// 過去の位置・向きの更新
+		m_Info.posOld = m_Info.pos;
+		m_Info.rotOld = m_Info.rot;
 
-		if (--m_Info.nCntRadius <= 0)
+		// 半径推移
+		if (m_Info.bSet == false)
 		{
-			m_Info.bSet = true;
-		}
-	}
+			m_Info.fRadiusRate = (float)m_Info.nCntRadius / (float)RADIUS_TIME;
+			m_Info.fRadius = 1 * (1.0f - m_Info.fRadiusRate);
 
-	// 寿命処理
-	if (m_Info.bSet && !m_Info.bContact)
-	{
-		// 寿命
-		if (--m_Info.nLife <= 0)
-		{
-			// １つ目のキューブなら
-			if (m_Info.nID == 0)
+			if (--m_Info.nCntRadius <= 0)
 			{
-				// 先頭フラグを偽にする
-				bLeadSet = false;
+				m_Info.bSet = true;
 			}
-
-			// パーティクル生成
-			CParticleX *pObj = CParticleX::Create();
-			pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y, m_Info.pos.z));
-			pObj->Par_SetRot(INIT_D3DXVECTOR3);
-			pObj->Par_SetMove(D3DXVECTOR3(15.0f, 15.0f, 15.0f));
-			pObj->Par_SetType(0);
-			pObj->Par_SetLife(100);
-			pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.8f, 0.8f, 1.0f));
-			pObj->Par_SetForm(10);
-
-			// 周囲にキューブがあるか
-			Contact(0, VECTOR_X, m_Info.pos);
-			Contact(0, VECTOR_Y, m_Info.pos);
-			Contact(0, VECTOR_Z, m_Info.pos);
-
-			// 当たり判定
-			/* 敵		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
-			/* ブロック	*/ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
-
-			// オブジェクト破棄
-			Uninit();
-
-			m_nNumChain = 1;
-
-			return;
 		}
-		else if (m_Info.nLife <= (RADIUS_TIME * 2))
+
+		// 寿命処理
+		if (m_Info.bSet && !m_Info.bContact)
 		{
-			m_Info.fRadius -= m_Info.fRadius / m_Info.nLife;
+			// 寿命
+			if (--m_Info.nLife <= 0)
+			{
+				// １つ目のキューブなら
+				if (m_Info.nID == 0)
+				{
+					// 先頭フラグを偽にする
+					bLeadSet = false;
+				}
+
+				// パーティクル生成
+				CParticleX *pObj = CParticleX::Create();
+				pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y, m_Info.pos.z));
+				pObj->Par_SetRot(INIT_D3DXVECTOR3);
+				pObj->Par_SetMove(D3DXVECTOR3(15.0f, 15.0f, 15.0f));
+				pObj->Par_SetType(0);
+				pObj->Par_SetLife(100);
+				pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.8f, 0.8f, 1.0f));
+				pObj->Par_SetForm(10);
+
+				// 周囲にキューブがあるか
+				Contact(0, VECTOR_X, m_Info.pos);
+				Contact(0, VECTOR_Y, m_Info.pos);
+				Contact(0, VECTOR_Z, m_Info.pos);
+
+				// 当たり判定
+				/* 敵		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
+				/* ブロック	*/ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
+
+				// オブジェクト破棄
+				Uninit();
+
+				m_nNumChain = 1;
+
+				return;
+			}
+			else if (m_Info.nLife <= (RADIUS_TIME * 2))
+			{
+				m_Info.fRadius -= m_Info.fRadius / m_Info.nLife;
+			}
+			else if (m_Info.nLife <= RADIUS_TIME)
+			{
+				m_Info.fRadius -= m_Info.fRadius / m_Info.nLife;
+				m_Info.col.a *= ((float)m_Info.nLife / RADIUS_TIME);
+			}
 		}
-		else if (m_Info.nLife <= RADIUS_TIME)
-		{
-			m_Info.fRadius -= m_Info.fRadius / m_Info.nLife;
-			m_Info.col.a *= ((float)m_Info.nLife / RADIUS_TIME);
-		}
+
+		// サイズの更新
+		m_Info.size = D3DXVECTOR3(m_Info.fRadius, m_Info.fRadius, m_Info.fRadius);
+
+		SetPos(m_Info.pos);
+		//SetRot(m_Info.rot);
+		SetScale(m_Info.size);
+		SetColor(m_Info.col);
+
+		CObjectX::Update();
 	}
-
-	// サイズの更新
-	m_Info.size = D3DXVECTOR3(m_Info.fRadius, m_Info.fRadius, m_Info.fRadius);
-
-	SetPos(m_Info.pos);
-	//SetRot(m_Info.rot);
-	SetScale(m_Info.size);
-	SetColor(m_Info.col);
-
-	CObjectX::Update();
 }
 
 //========================================

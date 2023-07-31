@@ -17,6 +17,8 @@
 #include "scene\title.h"
 #include "scene\game.h"
 #include "scene\result.h"
+#include "scene\ranking.h"
+#include "scene\pause.h"
 #include "scene\fade.h"
 
 // 静的メンバ変数
@@ -34,6 +36,8 @@ CScene::MODE CScene::m_mode = MODE_TITLE;
 CTitle *CScene::m_pTitle = NULL;
 CGame *CScene::m_pGame = NULL;
 CResult *CScene::m_pResult = NULL;
+CRanking *CScene::m_pRanking = NULL;
+CPause *CScene::m_pPause = NULL;
 CFade *CManager::m_pFade = NULL;
 
 //========================================
@@ -310,6 +314,9 @@ HRESULT CScene::Init()
 	}
 	case CScene::MODE_GAME:
 	{
+		// ポーズ
+		m_pPause = CPause::Create();
+
 		// ゲーム 
 		m_pGame = CGame::Create();
 		break;
@@ -349,6 +356,11 @@ void CScene::Uninit(void)
 		delete m_pGame;
 		m_pGame = NULL;
 
+		m_pPause->Uninit();
+
+		delete m_pPause;
+		m_pPause = NULL;
+
 		break;
 	}
 	case CScene::MODE_RESULT:
@@ -377,7 +389,16 @@ void CScene::Update(void)
 	}
 	case CScene::MODE_GAME:
 	{
-		m_pGame->Update();
+
+		if (!m_pPause->IsPause())
+		{
+			m_pGame->Update();
+		}
+		else
+		{
+			m_pPause->Update();
+		}
+
 		break;
 	}
 	case CScene::MODE_RESULT:
@@ -404,6 +425,8 @@ void CScene::Draw(void)
 	case CScene::MODE_GAME:
 	{
 		m_pGame->Draw();
+		m_pPause->Draw();
+
 		break;
 	}
 	case CScene::MODE_RESULT:

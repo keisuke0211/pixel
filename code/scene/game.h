@@ -58,9 +58,8 @@ private:
 	/* タイム		*/static CTime *m_pTime;
 	/* スコア		*/static CScore *m_pScore;
 
-	D3DXVECTOR3 posV;			// 視点の保存
-	D3DXVECTOR3 posR;			// 注視点の保存
-
+	D3DXVECTOR3 m_rot;		// 向き
+	float m_nMoveRot;		// 向きの加速度
 	int m_nStartTime;		// 開始時間
 	int m_nEndTime;			// 終了時間
 

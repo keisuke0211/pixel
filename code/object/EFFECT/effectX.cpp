@@ -7,6 +7,7 @@
 //=======================================
 #include "effectX.h"
 #include "../../manager.h"
+#include "../../scene/pause.h"
 #include "../../system/renderer.h"
 
 //========================================
@@ -87,45 +88,50 @@ void CEffectX::Uninit(void)
 //========================================
 void CEffectX::Update(void)
 {
-	// 位置の代入
-	m_Info.posOld = m_Info.pos;
+	bool bPause = CPause::IsPause();
 
-	// 位置の代入
-	m_Info.pos.x += m_Info.move.x;
-	m_Info.move.x += (0.0f - m_Info.move.x) * 0.05f;
-
-	m_Info.pos.y += m_Info.move.y;
-	m_Info.move.y += (0.0f - m_Info.move.y) * 0.05f;
-
-	m_Info.pos.z += m_Info.move.z;
-	m_Info.move.z += (0.0f - m_Info.move.z) * 0.05f;
-
-	// 位置と向き設定
-	SetPos(m_Info.pos);
-	SetRot(m_Info.rot);
-
-	// 色・サイズの推移
-	if (m_Info.nType != 1)
+	if (!bPause)
 	{
-		m_Info.fRadius -= m_Info.fRadius / m_Info.nLife;
-		m_Info.col.a *= ((float)m_Info.nLife / m_Info.nLifeMax);
+		// 位置の代入
+		m_Info.posOld = m_Info.pos;
+
+		// 位置の代入
+		m_Info.pos.x += m_Info.move.x;
+		m_Info.move.x += (0.0f - m_Info.move.x) * 0.05f;
+
+		m_Info.pos.y += m_Info.move.y;
+		m_Info.move.y += (0.0f - m_Info.move.y) * 0.05f;
+
+		m_Info.pos.z += m_Info.move.z;
+		m_Info.move.z += (0.0f - m_Info.move.z) * 0.05f;
+
+		// 位置と向き設定
+		SetPos(m_Info.pos);
+		SetRot(m_Info.rot);
+
+		// 色・サイズの推移
+		if (m_Info.nType != 1)
+		{
+			m_Info.fRadius -= m_Info.fRadius / m_Info.nLife;
+			m_Info.col.a *= ((float)m_Info.nLife / m_Info.nLifeMax);
+		}
+
+		// サイズの更新
+		m_Info.size = D3DXVECTOR3(m_Info.fRadius, m_Info.fRadius, m_Info.fRadius);
+
+		// サイズと色の設定
+		SetScale(m_Info.size);
+		SetColor(m_Info.col);
+
+		if (--m_Info.nLife <= 0)
+		{// 寿命が尽きたら
+
+			Uninit();
+			return;
+		}
+
+		CObjectX::Update();
 	}
-
-	// サイズの更新
-	m_Info.size = D3DXVECTOR3(m_Info.fRadius, m_Info.fRadius, m_Info.fRadius);
-
-	// サイズと色の設定
-	SetScale(m_Info.size);
-	SetColor(m_Info.col);
-
-	if (--m_Info.nLife <= 0)
-	{// 寿命が尽きたら
-
-		Uninit();
-		return;
-	}
-
-	CObjectX::Update();
 }
 
 //========================================

@@ -6,6 +6,7 @@
 // *** enemy.cpp ***
 //========================================
 #include "enemy.h"
+#include "../../scene/pause.h"
 #include "../../manager.h"
 #include "../../system/renderer.h"
 #include "../../system/sound.h"
@@ -114,53 +115,59 @@ void CEnemy::Uninit(void)
 //========================================
 void CEnemy::Update(void)
 {
-	// 過去の位置・向きの更新
-	m_Info.posOld = m_Info.pos;
-	m_Info.rotOld = m_Info.rot;
+	bool bPause = CPause::IsPause();
 
-	// 状態推移
-	StateShift();
-
-	// 移動量の代入
-	m_Info.pos.x += m_Info.move.x;
-
-	 // 当たり判定
-	if (Collsion(VECTOR_X, m_Info.pos))
+	if (!bPause)
 	{
 
-	}
+		// 過去の位置・向きの更新
+		m_Info.posOld = m_Info.pos;
+		m_Info.rotOld = m_Info.rot;
 
-	// 移動量の代入
-	m_Info.pos.z += m_Info.move.z;
+		// 状態推移
+		StateShift();
 
-	if (Collsion(VECTOR_Z, m_Info.pos))
-	{
-		
-	}
+		// 移動量の代入
+		m_Info.pos.x += m_Info.move.x;
 
-	// 仮の移動処理
-	if (++m_Info.nCntTime >= 240 && m_Info.nMove == 1)
-	{
-		m_Info.move.z *= -1;
-		m_Info.nCntTime = 0;
-		
-		if (m_Info.rot.y == 0.0f)
+		// 当たり判定
+		if (Collsion(VECTOR_X, m_Info.pos))
 		{
-			m_Info.rot.y = 3.14f;
+
 		}
-		else if (m_Info.rot.y = 3.14f)
+
+		// 移動量の代入
+		m_Info.pos.z += m_Info.move.z;
+
+		if (Collsion(VECTOR_Z, m_Info.pos))
 		{
-			m_Info.rot.y = 0.0f;
+
 		}
-		SetRot(m_Info.rot);
+
+		// 仮の移動処理
+		if (++m_Info.nCntTime >= 240 && m_Info.nMove == 1)
+		{
+			m_Info.move.z *= -1;
+			m_Info.nCntTime = 0;
+
+			if (m_Info.rot.y == 0.0f)
+			{
+				m_Info.rot.y = 3.14f;
+			}
+			else if (m_Info.rot.y = 3.14f)
+			{
+				m_Info.rot.y = 0.0f;
+			}
+			SetRot(m_Info.rot);
+		}
+
+		CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+
+		SetPos(m_Info.pos);
+		SetColor(m_Info.col);
+
+		CObjectX::Update();
 	}
-
-	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-
-	SetPos(m_Info.pos);
-	SetColor(m_Info.col);
-
-	CObjectX::Update();
 }
 
 //========================================

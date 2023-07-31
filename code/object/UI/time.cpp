@@ -6,6 +6,9 @@
 // *** score2D.cpp ***
 //========================================
 #include "time.h"
+#include "../model/block.h"
+#include "../../scene/game.h"
+#include "../../scene/pause.h"
 
 //========================================
 // コンストラクタ
@@ -74,18 +77,28 @@ void CTime::Uninit(void)
 //========================================
 void CTime::Update(void)
 {
-	// 更新処理
-	CText2D::Update();
+	bool bPause = CPause::IsPause();
+	bool bStart = CGame::IsStart();
+	bool bCameraExit = CBlock::IsExitCamera();
 
-	if (m_nTime > 0)
-	{// タイムが0以上の時、
-
-		// カウンターが0になった時、
-		m_nCounter = (m_nCounter + 1) % 60;
-		if (m_nCounter == 0)
+	if (bStart)
+	{
+		if (!bPause || bCameraExit)
 		{
-			m_nTime--;			// タイムを減算
-			SetTime(m_nTime);	// タイム設定
+			// 更新処理
+			CText2D::Update();
+
+			if (m_nTime > 0)
+			{// タイムが0以上の時、
+
+				// カウンターが0になった時、
+				m_nCounter = (m_nCounter + 1) % 60;
+				if (m_nCounter == 0)
+				{
+					m_nTime--;			// タイムを減算
+					SetTime(m_nTime);	// タイム設定
+				}
+			}
 		}
 	}
 }

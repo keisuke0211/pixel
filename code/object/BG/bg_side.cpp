@@ -9,6 +9,7 @@
 #include "../../manager.h"
 #include "../../system/renderer.h"
 #include "../../system/texture.h"
+#include "../../scene/pause.h"
 
 // 静的変数
 float CBgSide::m_aTexV[3] = { 0.0f };
@@ -203,43 +204,48 @@ void CBgSide::Uninit(void)
 //========================================
 void CBgSide::Update(void)
 {
-	VERTEX_3D_MULTI *pVtx;	// 設定用ポインタ
+	bool bPause = CPause::IsPause();
 
-	// 頂点バッファをロックし、頂点情報へのポインタを取得
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	//テクスチャ座標の開始位置(X軸)の更新
-	m_aTexV[0] += 0.0006f;
-	m_aTexV[1] += 0.0004f;
-	m_aTexV[2] += 0.0003f;
-
-	// テクスチャ座標の更新
-	for (int nCntHeight = 0; nCntHeight < BG_DIVISION_HEIGHT + 1; nCntHeight++)
+	if (!bPause)
 	{
-		for (int nCntWidth = 0; nCntWidth < BG_DIVISION_WIDTH + 1; nCntWidth++)
+		VERTEX_3D_MULTI *pVtx;	// 設定用ポインタ
+
+		// 頂点バッファをロックし、頂点情報へのポインタを取得
+		m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+		//テクスチャ座標の開始位置(X軸)の更新
+		m_aTexV[0] += 0.0006f;
+		m_aTexV[1] += 0.0004f;
+		m_aTexV[2] += 0.0003f;
+
+		// テクスチャ座標の更新
+		for (int nCntHeight = 0; nCntHeight < BG_DIVISION_HEIGHT + 1; nCntHeight++)
 		{
-			// テクスチャ１
-			pVtx[(nCntHeight * (BG_DIVISION_WIDTH + 1)) + nCntWidth].tex1
-				= D3DXVECTOR2(
-					m_aTexV[0] + (nCntWidth * (8.0f / (float)BG_DIVISION_WIDTH)),
-					nCntHeight * (1.0f / (float)BG_DIVISION_HEIGHT));
+			for (int nCntWidth = 0; nCntWidth < BG_DIVISION_WIDTH + 1; nCntWidth++)
+			{
+				// テクスチャ１
+				pVtx[(nCntHeight * (BG_DIVISION_WIDTH + 1)) + nCntWidth].tex1
+					= D3DXVECTOR2(
+						m_aTexV[0] + (nCntWidth * (8.0f / (float)BG_DIVISION_WIDTH)),
+						nCntHeight * (1.0f / (float)BG_DIVISION_HEIGHT));
 
-			// テクスチャ2
-			pVtx[(nCntHeight * (BG_DIVISION_WIDTH + 1)) + nCntWidth].texM
-				= D3DXVECTOR2(
-					m_aTexV[1] + (nCntWidth * (8.0f / (float)BG_DIVISION_WIDTH)),
-					nCntHeight * (1.0f / (float)BG_DIVISION_HEIGHT));
+				// テクスチャ2
+				pVtx[(nCntHeight * (BG_DIVISION_WIDTH + 1)) + nCntWidth].texM
+					= D3DXVECTOR2(
+						m_aTexV[1] + (nCntWidth * (8.0f / (float)BG_DIVISION_WIDTH)),
+						nCntHeight * (1.0f / (float)BG_DIVISION_HEIGHT));
 
-			// テクスチャ3
-			pVtx[(nCntHeight * (BG_DIVISION_WIDTH + 1)) + nCntWidth].texM2
-				= D3DXVECTOR2(
-					m_aTexV[2] + (nCntWidth * (8.0f / (float)BG_DIVISION_WIDTH)),
-					nCntHeight * (1.0f / (float)BG_DIVISION_HEIGHT));
+				// テクスチャ3
+				pVtx[(nCntHeight * (BG_DIVISION_WIDTH + 1)) + nCntWidth].texM2
+					= D3DXVECTOR2(
+						m_aTexV[2] + (nCntWidth * (8.0f / (float)BG_DIVISION_WIDTH)),
+						nCntHeight * (1.0f / (float)BG_DIVISION_HEIGHT));
+			}
 		}
-	}
 
-	// 頂点バッファをアンロックする
-	m_pVtxBuff->Unlock();
+		// 頂点バッファをアンロックする
+		m_pVtxBuff->Unlock();
+	}
 }
 
 //========================================

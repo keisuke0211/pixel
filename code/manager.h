@@ -26,6 +26,8 @@ class CFont;			// フォント
 class CTitle;			// タイトル
 class CGame;			// ゲーム
 class CResult;			// リザルト
+class CRanking;			// ランキング
+class CPause;			// ポーズ
 class CFade;			// フェード
 
 //****************************************
@@ -58,18 +60,24 @@ public:
 	/* 終了			*/void Uninit(void);
 	/* 更新			*/void Update(void);
 	/* 描画			*/void Draw(void);
-	/* モード取得	*/static CScene::MODE GetMode(void);
 
 	// -- 取得 ------------------------------------------
+	/* モード取得	*/static CScene::MODE GetMode(void);
 	/* タイトル		*/static CTitle *GetTitle() { return m_pTitle; }
 	/* ゲーム		*/static CGame *GetGame() { return m_pGame; }
 	/* リザルト		*/static CResult *GetResult() { return m_pResult; }
+	/* ランキング	*/static CRanking *GetRanking() { return m_pRanking; }
+	/* ポーズ		*/static CPause *GetPause() { return m_pPause; }
+
 private:
 
 	// ***** 変数 *****
 	/* タイトル		*/static CTitle *m_pTitle;
 	/* ゲーム		*/static CGame *m_pGame;
 	/* リザルト		*/static CResult *m_pResult;
+	/* ランキング	*/static CRanking *m_pRanking;
+	/* ポーズ		*/static CPause	*m_pPause;
+
 	static MODE m_mode;		// モード種類
 };
 
