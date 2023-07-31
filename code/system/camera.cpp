@@ -9,6 +9,7 @@
 #include "../manager.h"
 #include "renderer.h"
 #include "input.h"
+#include "../object/model/block.h"
 
 //****************************************
 // マクロ定義
@@ -114,13 +115,18 @@ void CCamera::Update(void)
 		AxisRotationCamera(DIRECTION_LEFT, (sinf(pInputJoypad->GetStick().aAngle[CInputJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CInputJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.y);
 	}
 
-	m_Info.rot += m_Info.spin;					// 向きを更新
-	m_Info.spin *= CAMERA_SPIN_DAMP;			// 回転量を減衰
-	m_Info.fHeight += m_Info.fVerticalMove;		// 高さを更新
-	m_Info.fVerticalMove *= CAMERA_SPIN_DAMP;	// 縦方向の移動量を減衰
+	bool bExit = CBlock::IsExitCamera();
 
-	// 向きを制御
-	RotControl(&m_Info.rot);
+	if (!bExit)
+	{
+		m_Info.rot += m_Info.spin;					// 向きを更新
+		m_Info.spin *= CAMERA_SPIN_DAMP;			// 回転量を減衰
+		m_Info.fHeight += m_Info.fVerticalMove;		// 高さを更新
+		m_Info.fVerticalMove *= CAMERA_SPIN_DAMP;	// 縦方向の移動量を減衰
+
+		// 向きを制御
+		RotControl(&m_Info.rot);
+	}
 
 	// 高さを制御
 	FloatControl(&m_Info.fHeight, D3DX_PI * 0.30f, D3DX_PI * 0.01f);
@@ -278,4 +284,20 @@ void CCamera::SetPosR(D3DXVECTOR3 pos, int nIdx)
 	m_Info.posV.x = m_Info.posR.x + (sinf(m_Info.rot.y) * (m_Info.fDistance * (1.0f - fabsf(m_Info.fHeight))));
 	m_Info.posV.y = m_Info.posR.y + (m_Info.fDistance * m_Info.fHeight);
 	m_Info.posV.z = m_Info.posR.z + (cosf(m_Info.rot.y) * (m_Info.fDistance * (1.0f - fabsf(m_Info.fHeight))));
+}
+
+//========================================
+// カメラの向き設定
+//========================================
+void CCamera::SetRot(D3DXVECTOR3 rot, int nIdx)
+{
+	m_Info.rot = rot;
+}
+
+//========================================
+// カメラの高さ
+//========================================
+void CCamera::SetHeigth(float Heigth)
+{
+	m_Info.fHeight = Heigth;
 }

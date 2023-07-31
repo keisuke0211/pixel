@@ -21,22 +21,25 @@ public:
 	// モデル種類
 	enum MODEL
 	{
-		MODEL_GRASS_00 = 0,	// 草ブロック 1×1×1
-		MODEL_GRASS_01,		// 草ブロック 3×1×1
-		MODEL_GRASS_02,		// 草ブロック 5×1×1
-		MODEL_GRASS_03,		// 草ブロック 3×3×1
-		MODEL_GRASS_04,		// 草ブロック 5×5×1
-		MODEL_SOIL_00,		// 土ブロック 1×1×1
-		MODEL_SOIL_01,		// 土ブロック 3×1×1
-		MODEL_SOIL_02,		// 土ブロック 5×1×1
-		MODEL_SOIL_03,		// 土ブロック 1×3×1
-		MODEL_SOIL_04,		// 土ブロック 1×5×1
-		MODEL_SOIL_05,		// 土ブロック 3×1×3
-		MODEL_SOIL_06,		// 土ブロック 5×1×5
-		MODEL_SOIL_07,		// 土ブロック 3×3×1
-		MODEL_SOIL_08,		// 土ブロック 5×5×1
+		MODEL_GRASS_00 = 0,	// 草 1×1×1
+		MODEL_GRASS_01,		// 草 3×1×1
+		MODEL_GRASS_02,		// 草 5×1×1
+		MODEL_GRASS_03,		// 草 3×3×1
+		MODEL_GRASS_04,		// 草 5×5×1
+		MODEL_SOIL_00,		// 土 1×1×1
+		MODEL_SOIL_01,		// 土 3×1×1
+		MODEL_SOIL_02,		// 土 5×1×1
+		MODEL_SOIL_03,		// 土 1×3×1
+		MODEL_SOIL_04,		// 土 1×5×1
+		MODEL_SOIL_05,		// 土 3×1×3
+		MODEL_SOIL_06,		// 土 5×1×5
+		MODEL_SOIL_07,		// 土 3×3×1
+		MODEL_SOIL_08,		// 土 5×5×1
+		MODEL_STONE,		// 石(仮)
 		MODEL_CRACK_ROCK,	// ひび割れ岩(仮)
 		MODEL_TNT,			// TNT(仮)
+		MODEL_GOAL,			// ゴールブロック
+		MODEL_BARRIER,		// バリアブロック
 		MODEL_BULLET,		// 弾
 		MODEL_PLAYER_00,	// プレイヤー 体
 		MODEL_PLAYER_01,	// プレイヤー 頭

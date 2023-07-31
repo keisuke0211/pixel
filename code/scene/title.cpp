@@ -10,6 +10,7 @@
 #include "../system/input.h"
 #include "../object\UI\text2D.h"
 #include "fade.h"
+#include "../object/model/block.h"
 
 #include "../system/words/text.h"
 #include "../system/words/font.h"
@@ -48,8 +49,8 @@ CTitle::~CTitle()
 //========================================
 HRESULT CTitle::Init(void)
 {
-	// モデル
-	CModel::InitModel();
+	CModel::InitModel();	// モデル
+	CBlock::Load();			// ブロック
 
 	/*CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(540.0f, 100.0f, 0.0f),

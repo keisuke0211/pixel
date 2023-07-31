@@ -15,6 +15,8 @@
 #include "../system/words/text.h"
 #include "../system/words/font.h"
 
+// 静的変数
+CResult::VERDICT CResult::verdict = VERDICT_GAMECLEAR;
 
 //========================================
 // コンストラクタ
@@ -37,13 +39,33 @@ CResult::~CResult()
 //========================================
 HRESULT CResult::Init(void)
 {
-	CText::Create(CText::BOX_NORMAL,
-		D3DXVECTOR3(540.0f, 100.0f, 0.0f),
-		D3DXVECTOR2(220.0f, 100.0f),
-		"ゲームクリア",
-		CFont::FONT_DOTGOTHIC,
-		40.0f,
-		5, 10, -1, false);
+	switch (verdict)
+	{
+	case CResult::VERDICT_GAMECLEAR:
+	{
+		CText::Create(CText::BOX_NORMAL,
+			D3DXVECTOR3(640.0f, 100.0f, 0.0f),
+			D3DXVECTOR2(640.0f, 100.0f),
+			"ゲームクリア",
+			CFont::FONT_DOTGOTHIC,
+			40.0f,
+			5, 10, -1,false);
+	}
+		break;
+	case CResult::VERDICT_GAMEOVER:
+	{
+		CText::Create(CText::BOX_NORMAL,
+			D3DXVECTOR3(540.0f, 100.0f, 0.0f),
+			D3DXVECTOR2(640.0f, 100.0f),
+			"ゲームオーバー",
+			CFont::FONT_DOTGOTHIC,
+			40.0f,
+			5, 10, -1, false);
+	}
+		break;
+	case CResult::VERDICT_MAX:
+		break;
+	}
 
 	{// スコア
 		CText2D *pObj = CText2D::Create();
@@ -82,6 +104,8 @@ void CResult::Uninit(void)
 	CObject::ReleaseAll(CObject::TYPE_TIME);
 	CObject::ReleaseAll(CObject::TYPE_SCORE);
 	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
+	CObject::ReleaseAll(CObject::TYPE_FONT);
+
 }
 
 //========================================

@@ -65,9 +65,12 @@ public:
 	void SetScreen(void);							// 画面設定
 	void SetPosV(D3DXVECTOR3 pos, int nIdx = 0);	// 視点
 	void SetPosR(D3DXVECTOR3 pos, int nIdx = 0);	// 注視点
+	void SetRot(D3DXVECTOR3 rot, int nIdx = 0);		// 向き
+	void SetHeigth(float Heigth);					// 高さ
 
 	/* 取得 */
-	Info GetInfo() { return m_Info; }			// プレイヤー情報
+	Info GetInfo() { return m_Info; }			// カメラの情報
+
 
 private:
 

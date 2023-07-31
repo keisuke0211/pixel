@@ -7,15 +7,28 @@
 //========================================
 #include "block.h"
 #include "bullet_cube.h"
+#include "../../scene/game.h"
 #include "model.h"
 #include "../EFFECT/particleX.h"
 #include "../../system/sound.h"
 #include "../../system/csv_file.h"
+#include "../../system/camera.h"
+#include "../../system/words/font.h"
+#include "../../system/words/text.h"
+
+// 静的変数
+CBlock::TypeInfo *CBlock::m_TypeInfo = NULL;
+int CBlock::m_nCntExit = 0;
+bool CBlock::m_bExit = false;
+bool CBlock::m_bExitCamera = false;
+D3DXVECTOR3 CBlock::m_CameraRot = INIT_D3DXVECTOR3;
+float CBlock::m_CameraHeigth = 0.0f;
 
 //========================================
 // マクロ定義
 //========================================
 #define TNT_COLLSION		(3.0f)	// TNTの爆発の判定
+#define FILE_PATH	("data/GAMEDATA/BLOCK/BLOCK_DATA.txt")	// ファイルパス
 
 //========================================
 // コンストラクタ
@@ -29,7 +42,7 @@ CBlock::CBlock(int nPriority) : CObjectX(nPriority)
 	m_Info.rotOld = INIT_D3DXVECTOR3;
 	m_Info.size = INIT_D3DXVECTOR3;
 	m_Info.col = INIT_D3DXCOLOR;
-	m_Info.nType = 0;
+	m_Info.nModelID = 0;
 	m_Info.fRadius = 0.0f;
 	m_Info.nCntRadius = 0;
 	m_Info.fRadiusRate = 0.0f;
@@ -49,7 +62,7 @@ CBlock::~CBlock()
 //========================================
 // 生成
 //========================================
-CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
+CBlock *CBlock::Create(int nType, D3DXVECTOR3 pos, int nState)
 {
 	CBlock *pBlock = NULL;
 
@@ -61,12 +74,32 @@ CBlock *CBlock::Create(int nType,D3DXVECTOR3 pos)
 	// オブジェクト2Dの生成
 	pBlock = new CBlock;
 
+	pBlock->m_Info.state = STATE_MAX;
 	pBlock->SetModel(nType);
+	pBlock->m_Info.nModelID = nType;
+
+	switch (nState)
+	{
+	case STATE_NORMAL:
+	{
+		pBlock->m_Info.state = STATE_NORMAL;
+	}
+	break;
+	case STATE_BREAK:
+	{
+		pBlock->m_Info.state = STATE_BREAK;
+	}
+	break;
+	case STATE_INVISIBLE:
+	{
+		pBlock->m_Info.state = STATE_INVISIBLE;
+	}
+	break;
+	}
 
 	// 初期化処理
 	pBlock->Init();
 
-	pBlock->m_Info.nType = nType;
 	pBlock->SetBlockPos(pos);
 
 	return pBlock;
@@ -85,9 +118,33 @@ HRESULT CBlock::Init(void)
 	m_Info.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.size = D3DXVECTOR3(1.0f,1.0f,1.0f);
-	m_Info.col = INIT_D3DXCOLOR;
-	m_Info.nType = 0;
 	m_Info.fRadius = 1.0f;
+
+	if(m_Info.state == STATE_MAX)
+	{
+	switch (m_TypeInfo[m_Info.nModelID].nState)
+	{
+	case STATE_NORMAL:
+		m_Info.state = STATE_NORMAL;
+		break;
+	case STATE_BREAK:
+		m_Info.state = STATE_BREAK;
+		break;
+	case STATE_INVISIBLE:
+		m_Info.state = STATE_INVISIBLE;
+		break;
+	}
+	}
+
+
+	if (m_Info.state != STATE_INVISIBLE)
+	{
+		m_Info.col = INIT_D3DXCOLOR;
+	}
+	else
+	{
+		m_Info.col = D3DXCOLOR(0.0f,0.0f,0.0f,0.0f);
+	}
 
 	// 生成
 	SetPos(m_Info.pos);
@@ -111,6 +168,9 @@ void CBlock::Uninit(void)
 //========================================
 void CBlock::Update(void)
 {
+	// -- 取得 -------------------------------------------
+	CCamera *pCamera = CManager::GetCamera();		// カメラ
+
 	// 過去の位置・向きの更新
 	m_Info.posOld = m_Info.pos;
 	m_Info.rotOld = m_Info.rot;
@@ -124,7 +184,7 @@ void CBlock::Update(void)
 
 		if (--m_Info.nEraseTime <= 0)
 		{
-			switch (m_Info.nType)
+			switch (m_Info.nModelID)
 			{
 			case MODEL_TNT:
 			{
@@ -136,6 +196,11 @@ void CBlock::Update(void)
 				CrackRock();
 			}
 				break;
+			default:
+			{
+				ExitOpen();
+			}
+			break;
 			}
 
 			// 破棄
@@ -145,6 +210,55 @@ void CBlock::Update(void)
 		}
 	}
 
+	bool bExit = CGame::IsExit();
+	if (bExit)
+	{
+		if (m_Info.state == STATE_BREAK && !m_Info.bErase)
+		{
+			if (m_Info.nModelID != MODEL_TNT && m_Info.nModelID != MODEL_CRACK_ROCK)
+			{
+				m_Info.nEraseTime = 60;
+				m_Info.bErase = true;
+			}
+		}
+
+		if (m_Info.nModelID == MODEL_GOAL && !m_bExit)
+		{
+			m_CameraRot = pCamera->GetInfo().rot;
+			m_CameraHeigth = pCamera->GetInfo().fHeight;
+
+			pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			pCamera->SetHeigth(0.0f);
+			pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 5, m_Info.pos.z + 100));
+
+			m_nCntExit = 90;
+			m_bExit = true;
+			m_bExitCamera = true;
+
+		}
+		else if (m_Info.nModelID == MODEL_GOAL && m_bExit)
+		{
+			if (--m_nCntExit <= 0 && m_bExitCamera)
+			{
+				pCamera->SetRot(m_CameraRot);
+				pCamera->SetHeigth(m_CameraHeigth);
+
+				m_nCntExit = 0;
+				m_bExitCamera = false;
+
+				CText::Create(CText::BOX_NORMAL,
+					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
+					D3DXVECTOR2(280.0f, 100.0f),
+					"出口が開いた！",
+					CFont::FONT_DOTGOTHIC,
+					20.0f,
+					10, 10, 30, false);
+			}
+		}
+	}
+
+
+
 	CObjectX::Update();
 }
 
@@ -153,7 +267,10 @@ void CBlock::Update(void)
 //========================================
 void CBlock::Draw(void)
 {
-	CObjectX::Draw();
+	if (m_Info.state != STATE_INVISIBLE)
+	{
+		CObjectX::Draw();
+	}
 }
 
 //========================================
@@ -161,20 +278,23 @@ void CBlock::Draw(void)
 //========================================
 void CBlock::HitBlock(void)
 {
-	switch (m_Info.nType)
+	if (m_Info.state == STATE_BREAK)
 	{
-	case MODEL_TNT:
-	{
-		m_Info.nEraseTime = 20;
-		m_Info.bErase = true;
-	}
-	break;
-	case MODEL_CRACK_ROCK:
-	{
-		m_Info.nEraseTime = 10;
-		m_Info.bErase = true;
-	}
-	break;
+		switch (m_Info.nModelID)
+		{
+		case MODEL_TNT:
+		{
+			m_Info.nEraseTime = 20;
+			m_Info.bErase = true;
+		}
+		break;
+		case MODEL_CRACK_ROCK:
+		{
+			m_Info.nEraseTime = 10;
+			m_Info.bErase = true;
+		}
+		break;
+		}
 	}
 }
 
@@ -211,6 +331,22 @@ void CBlock::TntBlock(void)
 
 	// キューブとの当たり判定
 	ModelCollsion(PRIO_CUBE, TYPE_CUBE,m_Info.pos);
+}
+
+//========================================
+// 出口解放
+//========================================
+void CBlock::ExitOpen(void)
+{
+	// パーティクル生成
+	CParticleX *pObj = CParticleX::Create();
+	pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y, m_Info.pos.z));
+	pObj->Par_SetRot(INIT_D3DXVECTOR3);
+	pObj->Par_SetMove(D3DXVECTOR3(25.0f, 5.0f, 25.0f));
+	pObj->Par_SetType(0);
+	pObj->Par_SetLife(100);
+	pObj->Par_SetCol(D3DXCOLOR(0.9f, 0.0f, 0.0f, 1.0f));
+	pObj->Par_SetForm(10);
 }
 
 //========================================
@@ -276,5 +412,56 @@ void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 		}
 
 		pObj = pObjNext;	// 次のオブジェクトを代入
+	}
+}
+
+//========================================
+// 読み込み
+//========================================
+void CBlock::Load(void)
+{
+	int nCntModel = 0;
+	char aDataSearch[TXT_MAX];	// データ検索用
+
+	// ファイルの読み込み
+	FILE *pFile = fopen(FILE_PATH, "r");
+
+	if (pFile == NULL)
+	{// 種類毎の情報のデータファイルが開けなかった場合、
+	 //処理を終了する
+		return;
+	}
+
+	// ENDが見つかるまで読み込みを繰り返す
+	while (1)
+	{
+		fscanf(pFile, "%s", aDataSearch);	// 検索
+
+		if (!strcmp(aDataSearch, "END"))
+		{// 読み込みを終了
+			fclose(pFile);
+			break;
+		}
+		if (aDataSearch[0] == '#')
+		{// 折り返す
+			continue;
+		}
+
+		if (!strcmp(aDataSearch, "NUM_BLOCK"))
+		{
+			int nMaxBlock = 0;
+
+			fscanf(pFile, "%s", &aDataSearch[0]);
+			fscanf(pFile, "%d", &nMaxBlock);			// 最大数
+			m_TypeInfo = new CBlock::TypeInfo[nMaxBlock];
+			assert(m_TypeInfo != NULL);
+		}
+		else if (!strcmp(aDataSearch, "BLOCK"))
+		{
+			fscanf(pFile, "%s", &aDataSearch[0]);
+			m_TypeInfo[nCntModel].nModelID = nCntModel;			// モデルID
+			fscanf(pFile, "%d", &m_TypeInfo[nCntModel].nState);	// 状態
+			nCntModel++;
+		}
 	}
 }

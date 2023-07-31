@@ -6,35 +6,38 @@
 #========================================
 #モデルの最大数
 #========================================
-NUM_MODEL = 25
+NUM_MODEL = 28
 #========================================
 #ファイル名 / 影の有無
 #========================================
-MODEL = data\\MODEL\\Block\\grass000.x 				0	#00 草ブロック 1×1×1
-MODEL = data\\MODEL\\Block\\grass001.x 				0	#01 草ブロック 3×1×1
-MODEL = data\\MODEL\\Block\\grass002.x 				0	#02 草ブロック 5×1×1
-MODEL = data\\MODEL\\Block\\grass003.x 				0	#03 草ブロック 3×3×1
-MODEL = data\\MODEL\\Block\\grass004.x 				0	#04 草ブロック 5×5×1
-MODEL = data\\MODEL\\Block\\soil004.x 				0	#05 土ブロック 1×1×1
-MODEL = data\\MODEL\\Block\\soil004.x 				0	#06 土ブロック 3×1×1
-MODEL = data\\MODEL\\Block\\soil004.x 				0	#07 土ブロック 5×1×1
-MODEL = data\\MODEL\\Block\\soil004.x 				0	#08 土ブロック 1×3×1
-MODEL = data\\MODEL\\Block\\soil004.x 				0	#09 土ブロック 1×5×1
-MODEL = data\\MODEL\\Block\\soil004.x 				0	#10 土ブロック 3×1×3
-MODEL = data\\MODEL\\Block\\soil004.x 				0	#11 土ブロック 5×1×5
-MODEL = data\\MODEL\\Block\\soil004.x 				0	#12 土ブロック 3×3×1
-MODEL = data\\MODEL\\Block\\soil008.x 				0	#13 土ブロック 5×5×1
-MODEL = data\\MODEL\\Block\\CrackRock.x 			0	#14 ひび割れ岩(仮)
-MODEL = data\\MODEL\\Block\\tnt.x 					0	#15 TNT(仮)
-MODEL = data\\MODEL\\Weapon\\Bullet01.x 			1	#16 弾ブロック 1×1×1
-MODEL = data\\MODEL\\Player\\Player_body.x 			1	#17 プレイヤー 体
-MODEL = data\\MODEL\\Player\\Player_head.x 			1	#18 プレイヤー 頭
-MODEL = data\\MODEL\\Player\\Player_left_arm.x 		1	#19 プレイヤー 左手
-MODEL = data\\MODEL\\Player\\Player_right_arm.x 	1	#20 プレイヤー 右手
-MODEL = data\\MODEL\\Player\\Player_left_foot.x 	1	#21 プレイヤー 左足
-MODEL = data\\MODEL\\Player\\Player_right_foot.x 	1	#22 プレイヤー 右足
-MODEL = data\\MODEL\\Enemy\\Ghost999.x 				1	#23 仮エネミー 999
-MODEL = data\\MODEL\\Effect\\Effct000.x 			0	#24 エフェクト 粒子
+MODEL = data\\MODEL\\Block\\grass000.x 				0	#00 草 1×1×1
+MODEL = data\\MODEL\\Block\\grass001.x 				0	#01 草 3×1×1
+MODEL = data\\MODEL\\Block\\grass002.x 				0	#02 草 5×1×1
+MODEL = data\\MODEL\\Block\\grass003.x 				0	#03 草 3×3×1
+MODEL = data\\MODEL\\Block\\grass004.x 				0	#04 草 5×5×1
+MODEL = data\\MODEL\\Block\\soil000.x 				0	#05 土 1×1×1
+MODEL = data\\MODEL\\Block\\soil001.x 				0	#06 土 3×1×1
+MODEL = data\\MODEL\\Block\\soil002.x 				0	#07 土 5×1×1
+MODEL = data\\MODEL\\Block\\soil003.x 				0	#08 土 1×3×1
+MODEL = data\\MODEL\\Block\\soil004.x 				0	#09 土 1×5×1
+MODEL = data\\MODEL\\Block\\soil005.x 				0	#10 土 3×1×3
+MODEL = data\\MODEL\\Block\\soil006.x 				0	#11 土 5×1×5
+MODEL = data\\MODEL\\Block\\soil007.x 				0	#12 土 3×3×1
+MODEL = data\\MODEL\\Block\\soil008.x 				0	#13 土 5×5×1
+MODEL = data\\MODEL\\Block\\stone.x 				0	#14 石
+MODEL = data\\MODEL\\Block\\CrackRock.x 			0	#15 ひび割れ岩(仮)
+MODEL = data\\MODEL\\Block\\tnt.x 					0	#16 TNT(仮)
+MODEL = data\\MODEL\\Block\\goal_block.x 			0	#17 ゴールブロック
+MODEL = data\\MODEL\\Block\\barrier_block.x 		0	#18 バリアブロック
+MODEL = data\\MODEL\\Weapon\\Bullet01.x 			1	#19 弾ブロック 1×1×1
+MODEL = data\\MODEL\\Player\\Player_body.x 			1	#20 プレイヤー 体
+MODEL = data\\MODEL\\Player\\Player_head.x 			1	#21 プレイヤー 頭
+MODEL = data\\MODEL\\Player\\Player_left_arm.x 		1	#22 プレイヤー 左手
+MODEL = data\\MODEL\\Player\\Player_right_arm.x 	1	#23 プレイヤー 右手
+MODEL = data\\MODEL\\Player\\Player_left_foot.x 	1	#24 プレイヤー 左足
+MODEL = data\\MODEL\\Player\\Player_right_foot.x 	1	#25 プレイヤー 右足
+MODEL = data\\MODEL\\Enemy\\Ghost999.x 				1	#26 仮エネミー 999
+MODEL = data\\MODEL\\Effect\\Effct000.x 			0	#27 エフェクト 粒子
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||

@@ -6,6 +6,7 @@
 // *** game.cpp ***
 //========================================
 #include "game.h"
+#include "result.h"
 #include "../system/csv_file.h"
 #include "../object\UI\score.h"
 #include "../object\UI\time.h"
@@ -18,12 +19,15 @@
 #include "../system/input.h"
 #include "../system/words/text.h"
 #include "../system/words/font.h"
+#include "../system/camera.h"
 #include "fade.h"
 
 // 静的変数
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
 bool CGame::m_bStart = true;
+bool CGame::m_bClear = false;
+bool CGame::m_bExit = false;
 
 //========================================
 // コンストラクタ
@@ -31,6 +35,8 @@ bool CGame::m_bStart = true;
 CGame::CGame()
 {
 	m_nStartTime = 0;
+	m_nEndTime = 0;
+	m_bEnd = false;
 }
 
 //========================================
@@ -174,6 +180,7 @@ void CGame::Uninit(void)
 	CObject::ReleaseAll(CObject::TYPE_EFFECT);
 	CObject::ReleaseAll(CObject::TYPE_PARTICLE);
 	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
+	CObject::ReleaseAll(CObject::TYPE_FONT);
 }
 
 //========================================
@@ -181,6 +188,9 @@ void CGame::Uninit(void)
 //========================================
 void CGame::Update(void)
 {
+	// -- 取得 -------------------------------------------
+	CCamera *pCamera = CManager::GetCamera();		// カメラ
+
 	// 開始フラグ
 	if (!m_bStart)
 	{
@@ -190,17 +200,46 @@ void CGame::Update(void)
 		}
 	}
 
+	// エネミーの全滅
+	if (!m_bExit && CEnemy::GetEnemyAll() <= 0)
+	{
+		m_bExit = true;
+
+	}
+
 	if (CFade::GetFade() == CFade::FADE_NONE)
 	{
-		// エネミーの全滅
-		if (CEnemy::GetEnemyAll() <= 0)
+		// CLEAR
+		if (m_bClear)
 		{
-			CManager::GetFade()->SetFade(MODE_RESULT);
+			if (!m_bEnd)
+			{
+				CText::Create(CText::BOX_NORMAL,
+					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
+					D3DXVECTOR2(440.0f, 100.0f),
+					"Game Clear",
+					CFont::FONT_DOTGOTHIC,
+					20.0f,
+					15, 10, 30, false);
+
+				m_nEndTime = (15 * 10) + 10 + 25;
+				m_bEnd = true;
+
+				CResult::SetVerdict(CResult::VERDICT_GAMECLEAR);
+			}
+			else
+			{
+				if (--m_nEndTime <= 0)
+				{
+					CManager::GetFade()->SetFade(MODE_RESULT);
+				}
+			}
 		}
 
 		// 時間切れ
 		if (m_pTime->GetTime() <= 0)
 		{
+			CResult::SetVerdict(CResult::VERDICT_GAMEOVER);
 			CManager::GetFade()->SetFade(MODE_RESULT);
 		}
 	}
@@ -246,7 +285,7 @@ void CGame::LoodBlock(void)
 	CSVFILE *pFile = new CSVFILE;
 
 	// 読み込み
-	pFile->FileLood("data\\GAMEDATA\\BLOCK\\STAGE_DATA.csv", true, true, ',');
+	pFile->FileLood("data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv", true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
@@ -256,6 +295,7 @@ void CGame::LoodBlock(void)
 	{
 		// 配置情報の生成
 		int nType;				// 種類
+		int nState;				// 状態
 		D3DXVECTOR3 pos;		// 位置
 
 								// 列数の取得
@@ -271,6 +311,7 @@ void CGame::LoodBlock(void)
 			case 1:	pFile->ToValue(pos.x, sData); break;	// 位置 X
 			case 2:	pFile->ToValue(pos.y, sData); break;	// 位置 Y
 			case 3:	pFile->ToValue(pos.z, sData); break;	// 位置 Z
+			case 4: pFile->ToValue(nState, sData); break;	// 状態
 			}
 		}
 
@@ -281,7 +322,7 @@ void CGame::LoodBlock(void)
 		}
 
 		// 配置
-		CBlock *pObj = CBlock::Create(nType, pos);
+		CBlock *pObj = CBlock::Create(nType, pos,nState);
 	}
 
 	// メモリ開放
@@ -296,7 +337,7 @@ void CGame::LoodEnemy(void)
 {
 	CSVFILE *pFile = new CSVFILE;
 
-	pFile->FileLood("data\\GAMEDATA\\ENEMY\\STAGE_DATA1.csv", true, true, ',');
+	pFile->FileLood("data\\GAMEDATA\\ENEMY\\STAGE_ENEMY1.csv", true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();

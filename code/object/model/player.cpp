@@ -15,6 +15,7 @@
 #include "../../system/physics.h"
 #include "bullet.h"
 #include "enemy.h"
+#include "block.h"
 #include "bullet_cube.h"
 #include "../EFFECT/particleX.h"
 
@@ -354,8 +355,14 @@ void CPlayer::UpdatePos(void)
 	// 目標向きに移動向きを代入
 	m_Info.targetRot = m_Info.moveRot;
 
-	// カメラの注視点を設定
-	pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 95, m_Info.pos.z));
+
+	bool bExit = CBlock::IsExitCamera();
+
+	if (!bExit)
+	{
+		// カメラの注視点を設定
+		pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 95, m_Info.pos.z));
+	}
 }
 
 //========================================
@@ -393,6 +400,32 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 			float fPairWidth = pObj->GetWidth();	// 幅
 			float fPairHeight = pObj->GetHeight();	// 高さ
 			float fPairDepth = pObj->GetDepth();	// 奥行き
+
+			// ゴールブロックだと
+			if (type == TYPE_BLOCK)
+			{
+				// ダイナミックキャストする
+				CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
+
+				int nBlockType = pBlock->GetBlockType();
+				if (nBlockType == MODEL_GOAL)
+				{
+					fPairWidth *= 0.9f;
+					fPairHeight *= 09.f;
+					fPairDepth *= 0.9f;
+
+					// クリア
+					if (!CGame::IsClear())
+					{
+						if (Collsion(pos, pBlock->GetBlockPos(), D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+						{
+							CGame::SetClear(true);
+						}
+					}
+					pObj = pObjNext;	// 次のオブジェクトを代入
+					continue;
+				}
+			}
 
 			// --- 当たり判定 ----------------------------------------------
 			switch (vector)
