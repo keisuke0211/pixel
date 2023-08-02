@@ -161,7 +161,7 @@ void CEnemy::Update(void)
 			SetRot(m_Info.rot);
 		}
 
-		CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+		CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 
 		SetPos(m_Info.pos);
 		SetColor(m_Info.col);

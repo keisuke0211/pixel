@@ -59,6 +59,12 @@ public:
 
 	/* 削除 */void Disap(bool bDisap);
 
+	// -- 設定 ------------------------------------------
+	/* ポーズ中の生成	*/void SetTetPause(bool bPause);
+	/* ボックスの色		*/void SetBoxColor(D3DXCOLOR col);
+	/* テキストの色		*/void SetTextColor(D3DXCOLOR col);
+
+
 private:
 
 	// ***** 構造体 *****
@@ -84,6 +90,7 @@ private:
 		bool bRelease;			// 消すフラグ
 
 		bool bTextBok;			// テキストボックスの表示フラグ
+		bool bPause;			// ポーズ中でも動くか（false：動かない）
 		string sText;			// 表示するテキスト
 		string sALLText;		// テキストの全体
 		CWords** words;			// 文字

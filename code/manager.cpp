@@ -27,9 +27,9 @@ CCamera *CManager::m_pCamera = NULL;
 CLight *CManager::m_pLight = NULL;
 CSound *CManager::m_pSound = NULL;
 CTexture *CManager::m_pTexture = NULL;
-CInputKeyboard *CManager::m_InputKeyboard = NULL;
-CInputMouse *CManager::m_InputMouse = NULL;
-CInputJoypad *CManager::m_InputJoypad = NULL;
+CKeyboard *CManager::m_InputKeyboard = NULL;
+CMouse *CManager::m_InputMouse = NULL;
+CJoypad *CManager::m_InputJoypad = NULL;
 CFont *CManager::m_pFont = NULL;
 CScene *CManager::m_pScene = NULL;
 CScene::MODE CScene::m_mode = MODE_TITLE;
@@ -70,7 +70,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	}
 
 	// キーボード
-	m_InputKeyboard = new CInputKeyboard;
+	m_InputKeyboard = new CKeyboard;
 
 	if (FAILED(m_InputKeyboard->Init(hinstance, hWnd)))
 	{
@@ -78,7 +78,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	}
 
 	// マウス
-	m_InputMouse = new CInputMouse;
+	m_InputMouse = new CMouse;
 
 	if (FAILED(m_InputMouse->Init(hinstance, hWnd)))
 	{
@@ -86,7 +86,7 @@ HRESULT CManager::Init(HINSTANCE hinstance, HWND hWnd, BOOL bWindow)
 	}
 
 	// ジョイパット
-	m_InputJoypad = new CInputJoypad;
+	m_InputJoypad = new CJoypad;
 
 	if (FAILED(m_InputJoypad->Init()))
 	{
@@ -308,25 +308,26 @@ HRESULT CScene::Init()
 	{
 	case CScene::MODE_TITLE:
 	{
-		// タイトル
 		m_pTitle = CTitle::Create();
 		break;
 	}
 	case CScene::MODE_GAME:
 	{
-		// ポーズ
 		m_pPause = CPause::Create();
-
-		// ゲーム 
 		m_pGame = CGame::Create();
 		break;
 	}
 	case CScene::MODE_RESULT:
 	{
-		// リザルト
 		m_pResult = CResult::Create();
 		break;
 	}
+	case CScene::MODE_RANKING:
+	{
+		m_pRanking = CRanking::Create();
+		break;
+	}
+	break;
 	}
 
 	return S_OK;
@@ -371,6 +372,15 @@ void CScene::Uninit(void)
 		m_pResult = NULL;
 		break;
 	}
+	case CScene::MODE_RANKING:
+	{
+		m_pRanking->Uninit();
+
+		delete m_pRanking;
+		m_pRanking = NULL;
+		break;
+	}
+	break;
 	}
 }
 
@@ -406,6 +416,11 @@ void CScene::Update(void)
 		m_pResult->Update();
 		break;
 	}
+	case CScene::MODE_RANKING:
+	{
+		m_pRanking->Update();
+		break;
+	}
 	}
 }
 
@@ -432,6 +447,11 @@ void CScene::Draw(void)
 	case CScene::MODE_RESULT:
 	{
 		m_pResult->Draw();
+		break;
+	}
+	case CScene::MODE_RANKING:
+	{
+		m_pRanking->Draw();
 		break;
 	}
 	}

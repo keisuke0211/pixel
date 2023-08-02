@@ -19,9 +19,9 @@ class CCamera;			// カメラ
 class CLight;			// ライト
 class CSound;			// サウンド
 class CTexture;			// テクスチャ
-class CInputKeyboard;	// キーボード
-class CInputMouse;		// マウス
-class CInputJoypad;		// ジョイパット
+class CKeyboard;		// キーボード
+class CMouse;			// マウス
+class CJoypad;			// ジョイパット
 class CFont;			// フォント
 class CTitle;			// タイトル
 class CGame;			// ゲーム
@@ -45,8 +45,10 @@ public:
 	enum MODE
 	{
 		MODE_TITLE = 0,	// タイトル
+		MODE_TUTORIAL,	// チュートリアル
 		MODE_GAME,		// ゲーム
 		MODE_RESULT,	// リザルト
+		MODE_RANKING,	// ランキング
 		MODE_MAX
 	};
 
@@ -104,9 +106,9 @@ public:
 	/* ライト		*/static CLight *GetLight() { return m_pLight; }
 	/* サウンド		*/static CSound *GetSound() { return m_pSound; }
 	/* テクスチャ	*/static CTexture* GetTexture(){ return m_pTexture; }
-	/* キーボード	*/static CInputKeyboard* GetInputKeyboard() { return m_InputKeyboard; }
-	/* マウス		*/static CInputMouse* GetInputMouse() { return m_InputMouse; }
-	/* ジョイパット	*/static CInputJoypad* GetInputJoypad() { return m_InputJoypad; }
+	/* キーボード	*/static CKeyboard* GetInputKeyboard() { return m_InputKeyboard; }
+	/* マウス		*/static CMouse* GetInputMouse() { return m_InputMouse; }
+	/* ジョイパット	*/static CJoypad* GetInputJoypad() { return m_InputJoypad; }
 	/* フォント		*/static CFont*	GetFont() { return m_pFont; }
 	/* フェード		*/static CFade *GetFade() { return m_pFade; }
 
@@ -116,10 +118,10 @@ private:
 	/* ライト		*/static CLight *m_pLight;
 	/* サウンド		*/static CSound *m_pSound;
 	/* テクスチャ	*/static CTexture *m_pTexture;
-	/* キーボード	*/static CInputKeyboard *m_InputKeyboard;
+	/* キーボード	*/static CKeyboard *m_InputKeyboard;
 	/* フォント		*/static CFont *m_pFont;
-	/* マウス		*/static CInputMouse* m_InputMouse;
-	/* ジョイパット	*/static CInputJoypad* m_InputJoypad;
+	/* マウス		*/static CMouse* m_InputMouse;
+	/* ジョイパット	*/static CJoypad* m_InputJoypad;
 	/* シーン		*/static CScene *m_pScene;
 	/* フェード		*/static CFade *m_pFade;
 

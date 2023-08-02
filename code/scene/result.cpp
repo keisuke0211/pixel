@@ -114,11 +114,11 @@ void CResult::Uninit(void)
 void CResult::Update(void)
 {
 	// --- 取得 ---------------------------------
-	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
-	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_A))
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
 	{
 		if (CFade::GetFade() == CFade::FADE_NONE)
 		{

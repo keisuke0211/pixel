@@ -107,7 +107,7 @@ void CInput::Uninit(void)
 //========================================
 
 // コンストラクタ
-CInputKeyboard::CInputKeyboard()
+CKeyboard::CKeyboard()
 {
 	for (int nCntKey = 0; nCntKey < NUM_KEY_MAX; nCntKey++)
 	{
@@ -122,7 +122,7 @@ CInputKeyboard::CInputKeyboard()
 }
 
 // デストラクタ
-CInputKeyboard::~CInputKeyboard()
+CKeyboard::~CKeyboard()
 {
 
 }
@@ -130,7 +130,7 @@ CInputKeyboard::~CInputKeyboard()
 //========================================
 // 初期化
 //========================================
-HRESULT CInputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
+HRESULT CKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	CInput::Init(hInstance, hWnd);
 
@@ -165,7 +165,7 @@ HRESULT CInputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
 //========================================
 // 終了
 //========================================
-void CInputKeyboard::Uninit(void)
+void CKeyboard::Uninit(void)
 {
 	CInput::Uninit();
 }
@@ -173,7 +173,7 @@ void CInputKeyboard::Uninit(void)
 //========================================
 // 更新
 //========================================
-void CInputKeyboard::Update(void)
+void CKeyboard::Update(void)
 {
 	BYTE aKeyState[NUM_KEY_MAX];
 
@@ -219,14 +219,14 @@ void CInputKeyboard::Update(void)
 //========================================
 // プレスの取得
 //========================================
-bool CInputKeyboard::GetPress(int nKey)
+bool CKeyboard::GetPress(int nKey)
 {
 	return (m_aKeyState[nKey] & 0x80);
 }
 //========================================
 // トリガー情報を取得
 //========================================
-bool CInputKeyboard::GetTrigger(int nKey)
+bool CKeyboard::GetTrigger(int nKey)
 {
 	return (m_aKeyStateTrigger[nKey] & 0x80);
 }
@@ -234,7 +234,7 @@ bool CInputKeyboard::GetTrigger(int nKey)
 //========================================
 // リピート情報を取得 -
 //========================================
-bool CInputKeyboard::GetRepeat(int nKey)
+bool CKeyboard::GetRepeat(int nKey)
 {
 	return (m_aKeyStateRepeat[nKey] & 0x80);
 }
@@ -242,7 +242,7 @@ bool CInputKeyboard::GetRepeat(int nKey)
 //========================================
 // リリース情報を取得
 //========================================
-bool CInputKeyboard::GetRelease(int nKey)
+bool CKeyboard::GetRelease(int nKey)
 {
 	return (m_aKeyStateRelease[nKey] & 0x80);
 }
@@ -254,7 +254,7 @@ bool CInputKeyboard::GetRelease(int nKey)
 //========================================
 
 // コンストラクタ
-CInputMouse::CInputMouse()
+CMouse::CMouse()
 {
 	for (int nCntKey = 0; nCntKey < MOUSE_KEY_MAX; nCntKey++)
 	{
@@ -271,7 +271,7 @@ CInputMouse::CInputMouse()
 }
 
 // デストラクタ
-CInputMouse::~CInputMouse()
+CMouse::~CMouse()
 {
 
 }
@@ -279,7 +279,7 @@ CInputMouse::~CInputMouse()
 //========================================
 // 初期化
 //========================================
-HRESULT CInputMouse::Init(HINSTANCE hInstance, HWND hWnd)
+HRESULT CMouse::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	CInput::Init(hInstance, hWnd);
 
@@ -314,7 +314,7 @@ HRESULT CInputMouse::Init(HINSTANCE hInstance, HWND hWnd)
 //========================================
 // 終了
 //========================================
-void CInputMouse::Uninit(void)
+void CMouse::Uninit(void)
 {
 	CInput::Uninit();
 }
@@ -322,7 +322,7 @@ void CInputMouse::Uninit(void)
 //========================================
 // 更新
 //========================================
-void CInputMouse::Update(void)
+void CMouse::Update(void)
 {
 	DIMOUSESTATE2 aKeyState;	// 入力情報
 
@@ -369,7 +369,7 @@ void CInputMouse::Update(void)
 //========================================
 // プレスの取得
 //========================================
-bool CInputMouse::GetPress(MOUSE Mouse)
+bool CMouse::GetPress(MOUSE Mouse)
 {
 	return (m_aMouseState.rgbButtons[Mouse] & 0x80);
 }
@@ -377,7 +377,7 @@ bool CInputMouse::GetPress(MOUSE Mouse)
 //========================================
 // トリガー情報を取得
 //========================================
-bool CInputMouse::GetTrigger(MOUSE Mouse)
+bool CMouse::GetTrigger(MOUSE Mouse)
 {
 	return (m_aMouseStateTrigger.rgbButtons[Mouse] & 0x80);
 }
@@ -385,7 +385,7 @@ bool CInputMouse::GetTrigger(MOUSE Mouse)
 //========================================
 // リピート情報を取得 -
 //========================================
-bool CInputMouse::GetRepeat(MOUSE Mouse)
+bool CMouse::GetRepeat(MOUSE Mouse)
 {
 	return (m_aMouseStateRepeat.rgbButtons[Mouse] & 0x80);
 }
@@ -393,7 +393,7 @@ bool CInputMouse::GetRepeat(MOUSE Mouse)
 //========================================
 // リリース情報を取得
 //========================================
-bool CInputMouse::GetRelease(MOUSE Mouse)
+bool CMouse::GetRelease(MOUSE Mouse)
 {
 	return (m_aMouseStateRelease.rgbButtons[Mouse] & 0x80);
 }
@@ -401,7 +401,7 @@ bool CInputMouse::GetRelease(MOUSE Mouse)
 //========================================
 //　マウスポインターの位置
 //========================================
-D3DXVECTOR3 CInputMouse::GetPos(void)
+D3DXVECTOR3 CMouse::GetPos(void)
 {
 	POINT MousePos;		// カーソル用
 
@@ -417,7 +417,7 @@ D3DXVECTOR3 CInputMouse::GetPos(void)
 //========================================
 // マウスのホイールの動き感知
 //========================================
-int CInputMouse::GetWheel(void)
+int CMouse::GetWheel(void)
 {
 	return (int)m_aMouseState.lZ;
 }
@@ -429,7 +429,7 @@ int CInputMouse::GetWheel(void)
 //========================================
 
 // コンストラクタ
-CInputJoypad::CInputJoypad()
+CJoypad::CJoypad()
 {
 	for (int nCntPat = 0; nCntPat < MAX_PAT; nCntPat++)
 	{
@@ -443,7 +443,7 @@ CInputJoypad::CInputJoypad()
 }
 
 // デストラクタ
-CInputJoypad::~CInputJoypad()
+CJoypad::~CJoypad()
 {
 
 }
@@ -451,7 +451,7 @@ CInputJoypad::~CInputJoypad()
 //========================================
 // 初期化
 //========================================
-HRESULT CInputJoypad::Init(void)
+HRESULT CJoypad::Init(void)
 {
 	//XInputのステートを設定（有効にする）
 	XInputEnable(true);
@@ -475,7 +475,7 @@ HRESULT CInputJoypad::Init(void)
 //========================================
 // 終了
 //========================================
-void CInputJoypad::Uninit(void)
+void CJoypad::Uninit(void)
 {
 	//XInputのステートを設定（無効にする）
 	XInputEnable(false);
@@ -484,7 +484,7 @@ void CInputJoypad::Uninit(void)
 //========================================
 // 更新
 //========================================
-void CInputJoypad::Update(void)
+void CJoypad::Update(void)
 {
 	XINPUT_STATE JoyKeyState[MAX_PAT];		//ジョイパッド入力情報
 
@@ -545,7 +545,7 @@ void CInputJoypad::Update(void)
 //========================================
 // プレス情報
 //========================================
-bool CInputJoypad::GetJoypadPress(JOYKEY Key, int nPatNum)
+bool CJoypad::GetPress(JOYKEY Key, int nPatNum)
 {
 	return (m_JoyKeyState[nPatNum].Gamepad.wButtons & (0x01 << Key));
 }
@@ -553,7 +553,7 @@ bool CInputJoypad::GetJoypadPress(JOYKEY Key, int nPatNum)
 //========================================
 // トリガー情報
 //========================================
-bool CInputJoypad::GetJoypadTrigger(JOYKEY Key, int nPatNum)
+bool CJoypad::GetTrigger(JOYKEY Key, int nPatNum)
 {
 	return (m_JoyKeyStateTrigger[nPatNum].Gamepad.wButtons & (0x01 << Key));
 }
@@ -561,7 +561,7 @@ bool CInputJoypad::GetJoypadTrigger(JOYKEY Key, int nPatNum)
 //========================================
 // リリース情報
 //========================================
-bool CInputJoypad::GetJoypadRelese(JOYKEY Key, int nPatNum)
+bool CJoypad::GetRelese(JOYKEY Key, int nPatNum)
 {
 	return (m_JoyKeyStateRelease[nPatNum].Gamepad.wButtons & (0x01 << Key));
 }
@@ -569,7 +569,7 @@ bool CInputJoypad::GetJoypadRelese(JOYKEY Key, int nPatNum)
 //========================================
 // リピート情報
 //========================================
-bool CInputJoypad::GetJoypadRepeat(JOYKEY Key, int nPatNum)
+bool CJoypad::GetRepeat(JOYKEY Key, int nPatNum)
 {
 	return (m_aJoyKeyStateRepeat[nPatNum].Gamepad.wButtons & (0x01 << Key));
 }
@@ -577,7 +577,7 @@ bool CInputJoypad::GetJoypadRepeat(JOYKEY Key, int nPatNum)
 //========================================
 // トリガーペダル処理
 //========================================
-int CInputJoypad::GetJoypadTriggerPedal(JOYKEY Key, int nPatNum)
+int CJoypad::GetTriggerPedal(JOYKEY Key, int nPatNum)
 {
 	int nJoypadTriggerPedal = 0;
 	switch (Key)
@@ -596,7 +596,7 @@ int CInputJoypad::GetJoypadTriggerPedal(JOYKEY Key, int nPatNum)
 //========================================
 // コントローラーの振動制御
 //========================================
-void CInputJoypad::JoypadVibration(int nTime, WORD nStrength, int nPatNum)
+void CJoypad::Vibration(int nTime, WORD nStrength, int nPatNum)
 {
 	m_nTime[nPatNum] = nTime;			//振動持続時間
 	m_nStrength[nPatNum] = nStrength;	//振動の強さ
@@ -605,7 +605,7 @@ void CInputJoypad::JoypadVibration(int nTime, WORD nStrength, int nPatNum)
 //========================================
 // スティックの入力情報を取得
 //========================================
-void CInputJoypad::UpdateStick(void)
+void CJoypad::UpdateStick(void)
 {
 	for (int nPatNum = 0; nPatNum < MAX_PAT; nPatNum++)
 	{
@@ -708,7 +708,7 @@ void CInputJoypad::UpdateStick(void)
 //========================================
 // スティックの入力情報を取得
 //========================================
-XINPUT_STATE *CInputJoypad::GetXInputState(void)
+XINPUT_STATE *CJoypad::GetXInputState(void)
 {
 	return &m_xInput;
 }

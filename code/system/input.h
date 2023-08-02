@@ -45,13 +45,13 @@ private:
 };
 
 // キーボード
-class CInputKeyboard : public CInput
+class CKeyboard : public CInput
 {
 public:
 
 	// ***** 関数 *****
-	CInputKeyboard();
-	virtual~CInputKeyboard();
+	CKeyboard();
+	virtual~CKeyboard();
 
 	/* メイン */
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd);	// 初期化
@@ -76,7 +76,7 @@ private:
 };
 
 // マウス
-class CInputMouse : public CInput
+class CMouse : public CInput
 {
 public:
 	// ***** 列挙型 *****
@@ -96,8 +96,8 @@ public:
 	};
 
 	// ***** 関数 *****
-	CInputMouse();
-	virtual~CInputMouse();
+	CMouse();
+	virtual~CMouse();
 
 	/* メイン */
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd);				// 初期化
@@ -129,7 +129,7 @@ private:
 };
 
 // ジョイパット
-class CInputJoypad : public CInput
+class CJoypad : public CInput
 {
 public:	
 
@@ -191,21 +191,21 @@ public:
 
 
 	// ***** 関数 *****
-	CInputJoypad();
-	virtual~CInputJoypad();
+	CJoypad();
+	virtual~CJoypad();
 
 	/* メイン */
-	HRESULT Init(void);												// 初期化
-	void Uninit(void);												// 終了
-	void Update(void);												// 更新
-	void UpdateStick(void);											// 更新
-	bool GetJoypadPress(JOYKEY Key, int nPatNum = 0);				// プレス情報を取得
-	bool GetJoypadTrigger(JOYKEY Key, int nPatNum = 0);				// トリガー情報を取得
-	bool GetJoypadRelese(JOYKEY Key, int nPatNum = 0);				// リリース情報を取得
-	bool GetJoypadRepeat(JOYKEY Key, int nPatNum = 0);				// リピート情報を取得
+	HRESULT Init(void);											// 初期化
+	void Uninit(void);											// 終了
+	void Update(void);											// 更新(ボタン)
+	void UpdateStick(void);										// 更新(スティック)
+	bool GetPress(JOYKEY Key, int nPatNum = 0);					// プレス情報を取得
+	bool GetTrigger(JOYKEY Key, int nPatNum = 0);				// トリガー情報を取得
+	bool GetRelese(JOYKEY Key, int nPatNum = 0);				// リリース情報を取得
+	bool GetRepeat(JOYKEY Key, int nPatNum = 0);				// リピート情報を取得
 
-	int GetJoypadTriggerPedal(JOYKEY Key, int nPatNum = 0);				// トリガーペダル情報を取得
-	void JoypadVibration(int nTime, WORD nStrength, int nPatNum = 0);	// コントローラーの振動制御
+	int GetTriggerPedal(JOYKEY Key, int nPatNum = 0);					// トリガーペダル情報を取得
+	void Vibration(int nTime, WORD nStrength, int nPatNum = 0);			// コントローラーの振動制御
 	STICK_INPUT GetStick(int nPatNum = 0) { return m_stick[nPatNum]; }	// スティックの入力情報を取得
 	XINPUT_STATE *GetXInputState(void);									// ジョイパットの入力情報の取得
 

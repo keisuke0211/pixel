@@ -90,15 +90,15 @@ void CCamera::Uninit(void)
 void CCamera::Update(void)
 {
 	// --- 取得---------------------------------
-	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
-	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
 
 	// 過去の位置を代入
 	m_Info.posOldV = m_Info.posV;
 	m_Info.posOldR = m_Info.posR;
 
-	if (pInputMouse->GetPress(CInputMouse::MOUSE_RIGHT))
+	if (pInputMouse->GetPress(CMouse::MOUSE_RIGHT))
 	{// マウスの右ボタンが押されている間
 
 		 // カーソルの移動量に応じて回転
@@ -109,10 +109,10 @@ void CCamera::Update(void)
 		}
 		AxisRotationCamera(DIRECTION_LEFT, pInputMouse->GetCursorMove().x * CAMERA_ROT_FORCE_BY_CURSOR.y);	
 	}
-	else if (pInputJoypad->GetStick().aTplDiameter[CInputJoypad::STICK_TYPE_RIGHT] > 0.1f)
+	else if (pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT] > 0.1f)
 	{
-		AxisRotationCamera(DIRECTION_UP, (cosf(pInputJoypad->GetStick().aAngle[CInputJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CInputJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.x);
-		AxisRotationCamera(DIRECTION_LEFT, (sinf(pInputJoypad->GetStick().aAngle[CInputJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CInputJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.y);
+		AxisRotationCamera(DIRECTION_UP, (cosf(pInputJoypad->GetStick().aAngle[CJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.x);
+		AxisRotationCamera(DIRECTION_LEFT, (sinf(pInputJoypad->GetStick().aAngle[CJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.y);
 	}
 
 	bool bExit = CBlock::IsExitCamera();
@@ -136,16 +136,11 @@ void CCamera::Update(void)
 	//m_Info.posV.y = m_Info.posR.y + (m_Info.fDistance * m_Info.fHeight);
 	//m_Info.posV.z = m_Info.posR.z + (cosf(m_Info.rot.y + D3DX_PI) * (m_Info.fDistance * (1.0 - fabsf(m_Info.fHeight))));
 
-	if (pInputKeyboard->GetTrigger(DIK_Q) == true || pInputMouse->GetTrigger(CInputMouse::MOUSE_5) == true)
+	if (pInputKeyboard->GetTrigger(DIK_Q) == true || pInputMouse->GetTrigger(CMouse::MOUSE_5) == true)
 	{// マウスのサイドボタン2を押したら
 
 		// 画面設定
 		SetScreen();
-	}
-
-	if (pInputKeyboard->GetPress(DIK_UP))
-	{
-		m_Info.posV.z += 1.0f;
 	}
 }
 

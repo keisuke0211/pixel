@@ -160,17 +160,17 @@ void CPlayer::Draw(void)
 void CPlayer::KeyInput(void)
 {
 	// --- 取得 ---------------------------------
-	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
-	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
 
 	m_Info.bMove = true;
 
-	if (pInputJoypad->GetStick().aTplDiameter[CInputJoypad::STICK_TYPE_LEFT] > 0.35f)
+	if (pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_LEFT] > 0.35f)
 	{// 左スティックが倒されている時、
 
 	 // 目標向きにスティックの角度を代入
-		m_Info.moveRot.y = -pInputJoypad->GetStick().aAngle[CInputJoypad::STICK_TYPE_LEFT] + D3DX_PI;
+		m_Info.moveRot.y = -pInputJoypad->GetStick().aAngle[CJoypad::STICK_TYPE_LEFT] + D3DX_PI;
 	}
 	else if (pInputKeyboard->GetPress(DIK_A)) { MoveKeyboard(DIRECTION_LEFT); }		// 左移動
 	else if (pInputKeyboard->GetPress(DIK_D)) { MoveKeyboard(DIRECTION_RIGHT); }	// 右移動
@@ -191,7 +191,7 @@ void CPlayer::KeyInput(void)
 	}
 
 	// ジャンプ
-	if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_A))
+	if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
 	{
 		if (m_Info.bJump == false)
 		{
@@ -201,7 +201,7 @@ void CPlayer::KeyInput(void)
 	}
 
 	// 攻撃
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CInputMouse::MOUSE_LEFT) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_B))
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CMouse::MOUSE_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_B))
 	{
 		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 15,m_Info.pos.z),m_Info.rot);
 	}
@@ -417,9 +417,9 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 				int nBlockType = pBlock->GetBlockType();
 				if (nBlockType == MODEL_GOAL)
 				{
-					fPairWidth *= 0.9f;
-					fPairHeight *= 09.f;
-					fPairDepth *= 0.9f;
+					fPairWidth *= 0.8f;
+					fPairHeight *= 0.8f;
+					fPairDepth *= 0.8f;
 
 					// クリア
 					if (!CGame::IsClear())
@@ -519,9 +519,9 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 void CPlayer::BulletStop(void)
 {
 	// --- 取得 ---------------------------------
-	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
-	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
 
 	// 先頭オブジェクトを取得
 	CObject *pObj = CObject::GetTop(PRIO_OBJECT);
@@ -541,7 +541,7 @@ void CPlayer::BulletStop(void)
 			CBullet *pBullet = dynamic_cast<CBullet*>(pObj);
 
 
-			if (pInputKeyboard->GetTrigger(DIK_E) || pInputMouse->GetTrigger(CInputMouse::MOUSE_4) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_X))
+			if (pInputKeyboard->GetTrigger(DIK_E) || pInputMouse->GetTrigger(CMouse::MOUSE_4) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X))
 			{
 				// ID取得
 				int nID = pBullet->GetID();

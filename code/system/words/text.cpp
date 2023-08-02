@@ -78,6 +78,7 @@ HRESULT CText::Init()
 	m_Info.nDisapTime = 0;
 	m_Info.nDisapTimeMax = 0;
 	m_Info.bRelease = false;
+	m_Info.bPause = false;
 
 	return S_OK;
 }
@@ -111,7 +112,7 @@ void CText::Update()
 	{
 		bool bPause = CPause::IsPause();
 
-		if (CScene::GetMode() == CScene::MODE_GAME && bPause)
+		if (CScene::GetMode() == CScene::MODE_GAME && !m_Info.bPause && bPause)
 		{
 			return;
 		}
@@ -310,11 +311,11 @@ void CText::DisapTime(void)
 				m_Info.words[wordsCount]->SetColar(m_Info.col);
 			}
 		}
+	}
 
-		if (m_Info.bTextBok)
-		{
-			CObject2D::SetColar(m_Info.col);
-		}
+	if (m_Info.bTextBok)
+	{
+		CObject2D::SetColar(m_Info.col);
 	}
 	CObject2D::Update();
 }
@@ -396,4 +397,31 @@ void CText::Disap(bool bDisap)
 bool CText::CheckLeadByte(int nLetter)
 {
 	return (((nLetter & 0xffu) ^ 0x20u) - 0xa1) < 94u / 2;
+}
+
+//========================================
+// ポーズ中でもテキスト生成するか
+//========================================
+void CText::SetTetPause(bool bPause)
+{
+	m_Info.bPause = bPause;
+}
+
+//========================================
+// メッセージボックスの色設定
+//========================================
+void CText::SetBoxColor(D3DXCOLOR col)
+{
+	m_Info.col = col;
+}
+
+//========================================
+// テキストの色設定
+//========================================
+void CText::SetTextColor(D3DXCOLOR col)
+{
+	for (int wordsCount = 0; wordsCount < m_Info.nTextLength; wordsCount++)
+	{
+		m_Info.words[wordsCount]->SetColar(col);
+	}
 }

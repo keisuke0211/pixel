@@ -54,6 +54,10 @@ CGame::~CGame()
 //========================================
 HRESULT CGame::Init(void)
 {
+	m_bStart = false;
+	m_bClear = false;
+	m_bExit = false;
+
 	// 背景(側面)の生成
 	CBgSide *pBgsky = CBgSide::Create();
 
@@ -97,65 +101,6 @@ HRESULT CGame::Init(void)
 		CScore::SetScore();
 	}
 
-	{
-		{// 移動方法テキスト
-			CText2D *pObj = CText2D::Create();
-
-			pObj->SetPos(D3DXVECTOR3(32.0f, 32.0f, 0.0f));
-			pObj->SetSize(16.0f, 16.0f);
-			pObj->SetString("MOVE : W A D S");
-		}
-
-		{// ジャンプ方法テキスト
-			CText2D *pObj = CText2D::Create();
-
-			pObj->SetPos(D3DXVECTOR3(32.0f, 48.0f, 0.0f));
-			pObj->SetSize(16.0f, 16.0f);
-			pObj->SetString("JUMP : SPACE");
-		}
-
-		{// 射撃方法テキスト
-			CText2D *pObj = CText2D::Create();
-
-			pObj->SetPos(D3DXVECTOR3(32.0f, 64.0f, 0.0f));
-			pObj->SetSize(16.0f, 16.0f);
-			pObj->SetString("SHOT : ENTER & MOUSE_LEFT");
-		}
-
-		{// 配置テキスト
-			CText2D *pObj = CText2D::Create();
-
-			pObj->SetPos(D3DXVECTOR3(32.0f, 80.0f, 0.0f));
-			pObj->SetSize(16.0f, 16.0f);
-			pObj->SetString("SET_CUBE : E");
-		}
-
-		{// カメラ切り替えテキスト
-			CText2D *pObj = CText2D::Create();
-
-			pObj->SetPos(D3DXVECTOR3(32.0f, 128.0f, 0.0f));
-			pObj->SetSize(16.0f, 16.0f);
-			pObj->SetString("CAMERA_MODE : Q");
-		}
-
-		{// カメラ移動方法テキスト
-			CText2D *pObj = CText2D::Create();
-
-			pObj->SetPos(D3DXVECTOR3(32.0f, 144.0f, 0.0f));
-			pObj->SetSize(16.0f, 16.0f);
-			pObj->SetString("CAMERA_MOVE : MOUSE_RIGHT");
-		}
-
-		{// リセット方法テキスト
-			CText2D *pObj = CText2D::Create();
-
-			pObj->SetPos(D3DXVECTOR3(32.0f, 176.0f, 0.0f));
-			pObj->SetSize(16.0f, 16.0f);
-			pObj->SetString("RESET:R");
-		}
-	}
-
-
 	CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 		D3DXVECTOR2(440.0f, 100.0f),
@@ -182,6 +127,8 @@ void CGame::Uninit(void)
 	CObject::ReleaseAll(CObject::TYPE_ENEMY);
 	CObject::ReleaseAll(CObject::TYPE_EFFECT);
 	CObject::ReleaseAll(CObject::TYPE_PARTICLE);
+	CObject::ReleaseAll(CObject::TYPE_TIME);
+	CObject::ReleaseAll(CObject::TYPE_SCORE);
 	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
 }
@@ -193,11 +140,11 @@ void CGame::Update(void)
 {
 	// -- 取得 -------------------------------------------
 	CCamera *pCamera = CManager::GetCamera();		// カメラ
-	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
 
 	// ポーズ
-	if (pInputKeyboard->GetTrigger(DIK_P) || pInputJoypad->GetJoypadTrigger(CInputJoypad::JOYKEY_START))
+	if (pInputKeyboard->GetTrigger(DIK_P) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_START))
 	{
 		CPause::SetPause(true);
 	}

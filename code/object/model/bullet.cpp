@@ -114,9 +114,9 @@ void CBullet::Uninit(void)
 void CBullet::Update(void)
 {
 	// --- 取得 ---------------------------------
-	CInputKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CInputMouse *pInputMouse = CManager::GetInputMouse();			// マウス
-	CInputJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
 
 	// 過去の位置・向きの更新
 	m_Info.posOld = m_Info.pos;
