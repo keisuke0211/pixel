@@ -294,32 +294,34 @@ void CPlayer::MovePos(float fMove)
 		//	fAngle = -1.57f;
 		//}
 
-		if (fAngle > D3DX_PI)
+		// Šp“x‚Ì‚ð‚S•ªŠ„‚É‚·‚é
 		{
-			fAngle = -1.5;;
-		}
+			if (fAngle > D3DX_PI)
+			{
+				fAngle = -1.5;;
+			}
 
-		if (fAngle < D3DX_PI * -0.75 ||
-			fAngle > D3DX_PI * 0.75)
-		{
-			fAngle = 3.14f;
+			if (fAngle < D3DX_PI * -0.75 ||
+				fAngle > D3DX_PI * 0.75)
+			{
+				fAngle = 3.14f;
+			}
+			else if (fAngle > D3DX_PI * -0.25 &&
+				fAngle < D3DX_PI * 0.25)
+			{
+				fAngle = 0.0f;
+			}
+			else if (fAngle > D3DX_PI * -0.75 &&
+				fAngle < D3DX_PI * -0.25)
+			{
+				fAngle = -1.57f;
+			}
+			else if (fAngle > D3DX_PI * 0.25 &&
+				fAngle < D3DX_PI * 0.75)
+			{
+				fAngle = 1.57f;
+			}
 		}
-		else if (fAngle > D3DX_PI * -0.25 &&
-			fAngle < D3DX_PI * 0.25)
-		{
-			fAngle = 0.0f;
-		}
-		else if (fAngle > D3DX_PI * -0.75 &&
-			fAngle < D3DX_PI * -0.25)
-		{
-			fAngle = -1.57f;
-		}
-		else if (fAngle > D3DX_PI * 0.25 &&
-			fAngle < D3DX_PI * 0.75)
-		{
-			fAngle = 1.57f;
-		}
-
 		m_Info.moveRot.y += fAngle;
 
 		if (pMotion != NULL && !m_Info.bMotion)

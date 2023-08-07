@@ -255,6 +255,7 @@ void CTutorial::TextLoad(void)
 	// メモリ確保
 	m_TextInfo = new CTutorial::TEXT_INFO[nRowMax];
 	m_nTextMax = nRowMax - 1;
+	int nNumAll = 0;
 
 	for (int nRow = 0; nRow < nRowMax; nRow++)
 	{
@@ -288,6 +289,12 @@ void CTutorial::TextLoad(void)
 		if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
 		{
 			return;
+		}
+
+		{
+			nNumAll++;
+			int nType = m_TextInfo[nRow].nType;
+			m_nTypeMax[nType] = nNumAll;
 		}
 	}
 
@@ -393,7 +400,7 @@ void CTutorial::TutorialTex(void)
 		
 		if (move.x <= -1.0f || move.x >= 1.0f)
 		{
-			if (m_nTextCreate <= 0)
+			if (m_nTextCreate <= 0 && m_nTypeMax[ACTION_MOVE] == m_nNumText)
 			{
 				CObject::ReleaseAll(CObject::TYPE_FONT);
 				m_nTextType = ACTION_CAMERA;
@@ -407,7 +414,7 @@ void CTutorial::TutorialTex(void)
 
 		if (move.y <= -0.01f || move.y >= 0.01f)
 		{
-			if (m_nTextCreate <= 0)
+			if (m_nTextCreate <= 0 && m_nTypeMax[ACTION_CAMERA] == m_nNumText)
 			{
 				CObject::ReleaseAll(CObject::TYPE_FONT);
 				m_nTextType = ACTION_SHOT;
@@ -419,7 +426,7 @@ void CTutorial::TutorialTex(void)
 	{
 		int nNumAll = CBullet::GetNumAll();
 
-		if (nNumAll >= 3)
+		if (nNumAll >= 3 && m_nTypeMax[ACTION_SHOT] == m_nNumText)
 		{
 			CObject::ReleaseAll(CObject::TYPE_FONT);
 			m_nTextType = ACTION_SET;
@@ -430,7 +437,7 @@ void CTutorial::TutorialTex(void)
 	{
 		int nNumAll = CCube::GetNumAll();
 
-		if (nNumAll >= 3)
+		if (nNumAll >= 2 && m_nTypeMax[ACTION_SET] == m_nNumText)
 		{
 			CObject::ReleaseAll(CObject::TYPE_FONT);
 			m_nTextType = ACTION_SET1;
@@ -441,7 +448,7 @@ void CTutorial::TutorialTex(void)
 	{
 		bool bSet = CPlayer::IsCubeSet();
 
-		if (bSet)
+		if (bSet && m_nTypeMax[ACTION_SET1] == m_nNumText)
 		{
 			CObject::ReleaseAll(CObject::TYPE_FONT);
 			m_nTextType = ACTION_ENEMY;
@@ -452,7 +459,7 @@ void CTutorial::TutorialTex(void)
 	{
 		int nNumEnemy = CEnemy::GetEnemyAll();
 
-		if (nNumEnemy == 0)
+		if (nNumEnemy == 0 && m_nTypeMax[ACTION_ENEMY] == m_nNumText)
 		{
 			CObject::ReleaseAll(CObject::TYPE_FONT);
 			m_nTextType = ACTION_CLEAR;
@@ -461,7 +468,7 @@ void CTutorial::TutorialTex(void)
 	break;
 	case ACTION_CLEAR:	// 出口
 	{
-		if (m_nTextCreate <= 0 && m_nNumText == 21)
+		if (m_nTextCreate <= 0 && m_nTypeMax[ACTION_CLEAR] == m_nNumText)
 		{
 			CObject::ReleaseAll(CObject::TYPE_FONT);
 			m_nTextType = ACTION_FREE;
@@ -470,7 +477,7 @@ void CTutorial::TutorialTex(void)
 	break;
 	case ACTION_FREE:	// 自由
 	{
-		if (m_nTextCreate <= 0 && m_nNumText == 24)
+		if (m_nTextCreate <= 0 && m_nTypeMax[ACTION_FREE] == m_nNumText)
 		{
 			CObject::ReleaseAll(CObject::TYPE_FONT);
 			m_nTextType = ACTION_MAX;
