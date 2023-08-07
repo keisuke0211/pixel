@@ -42,6 +42,7 @@ public:
 		ACTION_SET1,		// 配置(任意)
 		ACTION_ENEMY,		// 敵
 		ACTION_CLEAR,		// 出口
+		ACTION_FREE,		// 自由
 		ACTION_MAX
 	};
 

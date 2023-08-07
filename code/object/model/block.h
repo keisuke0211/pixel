@@ -83,6 +83,7 @@ public:
 	/* 色		*/D3DXCOLOR GetBlockColor(void) { return m_Info.col; }
 	/* 大きさ	*/D3DXVECTOR3 GetBlockSize(void) { return m_Info.size; }
 	/* 種類		*/int GetBlockType(void) { return m_Info.nModelID; }
+	/* 出口		*/static bool IsExit(void) { return m_bExit; }
 	/* 出口		*/static int GetBlockExit(void) { return m_nCntExit; }
 	/* 出口		*/static bool IsExitCamera(void) { return m_bExitCamera; }
 

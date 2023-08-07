@@ -97,7 +97,7 @@ HRESULT CTutorial::Init(void)
 		m_pTime->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 32.0f, 0.0f));
 
 		// タイム設定
-		m_pTime->SetTime(MAX_TIME);
+		m_pTime->SetTime(MAX_TIME*2);
 	}
 
 	{
@@ -254,7 +254,7 @@ void CTutorial::TextLoad(void)
 
 	// メモリ確保
 	m_TextInfo = new CTutorial::TEXT_INFO[nRowMax];
-	m_nTextMax = nRowMax;
+	m_nTextMax = nRowMax - 1;
 
 	for (int nRow = 0; nRow < nRowMax; nRow++)
 	{
@@ -320,9 +320,9 @@ void CTutorial::TextInit(int nIdx)
 //========================================
 void CTutorial::TexCreate(int nIdx)
 {
-	if (nIdx >= m_nTextMax - 1)
+	if (m_TextInfo[nIdx].nType == ACTION_FREE)
 	{
-		return;
+		m_TextInfo[nIdx].nType = ACTION_FREE;
 	}
 
 	if (m_TextInfo[nIdx].nType == m_nTextType && !m_TextInfo[nIdx].bCreate)
@@ -363,11 +363,16 @@ void CTutorial::TutorialTex(void)
 	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
 
+
 	// テキストの生成
 	if (--m_nTextCreate <= 0)
 	{
 		m_nTextCreate = 0;
-		TexCreate(m_nNumText);
+
+		if (m_nNumText < m_nTextMax)
+		{
+			TexCreate(m_nNumText);
+		}
 	}
 
 	switch (m_nTextType)
@@ -381,7 +386,7 @@ void CTutorial::TutorialTex(void)
 			if (m_nTextCreate <= 0)
 			{
 				CObject::ReleaseAll(CObject::TYPE_FONT);
-				m_nTextType++;
+				m_nTextType = ACTION_CAMERA;
 			}
 		}
 	}
@@ -395,7 +400,7 @@ void CTutorial::TutorialTex(void)
 			if (m_nTextCreate <= 0)
 			{
 				CObject::ReleaseAll(CObject::TYPE_FONT);
-				m_nTextType++;
+				m_nTextType = ACTION_SHOT;
 			}
 		}
 	}
@@ -407,7 +412,7 @@ void CTutorial::TutorialTex(void)
 		if (nNumAll >= 3)
 		{
 			CObject::ReleaseAll(CObject::TYPE_FONT);
-			m_nTextType++;
+			m_nTextType = ACTION_SET;
 		}
 	}
 	break;
@@ -418,7 +423,7 @@ void CTutorial::TutorialTex(void)
 		if (nNumAll >= 3)
 		{
 			CObject::ReleaseAll(CObject::TYPE_FONT);
-			m_nTextType++;
+			m_nTextType = ACTION_SET1;
 		}
 	}
 	break;
@@ -429,20 +434,38 @@ void CTutorial::TutorialTex(void)
 		if (bSet)
 		{
 			CObject::ReleaseAll(CObject::TYPE_FONT);
-			m_nTextType++;
+			m_nTextType = ACTION_ENEMY;
 		}
 	}
 	break;
 	case ACTION_ENEMY:	// 敵
 	{
+		int nNumEnemy = CEnemy::GetEnemyAll();
 
+		if (nNumEnemy == 0)
+		{
+			CObject::ReleaseAll(CObject::TYPE_FONT);
+			m_nTextType = ACTION_CLEAR;
+		}
 	}
 	break;
 	case ACTION_CLEAR:	// 出口
 	{
-
+		if (m_nTextCreate <= 0 && m_nNumText == 21)
+		{
+			CObject::ReleaseAll(CObject::TYPE_FONT);
+			m_nTextType = ACTION_FREE;
+		}
 	}
 	break;
+	case ACTION_FREE:	// 自由
+	{
+		if (m_nTextCreate <= 0 && m_nNumText == 24)
+		{
+			CObject::ReleaseAll(CObject::TYPE_FONT);
+			m_nTextType = ACTION_MAX;
+		}
+	}
 	}
 }
 
