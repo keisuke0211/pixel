@@ -171,16 +171,26 @@ void CPlayer::KeyInput(void)
 
 	m_Info.bMove = true;
 
-	if (pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_LEFT] > 0.35f)
-	{// 左スティックが倒されている時、
-
-	 // 目標向きにスティックの角度を代入
-		m_Info.moveRot.y = -pInputJoypad->GetStick().aAngle[CJoypad::STICK_TYPE_LEFT] + D3DX_PI;
+	if (pInputJoypad->GetPress(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
+	{
+		MoveInput(DIRECTION_LEFT);
 	}
-	else if (pInputKeyboard->GetPress(DIK_A)) { MoveKeyboard(DIRECTION_LEFT); }		// 左移動
-	else if (pInputKeyboard->GetPress(DIK_D)) { MoveKeyboard(DIRECTION_RIGHT); }	// 右移動
-	else if (pInputKeyboard->GetPress(DIK_W)) { MoveKeyboard(DIRECTION_BACK); }		// 奥移動
-	else if (pInputKeyboard->GetPress(DIK_S)) { MoveKeyboard(DIRECTION_FRONT); }	// 手前移動
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
+	{
+		MoveInput(DIRECTION_RIGHT);
+	}
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
+	{
+		MoveInput(DIRECTION_FRONT);
+	}
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
+	{
+		MoveInput(DIRECTION_BACK);
+	}
+	else if (pInputKeyboard->GetPress(DIK_A)) { MoveInput(DIRECTION_LEFT); }	// 左移動
+	else if (pInputKeyboard->GetPress(DIK_D)) { MoveInput(DIRECTION_RIGHT); }	// 右移動
+	else if (pInputKeyboard->GetPress(DIK_W)) { MoveInput(DIRECTION_BACK); }	// 奥移動
+	else if (pInputKeyboard->GetPress(DIK_S)) { MoveInput(DIRECTION_FRONT); }	// 手前移動
 	else
 	{
 		if (m_Info.bAction)
@@ -221,7 +231,7 @@ void CPlayer::KeyInput(void)
 //========================================
 // キーボードの移動処理
 //========================================
-void CPlayer::MoveKeyboard(DIRECTION drct)
+void CPlayer::MoveInput(DIRECTION drct)
 {
 	// --- 代入 ---------------------------------
 	m_Info.moveRot = m_Info.rot;	// 移動向き
@@ -283,6 +293,32 @@ void CPlayer::MovePos(float fMove)
 		//{// 右
 		//	fAngle = -1.57f;
 		//}
+
+		if (fAngle > D3DX_PI)
+		{
+			fAngle = -1.5;;
+		}
+
+		if (fAngle < D3DX_PI * -0.75 ||
+			fAngle > D3DX_PI * 0.75)
+		{
+			fAngle = 3.14f;
+		}
+		else if (fAngle > D3DX_PI * -0.25 &&
+			fAngle < D3DX_PI * 0.25)
+		{
+			fAngle = 0.0f;
+		}
+		else if (fAngle > D3DX_PI * -0.75 &&
+			fAngle < D3DX_PI * -0.25)
+		{
+			fAngle = -1.57f;
+		}
+		else if (fAngle > D3DX_PI * 0.25 &&
+			fAngle < D3DX_PI * 0.75)
+		{
+			fAngle = 1.57f;
+		}
 
 		m_Info.moveRot.y += fAngle;
 

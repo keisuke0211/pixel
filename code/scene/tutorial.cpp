@@ -320,9 +320,19 @@ void CTutorial::TextInit(int nIdx)
 //========================================
 void CTutorial::TexCreate(int nIdx)
 {
-	if (m_TextInfo[nIdx].nType == ACTION_FREE)
+	if (m_TextInfo[nIdx].nType == ACTION_CLEAR)
 	{
-		m_TextInfo[nIdx].nType = ACTION_FREE;
+		int nCntExit = CBlock::GetBlockExit();
+		bool bExit = CBlock::IsExit();
+
+		if (!bExit)
+		{
+			return;
+		}
+		else if (nCntExit >= 1)
+		{
+			return;
+		}
 	}
 
 	if (m_TextInfo[nIdx].nType == m_nTextType && !m_TextInfo[nIdx].bCreate)

@@ -73,7 +73,7 @@ private:
 	D3DXVECTOR3 Collision(PRIO nPrio, TYPE nType,VECTOR vector,D3DXVECTOR3 pos);	// ブロックの当たり判定
 
 	/* 移動 */
-	void MoveKeyboard(DIRECTION drct);	// キーボードの移動処理
+	void MoveInput(DIRECTION drct);	// キーボードの移動処理
 	void MovePos(float fMove);	// 移動
 	void UpdatePos(void);		// 位置更新
 
