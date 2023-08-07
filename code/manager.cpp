@@ -15,6 +15,7 @@
 #include "system\words\font.h"
 #include "object\object.h"
 #include "scene\title.h"
+#include "scene\tutorial.h"
 #include "scene\game.h"
 #include "scene\result.h"
 #include "scene\ranking.h"
@@ -34,6 +35,7 @@ CFont *CManager::m_pFont = NULL;
 CScene *CManager::m_pScene = NULL;
 CScene::MODE CScene::m_mode = MODE_TITLE;
 CTitle *CScene::m_pTitle = NULL;
+CTutorial *CScene::m_pTutorial = NULL;
 CGame *CScene::m_pGame = NULL;
 CResult *CScene::m_pResult = NULL;
 CRanking *CScene::m_pRanking = NULL;
@@ -311,6 +313,12 @@ HRESULT CScene::Init()
 		m_pTitle = CTitle::Create();
 		break;
 	}
+	case CScene::MODE_TUTORIAL:
+	{
+		m_pPause = CPause::Create();
+		m_pTutorial = CTutorial::Create();
+		break;
+	}
 	case CScene::MODE_GAME:
 	{
 		m_pPause = CPause::Create();
@@ -344,21 +352,30 @@ void CScene::Uninit(void)
 	case CScene::MODE_TITLE:
 	{
 		m_pTitle->Uninit();
-
 		delete m_pTitle;
 		m_pTitle = NULL;
+
+		break;
+	}
+	case CScene::MODE_TUTORIAL:
+	{
+		m_pTutorial->Uninit();
+		delete m_pTutorial;
+		m_pTutorial = NULL;
+
+		m_pPause->Uninit();
+		delete m_pPause;
+		m_pPause = NULL;
 
 		break;
 	}
 	case CScene::MODE_GAME:
 	{
 		m_pGame->Uninit();
-
 		delete m_pGame;
 		m_pGame = NULL;
 
 		m_pPause->Uninit();
-
 		delete m_pPause;
 		m_pPause = NULL;
 
@@ -367,17 +384,17 @@ void CScene::Uninit(void)
 	case CScene::MODE_RESULT:
 	{
 		m_pResult->Uninit();
-
 		delete m_pResult;
 		m_pResult = NULL;
+
 		break;
 	}
 	case CScene::MODE_RANKING:
 	{
 		m_pRanking->Uninit();
-
 		delete m_pRanking;
 		m_pRanking = NULL;
+
 		break;
 	}
 	break;
@@ -395,6 +412,18 @@ void CScene::Update(void)
 	case CScene::MODE_TITLE:
 	{
 		m_pTitle->Update();
+		break;
+	}
+	case CScene::MODE_TUTORIAL:
+	{
+		if (!m_pPause->IsPause())
+		{
+			m_pTutorial->Update();
+		}
+		else
+		{
+			m_pPause->Update();
+		}
 		break;
 	}
 	case CScene::MODE_GAME:
@@ -435,6 +464,12 @@ void CScene::Draw(void)
 	case CScene::MODE_TITLE:
 	{
 		m_pTitle->Draw();
+		break;
+	}
+	case CScene::MODE_TUTORIAL:
+	{
+		m_pGame->Draw();
+		m_pTutorial->Draw();
 		break;
 	}
 	case CScene::MODE_GAME:

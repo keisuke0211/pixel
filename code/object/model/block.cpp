@@ -8,6 +8,7 @@
 #include "block.h"
 #include "bullet_cube.h"
 #include "../../scene/game.h"
+#include "../../scene/title.h"
 #include "model.h"
 #include "../EFFECT/particleX.h"
 #include "../../system/sound.h"
@@ -210,7 +211,7 @@ void CBlock::Update(void)
 		}
 	}
 
-	bool bExit = CGame::IsExit();
+	bool bExit = CTitle::IsExit();
 	if (bExit)
 	{
 		if (m_Info.state == STATE_BREAK && !m_Info.bErase)

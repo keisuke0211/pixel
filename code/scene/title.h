@@ -65,7 +65,22 @@ public:
 	/* メニュー		*/void Menu(void);
 	/* テキスト削除 */void TextClear(int nWords,int nText, TITLE aTitle);
 
+	// -- 設定 ------------------------------------------
+	/* 開始		*/static void SetStart(bool bStart) { m_bStart = bStart; }
+	/* 出口		*/static void SetExit(bool bExit) { m_bExit = bExit; }
+	/* クリア	*/static void SetClear(bool bClear) { m_bClear = bClear; }
+
+	// -- 取得 ------------------------------------------
+	/* 開始			*/static bool IsStart() { return m_bStart; }
+	/* 出口			*/static bool IsExit() { return m_bExit; }
+	/* クリア		*/static bool IsClear() { return m_bClear; }
+
 private:
+
+	// ***** 静的変数 *****
+	static bool m_bStart;	// 開始フラグ
+	static bool m_bExit;	// 出口　（出口を開くかのフラク）
+	static bool m_bClear;	// クリアフラグ
 
 	// ***** 変数 *****
 	TITLE Title;	// 現在のモード

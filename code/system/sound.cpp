@@ -15,7 +15,7 @@
 // マクロ定義
 //****************************************
 // サウンドのデータファイルの相対パス
-#define SOUND_DATA_FILE_PATH	"data\\GAMEDATA\\SOUND\\SOUND_DATA.txt"
+const char* CSound::FILE_PATH = "data\\GAMEDATA\\SOUND\\SOUND_DATA.txt";
 
 // 静的メンバ変数
 float CSound::m_aSoundVolume[SOUND_TYPE_MAX] = { 1.0f,1.0f };
@@ -151,7 +151,7 @@ void CSound::Load(void)
 	m_nSoundNum = 0;
 
 	// 種類毎の情報のデータファイルを開く
-	pFile = fopen(SOUND_DATA_FILE_PATH, "r");
+	pFile = fopen(FILE_PATH, "r");
 
 	if (pFile == NULL)
 	{// 種類毎の情報のデータファイルが開けなかった場合、

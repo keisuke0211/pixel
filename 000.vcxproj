@@ -47,6 +47,7 @@
     <ClCompile Include="code\scene\ranking.cpp" />
     <ClCompile Include="code\scene\result.cpp" />
     <ClCompile Include="code\scene\title.cpp" />
+    <ClCompile Include="code\scene\tutorial.cpp" />
     <ClCompile Include="code\system\camera.cpp" />
     <ClCompile Include="code\system\csv_file.cpp" />
     <ClCompile Include="code\system\input.cpp" />
@@ -88,6 +89,7 @@
     <ClInclude Include="code\scene\ranking.h" />
     <ClInclude Include="code\scene\result.h" />
     <ClInclude Include="code\scene\title.h" />
+    <ClInclude Include="code\scene\tutorial.h" />
     <ClInclude Include="code\system\camera.h" />
     <ClInclude Include="code\system\csv_file.h" />
     <ClInclude Include="code\system\input.h" />

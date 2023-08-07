@@ -9,6 +9,8 @@
 #include "../manager.h"
 #include "renderer.h"
 #include "input.h"
+#include "../scene/pause.h"
+#include "../scene/title.h"
 #include "../object/model/block.h"
 
 //****************************************
@@ -98,21 +100,32 @@ void CCamera::Update(void)
 	m_Info.posOldV = m_Info.posV;
 	m_Info.posOldR = m_Info.posR;
 
-	if (pInputMouse->GetPress(CMouse::MOUSE_RIGHT))
-	{// マウスの右ボタンが押されている間
-
-		 // カーソルの移動量に応じて回転
-
-		if (m_Info.nScreen == SCREEN_3D)
-		{
-			AxisRotationCamera(DIRECTION_UP, pInputMouse->GetCursorMove().y * CAMERA_ROT_FORCE_BY_CURSOR.x);
-		}
-		AxisRotationCamera(DIRECTION_LEFT, pInputMouse->GetCursorMove().x * CAMERA_ROT_FORCE_BY_CURSOR.y);	
-	}
-	else if (pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT] > 0.1f)
+	// 視点移動
 	{
-		AxisRotationCamera(DIRECTION_UP, (cosf(pInputJoypad->GetStick().aAngle[CJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.x);
-		AxisRotationCamera(DIRECTION_LEFT, (sinf(pInputJoypad->GetStick().aAngle[CJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.y);
+		bool bPause = CPause::IsPause();
+		if (!bPause)
+		{
+			bool bStart = CTitle::IsStart();
+			if (bStart)
+			{
+				if (pInputMouse->GetPress(CMouse::MOUSE_RIGHT))
+				{// マウスの右ボタンが押されている間
+
+					 // カーソルの移動量に応じて回転
+
+					if (m_Info.nScreen == SCREEN_3D)
+					{
+						AxisRotationCamera(DIRECTION_UP, pInputMouse->GetCursorMove().y * CAMERA_ROT_FORCE_BY_CURSOR.x);
+					}
+					AxisRotationCamera(DIRECTION_LEFT, pInputMouse->GetCursorMove().x * CAMERA_ROT_FORCE_BY_CURSOR.y);
+				}
+				else if (pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT] > 0.1f)
+				{
+					AxisRotationCamera(DIRECTION_UP, (cosf(pInputJoypad->GetStick().aAngle[CJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.x);
+					AxisRotationCamera(DIRECTION_LEFT, (sinf(pInputJoypad->GetStick().aAngle[CJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.y);
+				}
+			}
+		}
 	}
 
 	bool bExit = CBlock::IsExitCamera();

@@ -21,6 +21,7 @@ class CSound
 public:
 	// ***** 定義 *****
 	static const int SOUND_MAX = 64;	// サウンドの最大数
+	static const char* FILE_PATH;		// 読み込むファイルパス
 
 	// ***** 列挙型 *****
 

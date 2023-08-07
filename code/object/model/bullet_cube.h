@@ -85,7 +85,8 @@ public:
 	/* 先頭フラグ	*/static bool GetLeadSet(void) { return bLeadSet; }
 	/* 連鎖カウント	*/int GetChain(void) { return m_Info.nChain; }
 	/* ID			*/int GetID(void) { return m_Info.nID; }
-
+	/* 総数			*/static int GetNumAll(void) { return m_nNumAll; }
+		
 private:
 
 	// ***** 関数 *****

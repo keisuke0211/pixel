@@ -16,13 +16,14 @@
 //****************************************
 class CTime;			// タイム
 class CScore;			// スコア
+class CPlayer;			// プレイヤー
 
 //****************************************
 // クラス
 //****************************************
 class CGame : public CScene
 {
-	static const int MAX_TIME = 99;	// 制限時間
+	static const int GAME_TIME = 60;	// 制限時間
 public:
 
 	// ***** 関数 *****
@@ -35,26 +36,20 @@ public:
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);
 	/* 生成		*/static CGame *Create(void);
-	/* エネミー	*/void SetEnemy(void);
 
 	// -- 読み込み ----------
 	/* エネミー	*/static void LoodEnemy(void);
-	/* ブロック */static void LoodBlock(void);
-
-	// -- 設定 ------------------------
-	/* 出口		*/static void SetExit(bool bExit) { m_bExit = bExit; }
-	/* クリア	*/static void SetClear(bool bClear) { m_bClear = bClear; }
+	/* ブロック */static void LoodBlock(void);	
 
 	// -- 取得 ------------------------
+	/* プレイヤー	*/static CPlayer *GetPlayer() { return m_pPlayer; }
 	/* タイム		*/static CTime *GetTime() { return m_pTime; }
 	/* スコア		*/static CScore *GetScore() { return m_pScore; };
-	/* 開始			*/static bool IsStart() { return m_bStart; }
-	/* 出口			*/static bool IsExit() { return m_bExit; }
-	/* クリア		*/static bool IsClear() { return m_bClear; }
-
+	
 private:
 
 	// ***** 変数 *****
+	/* プレイヤー	*/static CPlayer *m_pPlayer;
 	/* タイム		*/static CTime *m_pTime;
 	/* スコア		*/static CScore *m_pScore;
 
@@ -64,9 +59,6 @@ private:
 	int m_nEndTime;			// 終了時間
 
 	bool m_bEnd;			// 終了フラグ
-	static bool m_bStart;	// 開始フラグ
-	static bool m_bExit;	// 出口　（出口を開くかのフラク）
-	static bool m_bClear;	// クリアフラグ
 };
 
 #endif

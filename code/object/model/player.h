@@ -65,6 +65,8 @@ public:
 
 	/* 取得 */
 	D3DXVECTOR3 GetPos() { return m_Info.pos; }
+	D3DXVECTOR3 GetPlayerMove() { return m_Info.move; }
+	static bool IsCubeSet() { return m_bCubeSet; }
 
 private:
 	// ***** 関数 *****
@@ -80,6 +82,7 @@ private:
 	void BulletStop(void);	// 弾停止
 
 	// ***** 変数 *****
-	Info m_Info;		// プレイヤー情報
+	Info m_Info;			// プレイヤー情報
+	static bool m_bCubeSet;	// キューブ配置フラグ
 };
 #endif

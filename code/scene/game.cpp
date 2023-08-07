@@ -5,6 +5,7 @@
 //========================================
 // *** game.cpp ***
 //========================================
+#include "title.h"
 #include "game.h"
 #include "result.h"
 #include "../system/csv_file.h"
@@ -24,11 +25,9 @@
 #include "fade.h"
 
 // 静的変数
+CPlayer *CGame::m_pPlayer = NULL;
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
-bool CGame::m_bStart = false;
-bool CGame::m_bClear = false;
-bool CGame::m_bExit = false;
 
 //========================================
 // コンストラクタ
@@ -54,9 +53,9 @@ CGame::~CGame()
 //========================================
 HRESULT CGame::Init(void)
 {
-	m_bStart = false;
-	m_bClear = false;
-	m_bExit = false;
+	CTitle::SetStart(false);
+	CTitle::SetExit(false);
+	CTitle::SetClear(false);
 
 	// 背景(側面)の生成
 	CBgSide *pBgsky = CBgSide::Create();
@@ -84,7 +83,7 @@ HRESULT CGame::Init(void)
 		m_pTime->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 32.0f, 0.0f));
 
 		// タイム設定
-		m_pTime->SetTime(MAX_TIME);
+		m_pTime->SetTime(GAME_TIME);
 	}
 
 	{
@@ -110,7 +109,6 @@ HRESULT CGame::Init(void)
 		15, 10, 30, false);
 	m_nStartTime = (15 * 18) + 10 + 25;
 	m_nMoveRot = ((D3DX_PI * 2) / m_nStartTime);
-
 
 	return S_OK;
 }
@@ -139,9 +137,9 @@ void CGame::Uninit(void)
 void CGame::Update(void)
 {
 	// -- 取得 -------------------------------------------
-	CCamera *pCamera = CManager::GetCamera();		// カメラ
+	CCamera *pCamera = CManager::GetCamera();					// カメラ
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
 
 	// ポーズ
 	if (pInputKeyboard->GetTrigger(DIK_P) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_START))
@@ -150,50 +148,58 @@ void CGame::Update(void)
 	}
 
 	// 開始フラグ
-	if (!m_bStart)
 	{
-		pCamera->SetRot(m_rot);
-		m_rot.y += m_nMoveRot;
-
-		if (--m_nStartTime <= 0)
+		bool bStart = CTitle::IsStart();
+		if (!bStart)
 		{
-			pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-			m_bStart = true;
+			pCamera->SetRot(m_rot);
+			m_rot.y += m_nMoveRot;
+
+			if (--m_nStartTime <= 0)
+			{
+				pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+				CTitle::SetStart(true);
+			}
 		}
 	}
 
 	// エネミーの全滅
-	if (!m_bExit && CEnemy::GetEnemyAll() <= 0)
 	{
-		m_bExit = true;
-
+		bool bExit = CTitle::IsExit();
+		if (!bExit && CEnemy::GetEnemyAll() <= 0)
+		{
+			CTitle::SetExit(true);
+		}
 	}
 
 	if (CFade::GetFade() == CFade::FADE_NONE)
 	{
 		// CLEAR
-		if (m_bClear)
 		{
-			if (!m_bEnd)
-			{
-				CText::Create(CText::BOX_NORMAL,
-					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
-					D3DXVECTOR2(440.0f, 100.0f),
-					"Game Clear",
-					CFont::FONT_DOTGOTHIC,
-					20.0f,
-					15, 10, 30, false);
+			bool bClear = CTitle::IsClear();
 
-				m_nEndTime = (15 * 10) + 10 + 25;
-				m_bEnd = true;
-
-				CResult::SetVerdict(CResult::VERDICT_GAMECLEAR);
-			}
-			else
+			if (bClear)
 			{
-				if (--m_nEndTime <= 0)
+				if (!m_bEnd)
 				{
-					CManager::GetFade()->SetFade(MODE_RESULT);
+					CText::Create(CText::BOX_NORMAL,
+						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
+						D3DXVECTOR2(440.0f, 100.0f),
+						"GAME CLEAR",
+						CFont::FONT_DOTGOTHIC,
+						20.0f,
+						12, 10, 30, false);
+
+					m_nEndTime = (12 * 10) + 10 + 25;
+					m_bEnd = true;
+				}
+				else
+				{
+					if (--m_nEndTime <= 0)
+					{
+						CResult::SetVerdict(CResult::VERDICT_GAMECLEAR);
+						CManager::GetFade()->SetFade(MODE_RESULT);
+					}
 				}
 			}
 		}
@@ -201,8 +207,27 @@ void CGame::Update(void)
 		// 時間切れ
 		if (m_pTime->GetTime() <= 0)
 		{
-			CResult::SetVerdict(CResult::VERDICT_GAMEOVER);
-			CManager::GetFade()->SetFade(MODE_RESULT);
+			if (!m_bEnd)
+			{
+				CText::Create(CText::BOX_NORMAL,
+					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
+					D3DXVECTOR2(440.0f, 100.0f),
+					"TIME UP",
+					CFont::FONT_DOTGOTHIC,
+					20.0f,
+					12, 10, 30, false);
+
+				m_nEndTime = (12 * 7) + 10 + 25;
+				m_bEnd = true;
+			}
+			else
+			{
+				if (--m_nEndTime <= 0)
+				{
+					CResult::SetVerdict(CResult::VERDICT_GAMEOVER);
+					CManager::GetFade()->SetFade(MODE_RESULT);
+				}
+			}
 		}
 	}
 }
@@ -225,18 +250,6 @@ CGame *CGame::Create(void)
 	pGame->Init();
 
 	return pGame;
-}
-
-//========================================
-// セットエネミー
-//========================================
-void CGame::SetEnemy(void)
-{
-	// 敵を全て破棄
-	CObject::ReleaseAll(CObject::TYPE_ENEMY);
-
-	// 敵の生成
-	LoodEnemy();
 }
 
 //========================================

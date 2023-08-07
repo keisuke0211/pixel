@@ -16,6 +16,11 @@
 #include "../system/words/font.h"
 #include "../system/words/words.h"
 
+// 静的変数
+bool CTitle::m_bStart = false;
+bool CTitle::m_bClear = false;
+bool CTitle::m_bExit = false;
+
 //========================================
 // コンストラクタ
 //========================================
@@ -52,6 +57,10 @@ CTitle::~CTitle()
 //========================================
 HRESULT CTitle::Init(void)
 {
+	m_bStart = false;
+	m_bClear = false;
+	m_bExit = false;
+
 	CModel::InitModel();	// モデル
 	CBlock::Load();			// ブロック
 
@@ -141,7 +150,7 @@ void CTitle::Update(void)
 					CManager::GetFade()->SetFade(MODE_GAME);
 					break;
 				case MENU_TUTORIAL:
-					CManager::GetFade()->SetFade(MODE_GAME);
+					CManager::GetFade()->SetFade(MODE_TUTORIAL);
 					break;
 				case MENU_END:
 					CManager::GetFade()->SetFade(MODE_TITLE);

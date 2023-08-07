@@ -165,6 +165,9 @@
     <ClCompile Include="code\scene\ranking.cpp">
       <Filter>ソース ファイル\00_main\00_scene</Filter>
     </ClCompile>
+    <ClCompile Include="code\scene\tutorial.cpp">
+      <Filter>ソース ファイル\00_main\00_scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\main.h">
@@ -285,6 +288,9 @@
       <Filter>ソース ファイル\00_main\00_scene</Filter>
     </ClInclude>
     <ClInclude Include="code\scene\ranking.h">
+      <Filter>ソース ファイル\00_main\00_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="code\scene\tutorial.h">
       <Filter>ソース ファイル\00_main\00_scene</Filter>
     </ClInclude>
   </ItemGroup>

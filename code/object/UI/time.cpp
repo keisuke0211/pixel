@@ -8,6 +8,7 @@
 #include "time.h"
 #include "../model/block.h"
 #include "../../scene/game.h"
+#include "../../scene/title.h"
 #include "../../scene/pause.h"
 
 //========================================
@@ -77,12 +78,13 @@ void CTime::Uninit(void)
 //========================================
 void CTime::Update(void)
 {
-	bool bPause = CPause::IsPause();
-	bool bStart = CGame::IsStart();
-	bool bCameraExit = CBlock::IsExitCamera();
-
+	bool bStart = CTitle::IsStart();
+	
 	if (bStart)
 	{
+		bool bPause = CPause::IsPause();
+		bool bCameraExit = CBlock::IsExitCamera();
+
 		if (!bPause || bCameraExit)
 		{
 			// çXêVèàóù

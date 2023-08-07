@@ -7,6 +7,7 @@
 //========================================
 #include "player.h"
 #include "../../scene/game.h"
+#include "../../scene/title.h"
 #include "../../scene/pause.h"
 #include "motion.h"
 #include "../../manager.h"
@@ -31,6 +32,9 @@
 #define DUST_MAXCNT		(15)		// カウントの最大値
 
 #define ROT_FORCE_BY_CURSOR	(D3DXVECTOR3(0.0005f,0.00075f,0.0f))	// カーソルの回転力
+
+// 静的変数
+bool CPlayer::m_bCubeSet = false;
 
 // 定義
 const float CPlayer::PLAYER_SPEED = 1.0f;
@@ -83,6 +87,7 @@ CPlayer *CPlayer::Create(void)
 //========================================
 HRESULT CPlayer::Init(void)
 {
+	m_bCubeSet = false;
 	CCamera *pCamera = CManager::GetCamera();	// カメラの取得
 
 	CMotionModel::Init();
@@ -122,7 +127,7 @@ void CPlayer::Update(void)
 		m_Info.posOld = m_Info.pos;
 		m_Info.rotOld = m_Info.rot;
 
-		bool bStart = CGame::IsStart();
+		bool bStart = CTitle::IsStart();
 
 		if (bStart)
 		{
@@ -422,13 +427,17 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 					fPairDepth *= 0.8f;
 
 					// クリア
-					if (!CGame::IsClear())
 					{
-						if (Collsion(pos, pBlock->GetBlockPos(), D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+						bool bClear = CTitle::IsClear();
+						if (!bClear)
 						{
-							CGame::SetClear(true);
+							if (Collsion(pos, pBlock->GetBlockPos(), D3DXVECTOR3(fSize, fSize, fSize), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+							{
+								CTitle::SetClear(true);
+							}
 						}
 					}
+
 					pObj = pObjNext;	// 次のオブジェクトを代入
 					continue;
 				}
@@ -558,6 +567,7 @@ void CPlayer::BulletStop(void)
 
 					// キューブの生成
 					CCube::Create(nType, pos);
+					m_bCubeSet = true;
 
 					// オブジェクト破棄
 					pObj->Uninit();
