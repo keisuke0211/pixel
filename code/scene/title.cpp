@@ -71,7 +71,6 @@ HRESULT CTitle::Init(void)
 
 	m_bMove[0] = true;
 
-	m_Text[0]->m_SetText.bTextBok = false;
 	m_Text[0] = CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
@@ -152,6 +151,9 @@ void CTitle::Update(void)
 					break;
 				case MENU_TUTORIAL:
 					CManager::GetFade()->SetFade(MODE_TUTORIAL);
+					break;
+				case MENU_RANKING:
+					CManager::GetFade()->SetFade(MODE_RANKING);
 					break;
 				case MENU_END:
 					//ゲームの終了
@@ -324,6 +326,15 @@ void CTitle::MenuCreate(void)
 	{
 		m_Text[2] = CText::Create(CText::BOX_NORMAL,
 			D3DXVECTOR3(640.0f, 450.0f, 0.0f),
+			D3DXVECTOR2(360.0f, 100.0f),
+			"ランキング",
+			CFont::FONT_FZGONTA,
+			20.0f,
+			5, 10, -1);
+	}
+	{
+		m_Text[3] = CText::Create(CText::BOX_NORMAL,
+			D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 			D3DXVECTOR2(360.0f, 100.0f),
 			"EXIT",
 			CFont::FONT_MEIRIO,

@@ -46,6 +46,7 @@ public:
 	{
 		MENU_GAME = 0,	// ゲーム
 		MENU_TUTORIAL,	// チュートリアル
+		MENU_RANKING,	// ランキング
 		MENU_END,		// 終了
 		MENU_MAX
 	};
@@ -86,7 +87,7 @@ private:
 	TITLE Title;	// 現在のモード
 	CWords *m_Words[4]; // タイトル
 	bool m_bMove[4];
-	CText *m_Text[3];
+	CText *m_Text[MENU_MAX];
 	int m_nTextTime;	// テキストの表示時間
 	int m_nStandTime;	// 待機時間
 	int m_nSelectMenu;	// 現在選択しているメニュー
