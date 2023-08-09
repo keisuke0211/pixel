@@ -32,6 +32,19 @@ public:
 		BOX_MAX
 	};
 
+	// ***** 構造体 *****
+
+	// テキスト情報(生成用)
+	struct SetText
+	{
+		float fTextSize;		// 文字のサイズ
+		int nAppearTime;		// 1つの文字が加算されるまでの時間
+		int nStandTime;			// 待機時間
+		int nDisapTime;			// 消える時間
+
+		bool bTextBok;			// テキストボックスの表示フラグ
+	};
+
 	// ***** 関数 *****
 	CText(int nPriority = PRIO_TEXT);
 	~CText();
@@ -64,6 +77,8 @@ public:
 	/* ボックスの色		*/void SetBoxColor(D3DXCOLOR col);
 	/* テキストの色		*/void SetTextColor(D3DXCOLOR col);
 
+	// ***** 変数 *****
+	SetText m_SetText;	// テキスト情報（生成用）
 
 private:
 

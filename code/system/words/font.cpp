@@ -90,7 +90,7 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 	}
 
 	// デバイスコンテキスト取得
-	// デバイスにフォントを持たせないとGetGlyphOutline関数はエラーとなる
+	// ※デバイスにフォントを持たせないとGetGlyphOutline関数はエラーになる
 	HDC hdc = GetDC(NULL);
 	HFONT oldFont = (HFONT)SelectObject(hdc, m_hFont[nFont]);
 
@@ -99,12 +99,12 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 	const char *c = words.c_str();
 	UINT code = 0;
 #if _UNICODE
-	// unicodeの場合、文字コードは単純にワイド文字のUINT変換です
+	// unicodeの場合、文字コードは単純にワイド文字のUINT変換
 	code = (UINT)*c;
 #else
 	// マルチバイト文字の場合、
 	// 1バイト文字のコードは1バイト目のUINT変換、
-	// 2バイト文字のコードは[先導コード]*256 + [文字コード]です
+	// 2バイト文字のコードは[先導コード]*256 + [文字コード]
 	if (IsDBCSLeadByte(*c))
 		code = (BYTE)c[0] << 8 | (BYTE)c[1];
 	else
@@ -125,9 +125,10 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 	DeleteObject(m_hFont[nFont]);
 	ReleaseDC(NULL, hdc);
 
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();	//デバイスの取得
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-																		// テクスチャ作成
+	// テクスチャ作成
 	if (FAILED(pDevice->CreateTexture(GM.gmCellIncX, TM.tmHeight, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_texFont[nFont], NULL)))
 		if (FAILED(pDevice->CreateTexture(GM.gmCellIncX, TM.tmHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &m_texFont[nFont], NULL)))
 		{

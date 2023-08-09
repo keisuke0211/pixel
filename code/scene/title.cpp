@@ -71,6 +71,7 @@ HRESULT CTitle::Init(void)
 
 	m_bMove[0] = true;
 
+	m_Text[0]->m_SetText.bTextBok = false;
 	m_Text[0] = CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
@@ -153,7 +154,8 @@ void CTitle::Update(void)
 					CManager::GetFade()->SetFade(MODE_TUTORIAL);
 					break;
 				case MENU_END:
-					CManager::GetFade()->SetFade(MODE_TITLE);
+					//ƒQ[ƒ€‚ÌI—¹
+					PostQuitMessage(0);
 					break;
 				}
 			}

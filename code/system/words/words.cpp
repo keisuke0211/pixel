@@ -149,9 +149,6 @@ void CWords::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	//pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-	//pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));
 
@@ -166,9 +163,6 @@ void CWords::Draw(void)
 		0,
 		2);
 	pDevice->SetTexture(0, NULL);
-
-	//pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-	//pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 }
 
 //========================================
