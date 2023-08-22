@@ -38,7 +38,7 @@ CTitle::CTitle()
 		m_bMove[nCnt] = false;
 	}
 
-	for (int nCnt = 0; nCnt < TEXT_MAX; nCnt++)
+	for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
 	{
 		m_Text[nCnt] = NULL;
 	}
@@ -141,7 +141,7 @@ void CTitle::Update(void)
 				break;
 			case CTitle::TITLE_MENU:
 			{
-				TextClear(1, TEXT_MAX, TITLE_NEXT);
+				TextClear(1, MENU_MAX, TITLE_NEXT);
 
 
 				switch (m_nSelectMenu)
@@ -259,7 +259,7 @@ void CTitle::TitleAnime(void)
 void CTitle::Menu(void)
 {
 	// F
-	for (int nCnt = 0; nCnt < TEXT_MAX; nCnt++)
+	for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
 	{
 		if (m_Text[nCnt] != NULL)
 		{

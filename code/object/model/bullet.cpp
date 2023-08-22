@@ -434,8 +434,8 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 
 				if (m_Info.bHit)
 				{
-					//// キューブの生成
-					//CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z));
+					// キューブの生成
+					CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z));
 
 					// 弾の破棄
 					Uninit();

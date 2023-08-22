@@ -26,7 +26,6 @@ class CTitle : public CScene
 	static const int STAND_MAX = 20;	// テキストの待機時間
 	static const int TEXT_TIME = 150;	// テキストの表示時間
 	static const int WORDS_MAX = 4;		// 文字の最大数
-	static const int TEXT_MAX = 3;		// テキストの最大数
 
 public:
 

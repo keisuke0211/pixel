@@ -198,7 +198,7 @@ void CGame::Update(void)
 					if (--m_nEndTime <= 0)
 					{
 						CResult::SetVerdict(CResult::VERDICT_GAMECLEAR);
-						CManager::GetFade()->SetFade(MODE_RESULT);
+						CManager::GetFade()->SetFade(MODE_RANKING);
 					}
 				}
 			}
@@ -225,7 +225,7 @@ void CGame::Update(void)
 				if (--m_nEndTime <= 0)
 				{
 					CResult::SetVerdict(CResult::VERDICT_GAMEOVER);
-					CManager::GetFade()->SetFade(MODE_RESULT);
+					CManager::GetFade()->SetFade(MODE_RANKING);
 				}
 			}
 		}

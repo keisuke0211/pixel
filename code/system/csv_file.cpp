@@ -360,13 +360,3 @@ bool CSVFILE::ToValue(bool &val, const string &str)
 		return false;
 	}
 }
-
-//================================================================================
-// float型 → 文字列
-// 引数：データ(変換元)
-// 返値：データ(string)
-//================================================================================
-string CSVFILE::CastCell(float &val)
-{
-	return to_string(Format(val, 2,FORMAT_FLOOR));
-}
