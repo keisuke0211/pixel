@@ -63,6 +63,7 @@ public:
 	/* ポーズ中の生成	*/void SetTetPause(bool bPause);
 	/* ボックスの色		*/void SetBoxColor(D3DXCOLOR col);
 	/* テキストの色		*/void SetTextColor(D3DXCOLOR col);
+	/* 文字変更			*/bool SetWords(char* Text, int nIdx);
 
 private:
 

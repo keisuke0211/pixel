@@ -8,6 +8,7 @@
 #include "title.h"
 #include "game.h"
 #include "result.h"
+#include "ranking.h"
 #include "../system/csv_file.h"
 #include "../object\UI\score.h"
 #include "../object\UI\time.h"
@@ -199,6 +200,8 @@ void CGame::Update(void)
 					{
 						CResult::SetVerdict(CResult::VERDICT_GAMECLEAR);
 						CManager::GetFade()->SetFade(MODE_RANKING);
+
+						CRanking::SetScore11(m_pScore->GetScore());
 					}
 				}
 			}

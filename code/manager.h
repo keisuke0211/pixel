@@ -36,7 +36,7 @@ class CFade;			// フェード
 //****************************************
 
 // 画面クラス
-class CScene
+class CScene : public CPhysics
 {
 public:
 

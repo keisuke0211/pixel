@@ -159,51 +159,6 @@ void CObject::ReleaseAll(TYPE type)
 }
 
 //========================================
-// 指定の破棄
-//========================================
-void CObject::Release(PRIO prio,TYPE type, int Idx)
-{
-	int nIdx = 0;
-
-		// 先頭オブジェクト
-		CObject *pObj = m_apTop[prio];
-
-		// オブジェクト分の回す
-		while (pObj != NULL)
-		{
-			// 次のオブジェクト
-			CObject *pObjNext = pObj->m_pNext;
-
-			// 指定した種類かどうか
-			if (pObj->GetType() == type)
-			{
-				// 指定した番号か
-				if (nIdx == Idx)
-				{
-					// 次のオブジェクト
-					CObject *pObjNext = pObj->m_pNext;
-
-					// ダイナミックキャストする
-					CText *pText = dynamic_cast<CText*>(pObj);
-
-					// 次のオブジェクトがあるか
-					if (pObj->m_pNext == NULL)
-					{
-						pText->Disap(true);
-						break;
-					}
-					else
-					{
-						pText->Disap(true);
-					}
-					break;
-				}
-			}
-			pObj = pObjNext;	// 次のオブジェクトポインタを代入
-		}
-}
-
-//========================================
 // 破棄リスト
 //========================================
 void CObject::Release(void)

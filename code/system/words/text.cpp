@@ -425,3 +425,28 @@ void CText::SetTextColor(D3DXCOLOR col)
 		m_Info.words[wordsCount]->SetColar(col);
 	}
 }
+
+//========================================
+// テキストの色設定
+//========================================
+bool CText::SetWords(char* Text, int nIdx)
+{
+	bool bSet;
+
+	if (m_Info.words[nIdx] != NULL)
+	{
+		float fTxtSize = m_Info.fTextSize;
+		D3DXVECTOR3 pos;
+
+		pos = m_Info.words[nIdx]->GetPos();
+		m_Info.words[nIdx]->Uninit();
+
+		m_Info.words[nIdx] = CWords::Create(Text,
+			pos,
+			D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
+			m_Info.FontType);
+
+		return TRUE;
+	}
+	return FALSE;
+}
