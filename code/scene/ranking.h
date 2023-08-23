@@ -22,6 +22,7 @@ class CText;
 class CRanking : public CScene
 {
 	static const char* FILE_PATH;			// 読み込むファイルパス
+	static const char* TEXT_FILE_PATH;		// 読み込むファイルパス
 	static const int RANK_NUM = 8;			// 順位数
 	static const int NAME_NUM = 5;			// ランキングのの文字数
 	static const int NAME_START_DEX = 5;	// 名前の開始位置
@@ -34,7 +35,7 @@ class CRanking : public CScene
 #define NAME_START_CHAR	('A')
 
 #define BLINK_TIME	(4)						// 点滅時間
-#define BLINK_COLOR	D3DXCOLOR{243,189,63,255}	// ランキングフレームの点滅色
+#define BLINK_COLOR	D3DXCOLOR{200,50,0,255}	// ランキングフレームの点滅色
 public:
 
 	// ***** 関数 *****
@@ -47,6 +48,7 @@ public:
 	/* 更新			*/void Update(void);
 	/* 描画			*/void Draw(void);
 	/* 読み込み		*/void Load(void);
+	/* 文字読み込み	*/void WordsLoad(void);
 	/* 書き出し		*/void Save(void);
 	/* 生成			*/static CRanking *Create(void);
 
@@ -66,6 +68,26 @@ public:
 private:
 
 	// ***** 構造体 *****
+	
+	// 文字
+	struct Letter
+	{
+		char aConv[4];		// 文字
+	};
+
+	// 変換数
+	struct Conv
+	{
+		Letter *pLetter;
+	};
+
+	// 文字列
+	struct String
+	{
+		Conv	*pConv;		// 文字
+		int		nLettreMax;	// 文字の最大数
+		int		nConvMax;	// 変換文字の最大数
+	};
 
 	// 共通情報
 	struct Info
@@ -76,7 +98,11 @@ private:
 		int		nCntChar;		// 文字カウント
 		int		nUpdateRank;	// 更新順位
 		int		nCntBlink;		// 点滅カウンター
-		bool	bNameInput;		// 入力フラグ		
+		bool	bNameInput;		// 入力フラグ
+
+		int		nCntString;		// 文字列カウント
+		int		nCntLetter;		// 文字カウント
+		int		nCntConv;		// 変換文字カウント
 	};
 
 	// 各順位のテキスト
@@ -95,13 +121,17 @@ private:
 	// ***** 関数 *****
 	/* 状態処理		*/void State(void);
 	/* 名前入力		*/void NameEntry(void);
+	/* 名前入力		*/void NameInput(void);
 	/* ソート降順	*/void SortDesc(int *nUpdateRank);
 	/* 空白埋め		*/void strinit(char *pData, int nNum);
-
+	
 	// ***** 変数 *****
 	Info m_Info;					// 共通情報
 	Ranking m_Ranking[RANK_NUM];	// 順位情報
 	CText *m_Text[RANK_NUM];		// テキスト
+
+	String	*m_pString;		// 文字列
+	int		nStringMax;		// 文字列の最大数
 
 	// 順位の表示形式
 	Rank m_aRank[RANK_NUM] =

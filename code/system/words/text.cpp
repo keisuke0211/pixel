@@ -418,21 +418,28 @@ void CText::SetBoxColor(D3DXCOLOR col)
 //========================================
 // テキストの色設定
 //========================================
-void CText::SetTextColor(D3DXCOLOR col)
+bool CText::SetTextColor(D3DXCOLOR col)
 {
+
 	for (int wordsCount = 0; wordsCount < m_Info.nTextLength; wordsCount++)
 	{
-		m_Info.words[wordsCount]->SetColar(col);
+		if (m_Info.words[wordsCount] != NULL)
+		{
+			m_Info.words[wordsCount]->SetColar(col);
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
+	return TRUE;
 }
 
 //========================================
-// テキストの色設定
+// 文字設定
 //========================================
 bool CText::SetWords(char* Text, int nIdx)
 {
-	bool bSet;
-
 	if (m_Info.words[nIdx] != NULL)
 	{
 		float fTxtSize = m_Info.fTextSize;
@@ -441,11 +448,14 @@ bool CText::SetWords(char* Text, int nIdx)
 		pos = m_Info.words[nIdx]->GetPos();
 		m_Info.words[nIdx]->Uninit();
 
-		m_Info.words[nIdx] = CWords::Create(Text,
-			pos,
-			D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
-			m_Info.FontType);
 
+		if (Text != NULL)
+		{
+			m_Info.words[nIdx] = CWords::Create(Text,
+				pos,
+				D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
+				m_Info.FontType);
+		}
 		return TRUE;
 	}
 	return FALSE;

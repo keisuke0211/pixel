@@ -186,7 +186,6 @@ public:
 		bool aAngleTrigger[STICK_TYPE_MAX][STICK_ANGLE_MAX];	// スティックの方向トリガー情報
 		bool aAngleRepeat[STICK_TYPE_MAX][STICK_ANGLE_MAX];		// スティックの方向リピート情報
 		bool aAngleRelease[STICK_TYPE_MAX][STICK_ANGLE_MAX];	// スティックの方向リリース情報
-
 	}STICK_INPUT;
 
 
@@ -227,7 +226,7 @@ private:
 	WORD m_nStrength[MAX_PAT];						// 振動の強さ (0 - 65535)
 	XINPUT_STATE m_xInput;							// 入力情報
 
-	bool m_bAngle[MAX_PAT][STICK_TYPE_MAX][STICK_ANGLE_MAX];					// スティックの入力情報
+	bool m_bAngle[MAX_PAT][STICK_TYPE_MAX][STICK_ANGLE_MAX];				// スティックの入力情報
 	DWORD m_aStickCurrentTime[MAX_PAT][STICK_TYPE_MAX][STICK_ANGLE_MAX];	// スティックの現在の時間
 	DWORD m_aStickExecLastTime[MAX_PAT][STICK_TYPE_MAX][STICK_ANGLE_MAX];	// スティックの現在の時間
 

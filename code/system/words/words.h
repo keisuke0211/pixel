@@ -82,11 +82,13 @@ private:
 	struct Info
 	{
 		D3DXVECTOR3 size;
-		D3DXVECTOR3 move; //polygonの位置
-		D3DXVECTOR3 pos; //polygonの位置
+		D3DXVECTOR3 move;
+		D3DXVECTOR3 pos;
 		D3DXVECTOR3 rot;
 		D3DXVECTOR3 moveRot;
 		D3DXCOLOR col;
+
+		bool bDisp;			// 表示フラグ
 	};
 
 	// ***** 関数 *****

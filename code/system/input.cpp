@@ -519,26 +519,16 @@ void CJoypad::Update(void)
 		}
 
 		// 振動
-		m_JoyMoter[nCnt].wLeftMotorSpeed = m_nStrength[nCnt];
-		m_JoyMoter[nCnt].wRightMotorSpeed = m_nStrength[nCnt];
-		XInputSetState(nCnt, &m_JoyMoter[nCnt]);
+		m_JoyMoter[nCnt].wLeftMotorSpeed = m_nStrength[nCnt];	// 左
+		m_JoyMoter[nCnt].wRightMotorSpeed = m_nStrength[nCnt];	// 右
+		XInputSetState(nCnt, &m_JoyMoter[nCnt]);				// 振動情報を送る
 
 		// 振動時間の減算
-		if (m_nTime[nCnt] > 0)
-		{
-			m_nTime[nCnt]--;
-		}
-		else
+		if (--m_nTime[nCnt] >= 0)
 		{
 			m_nStrength[nCnt] = 0;
 			m_nTime[nCnt] = 0;
 		}
-	}
-
-	for (int nCntStick = 0; nCntStick < STICK_TYPE_MAX; nCntStick++)
-	{
-		// スティックの入力情報
-		GetStick(nCntStick);
 	}
 }
 
@@ -609,6 +599,7 @@ void CJoypad::UpdateStick(void)
 {
 	for (int nPatNum = 0; nPatNum < MAX_PAT; nPatNum++)
 	{
+		//ジョイパッドの状態を取得
 		if (XInputGetState(nPatNum, &m_xInput) == ERROR_SUCCESS)
 		{
 			for (int nCntStick = 0; nCntStick < STICK_TYPE_MAX; nCntStick++)
@@ -636,7 +627,9 @@ void CJoypad::UpdateStick(void)
 
 				// スティックの倒し具合を取得
 				m_stick[nPatNum].aTplDiameter[nCntStick] = fabsf(X);
-				if (m_stick[nPatNum].aTplDiameter[nCntStick] < fabsf(Y)) {
+
+				if (m_stick[nPatNum].aTplDiameter[nCntStick] < fabsf(Y))
+				{
 					m_stick[nPatNum].aTplDiameter[nCntStick] = fabsf(Y);
 				}
 				m_stick[nPatNum].aTplDiameter[nCntStick] /= 32768.0f;
@@ -672,6 +665,7 @@ void CJoypad::UpdateStick(void)
 					}
 				}
 
+				// 角度に応じた入力処理
 				for (int nCntAngle = 0; nCntAngle < STICK_ANGLE_MAX; nCntAngle++)
 				{
 					// スティックのトリガー情報を保存
