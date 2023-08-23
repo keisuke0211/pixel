@@ -142,7 +142,6 @@ void CObjectX::Draw(void)
 
 	// モデルの描画設定
 	m_pModel->Draw(m_mtxWorld, true);
-	
 
 	// 保存していたマテリアルを戻す
 	pDevice->SetMaterial(&matDef);

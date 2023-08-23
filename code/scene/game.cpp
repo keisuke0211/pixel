@@ -84,7 +84,7 @@ HRESULT CGame::Init(void)
 		m_pTime->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 32.0f, 0.0f));
 
 		// ƒ^ƒCƒ€Ý’è
-		m_pTime->SetTime(GAME_TIME);
+		m_pTime->SetTime(GAME_TIME*2);
 	}
 
 	{
@@ -160,6 +160,7 @@ void CGame::Update(void)
 			{
 				pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 				pCamera->SetHeigth(0.4f);
+				pCamera->SetDistance(500.0f);
 				CTitle::SetStart(true);
 			}
 		}

@@ -49,6 +49,7 @@ public:
 		int nScreen;				// 投影モード
 
 		float fDistance;			// 距離
+		float fTargetDistance;		// 目標距離
 		float fHeight;				// 高さ
 		float fTargetHeight;		// 目標高さ
 		float fVerticalMove;		// 縦の移動量
@@ -72,6 +73,7 @@ public:
 	void SetPosR(D3DXVECTOR3 pos, int nIdx = 0);	// 注視点
 	void SetRot(D3DXVECTOR3 rot, int nIdx = 0);		// 向き
 	void SetHeigth(float Heigth);					// 高さ
+	void SetDistance(float fDistance);				// 距離
 
 	/* 取得 */
 	Info GetInfo() { return m_Info; }			// カメラの情報

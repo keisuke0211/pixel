@@ -296,11 +296,6 @@ void CPlayer::MovePos(float fMove)
 
 		// Šp“x‚Ì‚ð‚S•ªŠ„‚É‚·‚é
 		{
-			if (fAngle > D3DX_PI)
-			{
-				fAngle = -1.5;;
-			}
-
 			if (fAngle < D3DX_PI * -0.75 ||
 				fAngle > D3DX_PI * 0.75)
 			{

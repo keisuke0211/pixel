@@ -52,6 +52,7 @@ CCamera::CCamera()
 	m_Save.fVerticalMove = INIT_FLOAT;	// 縦の移動量
 	m_Save.fHeight = INIT_FLOAT;		// 高さ
 	m_Save.fDistance = INIT_FLOAT;		// 距離
+	m_Info.fTargetDistance = INIT_FLOAT;
 }
 
 //========================================
@@ -75,7 +76,8 @@ HRESULT CCamera::Init(void)
 	m_Info.vecU = INIT_VEC;							// 上方向ベクトル
 	m_Info.rot = INIT_D3DXVECTOR3;					// 向き
 	m_Info.spin = INIT_D3DXVECTOR3;					// 回転力
-	m_Info.fDistance = 100.0f;						// 距離
+	m_Info.fDistance = 300.0f;						// 距離
+	m_Info.fTargetDistance = 300.0f;				// 目標距離
 	m_Info.fHeight = 0.05f;							// 高さ
 	m_Info.fVerticalMove = INIT_FLOAT;				// 縦の移動量
 	m_Info.nScreen = SCREEN_3D;						// 投影モード
@@ -142,9 +144,6 @@ void CCamera::Update(void)
 				case ROT_LEFT:
 					m_Info.spin.y = 1.57f;
 					break;
-				case ROT_MAX:
-					m_Info.spin.y = 0.0f;
-					break;
 				}
 			}
 		}
@@ -163,7 +162,7 @@ void CCamera::Update(void)
 		{
 			m_Info.targetRot = m_Info.spin;				// 目標向きに移動向きを代入
 		}
-		m_Info.fTargetHeight = m_Info.fVerticalMove;	// 目標に移動量を代入
+		m_Info.fTargetHeight = m_Info.fVerticalMove;	// 目標高さに移動量を代入
 
 		// 向きを制御
 		RotControl(&m_Info.rot);
@@ -179,6 +178,9 @@ void CCamera::Update(void)
 
 		// 高さを目標に向けて推移する
 		m_Info.fHeight += AngleDifference(m_Info.fHeight, m_Info.fTargetHeight) * ROT_DIAMETER;
+
+		// 距離を目標距離に向けて推移する
+		m_Info.fDistance += AngleDifference(m_Info.fDistance, m_Info.fTargetDistance) * ROT_DIAMETER;
 
 		if (m_Info.bRotMove)
 		{
@@ -219,10 +221,10 @@ void CCamera::SetCamera(void)
 
 	case SCREEN_3D: {	// 透視投影
 		D3DXMatrixPerspectiveFovLH(&m_Info.mtxProjection,
-			D3DXToRadian(90.0f),							/* 視野角 */
+			D3DXToRadian(45.0f),							/* 視野角 */
 			(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,		/*画面のアスペクト比*/
 			10.0f,											/*Z値の最小値*/
-			1500.0f);										/*Z値の最大値*/
+			2000.0f);										/*Z値の最大値*/
 	}
 		break;
 	}
@@ -345,4 +347,12 @@ void CCamera::SetRot(D3DXVECTOR3 rot, int nIdx)
 void CCamera::SetHeigth(float Heigth)
 {
 	m_Info.fVerticalMove = Heigth;
+}
+
+//========================================
+// カメラの距離
+//========================================
+void CCamera::SetDistance(float fDistance)
+{
+	m_Info.fTargetDistance = fDistance;
 }

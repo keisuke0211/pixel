@@ -409,8 +409,6 @@ void CRanking::NameInput(void)
 		IntLoopControl(&m_Info.nCntConv, nConvMax, 0);
 	}
 
-
-
 	// -- Œˆ’èEíœ ---------------------------------------------
 	if (pInputKeyboard->GetTrigger(DIK_BACKSPACE) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_B))
 	{// íœ
