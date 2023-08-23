@@ -159,6 +159,7 @@ void CGame::Update(void)
 			if (--m_nStartTime <= 0)
 			{
 				pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+				pCamera->SetHeigth(0.4f);
 				CTitle::SetStart(true);
 			}
 		}

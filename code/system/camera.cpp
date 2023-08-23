@@ -20,6 +20,7 @@
 #define CAMERA_ROT_FORCE_BY_STICK	(D3DXVECTOR3(0.004f,-0.006f,0.0f))		// スティックの回転力
 #define CAMERA_SPIN_DAMP			(0.9f)									// 回転の減少値
 #define CAMERA_SPEED				(50)									// 移動速度（X・Z座標）
+#define ROT_DIAMETER	(0.15f)												// 回転倍率
 
 //========================================
 // コンストラクタ
@@ -33,11 +34,15 @@ CCamera::CCamera()
 	m_Info.posOldV = INIT_D3DXVECTOR3;	// 前回の注視点R3;
 	m_Info.vecU = INIT_VEC;				// 上方向ベクトル
 	m_Info.rot = INIT_D3DXVECTOR3;		// 向き
+	m_Info.targetRot = INIT_D3DXVECTOR3;// 目標向き
 	m_Info.spin = INIT_D3DXVECTOR3;		// 回転量
 	m_Info.fDistance = INIT_FLOAT;		// 距離
 	m_Info.fHeight = INIT_FLOAT;		// 高さ
+	m_Info.fTargetHeight = INIT_FLOAT;	// 目標高さ
 	m_Info.fVerticalMove = INIT_FLOAT;	// 縦の移動量
 	m_Info.nScreen = SCREEN_NONE;		// 投影モード
+	m_Info.bRotMove = false;
+	m_Info.nRotType = 0;
 
 	/* 保存情報 */
 	m_Save.posV = INIT_D3DXVECTOR3;		// 視点
@@ -108,21 +113,38 @@ void CCamera::Update(void)
 			bool bStart = CTitle::IsStart();
 			if (bStart)
 			{
-				if (pInputMouse->GetPress(CMouse::MOUSE_RIGHT))
+				if (pInputMouse->GetTrigger(CMouse::MOUSE_RIGHT))
 				{// マウスの右ボタンが押されている間
-
-					 // カーソルの移動量に応じて回転
-
-					if (m_Info.nScreen == SCREEN_3D)
-					{
-						AxisRotationCamera(DIRECTION_UP, pInputMouse->GetCursorMove().y * CAMERA_ROT_FORCE_BY_CURSOR.x);
-					}
-					AxisRotationCamera(DIRECTION_LEFT, pInputMouse->GetCursorMove().x * CAMERA_ROT_FORCE_BY_CURSOR.y);
+					m_Info.nRotType++;
 				}
-				else if (pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT] > 0.1f)
+				else if (pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
 				{
-					AxisRotationCamera(DIRECTION_UP, (cosf(pInputJoypad->GetStick().aAngle[CJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.x);
-					AxisRotationCamera(DIRECTION_LEFT, (sinf(pInputJoypad->GetStick().aAngle[CJoypad::STICK_TYPE_RIGHT]) * pInputJoypad->GetStick().aTplDiameter[CJoypad::STICK_TYPE_RIGHT]) * CAMERA_ROT_FORCE_BY_STICK.y);
+					m_Info.nRotType--;
+				}
+				else if (pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
+				{
+					m_Info.nRotType++;
+				}
+
+				IntLoopControl(&m_Info.nRotType, ROT_MAX, 0);
+
+				switch (m_Info.nRotType)
+				{
+				case ROT_UP:
+					m_Info.spin.y = 0.0f;
+					break;
+				case ROT_RIGHT:
+					m_Info.spin.y = -1.57f;
+					break;
+				case ROT_DOWN:
+					m_Info.spin.y = 3.14f;
+					break;
+				case ROT_LEFT:
+					m_Info.spin.y = 1.57f;
+					break;
+				case ROT_MAX:
+					m_Info.spin.y = 0.0f;
+					break;
 				}
 			}
 		}
@@ -132,22 +154,37 @@ void CCamera::Update(void)
 
 	if (!bExit)
 	{
-		m_Info.rot += m_Info.spin;					// 向きを更新
-		m_Info.spin *= CAMERA_SPIN_DAMP;			// 回転量を減衰
-		m_Info.fHeight += m_Info.fVerticalMove;		// 高さを更新
-		m_Info.fVerticalMove *= CAMERA_SPIN_DAMP;	// 縦方向の移動量を減衰
+		if (m_Info.bRotMove)
+		{
+			m_Info.rot.y += m_Info.spin.y;					// 向きに移動向きを代入
+			m_Info.spin *= CAMERA_SPIN_DAMP;				// 回転量を減衰
+		}
+		else
+		{
+			m_Info.targetRot = m_Info.spin;				// 目標向きに移動向きを代入
+		}
+		m_Info.fTargetHeight = m_Info.fVerticalMove;	// 目標に移動量を代入
 
 		// 向きを制御
 		RotControl(&m_Info.rot);
+
+		// 高さを制御
+		FloatControl(&m_Info.fHeight, D3DX_PI * 0.30f, D3DX_PI * 0.01f);
+
+		if (!m_Info.bRotMove)
+		{
+			// 高さを目標に向けて推移する
+			m_Info.rot.y += AngleDifference(m_Info.rot.y, m_Info.targetRot.y) * ROT_DIAMETER;
+		}
+
+		// 高さを目標に向けて推移する
+		m_Info.fHeight += AngleDifference(m_Info.fHeight, m_Info.fTargetHeight) * ROT_DIAMETER;
+
+		if (m_Info.bRotMove)
+		{
+			m_Info.bRotMove = false;
+		}
 	}
-
-	// 高さを制御
-	FloatControl(&m_Info.fHeight, D3DX_PI * 0.30f, D3DX_PI * 0.01f);
-
-	//// 視点の位置設定
-	//m_Info.posV.x = m_Info.posR.x + (sinf(m_Info.rot.y + D3DX_PI) * (m_Info.fDistance * (1.0 - fabsf(m_Info.fHeight))));
-	//m_Info.posV.y = m_Info.posR.y + (m_Info.fDistance * m_Info.fHeight);
-	//m_Info.posV.z = m_Info.posR.z + (cosf(m_Info.rot.y + D3DX_PI) * (m_Info.fDistance * (1.0 - fabsf(m_Info.fHeight))));
 
 	if (pInputKeyboard->GetTrigger(DIK_Q) == true || pInputMouse->GetTrigger(CMouse::MOUSE_5) == true)
 	{// マウスのサイドボタン2を押したら
@@ -169,7 +206,6 @@ void CCamera::SetCamera(void)
 	D3DXMatrixIdentity(&m_Info.mtxProjection);
 
 	//プロジェクションマトリックスを作成
-
 	switch (m_Info.nScreen)
 	{
 	case SCREEN_2D: {	// 平行投影
@@ -186,7 +222,7 @@ void CCamera::SetCamera(void)
 			D3DXToRadian(90.0f),							/* 視野角 */
 			(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,		/*画面のアスペクト比*/
 			10.0f,											/*Z値の最小値*/
-			2000.0f);										/*Z値の最大値*/
+			1500.0f);										/*Z値の最大値*/
 	}
 		break;
 	}
@@ -300,6 +336,7 @@ void CCamera::SetPosR(D3DXVECTOR3 pos, int nIdx)
 void CCamera::SetRot(D3DXVECTOR3 rot, int nIdx)
 {
 	m_Info.rot = rot;
+	m_Info.bRotMove = true;
 }
 
 //========================================
@@ -307,5 +344,5 @@ void CCamera::SetRot(D3DXVECTOR3 rot, int nIdx)
 //========================================
 void CCamera::SetHeigth(float Heigth)
 {
-	m_Info.fHeight = Heigth;
+	m_Info.fVerticalMove = Heigth;
 }

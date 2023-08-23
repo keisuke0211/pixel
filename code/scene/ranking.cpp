@@ -352,16 +352,16 @@ void CRanking::NameInput(void)
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
 
-																// -- 文字列切替 ---------------------------------------------
+	// -- 文字列切替 ---------------------------------------------
 	if (pInputKeyboard->GetRepeat(DIK_A) || pInputKeyboard->GetRepeat(DIK_LEFT) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_LEFT))
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
 	{
 		m_Info.nCntLetter--;
 		m_Info.bNameInput = true;
 	}
 	else if (
 		pInputKeyboard->GetRepeat(DIK_D) || pInputKeyboard->GetRepeat(DIK_RIGHT) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_RIGHT))
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
 	{
 		m_Info.nCntLetter++;
 		m_Info.bNameInput = true;

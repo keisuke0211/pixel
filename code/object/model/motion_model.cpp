@@ -107,32 +107,6 @@ void CMotionModel::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	if (m_Stencil)
-	{
-		// ステンシルバッファ -> 有効
-		pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
-		// ステンシルバッファと比較する参照値設定 -> ref
-		pDevice->SetRenderState(D3DRS_STENCILREF, 0x01);
-
-		// ステンシルバッファの値に対してのマスク設定 -> 0xff(全て真)
-		pDevice->SetRenderState(D3DRS_STENCILMASK, 0xff);
-
-		// ステンシルテストの比較方法 ->
-		// （参照値 >= ステンシルバッファの参照値）なら合格
-		pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
-
-		// ステンシルテストの結果に対しての反映設定
-		pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);		// Zとステンシル成功
-		pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);			// Zとステンシル失敗
-		pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);			// Zのみ失敗
-	}
-	else
-	{
-		// ステンシルバッファ -> 無効
-		pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-	}
-
 	// 計算用マトリックス
 	D3DXMATRIX mtxRot, mtxTrans, mtxRotQuat, mtxScale;
 
@@ -162,9 +136,6 @@ void CMotionModel::Draw(void)
 	{// パーツの描画設定
 		m_pMotion->SetParts(m_mtxWorld, m_bcolor, m_color);
 	}
-
-	// ステンシルバッファ -> 無効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 }
 
 

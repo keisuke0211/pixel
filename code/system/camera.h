@@ -43,13 +43,18 @@ public:
 		D3DXVECTOR3 posOldR;		// 前回の注視点
 		D3DXVECTOR3 vecU;			// 上方向ベクトル
 		D3DXVECTOR3 rot;			// 向き
+		D3DXVECTOR3 targetRot;		// 目標向き
 		D3DXVECTOR3 spin;			// 回転量
 
 		int nScreen;				// 投影モード
 
 		float fDistance;			// 距離
 		float fHeight;				// 高さ
+		float fTargetHeight;		// 目標高さ
 		float fVerticalMove;		// 縦の移動量
+		bool bRotMove;				// 向きの移動切り替えフラグ
+
+		int nRotType;				// 向き種類
 	};
 
 	// ***** 関数 *****
@@ -70,7 +75,6 @@ public:
 
 	/* 取得 */
 	Info GetInfo() { return m_Info; }			// カメラの情報
-
 
 private:
 

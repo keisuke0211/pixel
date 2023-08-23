@@ -79,6 +79,15 @@ public:
 		DIRECTION_MAX,
 	};
 
+	enum ROT
+	{
+		ROT_UP,		// 上
+		ROT_RIGHT,	// 左
+		ROT_DOWN,	// 下
+		ROT_LEFT,	// 右
+		ROT_MAX
+	};
+
 	// ***** 関数 *****
 	CPhysics();		// コンストラクタ
 	virtual~CPhysics();	// デストラクタ
