@@ -15,15 +15,15 @@ SET_SIDE
 	POS = 0.0 -100.0 0.0
 	ROT = 0.0 0.0 0.0
 	COLOR = 1.0 1.0 1.0 1.0
-	HEIGHT = 100.0
+	HEIGHT = 500.0
 	RADIUS = 1080.0
 	
 	// テクスチャ関連
 	NUMTEX = 1
 	
 	SET_TEX
-		TYPE = 1
-		TEX_V = 0.001
+		TYPE = 0
+		TEX_V = 0.0006
 	END_TEX
 	
 	// 分割数
@@ -41,11 +41,21 @@ SET_SIDE
 	RADIUS = 1080.0
 	
 	// テクスチャ関連
-	NUMTEX = 1
+	NUMTEX = 3
 	
 	SET_TEX
-		TYPE = 0
-		TEX_V = 0.000
+		TYPE = 1
+		TEX_V = 0.0006
+	END_TEX
+	
+	SET_TEX
+		TYPE = 2
+		TEX_V = 0.0004
+	END_TEX
+	
+	SET_TEX
+		TYPE = 3
+		TEX_V = 0.0003
 	END_TEX
 	
 	// 分割数

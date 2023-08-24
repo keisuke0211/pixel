@@ -18,6 +18,12 @@
 // 頂点フォーマット【3D_MULTI】
 #define FVF_VERTEX_3D_MULTI (D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_DIFFUSE|D3DFVF_TEX3)
 
+#define BG_HEIGHT			(500.0f)	// 高さ
+#define BG_RADIUS			(1080.0f)	// 半径
+#define BG_DIVISION_WIDTH	(32)		// 分割幅
+#define BG_DIVISION_HEIGHT	(1)			// 分割高さ
+#define BG_POS				(D3DXVECTOR3(-100.0f,200.0f,100.0f))	// 位置
+
 //****************************************
 // コンストラクタ
 //****************************************
@@ -28,11 +34,16 @@ CBgSide::CBgSide(int nPriority) : CObject(nPriority)
 	m_Info.color = INIT_D3DXCOLOR;
 	m_Info.fHeight = INIT_FLOAT;
 	m_Info.fRadius = INIT_FLOAT;
-	m_Info.nType = 0;
 	m_Info.nNumTex = 0;
 	m_Info.nDivisionX = 1;
 	m_Info.nDivisionY = 1;
-	m_Info.fTexV = 0;
+
+	for (int nTex = 0; nTex < m_Info.nNumTex; nTex++)
+	{
+		m_Info.pMulti[nTex].nType = 0;
+		m_Info.pMulti[nTex].fTexV = 0;
+		m_Info.pMulti[nTex].fTexVSpeed = 0;
+	}
 }
 //****************************************
 // デストラクタ
@@ -59,12 +70,14 @@ CBgSide *CBgSide::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR color, floa
 		pObj->m_Info.nNumTex = nNumTex;
 
 		// メモリの解放
-		pObj->m_Info.nType = new int[nNumTex];
-		pObj->m_Info.fTexV = new float[nNumTex];
-		pObj->m_aTexV = new float[nNumTex];
+		pObj->m_Info.pMulti = new Multi[nNumTex];
 
-		pObj->m_Info.nType = nType;
-		pObj->m_Info.fTexV = fTexV;
+		for (int nTex = 0; nTex < nNumTex; nTex++)
+		{
+			pObj->m_Info.pMulti[nTex].nType = nType[nTex];
+			pObj->m_Info.pMulti[nTex].fTexV = 0.0f;
+			pObj->m_Info.pMulti[nTex].fTexVSpeed = fTexV[nTex];
+		}
 
 		pObj->m_Info.nDivisionX = nDivisionX;
 		pObj->m_Info.nDivisionY = nDivisionY;
@@ -81,7 +94,6 @@ CBgSide *CBgSide::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR color, floa
 //========================================
 HRESULT CBgSide::Init(void)
 {
-
 	SetType(TYPE_BG);
 
 	// デバイスの所得
@@ -197,15 +209,15 @@ HRESULT CBgSide::Init(void)
 
 	if (m_Info.nNumTex >= 1)
 	{
-		m_pTextureMeshfield1 = pTexture->GetAddress(*m_Info.nType);
+		m_pTextureMeshfield1 = pTexture->GetAddress(m_Info.pMulti[0].nType);
 	}
 	if (m_Info.nNumTex >= 2)
 	{
-		m_pTextureMeshfield2 = pTexture->GetAddress(*m_Info.nType);
+		m_pTextureMeshfield2 = pTexture->GetAddress(m_Info.pMulti[1].nType);
 	}
 	if (m_Info.nNumTex >= 3)
 	{
-		m_pTextureMeshfield3 = pTexture->GetAddress(*m_Info.nType);
+		m_pTextureMeshfield3 = pTexture->GetAddress(m_Info.pMulti[2].nType);
 	}
 
 	return S_OK;
@@ -230,11 +242,11 @@ void CBgSide::Uninit(void)
 		m_pIdxBuf = NULL;
 	}
 
-	m_Info.nType = NULL;
-
-	m_Info.fTexV = NULL;
-
-	m_aTexV = NULL;
+	for (int nTex = 0; nTex < m_Info.nNumTex; nTex++)
+	{
+		delete &m_Info.pMulti[nTex];
+	}
+	m_Info.pMulti = NULL;
 }
 
 //========================================
@@ -244,55 +256,54 @@ void CBgSide::Update(void)
 {
 	bool bPause = CPause::IsPause();
 
-	//if (!bPause)
-	//{
-	//	VERTEX_3D_MULTI *pVtx;	// 設定用ポインタ
+	if (!bPause)
+	{
+		VERTEX_3D_MULTI *pVtx;	// 設定用ポインタ
 
-	//	// 頂点バッファをロックし、頂点情報へのポインタを取得
-	//	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+		// 頂点バッファをロックし、頂点情報へのポインタを取得
+		m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	//	//テクスチャ座標の開始位置(X軸)の更新
-	//	for (int nTex = 0; nTex < m_Info.nNumTex; nTex++)
-	//	{
-	//		m_aTexV[nTex] += m_Info.fTexV[nTex];
-	//	}
+		//テクスチャ座標の開始位置(X軸)の更新
+		for (int nTex = 0; nTex < m_Info.nNumTex; nTex++)
+		{
+			m_Info.pMulti[nTex].fTexV += m_Info.pMulti[nTex].fTexVSpeed;
+		}
 
-	//	// テクスチャ座標の更新
-	//	for (int nCntHeight = 0; nCntHeight < m_Info.nDivisionY + 1; nCntHeight++)
-	//	{
-	//		for (int nCntWidth = 0; nCntWidth < m_Info.nDivisionX + 1; nCntWidth++)
-	//		{
+		// テクスチャ座標の更新
+		for (int nCntHeight = 0; nCntHeight < m_Info.nDivisionY + 1; nCntHeight++)
+		{
+			for (int nCntWidth = 0; nCntWidth < m_Info.nDivisionX + 1; nCntWidth++)
+			{
+				if (m_Info.nNumTex >= 1)
+				{
+					// テクスチャ1
+					pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].tex1
+						= D3DXVECTOR2(
+							m_Info.pMulti[0].fTexV + (nCntWidth * (8.0f / (float)m_Info.nDivisionX)),
+							nCntHeight * (1.0f / (float)m_Info.nDivisionY));
+				}
+				if (m_Info.nNumTex >= 2)
+				{
+					// テクスチャ2
+					pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].texM
+						= D3DXVECTOR2(
+							m_Info.pMulti[1].fTexV + (nCntWidth * (8.0f / (float)m_Info.nDivisionX)),
+							nCntHeight * (1.0f / (float)m_Info.nDivisionY));
+				}
+				if (m_Info.nNumTex >= 3)
+				{
+					// テクスチャ3
+					pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].texM2
+						= D3DXVECTOR2(
+							m_Info.pMulti[2].fTexV + (nCntWidth * (8.0f / (float)m_Info.nDivisionX)),
+							nCntHeight * (1.0f / (float)m_Info.nDivisionY));
+				}
+			}
+		}
 
-	//			if (m_Info.nNumTex >= 1)
-	//			{
-	//				// テクスチャ1
-	//				pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].tex1
-	//					= D3DXVECTOR2(
-	//						m_aTexV[m_Info.nNumTex] + (nCntWidth * (8.0f / (float)m_Info.nDivisionX)),
-	//						nCntHeight * (1.0f / (float)m_Info.nDivisionY));
-	//			}
-	//			if (m_Info.nNumTex >= 2)
-	//			{
-	//				// テクスチャ2
-	//				pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].texM
-	//					= D3DXVECTOR2(
-	//						m_aTexV[m_Info.nNumTex] + (nCntWidth * (8.0f / (float)m_Info.nDivisionX)),
-	//						nCntHeight * (1.0f / (float)m_Info.nDivisionY));
-	//			}
-	//			if (m_Info.nNumTex >= 3)
-	//			{
-	//				// テクスチャ3
-	//				pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].texM2
-	//					= D3DXVECTOR2(
-	//						m_aTexV[m_Info.nNumTex] + (nCntWidth * (8.0f / (float)m_Info.nDivisionX)),
-	//						nCntHeight * (1.0f / (float)m_Info.nDivisionY));
-	//			}
-	//		}
-	//	}
-
-	//	// 頂点バッファをアンロックする
-	//	m_pVtxBuff->Unlock();
-	//}
+		// 頂点バッファをアンロックする
+		m_pVtxBuff->Unlock();
+	}
 }
 
 //========================================
@@ -322,19 +333,28 @@ void CBgSide::Draw(void)
 	// ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
 
-	// テクスチャステージステートの設定		
+	// テクスチャステージステートの設定
+	if (m_Info.nNumTex >= 1)
+	{
 		pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 		pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 		pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+	}
+	if (m_Info.nNumTex >= 2)
+	{
 		pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_BLENDTEXTUREALPHA);
 		pDevice->SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_CURRENT);
 		pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
 		pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+	}
+	if (m_Info.nNumTex >= 3)
+	{
 		pDevice->SetTextureStageState(2, D3DTSS_COLOROP, D3DTOP_BLENDTEXTUREALPHA);
 		pDevice->SetTextureStageState(2, D3DTSS_COLORARG2, D3DTA_CURRENT);
 		pDevice->SetTextureStageState(2, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
 		pDevice->SetTextureStageState(2, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+	}
 
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_3D_MULTI));
@@ -346,9 +366,18 @@ void CBgSide::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_3D_MULTI);
 
 	// テクスチャの設定
+	if (m_Info.nNumTex >= 1)
+	{
 		pDevice->SetTexture(0, m_pTextureMeshfield1);
+	}
+	if (m_Info.nNumTex >= 2)
+	{
 		pDevice->SetTexture(1, m_pTextureMeshfield2);
+	}
+	if (m_Info.nNumTex >= 3)
+	{
 		pDevice->SetTexture(2, m_pTextureMeshfield3);
+	}
 
 	// ポリゴンの描画
 	pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP,
@@ -359,19 +388,28 @@ void CBgSide::Draw(void)
 		((m_Info.nDivisionX * m_Info.nDivisionY) * 2) + (4 * (m_Info.nDivisionY - 1)));
 
 	// テクスチャステージステートを戻す
+	if (m_Info.nNumTex >= 1)
+	{
 		pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 		pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 		pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+	}
+	if (m_Info.nNumTex >= 2)
+	{
 		pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 		pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 		pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+	}
+	if (m_Info.nNumTex >= 3)
+	{
 		pDevice->SetTextureStageState(2, D3DTSS_COLOROP, D3DTOP_DISABLE);
 		pDevice->SetTextureStageState(2, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 		pDevice->SetTextureStageState(2, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		pDevice->SetTextureStageState(2, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+	}
 
 	// ライティングを有効にする
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);

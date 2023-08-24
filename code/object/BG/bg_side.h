@@ -24,7 +24,7 @@ public:
 	{
 		D3DXVECTOR3 pos;	// 頂点座標
 		D3DXVECTOR3 nor;	// 法線ベクトル
-		D3DXCOLOR	col;	// 頂点カラー
+		D3DCOLOR	col;	// 頂点カラー
 		D3DXVECTOR2 tex1;	// テクスチャ座標1
 		D3DXVECTOR2 texM;	// テクスチャ座標2
 		D3DXVECTOR2 texM2;	// テクスチャ座標3
@@ -48,6 +48,12 @@ public:
 
 private:
 	// ***** 構造体 *****
+	struct Multi
+	{
+		int	nType;			// 画像種類
+		float fTexV;		// テクスチャ座標の開始位置(X軸)
+		float fTexVSpeed;	// テクスチャ座標の移動速度(X軸)
+	};
 
 	// 共通情報
 	struct Info
@@ -57,11 +63,10 @@ private:
 		D3DXCOLOR	color;	// 色
 		float fHeight;		// 高さ
 		float fRadius;		// 半径
-		int *nType;			// 画像種類
 		int nNumTex;		// 画像数
 		int nDivisionX;		// 分割幅
 		int nDivisionY;		// 分割高さ
-		float *fTexV;		// テクスチャ座標の開始位置(X軸)
+		Multi *pMulti;		// マルチ情報
 	};
 
 	// ***** 変数 *****
@@ -74,6 +79,5 @@ private:
 	LPDIRECT3DINDEXBUFFER9 m_pIdxBuf;	//インデックス情報を格納
 
 	Info m_Info;	// 共通情報
-	float *m_aTexV;
 };
 #endif
