@@ -188,7 +188,7 @@ void CCamera::Update(void)
 		}
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_Q) == true || pInputMouse->GetTrigger(CMouse::MOUSE_5) == true)
+	if (pInputKeyboard->GetTrigger(DIK_Q) || pInputMouse->GetTrigger(CMouse::MOUSE_5) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X))
 	{// マウスのサイドボタン2を押したら
 
 		// 画面設定
@@ -261,9 +261,9 @@ void CCamera::SetScreen(void)
 		m_Info.posR = m_Save.posR;						// 注視点
 		m_Info.rot  = m_Save.rot;						// 向き
 		m_Info.spin = m_Save.spin;						// 回転量
-		m_Info.fHeight = m_Save.fHeight;				// 高さ
+		m_Info.fTargetHeight = m_Save.fHeight;			// 高さ
 		m_Info.fDistance = m_Save.fDistance;			// 距離
-		m_Info.fVerticalMove = m_Save.fVerticalMove;	// 縦の移動量
+		m_Info.fVerticalMove = m_Save.fHeight;			// 縦の移動量
 
 		m_Info.nScreen = SCREEN_3D;
 	}
@@ -282,6 +282,8 @@ void CCamera::SetScreen(void)
 
 		// 向きを初期化
 		m_Info.rot.y = 0.0f;
+
+		m_Info.fVerticalMove = 0.05f;
 
 		m_Info.nScreen = SCREEN_2D;
 	}

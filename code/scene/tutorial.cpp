@@ -72,7 +72,7 @@ HRESULT CTutorial::Init(void)
 	CTitle::SetClear(false);
 
 	// îwåi(ë§ñ )ÇÃê∂ê¨
-	CBgSide *pBgsky = CBgSide::Create();
+	//CBgSide *pBgsky = CBgSide::Create();
 
 	// îwåi(ìVà‰)ÇÃê∂ê¨
 	CBgCeiling *pBgCeiling = CBgCeiling::Create();

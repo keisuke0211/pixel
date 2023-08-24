@@ -24,6 +24,12 @@ class CPlayer;			// プレイヤー
 class CGame : public CScene
 {
 	static const int GAME_TIME = 60;	// 制限時間
+	static const char* CEILING_FILE;	// 天井のファイルパス
+	static const char* SIDE_FILE;		// 側面のファイルパス
+	static const char* FLOOR_FILE;		// 床のファイルパス
+	static const char* BLOCK_FILE1;		// ブロックのファイルパス
+	static const char* ENEMY_FILE1;		// エネミーのファイルパス
+
 public:
 
 	// ***** 関数 *****
@@ -38,8 +44,11 @@ public:
 	/* 生成		*/static CGame *Create(void);
 
 	// -- 読み込み ----------
-	/* エネミー	*/static void LoodEnemy(void);
-	/* ブロック */static void LoodBlock(void);	
+	/* 背景　天井	*/static void LoodCeiling(void);
+	/* 背景　側面	*/static void LoodSide(void);
+	/* 床			*/static void LoodFloor(void);
+	/* ブロック		*/static void LoodBlock(void);
+	/* エネミー		*/static void LoodEnemy(void);
 
 	// -- 取得 ------------------------
 	/* プレイヤー	*/static CPlayer *GetPlayer() { return m_pPlayer; }
