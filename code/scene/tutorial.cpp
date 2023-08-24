@@ -36,6 +36,12 @@ CPlayer *CTutorial::m_pPlayer = NULL;
 CTime *CTutorial::m_pTime = NULL;
 CScore *CTutorial::m_pScore = NULL;
 
+const char* CTutorial::CEILING_FILE = "data\\GAMEDATA\\OBJECT\\CEILING_MULTI_DATA.txt";
+const char* CTutorial::SIDE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_MULTI_DATA.txt";
+const char* CTutorial::FLOOR_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_MULTI_DATA.txt";
+const char* CTutorial::BLOCK_FILE1 = "data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv";
+const char* CTutorial::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\STAGE_ENEMY1.csv";
+
 //========================================
 // コンストラクタ
 //========================================
@@ -72,16 +78,19 @@ HRESULT CTutorial::Init(void)
 	CTitle::SetClear(false);
 
 	// 背景(側面)の生成
-	//CBgSide *pBgsky = CBgSide::Create();
+	LoodSide();
 
 	// 背景(天井)の生成
-	CBgCeiling *pBgCeiling = CBgCeiling::Create();
+	LoodCeiling();
+
+	// 床の生成
+	LoodFloor();
 
 	// ブロックの生成
 	LoodBlock();
 
-	m_pPlayer = CPlayer::Create();
-	m_pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
+	CPlayer *pPlayer = CPlayer::Create();
+	pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
 	// 敵の生成
 	LoodEnemy();
@@ -195,7 +204,7 @@ void CTutorial::Update(void)
 						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 						D3DXVECTOR2(440.0f, 100.0f),
 						"Game Clear",
-						CFont::FONT_DOTGOTHIC,
+						CFont::FONT_BESTTEN,
 						20.0f,
 						15, 10, 30, false);
 
@@ -348,7 +357,7 @@ void CTutorial::TexCreate(int nIdx)
 			m_TextInfo[nIdx].pos,
 			m_TextInfo[nIdx].size,
 			*m_TextInfo[nIdx].ActionTex,
-			CFont::FONT_DOTGOTHIC,
+			CFont::FONT_BESTTEN,
 			m_TextInfo[nIdx].nTextSize,
 			m_TextInfo[nIdx].nStartTime,
 			m_TextInfo[nIdx].nStandTime,
@@ -484,6 +493,177 @@ void CTutorial::TutorialTex(void)
 		}
 	}
 	}
+}
+
+//========================================
+// 天井
+//========================================
+void CTutorial::LoodCeiling(void)
+{
+	CBgCeiling *pBgCeiling = CBgCeiling::Create();
+}
+
+//========================================
+// 側面
+//========================================
+void CTutorial::LoodSide(void)
+{
+	// 変数宣言
+	char aDataSearch[128] = {};		// 文字列比較用の変数
+	char g_aEqual[128] = {};		// ＝読み込み用変数
+
+									// ファイルポインタの宣言
+	FILE * pFile;
+
+	//ファイルを開く
+	pFile = fopen(SIDE_FILE, "r");
+
+	// ファイルが開けたら
+	if (pFile != NULL)
+	{//ファイルが開いた場合
+
+	 // END_SCRIPTが見つかるまで読み込みを繰り返す
+		while (1)
+		{
+			fscanf(pFile, "%s", aDataSearch);	// 検索
+
+			if (!strcmp(aDataSearch, "END_SCRIPT"))
+			{// 読み込みを終了
+				fclose(pFile);
+				break;
+			}
+			else if (aDataSearch[0] == '#')
+			{// 折り返す
+				continue;
+			}
+			else if (!strcmp(aDataSearch, "CREATE_SIDE"))
+			{// 生成開始
+
+				while (1)
+				{
+					fscanf(pFile, "%s", aDataSearch);
+
+					if (!strcmp(aDataSearch, "END_CREATE_SIDE"))
+					{// 生成終了
+						break;
+					}
+					else if (!strcmp(aDataSearch, "SET_SIDE"))
+					{// 生成情報の読み込み
+						D3DXVECTOR3 pos = INIT_D3DXVECTOR3;	// 位置
+						D3DXVECTOR3 rot = INIT_D3DXVECTOR3;	// 向き
+						D3DXCOLOR	color = INIT_D3DXCOLOR;	// 色
+						float fHeight = 0;					// 高さ
+						float fRadius = 0;					// 半径
+						int *nType = 0;						// 画像種類
+						int nNumTex = 0;					// 画像数
+						int nDivisionX = 1;					// 分割幅
+						int nDivisionY = 1;					// 分割高さ
+						float *fTexV = 0;					// テクスチャ座標の開始位置(X軸)
+
+						int nCntTex = 0; // 画像カウント
+
+						while (1)
+						{
+							fscanf(pFile, "%s", aDataSearch);
+
+							if (!strcmp(aDataSearch, "END_SIDE"))
+							{// 読み込みを終了
+
+								CBgSide *pBgSide = CBgSide::Create(
+									pos, rot, color, fHeight, fRadius, nType, nNumTex,
+									nDivisionX, nDivisionY, fTexV);
+
+								break;
+							}
+							else if (!strcmp(aDataSearch, "POS"))
+							{// 位置
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%f", &pos.x);
+								fscanf(pFile, "%f", &pos.y);
+								fscanf(pFile, "%f", &pos.z);
+							}
+							else if (!strcmp(aDataSearch, "ROT"))
+							{// 向き
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%f", &rot.x);
+								fscanf(pFile, "%f", &rot.y);
+								fscanf(pFile, "%f", &rot.z);
+							}
+							else if (!strcmp(aDataSearch, "COLOR"))
+							{// 色
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%f", &color.r);
+								fscanf(pFile, "%f", &color.g);
+								fscanf(pFile, "%f", &color.b);
+								fscanf(pFile, "%f", &color.a);
+							}
+							else if (!strcmp(aDataSearch, "HEIGHT"))
+							{// 高さ
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%f", &fHeight);
+							}
+							else if (!strcmp(aDataSearch, "RADIUS"))
+							{// 半径
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%f", &fRadius);
+							}
+							else if (!strcmp(aDataSearch, "NUMTEX"))
+							{// 画像数
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%d", &nNumTex);
+
+								// メモリの解放
+								nType = new int[nNumTex];
+								fTexV = new float[nNumTex];
+							}
+							else if (!strcmp(aDataSearch, "SET_TEX"))
+							{// 画像関連の設定
+
+								while (1)
+								{
+									fscanf(pFile, "%s", aDataSearch);
+
+									if (!strcmp(aDataSearch, "END_TEX"))
+									{// 読み込みを終了
+										nCntTex++;
+										break;
+									}
+									else if (!strcmp(aDataSearch, "TYPE"))
+									{// 半径
+										fscanf(pFile, "%s", &g_aEqual[0]);
+										fscanf(pFile, "%d", &nType[nCntTex]);
+									}
+									else if (!strcmp(aDataSearch, "TEX_V"))
+									{// 画像数
+										fscanf(pFile, "%s", &g_aEqual[0]);
+										fscanf(pFile, "%f", &fTexV[nCntTex]);
+									}
+								}
+							}
+							else if (!strcmp(aDataSearch, "DIVISION_X"))
+							{// 分割幅
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%d", &nDivisionX);
+							}
+							else if (!strcmp(aDataSearch, "DIVISION_Y"))
+							{// 分割高さ
+								fscanf(pFile, "%s", &g_aEqual[0]);
+								fscanf(pFile, "%d", &nDivisionY);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+//========================================
+// 床
+//========================================
+void CTutorial::LoodFloor(void)
+{
+
 }
 
 //========================================

@@ -26,7 +26,7 @@ public:
 	// ƒtƒHƒ“ƒg
 	enum FONT
 	{
-		FONT_DOTGOTHIC = 0,
+		FONT_BESTTEN = 0,
 		FONT_FZGONTA,
 		FONT_MEIRIO,
 		FONT_MAX,

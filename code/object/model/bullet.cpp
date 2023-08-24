@@ -27,6 +27,9 @@ int CBullet::m_nNumAll = 0;
 #define BULLET_DIAMETER		(0.2f)	// サイズの倍率
 #define BULLET_LIFE			(60)	// 寿命
 
+#define CUBE_LIFE1			(300)	// 壁や床に配置した場合の寿命
+#define CUBE_LIFE2			(150)	// 敵に当てた場合の寿命
+
 //========================================
 // コンストラクタ
 //========================================
@@ -334,7 +337,7 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 				if (m_Info.bHit)
 				{
 					// キューブの生成
-					CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z));
+					CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z), CUBE_LIFE1);
 
 					// 弾の破棄
 					Uninit();
@@ -435,7 +438,7 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 				if (m_Info.bHit)
 				{
 					// キューブの生成
-					CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z));
+					CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z), CUBE_LIFE2);
 
 					// 弾の破棄
 					Uninit();

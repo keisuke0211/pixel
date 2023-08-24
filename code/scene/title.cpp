@@ -75,7 +75,7 @@ HRESULT CTitle::Init(void)
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
 		" ",
-		CFont::FONT_DOTGOTHIC,
+		CFont::FONT_BESTTEN,
 		20.0f,
 		1, 1, -1);
 
@@ -83,7 +83,7 @@ HRESULT CTitle::Init(void)
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
 		"ENTER‚ð‰Ÿ‚µ‚ÄŽn‚ß‚Ä‚Ë!",
-		CFont::FONT_DOTGOTHIC,
+		CFont::FONT_BESTTEN,
 		20.0f,
 		5, 10, -1,false);
 
@@ -243,7 +243,7 @@ void CTitle::TitleAnime(void)
 				D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 				D3DXVECTOR2(1080.0f, 100.0f),
 				"ENTER‚ð‰Ÿ‚µ‚ÄŽn‚ß‚Ä‚Ë!",
-				CFont::FONT_DOTGOTHIC,
+				CFont::FONT_BESTTEN,
 				20.0f,
 				5, 10, -1, false);
 

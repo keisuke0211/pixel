@@ -9,9 +9,6 @@
 #include "../../manager.h"
 #include "../renderer.h"
 
-// 定義
-
-
 //　フォントパス
 const char* CFont::s_FileName[] =
 {
@@ -24,7 +21,7 @@ static_assert(sizeof(CFont::s_FileName) / sizeof(CFont::s_FileName[0]) == CFont:
 // フォント名
 const char* CFont::s_FontName[] =
 {
-	"ドットゴシック16",
+	"ベストテン",
 	"FZゴンタかな",
 	"メイリオ",
 };
@@ -63,7 +60,6 @@ void CFont::FontCreate(FONT nFont)
 	// フォントを使えるようにする
 	DESIGNVECTOR design;
 
-
 	AddFontResourceEx(
 		s_FileName[nFont], //ttfファイルへのパス
 		FR_PRIVATE,
@@ -74,7 +70,6 @@ void CFont::FontCreate(FONT nFont)
 	int fontsize = 60;
 	m_logFont[nFont] = { fontsize, 0, 0, 0, 0, 0, 0, 0, SHIFTJIS_CHARSET, OUT_TT_ONLY_PRECIS,
 		CLIP_DEFAULT_PRECIS, PROOF_QUALITY, FIXED_PITCH | FF_MODERN };
-
 
 	strcpy(m_logFont[nFont].lfFaceName, s_FontName[nFont]);
 }
@@ -94,7 +89,7 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 	HDC hdc = GetDC(NULL);
 	HFONT oldFont = (HFONT)SelectObject(hdc, m_hFont[nFont]);
 
-	std::string words = nWords;
+	string words = nWords;
 	// 文字コード取得
 	const char *c = words.c_str();
 	UINT code = 0;

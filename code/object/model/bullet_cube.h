@@ -65,7 +65,7 @@ public:
 	/* 終了		*/void Uninit(void);
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);
-	/* 生成		*/static CCube *Create(int nType, D3DXVECTOR3 pos);
+	/* 生成		*/static CCube *Create(int nType, D3DXVECTOR3 pos,int nLife);
 
 	// -- 設定 -------------------------------
 	/* 位置			*/void SetCubePos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }

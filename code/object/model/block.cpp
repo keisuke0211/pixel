@@ -251,7 +251,7 @@ void CBlock::Update(void)
 					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 					D3DXVECTOR2(280.0f, 100.0f),
 					"èoå˚Ç™äJÇ¢ÇΩÅI",
-					CFont::FONT_DOTGOTHIC,
+					CFont::FONT_BESTTEN,
 					20.0f,
 					10, 10, 30, false);
 			}

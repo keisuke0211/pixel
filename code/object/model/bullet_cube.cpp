@@ -69,7 +69,7 @@ CCube::~CCube()
 //========================================
 // ¶¬
 //========================================
-CCube *CCube::Create(int nShape, D3DXVECTOR3 pos)
+CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 {
 	CCube *pCube = NULL;
 
@@ -90,8 +90,8 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos)
 	pCube->Init();
 
 	pCube->m_Info.nShape = nShape;
-	pCube->m_Info.nLife = 300;
-	pCube->m_Info.nLifeMax = 300;
+	pCube->m_Info.nLife = nLife;
+	pCube->m_Info.nLifeMax = nLife;
 	pCube->SetCubePos(pos);
 	pCube->SetPos(pos);
 

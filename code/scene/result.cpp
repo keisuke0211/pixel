@@ -47,7 +47,7 @@ HRESULT CResult::Init(void)
 			D3DXVECTOR3(640.0f, 100.0f, 0.0f),
 			D3DXVECTOR2(640.0f, 100.0f),
 			"ゲームクリア",
-			CFont::FONT_DOTGOTHIC,
+			CFont::FONT_BESTTEN,
 			40.0f,
 			5, 10, -1,false);
 	}
@@ -58,7 +58,7 @@ HRESULT CResult::Init(void)
 			D3DXVECTOR3(540.0f, 100.0f, 0.0f),
 			D3DXVECTOR2(640.0f, 100.0f),
 			"ゲームオーバー",
-			CFont::FONT_DOTGOTHIC,
+			CFont::FONT_BESTTEN,
 			40.0f,
 			5, 10, -1, false);
 	}
@@ -86,7 +86,7 @@ HRESULT CResult::Init(void)
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
 		"ENTERを押して始めてね!",
-		CFont::FONT_DOTGOTHIC,
+		CFont::FONT_BESTTEN,
 		20.0f,
 		5, 10, -1);
 

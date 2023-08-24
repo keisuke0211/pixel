@@ -115,7 +115,7 @@ HRESULT CGame::Init(void)
 		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 		D3DXVECTOR2(440.0f, 100.0f),
 		"ïΩå¥ÉXÉeÅ[ÉWÅI\nÇUÇOïbà»ì‡Ç≈çUó™ÇπÇÊÅI",
-		CFont::FONT_DOTGOTHIC,
+		CFont::FONT_BESTTEN,
 		20.0f,
 		15, 10, 30, false);
 	m_nStartTime = (15 * 18) + 10 + 25;
@@ -199,7 +199,7 @@ void CGame::Update(void)
 						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 						D3DXVECTOR2(440.0f, 100.0f),
 						"GAME CLEAR",
-						CFont::FONT_DOTGOTHIC,
+						CFont::FONT_BESTTEN,
 						20.0f,
 						12, 10, 30, false);
 
@@ -228,7 +228,7 @@ void CGame::Update(void)
 					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 					D3DXVECTOR2(440.0f, 100.0f),
 					"TIME UP",
-					CFont::FONT_DOTGOTHIC,
+					CFont::FONT_BESTTEN,
 					20.0f,
 					12, 10, 30, false);
 

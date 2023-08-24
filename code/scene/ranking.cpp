@@ -75,7 +75,7 @@ HRESULT CRanking::Init(void)
 			D3DXVECTOR3(640.0f, 200 + ( 30 * nRank), 0.0f),
 			D3DXVECTOR2(1080.0f, 100.0f),
 			aString,
-			CFont::FONT_DOTGOTHIC,
+			CFont::FONT_BESTTEN,
 			20.0f,
 			5, 1, -1,false);
 	}
@@ -303,7 +303,7 @@ void CRanking::SetNameEntry(int nUpdateRank)
 			D3DXVECTOR3(640.0f, 200 + (30 * m_Info.nUpdateRank), 0.0f),
 			D3DXVECTOR2(1080.0f, 100.0f),
 			aString,
-			CFont::FONT_DOTGOTHIC,
+			CFont::FONT_BESTTEN,
 			20.0f,
 			1, 1, -1, false);
 	}
