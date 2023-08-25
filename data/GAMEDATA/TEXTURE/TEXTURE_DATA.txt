@@ -9,11 +9,13 @@
 #||||||||||||||||||||||||||||||||||||||||
 #========================================
 TEXTURE = data\\TEXTURE\\BgSky_layer00.png 		#00 空0
-TEXTURE = data\\TEXTURE\\BgSky_layer01.png 		#01 空１
-TEXTURE = data\\TEXTURE\\BgSky_layer02.png 		#02 空２
-TEXTURE = data\\TEXTURE\\BgSky_layer03.png 		#03 空３
-TEXTURE = data\\TEXTURE\\font_000.png 			#04 フォント
-TEXTURE = data\\TEXTURE\\TextBox.png 			#05 テキストボックス
+TEXTURE = data\\TEXTURE\\PixelSky_layer01.png 	#01 空１
+TEXTURE = data\\TEXTURE\\PixelSky_layer02.png 	#02 空２
+TEXTURE = data\\TEXTURE\\PixelSky_layer03.png 	#03 空３
+TEXTURE = data\\TEXTURE\\sea000.jpg 			#04 海１
+TEXTURE = data\\TEXTURE\\river000.jpg 			#05 海２
+TEXTURE = data\\TEXTURE\\font_000.png 			#06 フォント
+TEXTURE = data\\TEXTURE\\TextBox.png 			#07テキストボックス
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||

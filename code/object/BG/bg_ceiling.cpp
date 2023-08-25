@@ -19,7 +19,7 @@
 #define FVF_VERTEX_3D (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 
 
-#define BG_POS				(D3DXVECTOR3(-100.0f,680.0f,100.0f))	// 位置
+#define BG_POS				(D3DXVECTOR3(0.0f,580.0f,0.0f))			// 位置
 #define BG_HEIGHT			(475.0f)								// 高さ
 #define BG_RADIUS			(1080.0f)								// 半径
 #define BG_DIVISION_WIDTH	(16)									// 分割幅
@@ -186,7 +186,7 @@ HRESULT CBgCeiling::Init(void)
 	// テクスチャ設定
 	CTexture *pTexture = CManager::GetTexture();
 
-	m_pTexture = pTexture->GetAddress(CTexture::TEX_SKY00);
+	m_pTexture = pTexture->GetAddress(CTexture::TEX_SKY01);
 
 	return S_OK;
 }

@@ -1,11 +1,11 @@
 //========================================
 // 
-// 背景（側面）【 3D_MULTI 】処理
+// メッシュフィールド
 // 
 //========================================
-// *** bg_side.h ***
+// *** mesh_floor.h ***
 //========================================
-#include "bg_side.h"
+#include "mesh_floor.h"
 #include "../../manager.h"
 #include "../../system/renderer.h"
 #include "../../system/texture.h"
@@ -21,28 +21,32 @@
 //****************************************
 // コンストラクタ
 //****************************************
-CBgSide::CBgSide(int nPriority) : CObject(nPriority)
+CFloor::CFloor(int nPriority) : CObject(nPriority)
 {
 	m_Info.pos = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
 	m_Info.color = INIT_D3DXCOLOR;
+	m_Info.fWidth = INIT_FLOAT;
 	m_Info.fHeight = INIT_FLOAT;
-	m_Info.fRadius = INIT_FLOAT;
 	m_Info.nNumTex = 0;
 	m_Info.nDivisionX = 1;
 	m_Info.nDivisionY = 1;
+	m_Info.nNumDivisionX = 1;
+	m_Info.nNumDivisionY = 1;
 
 	for (int nTex = 0; nTex < m_Info.nNumTex; nTex++)
 	{
 		m_Info.pMulti[nTex].nType = 0;
-		m_Info.pMulti[nTex].fTexV = 0;
-		m_Info.pMulti[nTex].fTexVSpeed = 0;
+		m_Info.pMulti[nTex].fTexX = 0;
+		m_Info.pMulti[nTex].fTexY = 0;
+		m_Info.pMulti[nTex].fTexXSpeed = 0;
+		m_Info.pMulti[nTex].fTexYSpeed = 0;
 	}
 }
 //****************************************
 // デストラクタ
 //****************************************
-CBgSide::~CBgSide()
+CFloor::~CFloor()
 {
 
 }
@@ -50,18 +54,25 @@ CBgSide::~CBgSide()
 //========================================
 // 生成処理
 //========================================
-CBgSide *CBgSide::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR color, float fHeight, float fRadius, int *nType, int nNumTex, int nDivisionX, int nDivisionY, float *fTexV)
+CFloor *CFloor::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR color, float fWidth, float fHeight, int *nType, int nNumTex, bool bDivision, int nDivisionX, int nDivisionY, float *fTexX, float *fTexY)
 {
-	CBgSide *pObj = new CBgSide;
+	CFloor *pObj = new CFloor;
 
 	if (pObj != NULL)
 	{
 		pObj->m_Info.pos = pos;
 		pObj->m_Info.rot = rot;
 		pObj->m_Info.color = color;
+		pObj->m_Info.fWidth = fWidth;
 		pObj->m_Info.fHeight = fHeight;
-		pObj->m_Info.fRadius = fRadius;
 		pObj->m_Info.nNumTex = nNumTex;
+
+		// テクスチャの分割
+		if (bDivision)
+		{
+			pObj->m_Info.nNumDivisionX = nDivisionX;
+			pObj->m_Info.nNumDivisionY = nDivisionY;
+		}
 
 		// メモリの解放
 		pObj->m_Info.pMulti = new Multi[nNumTex];
@@ -69,8 +80,10 @@ CBgSide *CBgSide::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR color, floa
 		for (int nTex = 0; nTex < nNumTex; nTex++)
 		{
 			pObj->m_Info.pMulti[nTex].nType = nType[nTex];
-			pObj->m_Info.pMulti[nTex].fTexV = 0.0f;
-			pObj->m_Info.pMulti[nTex].fTexVSpeed = fTexV[nTex];
+			pObj->m_Info.pMulti[nTex].fTexX = 0.0f;
+			pObj->m_Info.pMulti[nTex].fTexY = 0.0f;
+			pObj->m_Info.pMulti[nTex].fTexXSpeed = fTexX[nTex];
+			pObj->m_Info.pMulti[nTex].fTexYSpeed = fTexY[nTex];
 		}
 
 		pObj->m_Info.nDivisionX = nDivisionX;
@@ -86,7 +99,7 @@ CBgSide *CBgSide::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR color, floa
 //========================================
 // 初期化処理
 //========================================
-HRESULT CBgSide::Init(void)
+HRESULT CFloor::Init(void)
 {
 	SetType(TYPE_BG);
 
@@ -114,16 +127,22 @@ HRESULT CBgSide::Init(void)
 			// 位置
 			pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].pos
 				= D3DXVECTOR3(
-					sinf(-D3DX_PI + (nCntWidth * ((D3DX_PI * 2) / m_Info.nDivisionX))) * m_Info.fRadius,
-					m_Info.fHeight - (nCntHeight * (m_Info.fHeight / m_Info.nDivisionY)),
-					cosf(-D3DX_PI + (nCntWidth * ((D3DX_PI * 2) / m_Info.nDivisionX))) * m_Info.fRadius);
+					(((float)nCntWidth - (float)m_Info.nDivisionX / 2)) * m_Info.fWidth,
+					0.0f,
+					(((float)nCntHeight - (float)m_Info.nDivisionY / 2)) * -m_Info.fHeight);
+
+
+			float n,i;
+			n = (((float)nCntWidth - (float)m_Info.nDivisionX / 2)) * m_Info.fWidth;
+			i = (((float)nCntHeight - (float)m_Info.nDivisionY / 2)) * -m_Info.fHeight;
+
 
 			// 法線ベクトル
 			pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].nor
 				= D3DXVECTOR3(
-					sinf(-D3DX_PI + (nCntWidth * ((D3DX_PI * 2) / m_Info.nDivisionX))),
 					0.0f,
-					cosf(-D3DX_PI + (nCntWidth * ((D3DX_PI * 2) / m_Info.nDivisionX))));;
+					1.0f,
+					0.0f);
 
 
 			if (m_Info.nNumTex >= 1)
@@ -131,24 +150,30 @@ HRESULT CBgSide::Init(void)
 				// テクスチャ１
 				pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].tex1
 					= D3DXVECTOR2(
-						nCntWidth * (8.0f / (float)m_Info.nDivisionX),
-						nCntHeight * (1.0f / (float)m_Info.nDivisionY));
+						nCntWidth * ((float)m_Info.nNumDivisionX / (float)m_Info.nDivisionX),
+						nCntHeight * ((float)m_Info.nNumDivisionY / (float)m_Info.nDivisionY));
 			}
+
+			float k, l,a;
+			a = (nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth;
+			k = nCntWidth * (m_Info.nDivisionX / (float)m_Info.nDivisionX);
+			l = nCntHeight * (m_Info.nDivisionY / (float)m_Info.nDivisionY);
+
 			if (m_Info.nNumTex >= 2)
 			{
 				// テクスチャ2
 				pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].texM
 					= D3DXVECTOR2(
-						nCntWidth * (8.0f / (float)m_Info.nDivisionX),
-						nCntHeight * (1.0f / (float)m_Info.nDivisionY));
+						nCntWidth * ((float)m_Info.nNumDivisionX / (float)m_Info.nDivisionX),
+						nCntHeight * ((float)m_Info.nNumDivisionY / (float)m_Info.nDivisionY));
 			}
 			if (m_Info.nNumTex >= 3)
 			{
 				// テクスチャ3
 				pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].texM2
 					= D3DXVECTOR2(
-						nCntWidth * (8.0f / (float)m_Info.nDivisionX),
-						nCntHeight * (1.0f / (float)m_Info.nDivisionY));
+						nCntWidth * ((float)m_Info.nNumDivisionX / (float)m_Info.nDivisionX),
+						nCntHeight * ((float)m_Info.nNumDivisionY / (float)m_Info.nDivisionY));
 			}
 		}
 	}
@@ -220,7 +245,7 @@ HRESULT CBgSide::Init(void)
 //========================================
 // 終了処理
 //========================================
-void CBgSide::Uninit(void)
+void CFloor::Uninit(void)
 {
 	// 頂点バッファの破棄
 	if (m_pVtxBuff != NULL)
@@ -246,7 +271,7 @@ void CBgSide::Uninit(void)
 //========================================
 // 更新処理
 //========================================
-void CBgSide::Update(void)
+void CFloor::Update(void)
 {
 	bool bPause = CPause::IsPause();
 
@@ -260,7 +285,8 @@ void CBgSide::Update(void)
 		//テクスチャ座標の開始位置(X軸)の更新
 		for (int nTex = 0; nTex < m_Info.nNumTex; nTex++)
 		{
-			m_Info.pMulti[nTex].fTexV += m_Info.pMulti[nTex].fTexVSpeed;
+			m_Info.pMulti[nTex].fTexX += m_Info.pMulti[nTex].fTexXSpeed;
+			m_Info.pMulti[nTex].fTexY += m_Info.pMulti[nTex].fTexYSpeed;
 		}
 
 		// テクスチャ座標の更新
@@ -273,24 +299,24 @@ void CBgSide::Update(void)
 					// テクスチャ1
 					pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].tex1
 						= D3DXVECTOR2(
-							m_Info.pMulti[0].fTexV + (nCntWidth * (8.0f / (float)m_Info.nDivisionX)),
-							nCntHeight * (1.0f / (float)m_Info.nDivisionY));
+							m_Info.pMulti[0].fTexX + (nCntWidth * (m_Info.nNumDivisionX / (float)m_Info.nDivisionX)),
+							m_Info.pMulti[0].fTexY + (nCntHeight * (m_Info.nNumDivisionY / (float)m_Info.nDivisionY)));
 				}
 				if (m_Info.nNumTex >= 2)
 				{
 					// テクスチャ2
 					pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].texM
 						= D3DXVECTOR2(
-							m_Info.pMulti[1].fTexV + (nCntWidth * (8.0f / (float)m_Info.nDivisionX)),
-							nCntHeight * (1.0f / (float)m_Info.nDivisionY));
+							m_Info.pMulti[1].fTexX + (nCntWidth * (m_Info.nNumDivisionX / (float)m_Info.nDivisionX)),
+							m_Info.pMulti[1].fTexY + (nCntHeight * (m_Info.nNumDivisionY / (float)m_Info.nDivisionY)));
 				}
 				if (m_Info.nNumTex >= 3)
 				{
 					// テクスチャ3
 					pVtx[(nCntHeight * (m_Info.nDivisionX + 1)) + nCntWidth].texM2
 						= D3DXVECTOR2(
-							m_Info.pMulti[2].fTexV + (nCntWidth * (8.0f / (float)m_Info.nDivisionX)),
-							nCntHeight * (1.0f / (float)m_Info.nDivisionY));
+							m_Info.pMulti[2].fTexX + (nCntWidth * (m_Info.nNumDivisionX / (float)m_Info.nDivisionX)),
+							m_Info.pMulti[2].fTexY + (nCntHeight * (m_Info.nNumDivisionY / (float)m_Info.nDivisionY)));
 				}
 			}
 		}
@@ -303,7 +329,7 @@ void CBgSide::Update(void)
 //========================================
 // 描画処理
 //========================================
-void CBgSide::Draw(void)
+void CFloor::Draw(void)
 {
 	// デバイスの所得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
@@ -379,7 +405,7 @@ void CBgSide::Draw(void)
 		0,
 		((m_Info.nDivisionX + 1) * (m_Info.nDivisionY + 1)),
 		0,
-		((m_Info.nDivisionX * m_Info.nDivisionY) * 2) + (4 * (m_Info.nDivisionY - 1)));
+		((m_Info.nDivisionX * m_Info.nDivisionY) * 2) + (4 * (m_Info.nDivisionX - 1)));
 
 	// テクスチャステージステートを戻す
 	if (m_Info.nNumTex >= 1)

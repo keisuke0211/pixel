@@ -32,6 +32,7 @@
 #define DUST_MAXCNT		(15)		// カウントの最大値
 
 #define ROT_FORCE_BY_CURSOR	(D3DXVECTOR3(0.0005f,0.00075f,0.0f))	// カーソルの回転力
+#define CUBE_LIFE1			(120)	// 壁や床に配置した場合の寿命
 
 // 静的変数
 bool CPlayer::m_bCubeSet = false;
@@ -276,23 +277,8 @@ void CPlayer::MovePos(float fMove)
 		// 視点から注視点までの角度
 		float fAngle
 			= FindAngle(D3DXVECTOR3(posV.x, posV.z, 0.0f), D3DXVECTOR3(posR.x, posR.z, 0.0f));
-		
-		//if (fAngle >= 2.14f && 3.925f >= fAngle)
-		//{// 前
-		//	fAngle = 3.14f;
-		//}
-		//else if(fAngle >= -0.96f && 0.35f >= fAngle)// 1.57 0.785
-		//{// 後ろ
-		//	fAngle = 0.0f;
-		//}
-		//else if (fAngle >= 0.35f && 3.925f >= fAngle)
-		//{// 左
-		//	fAngle = 1.57f;
-		//}
-		//else if ((fAngle >= 4.7f || 3.925f >= fAngle) && (fAngle >= 0.7f  || -0.96f >= fAngle))
-		//{// 右
-		//	fAngle = -1.57f;
-		//}
+
+		ControlAngle(&fAngle);
 
 		// 角度のを４分割にする
 		{
@@ -380,7 +366,6 @@ void CPlayer::UpdatePos(void)
 	}
 
 	{
-
 		// 移動量の代入
 		m_Info.pos.y += m_Info.move.y;
 
@@ -392,6 +377,14 @@ void CPlayer::UpdatePos(void)
 		m_Info.pos = Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Y, m_Info.pos);
 		m_Info.pos = Collision(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Y, m_Info.pos);
 
+
+		float fSize = 10.0f;
+		// 当たり判定（落下死用）
+		if ((m_Info.pos.y - fSize) < (-120) &&
+			(m_Info.posOld.y - fSize) >= (-120))
+		{// 落下したら
+			m_Info.pos = D3DXVECTOR3(0.0f, 20.0f, 0.0f);
+		}
 	}
 
 	// 位置の設定
@@ -599,7 +592,7 @@ void CPlayer::BulletStop(void)
 					D3DXVECTOR3 pos = pBullet->GetPos();
 
 					// キューブの生成
-					CCube::Create(nType, pos);
+					CCube::Create(nType, pos, CUBE_LIFE1);
 					m_bCubeSet = true;
 
 					// オブジェクト破棄

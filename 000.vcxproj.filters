@@ -168,6 +168,9 @@
     <ClCompile Include="code\scene\tutorial.cpp">
       <Filter>ソース ファイル\00_main\00_scene</Filter>
     </ClCompile>
+    <ClCompile Include="code\object\BG\mesh_floor.cpp">
+      <Filter>ソース ファイル\01_object\01_bg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\main.h">
@@ -292,6 +295,9 @@
     </ClInclude>
     <ClInclude Include="code\scene\tutorial.h">
       <Filter>ソース ファイル\00_main\00_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\BG\mesh_floor.h">
+      <Filter>ソース ファイル\01_object\01_bg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

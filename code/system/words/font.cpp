@@ -21,7 +21,7 @@ static_assert(sizeof(CFont::s_FileName) / sizeof(CFont::s_FileName[0]) == CFont:
 // フォント名
 const char* CFont::s_FontName[] =
 {
-	"ベストテン",
+	"ドットゴシック16",
 	"FZゴンタかな",
 	"メイリオ",
 };

@@ -33,6 +33,8 @@ public:
 		TEX_SKY01,		// 空01
 		TEX_SKY02,		// 空02
 		TEX_SKY03,		// 空03
+		TEX_SEA01,		// 海01
+		TEX_SEA02,		// 海02
 		TYPE_FONT,		// フォント
 		TYPE_TEXBOX,	// テキストボックス
 		TEX_MAX
