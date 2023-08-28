@@ -130,25 +130,25 @@ void CTime::SetTime(int nTime)
 	sprintf(aString, "TIME :%d", m_nTime);
 	SetString(aString);
 
-	/*FormFont pFont = {
-		INIT_D3DXCOLOR,
-		11.0f,
-		1,
-		10,
-		-1
-	};
+	//FormFont pFont = {
+	//	INIT_D3DXCOLOR,
+	//	12.0f,
+	//	1,
+	//	10,
+	//	-1
+	//};
 
-	FormShadow pShadow = {
-		D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
-		true,
-		D3DXVECTOR3(1.0f,1.0f,0.0f),
-		D3DXVECTOR2(1.0f,1.0f)
-	};
+	//FormShadow pShadow = {
+	//	D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
+	//	true,
+	//	D3DXVECTOR3(2.0f,2.0f,0.0f),
+	//	D3DXVECTOR2(1.0f,1.0f)
+	//};
 
-	CText::Create(CText::BOX_NORMAL,
-		D3DXVECTOR3(SCREEN_WIDTH - 760.0f, 32.0f, 0.0f),
-		D3DXVECTOR2(55.0f, 10.0f),
-		aString,
-		CFont::FONT_BESTTEN,
-		&pFont,false,&pShadow);*/
+	//CText::Create(CText::BOX_NORMAL,
+	//	D3DXVECTOR3(SCREEN_WIDTH - 760.0f, 32.0f, 0.0f),
+	//	D3DXVECTOR2(55.0f, 10.0f),
+	//	aString,
+	//	CFont::FONT_BESTTEN,
+	//	&pFont,false,&pShadow);
 }

@@ -15,8 +15,8 @@
 // 定義
 const char* CRanking::FILE_PATH = "data\\SAVEDATA\\RANKING_DATA.csv";
 const char* CRanking::TEXT_FILE_PATH = "data\\GAMEDATA\\TEXT\\WORDS_DATA.txt";
-int CRanking::m_nGameScore = 0;
-bool CRanking::m_bSetScore = false;
+int CRanking::m_nGameScore = 1200;
+bool CRanking::m_bSetScore = true;
 
 //========================================
 // コンストラクタ
@@ -41,6 +41,18 @@ CRanking::CRanking()
 	m_Info.nCntLetter = 0;
 	m_pString = NULL;
 	nStringMax = 0;
+
+	strinit(m_aNameData, TXT_MAX);
+
+	for (int nCnt = 0; nCnt < EXPLAIN_MAX; nCnt++)
+	{
+		m_Explain[nCnt] = NULL;
+	}
+
+	for (int nCnt = 0; nCnt < TEXT_MAX; nCnt++)
+	{
+		m_Words[nCnt] = NULL;
+	}
 }
 
 //========================================
@@ -80,16 +92,68 @@ HRESULT CRanking::Init(void)
 		sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_Ranking[nRank].aName,m_Ranking[nRank].nScore);
 
 		m_Text[nRank] = CText::Create(CText::BOX_NORMAL,
-			D3DXVECTOR3(640.0f, 200 + ( 30 * nRank), 0.0f),
-			D3DXVECTOR2(1080.0f, 100.0f),
+			D3DXVECTOR3(10.0f, 200 + ( 30 * nRank), 0.0f),
+			D3DXVECTOR2(0.0f, 100.0f),
 			aString,
 			CFont::FONT_BESTTEN,
 			&pFont,false);
 	}
 
-
 	if (m_bSetScore)
 	{
+		// 操作テキストの説明
+		{
+			pFont = {
+				INIT_D3DXCOLOR,
+				12.0f,
+				1,
+				1,
+				-1
+			};
+
+			m_Explain[0] = CText::Create(CText::BOX_NORMAL,
+				D3DXVECTOR3(50.0f, 500, 0.0f),
+				D3DXVECTOR2(0.0f, 0.0f),
+				"↑・→：行の変更",
+				CFont::FONT_BESTTEN,
+				&pFont, false);
+
+			m_Explain[1] = CText::Create(CText::BOX_NORMAL,
+				D3DXVECTOR3(50.0f, 550, 0.0f),
+				D3DXVECTOR2(0.0f, 0.0f),
+				"←・→：文字の変更",
+				CFont::FONT_BESTTEN,
+				&pFont, false);
+
+			m_Explain[2] = CText::Create(CText::BOX_NORMAL,
+				D3DXVECTOR3(50.0f, 600, 0.0f),
+				D3DXVECTOR2(0.0f, 0.0f),
+				"X・Y：変換",
+				CFont::FONT_BESTTEN,
+				&pFont, false);
+
+			m_Explain[3] = CText::Create(CText::BOX_NORMAL,
+				D3DXVECTOR3(640.0f, 500, 0.0f),
+				D3DXVECTOR2(0.0f, 100.0f),
+				"A：決定",
+				CFont::FONT_BESTTEN,
+				&pFont, false);
+
+			m_Explain[4] = CText::Create(CText::BOX_NORMAL,
+				D3DXVECTOR3(640.0f, 550, 0.0f),
+				D3DXVECTOR2(0.0f, 100.0f),
+				"B：削除",
+				CFont::FONT_BESTTEN,
+				&pFont, false);
+
+			m_Explain[5] = CText::Create(CText::BOX_NORMAL,
+				D3DXVECTOR3(640.0f, 600, 0.0f),
+				D3DXVECTOR2(0.0f, 100.0f),
+				"途中で入力をやめる場合は ※ を選択して下さい",
+				CFont::FONT_BESTTEN,
+				&pFont, false);
+		}
+
 		SetNameEntry(SetScore(m_nGameScore));
 	}
 
@@ -301,8 +365,10 @@ void CRanking::SetNameEntry(int nUpdateRank)
 		// 更新した順位の名前を初期化
 		strinit(m_Ranking[nUpdateRank].aName, TXT_MAX);
 
+		strcat(m_aNameData, "_____");
+
 		char aString[TXT_MAX];
-		sprintf(aString, " %s %-5s %6d", GetRankText(m_Info.nUpdateRank), m_Ranking[m_Info.nUpdateRank].aName, m_Ranking[m_Info.nUpdateRank].nScore);
+		sprintf(aString, " %s %-5s %6d", GetRankText(m_Info.nUpdateRank), m_aNameData, m_Ranking[m_Info.nUpdateRank].nScore);
 
 		m_Text[m_Info.nUpdateRank]->Uninit();
 
@@ -315,8 +381,8 @@ void CRanking::SetNameEntry(int nUpdateRank)
 		};
 
 		m_Text[m_Info.nUpdateRank] = CText::Create(CText::BOX_NORMAL,
-			D3DXVECTOR3(640.0f, 200 + (30 * m_Info.nUpdateRank), 0.0f),
-			D3DXVECTOR2(1080.0f, 100.0f),
+			D3DXVECTOR3(10.0f, 200 + (30 * m_Info.nUpdateRank), 0.0f),
+			D3DXVECTOR2(0.0f, 100.0f),
 			aString,
 			CFont::FONT_BESTTEN,
 			&pFont, false);
@@ -325,6 +391,8 @@ void CRanking::SetNameEntry(int nUpdateRank)
 	{// 更新処理が-1(更新無し)の時、
 		m_Info.bNameEntry = false;
 	}
+
+	SetWords();
 }
 
 //========================================
@@ -351,6 +419,7 @@ void CRanking::NameEntry(void)
 
 		if (m_Text[nRank]->SetWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, NAME_START_DEX + m_Info.nCntName, BLINK_COLOR))
 		{
+			UpdateWords();
 			m_Info.bNameInput = false;
 		}
 	}
@@ -428,15 +497,16 @@ void CRanking::NameInput(void)
 		if (m_Info.nCntName > 0)
 		{
 			int nRank = m_Info.nUpdateRank;
-			char aWords = '\0';
+			char aWords[] = "_";
 
 			// 現在のカウントの文字を反映する
-			for (int nCnt = 0; nCnt < 2; nCnt++)
+			for (int nCnt = 0; nCnt < 2; nCnt++)// 日本語用
 			{
 				m_Ranking[nRank].aName[(m_Info.nCntChar - 1) - nCnt] = '\0';
 			}
+			m_Info.nCntChar -= 2;
 
-			if (m_Text[nRank]->SetWords(&aWords, NAME_START_DEX + m_Info.nCntName,INIT_D3DXCOLOR))
+			if (m_Text[nRank]->SetWords(aWords, NAME_START_DEX + m_Info.nCntName,INIT_D3DXCOLOR))
 			{
 				m_Info.bNameInput = false;
 			}
@@ -449,21 +519,175 @@ void CRanking::NameInput(void)
 
 		int nString = m_Info.nCntString;
 		int nLetter = m_Info.nCntLetter;
+		int nLetterMax = m_pString[nString].nLettreMax - 1;
 		int nConv = m_Info.nCntConv;
 		int nRank = m_Info.nUpdateRank;
 
-		// 現在のカウントの文字を反映する
-		strcat(m_Ranking[nRank].aName, m_pString[nString].pConv[0].pLetter[nLetter].aConv);
+		if (nLetter != nLetterMax)
+		{
+			// 現在のカウントの文字を加える
+			strcat(m_Ranking[nRank].aName, m_pString[nString].pConv[0].pLetter[nLetter].aConv);
 
-		m_Info.nCntChar += 2;
+			// 現在のカウントの文字を反映する
+			strinit(m_aNameData, TXT_MAX);
+			strcat(m_aNameData, m_Ranking[nRank].aName);
 
-		if (++m_Info.nCntName >= NAME_NUM)
-		{// 名前入力のカウントを加算した結果、ランキング名の文字数に達した時、
-			m_Info.bNameEntry = false;
-			return;
+			m_Info.nCntChar += 2;
+
+			if (++m_Info.nCntName >= NAME_NUM)
+			{// 名前入力のカウントを加算した結果、ランキング名の文字数に達した時、
+				m_Info.bNameEntry = false;
+				return;
+			}
+			m_Info.bNameInput = true;
 		}
-		m_Info.bNameInput = true;
+		else
+		{
+			// 現在のカウントの文字が終端文字だったら
+			if (m_Info.nCntName != 0)
+			{
+				for (int nCnt = 0; nCnt < NAME_NUM - m_Info.nCntName; nCnt++)
+				{
+					// 現在のカウントの文字を加える
+					strcat(m_Ranking[nRank].aName, " ");
+
+					// 現在のカウントの文字を反映する
+					strinit(m_aNameData, TXT_MAX);
+					strcat(m_aNameData, m_Ranking[nRank].aName);
+
+					if (m_Text[nRank]->SetWords(" ", NAME_START_DEX + (m_Info.nCntName + nCnt), BLINK_COLOR))
+					{
+						m_Info.bNameInput = false;
+					}
+				}
+				m_Info.bNameEntry = false;
+			}
+			else
+			{
+				int nCntName = 0;
+				for (int nCnt = 0; nCnt < NAME_NUM - m_Info.nCntName; nCnt++)
+				{
+					char aData[TXT_MAX] = { "名無し　　" };
+
+					// 現在のカウントの文字を加える
+					strcat(m_Ranking[nRank].aName,&aData[nCntName]);
+
+					// 現在のカウントの文字を反映する
+					strinit(m_aNameData, TXT_MAX);
+					strcat(m_aNameData, m_Ranking[nRank].aName);
+
+					if (m_Text[nRank]->SetWords(&aData[nCntName], NAME_START_DEX + (m_Info.nCntName + nCnt), BLINK_COLOR))
+					{
+						m_Info.bNameInput = false;
+					}
+					nCntName += 2;
+				}
+				m_Info.bNameEntry = false;
+			}
+		}
 	}
+}
+
+//========================================
+// 文字表示設定()
+//========================================
+void CRanking::SetWords(void)
+{
+	int nString = m_Info.nCntString;
+	int nLetter = m_Info.nCntLetter;
+	int nLetterMax = m_pString[nString].nLettreMax - 1;
+	int nConv = m_Info.nCntConv;
+	int nConvMax = m_pString[nString].nConvMax - 1;
+	int nRank = m_Info.nUpdateRank;
+
+
+	int nNextLetter = m_Info.nCntLetter + 1;				// 次の文字
+	int nPrevLetter = m_pString[nString].nLettreMax - 1;	// 前の文字
+	int nNextString = m_Info.nCntString + 1;				// 次の行
+	int nPrevString = nStringMax - 1;						// 前の行
+
+	FormFont pFont = {
+		INIT_D3DXCOLOR,
+		30.0f,
+		1,
+		1,
+		-1
+	};
+
+	// 中央
+	m_Words[0] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(950.0f, 250, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+		m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, CFont::FONT_BESTTEN, &pFont, false);
+
+	// 上
+	m_Words[1] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(950.0f, 160, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+		m_pString[nPrevString].pConv[nConv].pLetter[0].aConv, CFont::FONT_BESTTEN, &pFont, false);
+
+	// 下
+	m_Words[2] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(950.0f, 340, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+		m_pString[nNextString].pConv[nConv].pLetter[0].aConv, CFont::FONT_BESTTEN, &pFont, false);
+
+	// 左
+	m_Words[3] = CText::Create(CText::BOX_NORMAL,D3DXVECTOR3(850.0f, 250, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
+		m_pString[nString].pConv[nConv].pLetter[nPrevLetter].aConv,CFont::FONT_BESTTEN,&pFont, false);
+
+	// 右
+	m_Words[4] = CText::Create(CText::BOX_NORMAL,D3DXVECTOR3(1050.0f, 250, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
+		m_pString[nString].pConv[nConv].pLetter[nNextLetter].aConv,CFont::FONT_BESTTEN,&pFont, false);
+
+	pFont = {
+		INIT_D3DXCOLOR,
+		15.0f,
+		1,
+		1,
+		-1
+	};
+
+	// 上
+	m_Words[5] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(975.0f, 210, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+		"↑", CFont::FONT_BESTTEN, &pFont, false);
+
+	// 下
+	m_Words[6] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(975.0f, 300, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+		"↓", CFont::FONT_BESTTEN, &pFont, false);
+
+	// 左
+	m_Words[7] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(930.0f, 250, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+		"←", CFont::FONT_BESTTEN, &pFont, false);
+
+	// 右
+	m_Words[8] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(1030.0f, 250, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+		"→", CFont::FONT_BESTTEN, &pFont, false);
+}
+
+//========================================
+// 文字表示(更新)
+//========================================
+void CRanking::UpdateWords(void)
+{
+	int nString = m_Info.nCntString;
+	int nLetter = m_Info.nCntLetter;
+	int nLetterMax = m_pString[nString].nLettreMax - 1;
+	int nConv = m_Info.nCntConv;
+	int nConvMax = m_pString[nString].nConvMax - 1;
+	int nRank = m_Info.nUpdateRank;
+
+
+	int nNextLetter = m_Info.nCntLetter + 1;	// 次の文字
+	int nPrevLetter = m_Info.nCntLetter - 1;	// 前の文字
+	int nNextString = m_Info.nCntString + 1;	// 次の行
+	int nPrevString = m_Info.nCntString - 1;	// 前の行
+
+	IntLoopControl(&nNextString, nStringMax, 0);
+	IntLoopControl(&nPrevString, nStringMax, 0);
+	IntLoopControl(&nNextLetter, nLetterMax+1, 0);
+	IntLoopControl(&nPrevLetter, nLetterMax+1, 0);
+
+	m_Words[0]->SetWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, 0, INIT_D3DXCOLOR);
+	m_Words[1]->SetWords(m_pString[nPrevString].pConv[0].pLetter[0].aConv, 0, INIT_D3DXCOLOR);
+	m_Words[2]->SetWords(m_pString[nNextString].pConv[0].pLetter[0].aConv, 0, INIT_D3DXCOLOR);
+	m_Words[3]->SetWords(m_pString[nString].pConv[nConv].pLetter[nPrevLetter].aConv, 0, INIT_D3DXCOLOR);
+	m_Words[4]->SetWords(m_pString[nString].pConv[nConv].pLetter[nNextLetter].aConv, 0, INIT_D3DXCOLOR);
+
 }
 
 //========================================

@@ -25,6 +25,8 @@ class CRanking : public CScene
 	static const char* TEXT_FILE_PATH;		// 読み込むファイルパス
 	static const int RANK_NUM = 8;			// 順位数
 	static const int NAME_NUM = 5;			// ランキングのの文字数
+	static const int EXPLAIN_MAX = 6;		// 操作説明のテキスト数
+	static const int TEXT_MAX = 9;			// 文字表示のテキスト数
 	static const int NAME_START_DEX = 5;	// 名前の開始位置
 
 // ランキング名の文字下限
@@ -119,16 +121,22 @@ private:
 	};
 
 	// ***** 関数 *****
-	/* 状態処理		*/void State(void);
-	/* 名前入力		*/void NameEntry(void);
-	/* 名前入力		*/void NameInput(void);
-	/* ソート降順	*/void SortDesc(int *nUpdateRank);
-	/* 空白埋め		*/void strinit(char *pData, int nNum);
-	
+	/* 状態処理			*/void State(void);
+	/* 名前入力			*/void NameEntry(void);
+	/* 名前入力			*/void NameInput(void);
+	/* ソート降順		*/void SortDesc(int *nUpdateRank);
+	/* 空白埋め			*/void strinit(char *pData, int nNum);
+	/* 文字表示(設定)	*/void SetWords(void);
+	/* 文字表示(更新)	*/void UpdateWords(void);
+
 	// ***** 変数 *****
 	Info m_Info;					// 共通情報
 	Ranking m_Ranking[RANK_NUM];	// 順位情報
-	CText *m_Text[RANK_NUM];		// テキスト
+	CText *m_Text[RANK_NUM];		// 順位テキスト
+	char m_aNameData[TXT_MAX];		// 表示テキスト
+
+	CText *m_Explain[EXPLAIN_MAX];	// 操作説明テキスト
+	CText *m_Words[TEXT_MAX];		// テキスト表示
 
 	String	*m_pString;		// 文字列
 	int		nStringMax;		// 文字列の最大数

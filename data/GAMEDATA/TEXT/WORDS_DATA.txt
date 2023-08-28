@@ -16,13 +16,13 @@ SET_TEXT
 // -- あ行 ------------------------------------
 SET_ROW
 	NUM_CONV = 3
-	NUM_WORDS = 5
+	NUM_WORDS = 6
 	
 	SET_WORDS
-		WOARDS	あ,い,う,え,お
-		CONV	ぁ,ぃ,ぅ,ぇ,ぉ
-		CONV	ア,イ,ウ,エ,オ
-		CONV	ァ,ィ,ゥ,ェ,ォ
+		WOARDS	あ,い,う,え,お,※
+		CONV	ぁ,ぃ,ぅ,ぇ,ぉ,※
+		CONV	ア,イ,ウ,エ,オ,※
+		CONV	ァ,ィ,ゥ,ェ,ォ,※
 	END_WORDS
 
 END_ROW
@@ -30,13 +30,13 @@ END_ROW
 // -- か行 ------------------------------------
 SET_ROW
 	NUM_CONV = 3
-	NUM_WORDS = 5
+	NUM_WORDS = 6
 	
 	SET_WORDS
-		WOARDS	か,き,く,け,こ
-		CONV	が,ぎ,ぐ,げ,ご
-		CONV	カ,キ,ク,ケ,コ
-		CONV	ガ,ギ,グ,ゲ,ゴ
+		WOARDS	か,き,く,け,こ,※
+		CONV	が,ぎ,ぐ,げ,ご,※
+		CONV	カ,キ,ク,ケ,コ,※
+		CONV	ガ,ギ,グ,ゲ,ゴ,※
 	END_WORDS
 
 END_ROW
@@ -44,13 +44,13 @@ END_ROW
 // -- さ行 ------------------------------------
 SET_ROW
 	NUM_CONV = 3
-	NUM_WORDS = 5
+	NUM_WORDS = 6
 	
 	SET_WORDS
-		WOARDS	さ,し,す,せ,そ
-		CONV	ざ,じ,ず,ぜ,ぞ
-		CONV	サ,シ,ス,セ,ソ
-		CONV	ザ,ジ,ズ,ゼ,ゾ
+		WOARDS	さ,し,す,せ,そ,※
+		CONV	ざ,じ,ず,ぜ,ぞ,※
+		CONV	サ,シ,ス,セ,ソ,※
+		CONV	ザ,ジ,ズ,ゼ,ゾ,※
 	END_WORDS
 
 END_ROW
@@ -58,13 +58,13 @@ END_ROW
 // -- た行 ------------------------------------
 SET_ROW
 	NUM_CONV = 3
-	NUM_WORDS = 5
+	NUM_WORDS = 6
 	
 	SET_WORDS
-		WOARDS	た,ち,つ,て,と
-		CONV	だ,ぢ,づ,で,ど
-		CONV	タ,チ,ツ,テ,ト
-		CONV	ダ,ヂ,ヅ,デ,ド
+		WOARDS	た,ち,つ,て,と,※
+		CONV	だ,ぢ,づ,で,ど,※
+		CONV	タ,チ,ツ,テ,ト,※
+		CONV	ダ,ヂ,ヅ,デ,ド,※
 	END_WORDS
 
 END_ROW
@@ -72,11 +72,11 @@ END_ROW
 // -- な行 ------------------------------------
 SET_ROW
 	NUM_CONV = 1
-	NUM_WORDS = 5
+	NUM_WORDS = 6
 	
 	SET_WORDS
-		WOARDS	な,に,ぬ,ね,の
-		CONV	ナ,二,ヌ,ネ,ノ
+		WOARDS	な,に,ぬ,ね,の,※
+		CONV	ナ,二,ヌ,ネ,ノ,※
 	END_WORDS
 
 END_ROW
@@ -84,13 +84,13 @@ END_ROW
 // -- は行 ------------------------------------
 SET_ROW
 	NUM_CONV = 3
-	NUM_WORDS = 5
+	NUM_WORDS = 6
 	
 	SET_WORDS
-		WOARDS	は,ひ,ふ,へ,ほ
-		CONV	ば,び,ぶ,べ,ぼ
-		CONV	ハ,ヒ,フ,へ,ホ
-		CONV	バ,ビ,ブ,べ,ボ
+		WOARDS	は,ひ,ふ,へ,ほ,※
+		CONV	ば,び,ぶ,べ,ぼ,※
+		CONV	ハ,ヒ,フ,へ,ホ,※
+		CONV	バ,ビ,ブ,べ,ボ,※
 	END_WORDS
 
 END_ROW
@@ -98,11 +98,11 @@ END_ROW
 // -- ま行 ------------------------------------
 SET_ROW
 	NUM_CONV = 1
-	NUM_WORDS = 5
+	NUM_WORDS = 6
 	
 	SET_WORDS
-		WOARDS	ま,み,む,め,も
-		CONV	マ,ミ,ム,メ,モ
+		WOARDS	ま,み,む,め,も,※
+		CONV	マ,ミ,ム,メ,モ,※
 	END_WORDS
 
 END_ROW
@@ -110,13 +110,13 @@ END_ROW
 // -- や行 ------------------------------------
 SET_ROW
 	NUM_CONV = 3
-	NUM_WORDS = 3
+	NUM_WORDS = 4
 	
 	SET_WORDS
-		WOARDS	や,ゆ,よ
-		CONV	ゃ,ゅ,ょ
-		CONV	ヤ,ユ,ヨ
-		CONV	ャ,ュ,ョ
+		WOARDS	や,ゆ,よ,※
+		CONV	ゃ,ゅ,ょ,※
+		CONV	ヤ,ユ,ヨ,※
+		CONV	ャ,ュ,ョ,※
 	END_WORDS
 
 END_ROW
@@ -124,11 +124,11 @@ END_ROW
 // -- ら行 ------------------------------------
 SET_ROW
 	NUM_CONV = 1
-	NUM_WORDS = 5
+	NUM_WORDS = 6
 	
 	SET_WORDS
-		WOARDS	ら,り,る,れ,ろ
-		CONV	ラ,リ,ル,レ,ロ
+		WOARDS	ら,り,る,れ,ろ,※
+		CONV	ラ,リ,ル,レ,ロ,※
 	END_WORDS
 
 END_ROW
@@ -136,11 +136,11 @@ END_ROW
 // -- わ行 ------------------------------------
 SET_ROW
 	NUM_CONV = 1
-	NUM_WORDS = 3
+	NUM_WORDS = 4
 	
 	SET_WORDS
-		WOARDS	わ,を,ん
-		CONV	ワ,ヲ,ン
+		WOARDS	わ,を,ん,※
+		CONV	ワ,ヲ,ン,※
 	END_WORDS
 
 END_ROW

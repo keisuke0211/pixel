@@ -71,6 +71,9 @@ private:
 	int m_nEndTime;			// 終了時間
 
 	bool m_bEnd;			// 終了フラグ
+	int m_nCounter;
+	int m_nSize;
+	int m_nPos;
 };
 
 #endif

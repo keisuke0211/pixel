@@ -46,6 +46,10 @@ CGame::CGame()
 	m_nStartTime = 0;
 	m_nEndTime = 0;
 	m_bEnd = false;
+
+	m_nCounter = 0;
+	m_nPos = 0;
+	m_nSize = 0;
 }
 
 //========================================
@@ -118,7 +122,7 @@ HRESULT CGame::Init(void)
 	pCamera->SetDistance(300.0f);
 
 	FormFont pFont = {
-		D3DXCOLOR(0.0f,0.53f,0.2f,1.0f),
+		D3DXCOLOR(0.0f,0.63f,0.2f,1.0f),
 		20.0f,
 		15,
 		10,
@@ -213,8 +217,15 @@ void CGame::Update(void)
 						INIT_D3DXCOLOR,
 						20.0f,
 						12,
-						10,
+						120,
 						30
+					};
+
+					FormShadow pShadow = {
+						D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
+						true,
+						D3DXVECTOR3(2.0f,2.0f,0.0f),
+						D3DXVECTOR2(1.0f,1.0f)
 					};
 
 					CText::Create(CText::BOX_NORMAL,
@@ -222,9 +233,9 @@ void CGame::Update(void)
 						D3DXVECTOR2(440.0f, 100.0f),
 						"GAME CLEAR",
 						CFont::FONT_BESTTEN,
-						&pFont, false);
+						&pFont, false,&pShadow);
 
-					m_nEndTime = (12 * 10) + 10 + 25;
+					m_nEndTime = (12 * 10) + 120 + 25;
 					m_bEnd = true;
 				}
 				else
@@ -297,8 +308,40 @@ CGame *CGame::Create(void)
 //========================================
 void CGame::Result(void)
 {
-	CManager::GetFade()->SetFade(MODE_RANKING);
-	CRanking::SetScore11(m_pScore->GetScore());
+	FormFont pFont = {
+		INIT_D3DXCOLOR,
+		20.0f,
+		12,
+		10,
+		30
+	};
+
+	FormShadow pShadow = {
+		D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
+		true,
+		D3DXVECTOR3(2.0f,2.0f,0.0f),
+		D3DXVECTOR2(1.0f,1.0f)
+	};
+
+	CText::Create(CText::BOX_NORMAL,
+		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
+		D3DXVECTOR2(440.0f, 100.0f),
+		"TIME BONUS",
+		CFont::FONT_BESTTEN,
+		&pFont, false,&pShadow);
+
+	// -- 取得 -------------------------------------------
+	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
+
+	if ((pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A)))
+	{
+		if (CFade::GetFade() == CFade::FADE_NONE)
+		{
+			CManager::GetFade()->SetFade(MODE_RANKING);
+			CRanking::SetScore11(m_pScore->GetScore());
+		}
+	}
 }
 
 //================================================================================
