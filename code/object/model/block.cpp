@@ -247,13 +247,20 @@ void CBlock::Update(void)
 				m_nCntExit = 0;
 				m_bExitCamera = false;
 
+				FontInfo pFont = {
+					INIT_D3DXCOLOR,
+					20.0f,
+					10,
+					10,
+					30
+				};
+
 				CText::Create(CText::BOX_NORMAL,
 					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 					D3DXVECTOR2(280.0f, 100.0f),
 					"èoå˚Ç™äJÇ¢ÇΩÅI",
 					CFont::FONT_BESTTEN,
-					20.0f,
-					10, 10, 30, false);
+					&pFont, false);
 			}
 		}
 	}

@@ -39,6 +39,14 @@ CResult::~CResult()
 //========================================
 HRESULT CResult::Init(void)
 {
+	FontInfo pFont = {
+		INIT_D3DXCOLOR,
+		40.0f,
+		5,
+		10,
+		-1
+	};
+
 	switch (verdict)
 	{
 	case CResult::VERDICT_GAMECLEAR:
@@ -48,8 +56,7 @@ HRESULT CResult::Init(void)
 			D3DXVECTOR2(640.0f, 100.0f),
 			"ゲームクリア",
 			CFont::FONT_BESTTEN,
-			40.0f,
-			5, 10, -1,false);
+			&pFont,false);
 	}
 		break;
 	case CResult::VERDICT_GAMEOVER:
@@ -59,8 +66,7 @@ HRESULT CResult::Init(void)
 			D3DXVECTOR2(640.0f, 100.0f),
 			"ゲームオーバー",
 			CFont::FONT_BESTTEN,
-			40.0f,
-			5, 10, -1, false);
+			&pFont, false);
 	}
 		break;
 	case CResult::VERDICT_MAX:
@@ -82,13 +88,20 @@ HRESULT CResult::Init(void)
 		pObj->SetString(tex);
 	}
 
+	pFont = {
+		INIT_D3DXCOLOR,
+		20.0f,
+		5,
+		10,
+		-1
+	};
+
 	CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
 		"ENTERを押して始めてね!",
 		CFont::FONT_BESTTEN,
-		20.0f,
-		5, 10, -1);
+		&pFont);
 
 	return S_OK;
 }

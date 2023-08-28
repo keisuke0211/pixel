@@ -15,8 +15,8 @@
 // 定義
 const char* CRanking::FILE_PATH = "data\\SAVEDATA\\RANKING_DATA.csv";
 const char* CRanking::TEXT_FILE_PATH = "data\\GAMEDATA\\TEXT\\WORDS_DATA.txt";
-int CRanking::m_nGameScore = 1100;
-bool CRanking::m_bSetScore = true;
+int CRanking::m_nGameScore = 0;
+bool CRanking::m_bSetScore = false;
 
 //========================================
 // コンストラクタ
@@ -65,6 +65,14 @@ HRESULT CRanking::Init(void)
 	// ソート
 	SortDesc(&nUpdateRank);
 
+	FontInfo pFont = {
+		INIT_D3DXCOLOR,
+		20.0f,
+		5,
+		1,
+		-1
+	};
+
 	// テキスト生成
 	for (int nRank = 0; nRank < RANK_NUM; nRank++)
 	{
@@ -76,8 +84,7 @@ HRESULT CRanking::Init(void)
 			D3DXVECTOR2(1080.0f, 100.0f),
 			aString,
 			CFont::FONT_BESTTEN,
-			20.0f,
-			5, 1, -1,false);
+			&pFont,false);
 	}
 
 
@@ -299,13 +306,20 @@ void CRanking::SetNameEntry(int nUpdateRank)
 
 		m_Text[m_Info.nUpdateRank]->Uninit();
 
+		FontInfo pFont = {
+			INIT_D3DXCOLOR,
+			20.0f,
+			1,
+			1,
+			-1
+		};
+
 		m_Text[m_Info.nUpdateRank] = CText::Create(CText::BOX_NORMAL,
 			D3DXVECTOR3(640.0f, 200 + (30 * m_Info.nUpdateRank), 0.0f),
 			D3DXVECTOR2(1080.0f, 100.0f),
 			aString,
 			CFont::FONT_BESTTEN,
-			20.0f,
-			1, 1, -1, false);
+			&pFont, false);
 	}
 	else
 	{// 更新処理が-1(更新無し)の時、
@@ -335,9 +349,8 @@ void CRanking::NameEntry(void)
 		int nConv = m_Info.nCntConv;
 		int nRank = m_Info.nUpdateRank;
 
-		if (m_Text[nRank]->SetWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, NAME_START_DEX + m_Info.nCntName))
+		if (m_Text[nRank]->SetWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, NAME_START_DEX + m_Info.nCntName, BLINK_COLOR))
 		{
-			m_Text[nRank]->SetTextColor(BLINK_COLOR);
 			m_Info.bNameInput = false;
 		}
 	}
@@ -423,7 +436,7 @@ void CRanking::NameInput(void)
 				m_Ranking[nRank].aName[(m_Info.nCntChar - 1) - nCnt] = '\0';
 			}
 
-			if (m_Text[nRank]->SetWords(&aWords, NAME_START_DEX + m_Info.nCntName))
+			if (m_Text[nRank]->SetWords(&aWords, NAME_START_DEX + m_Info.nCntName,INIT_D3DXCOLOR))
 			{
 				m_Info.bNameInput = false;
 			}

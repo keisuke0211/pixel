@@ -112,13 +112,27 @@ HRESULT CGame::Init(void)
 		CScore::SetScore();
 	}
 
+	CCamera *pCamera = CManager::GetCamera();					// ÉJÉÅÉâ
+
+	pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pCamera->SetHeigth(0.02f);
+	pCamera->SetDistance(300.0f);
+
+	FontInfo pFont = {
+		D3DXCOLOR(0.0f,0.53f,0.2f,1.0f),
+		20.0f,
+		15,
+		10,
+		30
+	};
+
 	CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 		D3DXVECTOR2(440.0f, 100.0f),
 		"ïΩå¥ÉXÉeÅ[ÉWÅI\nÇUÇOïbà»ì‡Ç≈çUó™ÇπÇÊÅI",
 		CFont::FONT_BESTTEN,
-		20.0f,
-		15, 10, 30, false);
+		&pFont, false);
+
 	m_nStartTime = (15 * 18) + 10 + 25;
 	m_nMoveRot = ((D3DX_PI * 2) / m_nStartTime);
 
@@ -196,13 +210,20 @@ void CGame::Update(void)
 			{
 				if (!m_bEnd)
 				{
+					FontInfo pFont = {
+						INIT_D3DXCOLOR,
+						20.0f,
+						12,
+						10,
+						30
+					};
+
 					CText::Create(CText::BOX_NORMAL,
 						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 						D3DXVECTOR2(440.0f, 100.0f),
 						"GAME CLEAR",
 						CFont::FONT_BESTTEN,
-						20.0f,
-						12, 10, 30, false);
+						&pFont, false);
 
 					m_nEndTime = (12 * 10) + 10 + 25;
 					m_bEnd = true;
@@ -211,7 +232,7 @@ void CGame::Update(void)
 				{
 					if (--m_nEndTime <= 0)
 					{
-						CResult::SetVerdict(CResult::VERDICT_GAMECLEAR);
+						//CResult::SetVerdict(CResult::VERDICT_GAMECLEAR);
 						CManager::GetFade()->SetFade(MODE_RANKING);
 
 						CRanking::SetScore11(m_pScore->GetScore());
@@ -225,13 +246,20 @@ void CGame::Update(void)
 		{
 			if (!m_bEnd)
 			{
+				FontInfo pFont = {
+					INIT_D3DXCOLOR,
+					20.0f,
+					12,
+					10,
+					30
+				};
+
 				CText::Create(CText::BOX_NORMAL,
 					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 					D3DXVECTOR2(440.0f, 100.0f),
 					"TIME UP",
 					CFont::FONT_BESTTEN,
-					20.0f,
-					12, 10, 30, false);
+					&pFont, false);
 
 				m_nEndTime = (12 * 7) + 10 + 25;
 				m_bEnd = true;
@@ -240,7 +268,7 @@ void CGame::Update(void)
 			{
 				if (--m_nEndTime <= 0)
 				{
-					CResult::SetVerdict(CResult::VERDICT_GAMEOVER);
+					//CResult::SetVerdict(CResult::VERDICT_GAMEOVER);
 					CManager::GetFade()->SetFade(MODE_RANKING);
 				}
 			}
@@ -351,6 +379,12 @@ void CGame::LoodSide(void)
 								CBgSide *pBgSide = CBgSide::Create(
 								pos,rot,color,fHeight,fRadius,nType,nNumTex,
 									nDivisionX,nDivisionY,fTexV);
+
+								delete[] nType;
+								nType = NULL;
+
+								delete[] fTexV;
+								fTexV = NULL;
 
 								break;
 							}

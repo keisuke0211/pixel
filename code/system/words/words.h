@@ -57,8 +57,9 @@ public:
 	// 引数2  : D3DXVECTOR3 pos     / 位置
 	// 引数3  : D3DXVECTOR2 size    / サイズ
 	// 引数4  : CFont::FONT Type　　/ フォント種類
+	// 引数5  : D3DXCOLOR col		/ 文字の色
 	//--------------------------------------------------
-	static CWords *CWords::Create(const char *Text, D3DXVECTOR3 pos, D3DXVECTOR3 Size, CFont::FONT Type);
+	static CWords *CWords::Create(const char *Text, D3DXVECTOR3 pos, D3DXVECTOR3 Size, CFont::FONT Type, D3DXCOLOR col);
 
 	// -- 設定 ------------------------------------------
 	/* 位置		*/virtual void SetPos(const D3DXVECTOR3 &pos);

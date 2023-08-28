@@ -201,13 +201,20 @@ void CTutorial::Update(void)
 			{
 				if (!m_bEnd)
 				{
+					FontInfo pFont = {
+						INIT_D3DXCOLOR,
+						20.0f,
+						15,
+						10,
+						30
+					};
+
 					CText::Create(CText::BOX_NORMAL,
 						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 						D3DXVECTOR2(440.0f, 100.0f),
 						"Game Clear",
 						CFont::FONT_BESTTEN,
-						20.0f,
-						15, 10, 30, false);
+						&pFont, false);
 
 					m_nEndTime = (15 * 10) + 10 + 25;
 					m_bEnd = true;
@@ -354,15 +361,20 @@ void CTutorial::TexCreate(int nIdx)
 
 	if (m_TextInfo[nIdx].nType == m_nTextType && !m_TextInfo[nIdx].bCreate)
 	{
+		FontInfo pFont = {
+			INIT_D3DXCOLOR,
+			m_TextInfo[nIdx].nTextSize,
+			m_TextInfo[nIdx].nStartTime,
+			m_TextInfo[nIdx].nStandTime,
+			m_TextInfo[nIdx].nDisapTime
+		};
+
 		CText::Create(CText::BOX_NORMAL,
 			m_TextInfo[nIdx].pos,
 			m_TextInfo[nIdx].size,
 			*m_TextInfo[nIdx].ActionTex,
 			CFont::FONT_BESTTEN,
-			m_TextInfo[nIdx].nTextSize,
-			m_TextInfo[nIdx].nStartTime,
-			m_TextInfo[nIdx].nStandTime,
-			m_TextInfo[nIdx].nDisapTime,
+			&pFont,
 			m_TextInfo[nIdx].bTextBok);
 
 		if (m_TextInfo[nIdx].nDisapTime == -1)

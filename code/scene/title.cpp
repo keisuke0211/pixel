@@ -64,28 +64,41 @@ HRESULT CTitle::Init(void)
 	CModel::InitModel();	// モデル
 	CBlock::Load();			// ブロック
 
-	m_Words[0] = CWords::Create("ブ", D3DXVECTOR3(440.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
-	m_Words[1] = CWords::Create("レ", D3DXVECTOR3(560.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
-	m_Words[2] = CWords::Create("パ", D3DXVECTOR3(680.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
-	m_Words[3] = CWords::Create("ズ", D3DXVECTOR3(800.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA);
+	m_Words[0] = CWords::Create("ブ", D3DXVECTOR3(440.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA,INIT_D3DXCOLOR);
+	m_Words[1] = CWords::Create("レ", D3DXVECTOR3(560.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA,INIT_D3DXCOLOR);
+	m_Words[2] = CWords::Create("パ", D3DXVECTOR3(680.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA,INIT_D3DXCOLOR);
+	m_Words[3] = CWords::Create("ズ", D3DXVECTOR3(800.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA,INIT_D3DXCOLOR);
 
 	m_bMove[0] = true;
 
+	FontInfo pFont = {
+		INIT_D3DXCOLOR,
+		20.0f,
+		1,
+		1,
+		-1
+	};
 	m_Text[0] = CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
 		" ",
 		CFont::FONT_BESTTEN,
+		&pFont);
+
+	pFont = {
+		INIT_D3DXCOLOR,
 		20.0f,
-		1, 1, -1);
+		5,
+		10,
+		-1
+	};
 
 	m_Text[1] = CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
 		"ENTERを押して始めてね!",
 		CFont::FONT_BESTTEN,
-		20.0f,
-		5, 10, -1,false);
+		&pFont,false);
 
 	m_nTextTime = TEXT_TIME;
 	m_nStandTime = STAND_MAX;
@@ -239,13 +252,20 @@ void CTitle::TitleAnime(void)
 		m_nStandTime--;
 		if (m_nStandTime <= 0)
 		{
+			FontInfo pFont = {
+				INIT_D3DXCOLOR,
+				20.0f,
+				5,
+				10,
+				-1
+			};
+
 			m_Text[1] = CText::Create(CText::BOX_NORMAL,
 				D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 				D3DXVECTOR2(1080.0f, 100.0f),
 				"ENTERを押して始めてね!",
 				CFont::FONT_BESTTEN,
-				20.0f,
-				5, 10, -1, false);
+				&pFont, false);
 
 			m_nTextTime = TEXT_TIME;
 			m_nStandTime = STAND_MAX;
@@ -304,14 +324,21 @@ void CTitle::Menu(void)
 //========================================
 void CTitle::MenuCreate(void)
 {
+	FontInfo pFont = {
+		INIT_D3DXCOLOR,
+		20.0f,
+		5,
+		10,
+		-1
+	};
+
 	{
 		m_Text[0] = CText::Create(CText::BOX_NORMAL,
 			D3DXVECTOR3(640.0f, 150.0f, 0.0f),
 			D3DXVECTOR2(360.0f, 100.0f),
 			"ゲーム",
 			CFont::FONT_FZGONTA,
-			20.0f,
-			5, 10, -1);
+			&pFont);
 	}
 
 	{
@@ -320,8 +347,7 @@ void CTitle::MenuCreate(void)
 			D3DXVECTOR2(360.0f, 100.0f),
 			"チュートリアル",
 			CFont::FONT_FZGONTA,
-			20.0f,
-			5, 10, -1);
+			&pFont);
 	}
 	{
 		m_Text[2] = CText::Create(CText::BOX_NORMAL,
@@ -329,8 +355,7 @@ void CTitle::MenuCreate(void)
 			D3DXVECTOR2(360.0f, 100.0f),
 			"ランキング",
 			CFont::FONT_FZGONTA,
-			20.0f,
-			5, 10, -1);
+			&pFont);
 	}
 	{
 		m_Text[3] = CText::Create(CText::BOX_NORMAL,
@@ -338,8 +363,7 @@ void CTitle::MenuCreate(void)
 			D3DXVECTOR2(360.0f, 100.0f),
 			"EXIT",
 			CFont::FONT_MEIRIO,
-			20.0f,
-			5, 10, -1);
+			&pFont);
 	}
 }
 

@@ -131,7 +131,6 @@ void CPause::Menu(void)
 		m_nSelectMenu = (MENU_MAX - 1);
 	}
 
-
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
 	{
 		if (CFade::GetFade() == CFade::FADE_NONE)
@@ -172,6 +171,14 @@ void CPause::Menu(void)
 //========================================
 void CPause::MenuCreate(void)
 {
+	FontInfo pFont = {
+		INIT_D3DXCOLOR,
+		20.0f,
+		5,
+		10,
+		-1
+	};
+
 	if (!m_Menu)
 	{
 		{
@@ -180,8 +187,7 @@ void CPause::MenuCreate(void)
 				D3DXVECTOR2(360.0f, 100.0f),
 				"再開",
 				CFont::FONT_MEIRIO,
-				20.0f,
-				5, 10, -1);
+				&pFont);
 			m_Text[0]->SetTetPause(true);
 		}
 
@@ -191,8 +197,7 @@ void CPause::MenuCreate(void)
 				D3DXVECTOR2(360.0f, 100.0f),
 				"やり直す",
 				CFont::FONT_MEIRIO,
-				20.0f,
-				5, 10, -1);
+				&pFont);
 			m_Text[1]->SetTetPause(true);
 		}
 		{
@@ -201,18 +206,24 @@ void CPause::MenuCreate(void)
 				D3DXVECTOR2(360.0f, 100.0f),
 				"タイトルに戻る",
 				CFont::FONT_MEIRIO,
-				20.0f,
-				5, 10, -1);
+				&pFont);
 			m_Text[2]->SetTetPause(true);
 		}
 		{
+			pFont = {
+				INIT_D3DXCOLOR,
+				40.0f,
+				5,
+				10,
+				-1
+			};
+
 			m_Text[3] = CText::Create(CText::BOX_NORMAL,
 				D3DXVECTOR3(640.0f, 100.0f, 0.0f),
 				D3DXVECTOR2(360.0f, 100.0f),
 				"ポーズ",
 				CFont::FONT_FZGONTA,
-				40.0f,
-				5, 10, -1,false);
+				&pFont,false);
 			m_Text[3]->SetTetPause(true);
 		}
 

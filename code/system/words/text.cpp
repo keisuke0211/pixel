@@ -17,8 +17,8 @@
 //========================================
 CText::CText(int nPriority) : CObject2D(nPriority)
 {
-	m_Info.col = INIT_D3DXCOLOR;
-
+	m_Info.TextBoxCol = INIT_D3DXCOLOR;
+	m_Info.FontCol = INIT_D3DXCOLOR;
 	m_Info.fTextSize = 0.0f;
 	m_Info.nTextLength = 0;
 	m_Info.nAppearTime = 0;
@@ -56,6 +56,8 @@ CText::~CText()
 //========================================
 HRESULT CText::Init()
 {
+	m_Info.TextBoxCol = INIT_D3DXCOLOR;
+	m_Info.FontCol = INIT_D3DXCOLOR;
 	m_Info.fTextSize = 0.0f;
 	m_Info.nTextLength = 0;
 	m_Info.nAppearTime = 0;
@@ -106,7 +108,6 @@ void CText::Uninit()
 //========================================
 void CText::Update()
 {
-
 	// テキスト生成
 	if (!m_Info.bStand)
 	{
@@ -152,12 +153,20 @@ void CText::Draw()
 //========================================
 // 生成
 //========================================
-CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, float TextSize, int AppearTime, int StandTime, int EraseTime, bool bTextBok)
+CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, FontInfo *pFont, bool bTextBok)
 {
 	CText * pText = new CText;
 
 	if (pText != NULL)
 	{
+		if (pFont == NULL)
+		{
+			pFont->col = INIT_D3DXCOLOR;
+			pFont->nAppearTime = 1;
+			pFont->nEraseTime = 1;
+			pFont->nStandTime = 10;
+		}
+
 		pText->Init();
 
 		// -- メッセージボックス ----------------
@@ -184,11 +193,12 @@ CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Te
 		}
 
 		// -- テキスト -----------------------
+		pText->m_Info.FontCol = pFont->col;
 		pText->m_Info.FontType = FontType;
-		pText->SetTextSize(TextSize);
-		pText->SetStandTime(StandTime);
-		pText->EraseTime(EraseTime);
-		pText->TextLetter(Text, AppearTime);
+		pText->SetTextSize(pFont->fTextSize);
+		pText->SetStandTime(pFont->nStandTime);
+		pText->EraseTime(pFont->nEraseTime);
+		pText->TextLetter(Text, pFont->nAppearTime);
 	}
 
 	return pText;
@@ -232,7 +242,7 @@ void CText::LetterForm(void)
 					m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
 						D3DXVECTOR3((pos.x + 10.0f) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), pos.y + m_Info.nNiCount*40.0f, pos.z),
 						D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
-						m_Info.FontType);
+						m_Info.FontType,m_Info.FontCol);
 
 					m_Info.nLetterPopCount++;
 					m_Info.nLetterPopCountX++;
@@ -246,7 +256,7 @@ void CText::LetterForm(void)
 						m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
 							D3DXVECTOR3((pos.x + 10.0f) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), pos.y + m_Info.nNiCount*40.0f, pos.z),
 							D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
-							m_Info.FontType);
+							m_Info.FontType,m_Info.FontCol);
 
 						m_Info.nLetterPopCount++;
 						m_Info.nLetterPopCountX++;
@@ -301,21 +311,22 @@ void CText::DisapTime(void)
 		}
 
 		// 色の推移
-		m_Info.col.a *= ((float)m_Info.nDisapTime / m_Info.nDisapTimeMax);
+		m_Info.TextBoxCol.a *= ((float)m_Info.nDisapTime / m_Info.nDisapTimeMax);
 
 		// 文字色の推移
 		for (int wordsCount = 0; wordsCount < m_Info.nTextLength; wordsCount++)
 		{
 			if (m_Info.words[wordsCount] != NULL)
 			{
-				m_Info.words[wordsCount]->SetColar(m_Info.col);
+				m_Info.FontCol.a *= ((float)m_Info.nDisapTime / m_Info.nDisapTimeMax);
+				m_Info.words[wordsCount]->SetColar(m_Info.FontCol);
 			}
 		}
 	}
 
 	if (m_Info.bTextBok)
 	{
-		CObject2D::SetColar(m_Info.col);
+		CObject2D::SetColar(m_Info.TextBoxCol);
 	}
 	CObject2D::Update();
 }
@@ -412,7 +423,7 @@ void CText::SetTetPause(bool bPause)
 //========================================
 void CText::SetBoxColor(D3DXCOLOR col)
 {
-	m_Info.col = col;
+	m_Info.TextBoxCol = col;
 }
 
 //========================================
@@ -438,7 +449,7 @@ bool CText::SetTextColor(D3DXCOLOR col)
 //========================================
 // 文字設定
 //========================================
-bool CText::SetWords(char* Text, int nIdx)
+bool CText::SetWords(char* Text, int nIdx, D3DXCOLOR col)
 {
 	if (m_Info.words[nIdx] != NULL)
 	{
@@ -454,7 +465,7 @@ bool CText::SetWords(char* Text, int nIdx)
 			m_Info.words[nIdx] = CWords::Create(Text,
 				pos,
 				D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
-				m_Info.FontType);
+				m_Info.FontType, col);
 		}
 		return TRUE;
 	}

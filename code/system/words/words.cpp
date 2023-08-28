@@ -176,7 +176,7 @@ void CWords::Draw(void)
 //========================================
 // ¶¬
 //========================================
-CWords *CWords::Create(const char*text, D3DXVECTOR3 pos, D3DXVECTOR3 size, CFont::FONT type)
+CWords *CWords::Create(const char*text, D3DXVECTOR3 pos, D3DXVECTOR3 size, CFont::FONT type, D3DXCOLOR col)
 {
 	CWords * pWords = NULL;
 	pWords = new CWords;
@@ -187,7 +187,7 @@ CWords *CWords::Create(const char*text, D3DXVECTOR3 pos, D3DXVECTOR3 size, CFont
 		pWords->SetSize(size);
 		pWords->Init();
 		pWords->SetWords(text, type);
-
+		pWords->SetColar(col);
 	}
 	return pWords;
 }

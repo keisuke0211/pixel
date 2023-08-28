@@ -261,10 +261,7 @@ void CFloor::Uninit(void)
 		m_pIdxBuf = NULL;
 	}
 
-	for (int nTex = 0; nTex < m_Info.nNumTex; nTex++)
-	{
-		delete &m_Info.pMulti[nTex];
-	}
+	delete[] m_Info.pMulti;
 	m_Info.pMulti = NULL;
 }
 
