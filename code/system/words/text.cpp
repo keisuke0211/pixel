@@ -35,6 +35,11 @@ CText::CText(int nPriority) : CObject2D(nPriority)
 	m_Info.nDisapTime = 0;
 	m_Info.nDisapTimeMax = 0;
 	m_Info.bRelease = false;
+
+	m_Info.aShadow.col = INIT_D3DXCOLOR;
+	m_Info.aShadow.AddPos = INIT_D3DXVECTOR3;
+	m_Info.aShadow.AddSize = INIT_D3DXVECTOR2;
+	m_Info.aShadow.bShadow = false;
 }
 
 //========================================
@@ -99,6 +104,21 @@ void CText::Uninit()
 		}
 	}
 	delete[] m_Info.words;
+	m_Info.words = NULL;
+
+	if (m_Info.aShadow.bShadow)
+	{
+		for (int wordsCount = 0; wordsCount < m_Info.nTextLength; wordsCount++)
+		{
+			if (m_Info.aShadow.shadow[wordsCount] != NULL)
+			{
+				m_Info.aShadow.shadow[wordsCount]->Uninit();
+			}
+		}
+
+		delete[] m_Info.aShadow.shadow;
+		m_Info.aShadow.shadow = NULL;
+	}
 
 	CObject2D::Uninit();
 }
@@ -153,20 +173,12 @@ void CText::Draw()
 //========================================
 // 生成
 //========================================
-CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, FontInfo *pFont, bool bTextBok)
+CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, FormFont *pFont, bool bTextBok, FormShadow *Shadow)
 {
 	CText * pText = new CText;
 
 	if (pText != NULL)
 	{
-		if (pFont == NULL)
-		{
-			pFont->col = INIT_D3DXCOLOR;
-			pFont->nAppearTime = 1;
-			pFont->nEraseTime = 1;
-			pFont->nStandTime = 10;
-		}
-
 		pText->Init();
 
 		// -- メッセージボックス ----------------
@@ -193,12 +205,51 @@ CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Te
 		}
 
 		// -- テキスト -----------------------
-		pText->m_Info.FontCol = pFont->col;
 		pText->m_Info.FontType = FontType;
-		pText->SetTextSize(pFont->fTextSize);
-		pText->SetStandTime(pFont->nStandTime);
-		pText->EraseTime(pFont->nEraseTime);
-		pText->TextLetter(Text, pFont->nAppearTime);
+
+		if (pFont != NULL)
+		{
+			pText->m_Info.FontCol = pFont->col;
+			pText->SetTextSize(pFont->fTextSize);
+			pText->SetStandTime(pFont->nStandTime);
+			pText->EraseTime(pFont->nEraseTime);
+			pText->TextLetter(Text, pFont->nAppearTime);
+		}
+		else if (pFont == NULL)
+		{
+			pText->m_Info.FontCol = INIT_D3DXCOLOR;
+			pText->SetTextSize(20.0f);
+			pText->SetStandTime(10);
+			pText->EraseTime(1);
+			pText->TextLetter(Text, 1);
+		}
+
+		/*pText->TextShadow(Shadow);*/
+
+		if (Shadow == NULL)
+		{
+			pText->m_Info.aShadow.col = INIT_D3DXCOLOR;
+			pText->m_Info.aShadow.AddPos = INIT_D3DXVECTOR3;
+			pText->m_Info.aShadow.AddSize = INIT_D3DXVECTOR2;
+			pText->m_Info.aShadow.bShadow = false;
+		}
+		else if (Shadow != NULL)
+		{
+			if (Shadow->bShadow)
+			{
+				pText->m_Info.aShadow.shadow = new CWords*[pText->m_Info.nTextLength];
+
+				for (int wordsCount = 0; wordsCount < pText->m_Info.nTextLength; wordsCount++)
+				{
+					pText->m_Info.aShadow.shadow[wordsCount] = NULL;
+				}
+
+				pText->m_Info.aShadow.col = Shadow->col;
+				pText->m_Info.aShadow.AddPos = Shadow->AddPos;
+				pText->m_Info.aShadow.AddSize = Shadow->AddSize;
+				pText->m_Info.aShadow.bShadow = Shadow->bShadow;
+			}
+		}
 	}
 
 	return pText;
@@ -239,6 +290,18 @@ void CText::LetterForm(void)
 					m_Info.sText += m_Info.sALLText[m_Info.nAddLetter];
 					m_Info.nAddLetter++;
 
+					// 影
+					if (m_Info.aShadow.bShadow)
+					{
+						D3DXVECTOR3 AddPos = m_Info.aShadow.AddPos;
+						D3DXVECTOR2 AddSize = m_Info.aShadow.AddSize;
+
+						m_Info.aShadow.shadow[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
+							D3DXVECTOR3((pos.x + (10.0f + AddPos.x)) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), (pos.y + AddPos.y) + m_Info.nNiCount * 40.0f, pos.z),
+							D3DXVECTOR3(fTxtSize + AddSize.x, fTxtSize + AddSize.y, 0.0f),
+							m_Info.FontType, m_Info.aShadow.col);
+					}
+
 					m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
 						D3DXVECTOR3((pos.x + 10.0f) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), pos.y + m_Info.nNiCount*40.0f, pos.z),
 						D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
@@ -251,6 +314,18 @@ void CText::LetterForm(void)
 				{
 					if (m_Info.sText != "\n")
 					{// 終端文字なら、
+
+						// 影
+						if (m_Info.aShadow.bShadow)
+						{
+							D3DXVECTOR3 AddPos = m_Info.aShadow.AddPos;
+							D3DXVECTOR2 AddSize = m_Info.aShadow.AddSize;
+
+							m_Info.aShadow.shadow[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
+								D3DXVECTOR3((pos.x + (10.0f + AddPos.x)) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), (pos.y + AddPos.y) + m_Info.nNiCount * 40.0f, pos.z),
+								D3DXVECTOR3(fTxtSize + AddSize.x, fTxtSize + AddSize.y, 0.0f),
+								m_Info.FontType, m_Info.aShadow.col);
+						}
 
 						m_Info.nAddLetter++;
 						m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
@@ -322,6 +397,18 @@ void CText::DisapTime(void)
 				m_Info.words[wordsCount]->SetColar(m_Info.FontCol);
 			}
 		}
+
+		if (m_Info.aShadow.bShadow)
+		{
+			for (int wordsCount = 0; wordsCount < m_Info.nTextLength; wordsCount++)
+			{
+				if (m_Info.aShadow.shadow[wordsCount] != NULL)
+				{
+					m_Info.aShadow.col.a *= ((float)m_Info.nDisapTime / m_Info.nDisapTimeMax);
+					m_Info.aShadow.shadow[wordsCount]->SetColar(m_Info.aShadow.col);
+				}
+			}
+		}
 	}
 
 	if (m_Info.bTextBok)
@@ -390,7 +477,14 @@ void CText::TextLetter(const char * Text, int AppearTime)
 	{
 		m_Info.words[wordsCount] = NULL;
 	}
+}
 
+//========================================
+// 文字の影
+//========================================
+void CText::TextShadow(FormShadow *Shadow)
+{
+	
 }
 
 //========================================

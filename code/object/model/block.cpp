@@ -177,7 +177,6 @@ void CBlock::Update(void)
 	m_Info.rotOld = m_Info.rot;
 
 	SetPos(m_Info.pos);
-	//SetRot(m_Info.rot);
 	SetScale(m_Info.size);
 
 	if (m_Info.bErase)
@@ -247,7 +246,7 @@ void CBlock::Update(void)
 				m_nCntExit = 0;
 				m_bExitCamera = false;
 
-				FontInfo pFont = {
+				FormFont pFont = {
 					INIT_D3DXCOLOR,
 					20.0f,
 					10,

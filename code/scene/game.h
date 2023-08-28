@@ -23,7 +23,7 @@ class CPlayer;			// プレイヤー
 //****************************************
 class CGame : public CScene
 {
-	static const int GAME_TIME = 60;	// 制限時間
+	static const int GAME_TIME = 90;	// 制限時間
 	static const char* CEILING_FILE;	// 天井のファイルパス
 	static const char* SIDE_FILE;		// 側面のファイルパス
 	static const char* FLOOR_FILE;		// 床のファイルパス
@@ -42,7 +42,7 @@ public:
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);
 	/* 生成		*/static CGame *Create(void);
-
+	
 	// -- 読み込み ----------
 	/* 背景　天井	*/static void LoodCeiling(void);
 	/* 背景　側面	*/static void LoodSide(void);
@@ -56,6 +56,9 @@ public:
 	/* スコア		*/static CScore *GetScore() { return m_pScore; };
 	
 private:
+
+	// ***** 関数 *****
+	/* リザルト	*/void  Result(void);
 
 	// ***** 変数 *****
 	/* プレイヤー	*/static CPlayer *m_pPlayer;

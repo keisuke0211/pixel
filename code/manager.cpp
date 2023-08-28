@@ -17,7 +17,6 @@
 #include "scene\title.h"
 #include "scene\tutorial.h"
 #include "scene\game.h"
-#include "scene\result.h"
 #include "scene\ranking.h"
 #include "scene\pause.h"
 #include "scene\fade.h"
@@ -37,7 +36,6 @@ CScene::MODE CScene::m_mode = MODE_TITLE;
 CTitle *CScene::m_pTitle = NULL;
 CTutorial *CScene::m_pTutorial = NULL;
 CGame *CScene::m_pGame = NULL;
-CResult *CScene::m_pResult = NULL;
 CRanking *CScene::m_pRanking = NULL;
 CPause *CScene::m_pPause = NULL;
 CFade *CManager::m_pFade = NULL;
@@ -325,11 +323,6 @@ HRESULT CScene::Init()
 		m_pGame = CGame::Create();
 		break;
 	}
-	case CScene::MODE_RESULT:
-	{
-		m_pResult = CResult::Create();
-		break;
-	}
 	case CScene::MODE_RANKING:
 	{
 		m_pRanking = CRanking::Create();
@@ -378,14 +371,6 @@ void CScene::Uninit(void)
 		m_pPause->Uninit();
 		delete m_pPause;
 		m_pPause = NULL;
-
-		break;
-	}
-	case CScene::MODE_RESULT:
-	{
-		m_pResult->Uninit();
-		delete m_pResult;
-		m_pResult = NULL;
 
 		break;
 	}
@@ -440,11 +425,6 @@ void CScene::Update(void)
 
 		break;
 	}
-	case CScene::MODE_RESULT:
-	{
-		m_pResult->Update();
-		break;
-	}
 	case CScene::MODE_RANKING:
 	{
 		m_pRanking->Update();
@@ -477,11 +457,6 @@ void CScene::Draw(void)
 		m_pGame->Draw();
 		m_pPause->Draw();
 
-		break;
-	}
-	case CScene::MODE_RESULT:
-	{
-		m_pResult->Draw();
 		break;
 	}
 	case CScene::MODE_RANKING:

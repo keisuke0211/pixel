@@ -81,6 +81,7 @@ public:
 	/* ワールドマトリックス	*/void SetMtxWorld(D3DXMATRIX mtxWorld) { m_mtxWorld = mtxWorld; }
 	/* 親モデル				*/void SetParent(CModel *pParent) { m_pParent = pParent; }
 	/* モデルID				*/void SetModelID(const int nModelID) { m_nModelID = nModelID; }
+	/* 影の有無				*/static void SetPlayerShadow(bool bShadow);
 
 	// -- 所得 ------------------------------------------
 
@@ -123,5 +124,6 @@ private:
 	/* 幅					*/static float m_Width;
 	/* 高さ					*/static float m_Height;
 	/* 奥行き				*/static float m_Depth;
+	/* プレイヤーの影		*/static bool m_bPlayerShadow;
 };
 #endif

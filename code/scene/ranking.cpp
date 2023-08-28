@@ -65,7 +65,7 @@ HRESULT CRanking::Init(void)
 	// ƒ\[ƒg
 	SortDesc(&nUpdateRank);
 
-	FontInfo pFont = {
+	FormFont pFont = {
 		INIT_D3DXCOLOR,
 		20.0f,
 		5,
@@ -306,7 +306,7 @@ void CRanking::SetNameEntry(int nUpdateRank)
 
 		m_Text[m_Info.nUpdateRank]->Uninit();
 
-		FontInfo pFont = {
+		FormFont pFont = {
 			INIT_D3DXCOLOR,
 			20.0f,
 			1,

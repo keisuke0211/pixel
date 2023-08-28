@@ -21,6 +21,7 @@
 #include "bullet_cube.h"
 #include "../EFFECT/particleX.h"
 #include "../../scene/pause.h"
+#include "../model/model.h"
 
 //****************************************
 // ƒ}ƒNƒ’è‹`
@@ -384,6 +385,13 @@ void CPlayer::UpdatePos(void)
 			(m_Info.posOld.y - fSize) >= (-120))
 		{// —Ž‰º‚µ‚½‚ç
 			m_Info.pos = D3DXVECTOR3(0.0f, 20.0f, 0.0f);
+
+			CModel::SetPlayerShadow(true);
+		}
+
+		if (m_Info.pos.y <= -12.5)
+		{
+			CModel::SetPlayerShadow(false);
 		}
 	}
 

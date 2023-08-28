@@ -171,7 +171,7 @@ void CPause::Menu(void)
 //========================================
 void CPause::MenuCreate(void)
 {
-	FontInfo pFont = {
+	FormFont pFont = {
 		INIT_D3DXCOLOR,
 		20.0f,
 		5,
@@ -186,7 +186,7 @@ void CPause::MenuCreate(void)
 				D3DXVECTOR3(640.0f, 250.0f, 0.0f),
 				D3DXVECTOR2(360.0f, 100.0f),
 				"再開",
-				CFont::FONT_MEIRIO,
+				CFont::FONT_BESTTEN,
 				&pFont);
 			m_Text[0]->SetTetPause(true);
 		}
@@ -196,7 +196,7 @@ void CPause::MenuCreate(void)
 				D3DXVECTOR3(640.0f, 400.0f, 0.0f),
 				D3DXVECTOR2(360.0f, 100.0f),
 				"やり直す",
-				CFont::FONT_MEIRIO,
+				CFont::FONT_BESTTEN,
 				&pFont);
 			m_Text[1]->SetTetPause(true);
 		}
@@ -205,7 +205,7 @@ void CPause::MenuCreate(void)
 				D3DXVECTOR3(640.0f, 550.0f, 0.0f),
 				D3DXVECTOR2(360.0f, 100.0f),
 				"タイトルに戻る",
-				CFont::FONT_MEIRIO,
+				CFont::FONT_BESTTEN,
 				&pFont);
 			m_Text[2]->SetTetPause(true);
 		}
@@ -218,12 +218,19 @@ void CPause::MenuCreate(void)
 				-1
 			};
 
+			FormShadow pShadow = {
+				D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
+				true,
+				D3DXVECTOR3(3.0f,3.0f,0.0f),
+				D3DXVECTOR2(1.0f,1.0f)
+			};
+
 			m_Text[3] = CText::Create(CText::BOX_NORMAL,
 				D3DXVECTOR3(640.0f, 100.0f, 0.0f),
 				D3DXVECTOR2(360.0f, 100.0f),
 				"ポーズ",
-				CFont::FONT_FZGONTA,
-				&pFont,false);
+				CFont::FONT_BESTTEN,
+				&pFont,false,&pShadow);
 			m_Text[3]->SetTetPause(true);
 		}
 

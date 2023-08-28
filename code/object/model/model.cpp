@@ -18,6 +18,7 @@ int CModel::m_nMaxModel = 0;						// モデル数
 float CModel::m_Width = NULL;
 float CModel::m_Height = NULL;
 float CModel::m_Depth = NULL;
+bool CModel::m_bPlayerShadow = true;
 
 //========================================
 //マクロ定義
@@ -453,7 +454,7 @@ void CModel::SetShadow(LPDIRECT3DDEVICE9 pDevice, D3DXMATERIAL *pMat, int nModel
 					0.0f);
 
 				//黒色に設定
-				MatCopy.Diffuse.a = 0.5f;
+				MatCopy.Diffuse.a = 1.0f;
 
 				//マテリアル設定
 				pDevice->SetMaterial(&MatCopy);
@@ -589,4 +590,30 @@ D3DMATERIAL9 CModel::InitMtrl(D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D3DXCOLOR e
 	mtrl.Emissive = e;
 	mtrl.Power = p;
 	return mtrl;
+}
+
+void CModel::SetPlayerShadow(bool bShadow)
+{
+	if (bShadow)
+	{
+		if (!m_bPlayerShadow)
+		{
+			for (int nCnt = 0; nCnt < 6; nCnt++)
+			{
+				m_material[nCnt + 20].bShadow = true;
+			}
+			m_bPlayerShadow = true;
+		}
+	}
+	else
+	{
+		if (m_bPlayerShadow)
+		{
+			for (int nCnt = 0; nCnt < 6; nCnt++)
+			{
+				m_material[nCnt + 20].bShadow = false;
+			}
+			m_bPlayerShadow = false;
+		}
+	}
 }

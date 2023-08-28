@@ -12,12 +12,11 @@
 #include "words.h"
 
 //****************************************
-// 前方宣言
+// 構造体
 //****************************************
-class CFont;
 
-// テキスト情報
-struct FontInfo
+// テキスト情報(生成用)
+struct FormFont
 {
 	D3DXCOLOR col;		// 文字の色
 	float fTextSize;	// 文字のサイズ(初期値 20)
@@ -25,6 +24,20 @@ struct FontInfo
 	int nStandTime;		// 待機時間(初期値 10)
 	int nEraseTime;		// 消えるまでの時間(初期値 1) ※ 0 は消えない
 };
+
+// 影情報(生成用)
+struct FormShadow
+{
+	D3DXCOLOR col;			// 影の色
+	bool bShadow;			// 影フラグ
+	D3DXVECTOR3 AddPos;		// 文字の位置からずらす値 (初期値 0,0,0)	(元の文字 + AddPos)
+	D3DXVECTOR2 AddSize;	// 文字のサイズの加算値 (初期値 0,0)		(元の文字 + AddSize)
+};
+
+//****************************************
+// 前方宣言
+//****************************************
+class CFont;
 
 //****************************************
 // クラス
@@ -59,10 +72,11 @@ public:
 	// 引数3  : D3DXVECTOR2 size    / テキストボックスのサイズ
 	// 引数4  : const char *Text　　/ テキスト
 	// 引数5  : CFont::FONT Type　　/ フォント種類
-	// 引数6  : FontInfo *pFont		/ フォント関連の情報(色・時間など) 無くても大丈夫
-	// 引数7  : bool bTextBok　　　/ メッセージボックスの表示・非表示 (初期値 true)
+	// 引数6  : FormFont *pFont		/ フォント関連の情報(色・時間など) 無くても大丈夫
+	// 引数7  : bool bTextBok　　　 / メッセージボックスの表示・非表示 (初期値 true)
+	// 引数8  : FormShadow *Shadow  / フォントの影の情報 無くても大丈夫
 	//--------------------------------------------------
-	static CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, FontInfo *pFont = NULL, bool bTextBok = true);
+	static CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, FormFont *pFont = NULL, bool bTextBok = true, FormShadow *Shadow = NULL);
 
 	/* 削除 */void Disap(bool bDisap);
 
@@ -75,6 +89,16 @@ public:
 private:
 
 	// ***** 構造体 *****
+
+	// 影
+	struct Shadow
+	{
+		D3DXCOLOR col;			// 影の色
+		bool bShadow;			// 影フラグ
+		CWords** shadow;		// 文字(影)
+		D3DXVECTOR3 AddPos;		// 文字の位置からずらす値 (初期値 0,0,0)	(元の文字 + AddPos)
+		D3DXVECTOR2 AddSize;	// 文字のサイズの加算値 (初期値 0,0)		(元の文字 + AddSize)
+	};
 
 	// テキスト情報
 	struct Info
@@ -97,6 +121,8 @@ private:
 		int nDisapTimeMax;		// 消える最大時間
 		bool bRelease;			// 消すフラグ
 
+		Shadow aShadow;			// 影
+
 		bool bTextBok;			// テキストボックスの表示フラグ
 		bool bPause;			// ポーズ中でも動くか（false：動かない）
 		string sText;			// 表示するテキスト
@@ -116,6 +142,7 @@ private:
 	/* 待機時間			*/void SetStandTime(int StandTime);
 	/* 文字の消す時間	*/void EraseTime(int time);
 	/* 文字の出現時間	*/void TextLetter(const char *Text, int DispText);
+	/* 文字の影			*/void TextShadow(FormShadow *Shadow);
 
 	// ***** 変数 *****
 	Info m_Info;

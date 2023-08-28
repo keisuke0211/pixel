@@ -69,7 +69,6 @@ public:
 	/* タイトル			*/static CTitle *GetTitle() { return m_pTitle; }
 	/* チュートリアル	*/static CTutorial *GetTutorial() { return m_pTutorial; }
 	/* ゲーム			*/static CGame *GetGame() { return m_pGame; }
-	/* リザルト			*/static CResult *GetResult() { return m_pResult; }
 	/* ランキング		*/static CRanking *GetRanking() { return m_pRanking; }
 	/* ポーズ			*/static CPause *GetPause() { return m_pPause; }
 
@@ -79,7 +78,6 @@ private:
 	/* タイトル			*/static CTitle *m_pTitle;
 	/* チュートリアル	*/static CTutorial *m_pTutorial;
 	/* ゲーム			*/static CGame *m_pGame;
-	/* リザルト			*/static CResult *m_pResult;
 	/* ランキング		*/static CRanking *m_pRanking;
 	/* ポーズ			*/static CPause	*m_pPause;
 

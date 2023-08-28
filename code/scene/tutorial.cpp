@@ -201,7 +201,7 @@ void CTutorial::Update(void)
 			{
 				if (!m_bEnd)
 				{
-					FontInfo pFont = {
+					FormFont pFont = {
 						INIT_D3DXCOLOR,
 						20.0f,
 						15,
@@ -361,7 +361,7 @@ void CTutorial::TexCreate(int nIdx)
 
 	if (m_TextInfo[nIdx].nType == m_nTextType && !m_TextInfo[nIdx].bCreate)
 	{
-		FontInfo pFont = {
+		FormFont pFont = {
 			INIT_D3DXCOLOR,
 			m_TextInfo[nIdx].nTextSize,
 			m_TextInfo[nIdx].nStartTime,

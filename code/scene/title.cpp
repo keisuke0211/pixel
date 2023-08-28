@@ -64,14 +64,14 @@ HRESULT CTitle::Init(void)
 	CModel::InitModel();	// モデル
 	CBlock::Load();			// ブロック
 
-	m_Words[0] = CWords::Create("ブ", D3DXVECTOR3(440.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA,INIT_D3DXCOLOR);
-	m_Words[1] = CWords::Create("レ", D3DXVECTOR3(560.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA,INIT_D3DXCOLOR);
-	m_Words[2] = CWords::Create("パ", D3DXVECTOR3(680.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA,INIT_D3DXCOLOR);
-	m_Words[3] = CWords::Create("ズ", D3DXVECTOR3(800.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_FZGONTA,INIT_D3DXCOLOR);
+	m_Words[0] = CWords::Create("ブ", D3DXVECTOR3(440.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN,INIT_D3DXCOLOR);
+	m_Words[1] = CWords::Create("レ", D3DXVECTOR3(560.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN,INIT_D3DXCOLOR);
+	m_Words[2] = CWords::Create("パ", D3DXVECTOR3(680.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN,INIT_D3DXCOLOR);
+	m_Words[3] = CWords::Create("ズ", D3DXVECTOR3(800.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN,INIT_D3DXCOLOR);
 
 	m_bMove[0] = true;
 
-	FontInfo pFont = {
+	FormFont pFont = {
 		INIT_D3DXCOLOR,
 		20.0f,
 		1,
@@ -252,7 +252,7 @@ void CTitle::TitleAnime(void)
 		m_nStandTime--;
 		if (m_nStandTime <= 0)
 		{
-			FontInfo pFont = {
+			FormFont pFont = {
 				INIT_D3DXCOLOR,
 				20.0f,
 				5,
@@ -324,7 +324,7 @@ void CTitle::Menu(void)
 //========================================
 void CTitle::MenuCreate(void)
 {
-	FontInfo pFont = {
+	FormFont pFont = {
 		INIT_D3DXCOLOR,
 		20.0f,
 		5,
@@ -337,7 +337,7 @@ void CTitle::MenuCreate(void)
 			D3DXVECTOR3(640.0f, 150.0f, 0.0f),
 			D3DXVECTOR2(360.0f, 100.0f),
 			"ゲーム",
-			CFont::FONT_FZGONTA,
+			CFont::FONT_BESTTEN,
 			&pFont);
 	}
 
@@ -346,7 +346,7 @@ void CTitle::MenuCreate(void)
 			D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 			D3DXVECTOR2(360.0f, 100.0f),
 			"チュートリアル",
-			CFont::FONT_FZGONTA,
+			CFont::FONT_BESTTEN,
 			&pFont);
 	}
 	{
@@ -354,15 +354,15 @@ void CTitle::MenuCreate(void)
 			D3DXVECTOR3(640.0f, 450.0f, 0.0f),
 			D3DXVECTOR2(360.0f, 100.0f),
 			"ランキング",
-			CFont::FONT_FZGONTA,
+			CFont::FONT_BESTTEN,
 			&pFont);
 	}
 	{
 		m_Text[3] = CText::Create(CText::BOX_NORMAL,
 			D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 			D3DXVECTOR2(360.0f, 100.0f),
-			"EXIT",
-			CFont::FONT_MEIRIO,
+			"ゲームをやめる",
+			CFont::FONT_BESTTEN,
 			&pFont);
 	}
 }

@@ -7,7 +7,6 @@
 //========================================
 #include "title.h"
 #include "game.h"
-#include "result.h"
 #include "ranking.h"
 #include "../system/csv_file.h"
 #include "../object\UI\score.h"
@@ -95,7 +94,7 @@ HRESULT CGame::Init(void)
 		m_pTime->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 32.0f, 0.0f));
 
 		// タイム設定
-		m_pTime->SetTime(GAME_TIME*2);
+		m_pTime->SetTime(GAME_TIME);
 	}
 
 	{
@@ -118,7 +117,7 @@ HRESULT CGame::Init(void)
 	pCamera->SetHeigth(0.02f);
 	pCamera->SetDistance(300.0f);
 
-	FontInfo pFont = {
+	FormFont pFont = {
 		D3DXCOLOR(0.0f,0.53f,0.2f,1.0f),
 		20.0f,
 		15,
@@ -210,7 +209,7 @@ void CGame::Update(void)
 			{
 				if (!m_bEnd)
 				{
-					FontInfo pFont = {
+					FormFont pFont = {
 						INIT_D3DXCOLOR,
 						20.0f,
 						12,
@@ -232,10 +231,8 @@ void CGame::Update(void)
 				{
 					if (--m_nEndTime <= 0)
 					{
-						//CResult::SetVerdict(CResult::VERDICT_GAMECLEAR);
-						CManager::GetFade()->SetFade(MODE_RANKING);
-
-						CRanking::SetScore11(m_pScore->GetScore());
+						// リザルト演出
+						Result();
 					}
 				}
 			}
@@ -246,7 +243,7 @@ void CGame::Update(void)
 		{
 			if (!m_bEnd)
 			{
-				FontInfo pFont = {
+				FormFont pFont = {
 					INIT_D3DXCOLOR,
 					20.0f,
 					12,
@@ -268,7 +265,6 @@ void CGame::Update(void)
 			{
 				if (--m_nEndTime <= 0)
 				{
-					//CResult::SetVerdict(CResult::VERDICT_GAMEOVER);
 					CManager::GetFade()->SetFade(MODE_RANKING);
 				}
 			}
@@ -294,6 +290,15 @@ CGame *CGame::Create(void)
 	pGame->Init();
 
 	return pGame;
+}
+
+//========================================
+// リザルト演出
+//========================================
+void CGame::Result(void)
+{
+	CManager::GetFade()->SetFade(MODE_RANKING);
+	CRanking::SetScore11(m_pScore->GetScore());
 }
 
 //================================================================================
