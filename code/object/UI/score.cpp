@@ -53,6 +53,8 @@ CScore *CScore::Create(void)
 //========================================
 HRESULT CScore::Init(void)
 {
+	m_nScore = 0;
+
 	// ‰Šú‰»ˆ—
 	CText2D::Init();
 
