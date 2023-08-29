@@ -794,13 +794,30 @@ void CCube::CubeText(void)
 	int nNumSet = 0;
 	D3DXCOLOR col;
 	char aString[TXT_MAX];
-	sprintf(aString, "%02d", m_nRestCube);
+	sprintf(aString, "%02d", m_nRestCube);// m_nLimitCube
 
 	// ’·‚³‚ðŽæ“¾
 	int m_Digit = strlen(aString);
 
+	if (m_nRestCube <= 0)
+	{
+		col = D3DXCOLOR(0.45f, 0.45f, 0.45f, 1.0f);
+	}
+	else if (m_nRestCube <= m_nLimitCube / 3)
+	{
+		col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+	else if (m_nRestCube <= m_nLimitCube * 2/3)
+	{
+		col = D3DXCOLOR(0.8f,0.8f,0.0f,1.0f);
+	}
+	else if (m_nRestCube <= m_nLimitCube)
+	{
+		col = INIT_D3DXCOLOR;
+	}
+
 	for (int nTime = 0; nTime < m_Digit; nTime++)
 	{
-		m_Cube->ChgWords(&aString[nTime], CUBE_START_DEX + nTime, INIT_D3DXCOLOR);
+		m_Cube->ChgWords(&aString[nTime], CUBE_START_DEX + nTime, col);
 	}
 }

@@ -19,7 +19,8 @@
 //========================================
 CTime::CTime(int nPriority) : CText2D(nPriority)
 {
-	m_nTime = 0;			// タイム
+	m_nTime = 0;			// 時間
+	m_nTimeMax  = 0;		// 時間の最大値
 	m_nCounter = 0;			// カウンター
 	m_Digit = 0;			// 桁数
 	m_bSetTime = false;		// 設定フラグ
@@ -104,20 +105,41 @@ void CTime::Update(void)
 			}
 		}
 
+		// テキストの更新
 		if (m_bUpdateTime)
 		{
 			// タイムを文字列に設定
 			char aTime[TXT_MAX];
 			int nNumSet = 0;
+			D3DXCOLOR col;
 
 			sprintf(aTime, "%02d", m_nTime);
 
 			// 長さを取得
 			m_Digit = strlen(aTime);
 
+			int n = (m_nTimeMax * 2) / 3;
+
+			if (m_nTime <= 0)
+			{
+				col = D3DXCOLOR(0.45f, 0.45f, 0.45f, 1.0f);
+			}
+			else if (m_nTime <= m_nTimeMax / 3)
+			{
+				col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+			}
+			else if (m_nTime <= (m_nTimeMax * 2) / 3)
+			{
+				col = D3DXCOLOR(0.9f, 0.9f, 0.0f, 1.0f);
+			}
+			else if (m_nTime < m_nTimeMax)
+			{
+				col = INIT_D3DXCOLOR;
+			}
+
 			for (int nTime = 0; nTime < m_Digit; nTime++)
 			{
-				if (m_Time->ChgWords(&aTime[nTime], TIME_START_DEX + nTime, INIT_D3DXCOLOR))
+				if (m_Time->ChgWords(&aTime[nTime], TIME_START_DEX + nTime, col))
 				{
 					nNumSet++;
 				}
@@ -126,6 +148,28 @@ void CTime::Update(void)
 			if (nNumSet == m_Digit)
 			{
 				m_bUpdateTime = false;
+			}
+		}
+
+		// 警告テキストの表示
+		{
+			// 残り時間をテキストに設定
+			char aString[TXT_MAX];
+			sprintf(aString, "残り %02d秒！！", m_nTime);
+			D3DXCOLOR col;
+
+			FormFont pFont = { INIT_D3DXCOLOR,20.0f,1,60,60 };
+			FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f) };
+
+			if (m_nTime == m_nTimeMax / 3)
+			{
+				CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(640.0f, 50.0f, 0.0f), D3DXVECTOR2(350.0f, 100.0f),
+					aString, CFont::FONT_BESTTEN, &pFont, false, &pShadow);
+			}
+			else if (m_nTime == m_nTimeMax * 2 / 3)
+			{
+				CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(640.0f, 50.0f, 0.0f), D3DXVECTOR2(350.0f, 100.0f),
+					aString, CFont::FONT_BESTTEN, &pFont, false, &pShadow);
 			}
 		}
 	}
@@ -149,6 +193,7 @@ void CTime::SetTime(int nTime)
 	{
 		// タイム代入
 		m_nTime = nTime;
+		m_nTimeMax = nTime;
 
 		// タイムを文字列に設定
 		char aString[TXT_MAX];

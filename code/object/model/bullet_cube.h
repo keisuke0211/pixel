@@ -22,7 +22,7 @@ class CText;
 class CCube : public CObjectX
 {
 	// 定義
-	static const int MAX_CUBE = 10;			// ステージで配置出来るキューブの制限
+	static const int MAX_CUBE = 30;			// ステージで配置出来るキューブの制限
 	static const int CUBE_START_DEX = 6;	// キューブの開始位置
 public:
 

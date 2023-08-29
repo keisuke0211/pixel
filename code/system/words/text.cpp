@@ -393,6 +393,7 @@ void CText::DisapTime(void)
 			if (m_Info.words[wordsCount] != NULL)
 			{
 				m_Info.FontCol.a *= ((float)m_Info.nDisapTime / m_Info.nDisapTimeMax);
+
 				m_Info.words[wordsCount]->SetColar(m_Info.FontCol);
 			}
 		}

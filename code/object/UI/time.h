@@ -44,7 +44,8 @@ public:
 
 private:
 	// ***** 変数 *****
-	int m_nTime;		// タイム
+	int m_nTime;		// 時間
+	int m_nTimeMax;		// 時間の最大値
 	int m_nCounter;		// カウンター
 	int m_Digit;		// 桁数
 	bool m_bSetTime;	// 時間の設定をしたか
