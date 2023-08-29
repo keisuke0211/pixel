@@ -86,8 +86,9 @@ void CTime::Update(void)
 	{
 		bool bPause = CPause::IsPause();
 		bool bCameraExit = CBlock::IsExitCamera();
+		bool bTime = CGame::IsTime();
 
-		if (!bPause && !bCameraExit)
+		if (!bPause && !bCameraExit && !bTime)
 		{
 			// XVˆ—
 			CText2D::Update();

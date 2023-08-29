@@ -59,6 +59,7 @@ public:
 	/* プレイヤー	*/static CPlayer *GetPlayer() { return m_pPlayer; }
 	/* タイム		*/static CTime *GetTime() { return m_pTime; }
 	/* スコア		*/static CScore *GetScore() { return m_pScore; };
+	/* 時間フラグ	*/static bool IsTime() { return m_bTime; }
 	
 private:
 
@@ -102,6 +103,7 @@ private:
 	int m_nStandTime;					// 待機時間(リザルト演出終了後)
 	CText *m_RstText[RST_ADD_SCORE];	// テキスト表示
 	bool m_bAddScore;					// スコアの加算フラグ
+	static bool m_bTime;				// 時間フラグ
 };
 
 #endif

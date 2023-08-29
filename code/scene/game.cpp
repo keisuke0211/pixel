@@ -30,6 +30,7 @@
 CPlayer *CGame::m_pPlayer = NULL;
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
+bool CGame::m_bTime = false;
 
 const char* CGame::CEILING_FILE = "data\\GAMEDATA\\OBJECT\\CEILING_MULTI_DATA.txt";
 const char* CGame::SIDE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_MULTI_DATA.txt";
@@ -78,6 +79,7 @@ HRESULT CGame::Init(void)
 	m_nStartTime = 0;
 	m_nEndTime = 0;
 	m_bEnd = false;
+	m_bTime = false;
 
 	m_nRstStgType = 0;
 	m_nTextCreate = 0;
@@ -260,6 +262,7 @@ void CGame::Update(void)
 
 					m_nEndTime = (12 * 10) + 120 + 25;
 					m_bEnd = true;
+					m_bTime = true;
 				}
 				else
 				{

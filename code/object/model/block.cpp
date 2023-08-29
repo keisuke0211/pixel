@@ -244,6 +244,7 @@ void CBlock::Update(void)
 				pCamera->SetHeigth(m_CameraHeigth);
 
 				m_nCntExit = 0;
+				m_bExitCamera = false;
 
 				FormFont pFont = {
 					INIT_D3DXCOLOR,
