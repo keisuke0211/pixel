@@ -720,7 +720,7 @@ void CGame::LoodBlock(void)
 		int nState;				// ó‘Ô
 		D3DXVECTOR3 pos;		// ˆÊ’u
 
-								// —ñ”‚ÌŽæ“¾
+		// —ñ”‚ÌŽæ“¾
 		int nLineMax = pFile->GetLineSize(nRow);
 
 		for (int nLine = 0; nLine < nLineMax; nLine++)

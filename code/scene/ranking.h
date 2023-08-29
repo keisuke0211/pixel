@@ -28,6 +28,8 @@ class CRanking : public CScene
 	static const int EXPLAIN_MAX = 6;		// 操作説明のテキスト数
 	static const int TEXT_MAX = 9;			// 文字表示のテキスト数
 	static const int NAME_START_DEX = 5;	// 名前の開始位置
+	static const int BLINK_TIME = 4;		// 点滅時間
+
 
 // ランキング名の文字下限
 // ランキング名の文字上限
@@ -36,8 +38,9 @@ class CRanking : public CScene
 #define NAME_MAX_CHAR	('Z' + 1)
 #define NAME_START_CHAR	('A')
 
-#define BLINK_TIME	(4)						// 点滅時間
-#define BLINK_COLOR	D3DXCOLOR{200,50,0,255}	// ランキングフレームの点滅色
+#define BLINK_COLOR		D3DXCOLOR{1.0f,1.0f,1.0f,1.0f}	// ランキングフレームの点滅色
+#define RANKING_COLOR	D3DXCOLOR{0.824f,0.824f,0.0f,1.0f}	// ランキングフレームの更新色
+
 public:
 
 	// ***** 関数 *****
@@ -105,6 +108,8 @@ private:
 		int		nCntString;		// 文字列カウント
 		int		nCntLetter;		// 文字カウント
 		int		nCntConv;		// 変換文字カウント
+
+		int		nCounterBlink;	// 点滅カウンター
 	};
 
 	// 各順位のテキスト

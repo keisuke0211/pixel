@@ -40,6 +40,7 @@ CRanking::CRanking()
 	m_Info.nCntString = 0;
 	m_Info.nCntLetter = 0;
 	m_pString = NULL;
+	m_Info.nCntBlink = 0;
 	nStringMax = 0;
 
 	strinit(m_aNameData, TXT_MAX);
@@ -309,7 +310,7 @@ void CRanking::State(void)
 	{
 		if (m_Info.nUpdateRank == nCntRanking)
 		{
-			m_Text[nCntRanking]->SetTextColor(BLINK_COLOR);
+			m_Text[nCntRanking]->SetTextColor(RANKING_COLOR);
 		}
 	}
 }
@@ -406,8 +407,21 @@ void CRanking::NameEntry(void)
 	}
 	if (!m_Info.bNameInput)
 	{
+		++m_Info.nCounterBlink %= (BLINK_TIME * 2);	// 点滅カウンターを加算制御
+
 		// 操作
 		NameInput();
+
+		D3DXCOLOR col =
+			!(m_Info.nCounterBlink / BLINK_TIME) ?
+			RANKING_COLOR : BLINK_COLOR;
+
+		int nRank = m_Info.nUpdateRank;
+
+		if (m_Text[nRank]->SetWords("_", NAME_START_DEX + m_Info.nCntName, col))
+		{
+			UpdateWords();
+		}
 	}
 	
 	if (m_Info.bNameInput)
@@ -417,12 +431,11 @@ void CRanking::NameEntry(void)
 		int nConv = m_Info.nCntConv;
 		int nRank = m_Info.nUpdateRank;
 
-		if (m_Text[nRank]->SetWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, NAME_START_DEX + m_Info.nCntName, BLINK_COLOR))
-		{
-			UpdateWords();
-			m_Info.bNameInput = false;
-		}
+		UpdateWords();
+		m_Info.bNameInput = false;
 	}
+
+
 }
 
 //========================================
@@ -534,12 +547,16 @@ void CRanking::NameInput(void)
 
 			m_Info.nCntChar += 2;
 
+			if (m_Text[nRank]->SetWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, NAME_START_DEX + m_Info.nCntName, RANKING_COLOR))
+			{
+				UpdateWords();
+			}
+
 			if (++m_Info.nCntName >= NAME_NUM)
 			{// 名前入力のカウントを加算した結果、ランキング名の文字数に達した時、
 				m_Info.bNameEntry = false;
 				return;
 			}
-			m_Info.bNameInput = true;
 		}
 		else
 		{
@@ -555,7 +572,7 @@ void CRanking::NameInput(void)
 					strinit(m_aNameData, TXT_MAX);
 					strcat(m_aNameData, m_Ranking[nRank].aName);
 
-					if (m_Text[nRank]->SetWords(" ", NAME_START_DEX + (m_Info.nCntName + nCnt), BLINK_COLOR))
+					if (m_Text[nRank]->SetWords(" ", NAME_START_DEX + (m_Info.nCntName + nCnt), RANKING_COLOR))
 					{
 						m_Info.bNameInput = false;
 					}
@@ -576,7 +593,7 @@ void CRanking::NameInput(void)
 					strinit(m_aNameData, TXT_MAX);
 					strcat(m_aNameData, m_Ranking[nRank].aName);
 
-					if (m_Text[nRank]->SetWords(&aData[nCntName], NAME_START_DEX + (m_Info.nCntName + nCnt), BLINK_COLOR))
+					if (m_Text[nRank]->SetWords(&aData[nCntName], NAME_START_DEX + (m_Info.nCntName + nCnt), RANKING_COLOR))
 					{
 						m_Info.bNameInput = false;
 					}
@@ -589,7 +606,7 @@ void CRanking::NameInput(void)
 }
 
 //========================================
-// 文字表示設定()
+// 文字表示(設定)
 //========================================
 void CRanking::SetWords(void)
 {
@@ -600,19 +617,12 @@ void CRanking::SetWords(void)
 	int nConvMax = m_pString[nString].nConvMax - 1;
 	int nRank = m_Info.nUpdateRank;
 
-
 	int nNextLetter = m_Info.nCntLetter + 1;				// 次の文字
 	int nPrevLetter = m_pString[nString].nLettreMax - 1;	// 前の文字
 	int nNextString = m_Info.nCntString + 1;				// 次の行
 	int nPrevString = nStringMax - 1;						// 前の行
 
-	FormFont pFont = {
-		INIT_D3DXCOLOR,
-		30.0f,
-		1,
-		1,
-		-1
-	};
+	FormFont pFont = {INIT_D3DXCOLOR,30.0f,1,1,-1};
 
 	// 中央
 	m_Words[0] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(950.0f, 250, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
@@ -634,13 +644,7 @@ void CRanking::SetWords(void)
 	m_Words[4] = CText::Create(CText::BOX_NORMAL,D3DXVECTOR3(1050.0f, 250, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
 		m_pString[nString].pConv[nConv].pLetter[nNextLetter].aConv,CFont::FONT_BESTTEN,&pFont, false);
 
-	pFont = {
-		INIT_D3DXCOLOR,
-		15.0f,
-		1,
-		1,
-		-1
-	};
+	pFont = {INIT_D3DXCOLOR,15.0f,1,1,-1};
 
 	// 上
 	m_Words[5] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(975.0f, 210, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
@@ -670,7 +674,6 @@ void CRanking::UpdateWords(void)
 	int nConv = m_Info.nCntConv;
 	int nConvMax = m_pString[nString].nConvMax - 1;
 	int nRank = m_Info.nUpdateRank;
-
 
 	int nNextLetter = m_Info.nCntLetter + 1;	// 次の文字
 	int nPrevLetter = m_Info.nCntLetter - 1;	// 前の文字

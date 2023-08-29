@@ -6,7 +6,7 @@
 #========================================
 # s”
 #========================================
-NUM_ROW = 10
+NUM_ROW = 12
 
 #========================================
 # •¶Žšî•ñ
@@ -141,6 +141,29 @@ SET_ROW
 	SET_WORDS
 		WOARDS	‚í,‚ð,‚ñ,¦
 		CONV	ƒ,ƒ’,ƒ“,¦
+	END_WORDS
+
+END_ROW
+
+// -- ”Žš ------------------------------------
+SET_ROW
+	NUM_CONV = 0
+	NUM_WORDS = 11
+	
+	SET_WORDS
+		WOARDS	‚O,‚P,‚Q,‚R,‚S,‚T.‚U,‚V,‚W,‚X,¦
+	END_WORDS
+
+END_ROW
+
+// -- ‹L† ------------------------------------
+SET_ROW
+	NUM_CONV = 1
+	NUM_WORDS = 11
+	
+	SET_WORDS
+		WOARDS	I,H,Y,,•,,ò,^,_,—,¦
+		CONV	„,ƒ,,‡,‰,Š,ô,™,ž,›,¦
 	END_WORDS
 
 END_ROW
