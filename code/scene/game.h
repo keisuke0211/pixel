@@ -14,9 +14,10 @@
 //****************************************
 // 前方宣言
 //****************************************
-class CTime;			// タイム
-class CScore;			// スコア
-class CPlayer;			// プレイヤー
+class CTime;	// タイム
+class CScore;	// スコア
+class CPlayer;	// プレイヤー
+class CText;	// テキスト
 
 //****************************************
 // クラス
@@ -29,6 +30,10 @@ class CGame : public CScene
 	static const char* FLOOR_FILE;		// 床のファイルパス
 	static const char* BLOCK_FILE1;		// ブロックのファイルパス
 	static const char* ENEMY_FILE1;		// エネミーのファイルパス
+
+	static const int TIME_SCORE = 50;	// １秒のスコアの加算値
+	static const int CUBE_SCORE = 100;	// １個のスコアの加算値
+
 
 public:
 
@@ -57,6 +62,23 @@ public:
 	
 private:
 
+	// ***** 列挙型 *****
+
+	// リザルト演出
+	enum Rst
+	{
+		RST_TIME = 0,	// タイムボーナス(テキスト)
+		RST_TIME_CALC,	// タイムボーナス(計算)
+		RST_CUBE,		// キューブボーナス(テキスト)
+		RST_CUBE_CALC,	// キューブボーナス(結果)
+		RST_BONUS,		// ボーナスの合計(テキスト)
+		RST_BONUS_CALC,	// ボーナスの合計(計算)
+		RST_ADD_SCORE,	// スコア加算
+		RST_STAND,		// 待機
+		RST_END,		// ランキング画面に移動
+		RST_MAX
+	};
+
 	// ***** 関数 *****
 	/* リザルト	*/void  Result(void);
 
@@ -69,8 +91,17 @@ private:
 	float m_nMoveRot;		// 向きの加速度
 	int m_nStartTime;		// 開始時間
 	int m_nEndTime;			// 終了時間
+	int m_nRstStgType;		// リザルト演出の種類
+	int m_nTextCreate;		// 次のテキストの生成するまでの時間
 
 	bool m_bEnd;			// 終了フラグ
+
+	int m_nTimeTotal;					// タイムボーナスの合計値
+	int m_nCubeTotal;					// キューブボーナスの合計値
+	int m_nTotal;						// 全ての合計値
+	int m_nStandTime;					// 待機時間(リザルト演出終了後)
+	CText *m_RstText[RST_ADD_SCORE];	// テキスト表示
+	bool m_bAddScore;					// スコアの加算フラグ
 };
 
 #endif

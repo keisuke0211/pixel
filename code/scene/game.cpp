@@ -12,6 +12,7 @@
 #include "../object\UI\score.h"
 #include "../object\UI\time.h"
 #include "../object\model\block.h"
+#include "../object/model/bullet_cube.h"
 #include "../object\model\player.h"
 #include "../object\model\enemy.h"
 #include "../object\BG\bg_side.h"
@@ -46,6 +47,18 @@ CGame::CGame()
 	m_nStartTime = 0;
 	m_nEndTime = 0;
 	m_bEnd = false;
+
+	m_nRstStgType = 0;
+	m_nTextCreate = 0;
+	m_nTimeTotal = 0;
+	m_nCubeTotal = 0;
+	m_nTotal = 0;
+	m_bAddScore = false;
+
+	for (int nRst = 0; nRst < RST_ADD_SCORE; nRst++)
+	{
+		m_RstText[nRst] = NULL;
+	}
 }
 
 //========================================
@@ -61,6 +74,17 @@ CGame::~CGame()
 //========================================
 HRESULT CGame::Init(void)
 {
+	m_rot = INIT_D3DXVECTOR3;
+	m_nStartTime = 0;
+	m_nEndTime = 0;
+	m_bEnd = false;
+
+	m_nRstStgType = 0;
+	m_nTextCreate = 0;
+	m_nTimeTotal = 0;
+	m_nCubeTotal = 0;
+	m_nTotal = 0;
+
 	CTitle::SetStart(false);
 	CTitle::SetExit(false);
 	CTitle::SetClear(false);
@@ -82,6 +106,9 @@ HRESULT CGame::Init(void)
 
 	// 敵の生成
 	LoodEnemy();
+
+	// キューブの制限数
+	CCube::SetLimit();
 
 	{
 		// タイム生成
@@ -128,7 +155,7 @@ HRESULT CGame::Init(void)
 	CText::Create(CText::BOX_NORMAL,
 		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 		D3DXVECTOR2(440.0f, 100.0f),
-		"平原ステージ！\n６０秒以内で攻略せよ！",
+		"平原ステージ！\n90秒以内に攻略せよ！",
 		CFont::FONT_BESTTEN,
 		&pFont, false);
 
@@ -304,40 +331,122 @@ CGame *CGame::Create(void)
 //========================================
 void CGame::Result(void)
 {
-	FormFont pFont = {
-		INIT_D3DXCOLOR,
-		20.0f,
-		12,
-		10,
-		30
-	};
+	FormFont pFont = { INIT_D3DXCOLOR, 20.0f, 5, 5, 0};
+	FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(1.0f,1.0f)};
 
-	FormShadow pShadow = {
-		D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
-		true,
-		D3DXVECTOR3(2.0f,2.0f,0.0f),
-		D3DXVECTOR2(1.0f,1.0f)
-	};
+	char aString[TXT_MAX];
+	int nLength = 0;
+	D3DXVECTOR3 pos = INIT_D3DXVECTOR3;
 
-	CText::Create(CText::BOX_NORMAL,
-		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
-		D3DXVECTOR2(440.0f, 100.0f),
-		"TIME BONUS",
-		CFont::FONT_BESTTEN,
-		&pFont, false,&pShadow);
-
-	// -- 取得 -------------------------------------------
-	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
-
-	if ((pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A)))
+	switch (m_nRstStgType)
 	{
-		if (CFade::GetFade() == CFade::FADE_NONE)
+	case RST_TIME:
+	{
+		sprintf(aString, "TIME BONUS");
+		pos = D3DXVECTOR3(100.0f, 100.0f, 0.0f);
+	}
+		break;
+	case RST_TIME_CALC:
+	{
+		int nTime = m_pTime->GetTime();
+		m_nTimeTotal = TIME_SCORE * nTime;
+
+		sprintf(aString, "%d * %d = %d",TIME_SCORE,nTime,m_nTimeTotal);
+		pos = D3DXVECTOR3(100.0f, 150.0f, 0.0f);
+	}
+		break;
+	case RST_CUBE:
+	{
+		sprintf(aString, "CUBE BONUS");
+		pos = D3DXVECTOR3(100.0f, 250.0f, 0.0f);
+	}
+		break;
+	case RST_CUBE_CALC:
+	{
+		int nCube = CCube::GetRest();
+		m_nCubeTotal = CUBE_SCORE * nCube;
+
+		sprintf(aString, "%d * %d = %d", CUBE_SCORE, nCube, m_nCubeTotal);
+		pos = D3DXVECTOR3(100.0f, 300.0f, 0.0f);
+	}
+		break;
+	case RST_BONUS:
+	{
+		sprintf(aString, "TOTAL BONUS");
+		pos = D3DXVECTOR3(100.0f, 500.0f, 0.0f);
+	}
+		break;
+	case RST_BONUS_CALC:
+	{
+		m_nTotal = m_nTimeTotal + m_nCubeTotal;
+
+		sprintf(aString, "%d",m_nTotal);
+		pos = D3DXVECTOR3(100.0f, 550.0f, 0.0f);
+	}
+		break;
+	case RST_ADD_SCORE:
+	{
+		if (m_bAddScore)
 		{
-			CManager::GetFade()->SetFade(MODE_RANKING);
-			CRanking::SetScore11(m_pScore->GetScore());
+			if (m_nTotal <= 0)
+			{
+				m_nStandTime = 120;
+				m_nRstStgType++;
+			}
+			else
+			{
+				m_nTotal -= 10;
+				CScore::SetScore(10);
+
+				char aTotal[TXT_MAX];
+
+				sprintf(aTotal, "%d", m_nTotal);
+				m_RstText[RST_BONUS_CALC]->ChgText(aTotal, INIT_D3DXCOLOR);
+			}
+		}
+		else
+		{
+			if (--m_nTextCreate <= 0)
+			{
+				m_nTextCreate = 0;
+				m_bAddScore = true;
+			}
 		}
 	}
+		break;
+	case RST_STAND:
+	{
+		if (m_nStandTime-- <= 0)
+		{
+			m_nRstStgType++;
+		}
+	}
+		break;
+	case RST_END:
+	{
+		CManager::GetFade()->SetFade(MODE_RANKING);
+		CRanking::SetScore11(m_pScore->GetScore());
+	}
+		break;
+	}
+
+	// テキストの生成
+	if (m_nRstStgType < RST_ADD_SCORE)
+	{
+		if (--m_nTextCreate <= 0)
+		{
+			m_nTextCreate = 0;
+			nLength = strlen(aString);
+
+			m_RstText[m_nRstStgType] = CText::Create(CText::BOX_NORMAL, pos, D3DXVECTOR2(0.0f, 0.0f),
+				aString, CFont::FONT_BESTTEN, &pFont, false, &pShadow);
+
+			m_nTextCreate = (nLength * 5) + 5;
+			m_nRstStgType++;
+		}
+	}	
+
+	
 }
 
 //================================================================================

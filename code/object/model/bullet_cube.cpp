@@ -13,11 +13,18 @@
 #include "block.h"
 #include "../../system/sound.h"
 #include "../../system/csv_file.h"
+#include "../../system/words/text.h"
+#include "../../system/words/words.h"
+#include "../../system/words/font.h"
 
 // 静的変数
 int CCube::m_nNumAll = -1;
+int CCube::m_nNumSet = 0;
 int CCube::m_nNumChain = 0;
+int CCube::m_nLimitCube = 0;
+int CCube::m_nRestCube = 0;
 bool CCube::bLeadSet = false;
+CText *CCube::m_Cube = NULL;
 
 //========================================
 // マクロ定義
@@ -35,6 +42,8 @@ bool CCube::bLeadSet = false;
 CCube::CCube(int nPriority) : CObjectX(nPriority)
 {
 	m_nNumAll++;	// 総数を加算
+	m_nNumSet++;	// キューブの配置数
+	m_nRestCube--;	// キューブの残り数
 
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;		// 位置
@@ -78,7 +87,7 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 		return pCube;
 	}
 
-	// オブジェクト2Dの生成
+	// キューブの生成
 	pCube = new CCube;
 
 	pCube->m_Info.nCntRadius = RADIUS_TIME;
@@ -89,13 +98,27 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 	// 初期化処理
 	pCube->Init();
 
+	int nCubeLife = nLife;
+
+	if (m_nNumSet >= MAX_CUBE)
+	{
+		nCubeLife = 1;
+	}
+	
 	pCube->m_Info.nShape = nShape;
-	pCube->m_Info.nLife = nLife;
-	pCube->m_Info.nLifeMax = nLife;
+	pCube->m_Info.nLife = nCubeLife;
+	pCube->m_Info.nLifeMax = nCubeLife;
 	pCube->SetCubePos(pos);
 	pCube->SetPos(pos);
 
 	pCube->m_Info.posOld = pCube->m_Info.pos;
+
+	int nNumSet = 0;
+	char aString[TXT_MAX];
+	sprintf(aString, "%02d", m_nRestCube);
+
+	// テキストの更新
+	CubeText();
 
 	// 位置補正
 	// X軸
@@ -135,7 +158,6 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 		}
 		return pCube;
 	}
-
 	return pCube;
 }
 
@@ -148,6 +170,11 @@ HRESULT CCube::Init(void)
 
 	// 種類の設定
 	SetType(TYPE_CUBE);
+
+	if (m_nRestCube <= 0)
+	{
+		m_nRestCube = 0;
+	}
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -233,9 +260,12 @@ void CCube::Update(void)
 				Contact(0, VECTOR_Y, m_Info.pos);
 				Contact(0, VECTOR_Z, m_Info.pos);
 
-				// 当たり判定
-				/* 敵		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
-				/* ブロック	*/ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
+				if (m_nNumSet <= MAX_CUBE)
+				{
+					// 当たり判定
+					/* 敵		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
+					/* ブロック	*/ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
+				}
 
 				// オブジェクト破棄
 				Uninit();
@@ -717,4 +747,60 @@ void CCube::Destruction(CCube *pCube)
 	pCube->Contact(0, VECTOR_X, pCube->m_Info.pos);
 	pCube->Contact(0, VECTOR_Y, pCube->m_Info.pos);
 	pCube->Contact(0, VECTOR_Z, pCube->m_Info.pos);
+}
+
+//========================================
+// 制限数の設定
+//========================================
+void CCube::SetLimit(void)
+{
+	m_nNumSet = 0;
+	m_nNumSet = 0;
+	m_nRestCube = MAX_CUBE;
+	m_nLimitCube = MAX_CUBE;
+
+	// タイムを文字列に設定
+	char aString[TXT_MAX];
+	sprintf(aString, "CUBE ：%d", m_nLimitCube);
+
+	FormFont pFont = {
+		INIT_D3DXCOLOR,
+		11.0f,
+		1,
+		10,
+		-1
+	};
+
+	FormShadow pShadow = {
+		D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
+		true,
+		D3DXVECTOR3(2.0f,2.0f,0.0f),
+		D3DXVECTOR2(1.0f,1.0f)
+	};
+
+	m_Cube = CText::Create(CText::BOX_NORMAL,
+		D3DXVECTOR3(SCREEN_WIDTH - 290.0f, 42.0f, 0.0f),
+		D3DXVECTOR2(0.0f, 0.0f),
+		aString,
+		CFont::FONT_BESTTEN,
+		&pFont, false, &pShadow);
+}
+
+//========================================
+// テキスト
+//========================================
+void CCube::CubeText(void)
+{
+	int nNumSet = 0;
+	D3DXCOLOR col;
+	char aString[TXT_MAX];
+	sprintf(aString, "%02d", m_nRestCube);
+
+	// 長さを取得
+	int m_Digit = strlen(aString);
+
+	for (int nTime = 0; nTime < m_Digit; nTime++)
+	{
+		m_Cube->ChgWords(&aString[nTime], CUBE_START_DEX + nTime, INIT_D3DXCOLOR);
+	}
 }

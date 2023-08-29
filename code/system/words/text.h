@@ -84,7 +84,8 @@ public:
 	/* ポーズ中の生成	*/void SetTetPause(bool bPause);
 	/* ボックスの色		*/void SetBoxColor(D3DXCOLOR col);
 	/* テキストの色		*/bool SetTextColor(D3DXCOLOR col);
-	/* 文字変更			*/bool SetWords(char* Text, int nIdx, D3DXCOLOR col);
+	/* 文字変更(単体)	*/bool ChgWords(char* Text, int nIdx, D3DXCOLOR col);
+	/* 文字変更(全体)	*/bool ChgText(char* Text, D3DXCOLOR col);// ※ 元のテキストより多いと使えない また半角英数のみ
 
 private:
 

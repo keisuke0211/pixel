@@ -12,10 +12,18 @@
 #include "../objectX.h"
 
 //****************************************
+// 前方宣言
+//****************************************
+class CText;
+
+//****************************************
 // クラス
 //****************************************
 class CCube : public CObjectX
 {
+	// 定義
+	static const int MAX_CUBE = 10;			// ステージで配置出来るキューブの制限
+	static const int CUBE_START_DEX = 6;	// キューブの開始位置
 public:
 
 	// ***** 列挙型 *****
@@ -30,7 +38,7 @@ public:
 
 	// ***** 構造体 *****
 
-	// プレイヤー情報
+	// キューブ情報
 	struct Info
 	{
 		D3DXVECTOR3 pos;		// 位置
@@ -66,6 +74,8 @@ public:
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);
 	/* 生成		*/static CCube *Create(int nType, D3DXVECTOR3 pos,int nLife);
+	/* テキスト */static void CubeText(void);
+
 
 	// -- 設定 -------------------------------
 	/* 位置			*/void SetCubePos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
@@ -75,6 +85,7 @@ public:
 	/* 寿命			*/void SetCubeLife(const int nLife) { m_Info.nLife = nLife; }
 	/* 種類			*/void SetCubeType(const int type) { m_Info.nShape = type; }
 	/* 先頭フラグ	*/void SetCubeLead(const bool bSet) { bLeadSet = bSet; }
+	/* 制限数		*/static void SetLimit(void);
 
 	// -- 取得 -------------------------------
 	/* 位置			*/D3DXVECTOR3 GetCubeos(void) { return m_Info.pos; }
@@ -86,7 +97,8 @@ public:
 	/* 連鎖カウント	*/int GetChain(void) { return m_Info.nChain; }
 	/* ID			*/int GetID(void) { return m_Info.nID; }
 	/* 総数			*/static int GetNumAll(void) { return m_nNumAll; }
-		
+	/* 残り数		*/static int GetRest(void) { return m_nRestCube; }
+
 private:
 
 	// ***** 関数 *****
@@ -97,10 +109,13 @@ private:
 	/* 破壊処理				*/void Destruction(CCube *pCube);
 
 	// ***** 変数 *****
-	static int m_nNumAll;	// キューブの総数
-	static int m_nNumChain;	// 連爆の総数
-	static bool bLeadSet;	// 先頭配置フラグ
-	Info m_Info;			// プレイヤー情報
-
+	static int m_nNumAll;		// キューブの総数
+	static int m_nNumSet;		// キューブの配置数
+	static int m_nRestCube;		// キューブの残り数
+	static int m_nNumChain;		// 連爆の総数
+	static bool bLeadSet;		// 先頭配置フラグ
+	static int m_nLimitCube;	// ステージで撃てるキューブの制限数
+	Info m_Info;				// プレイヤー情報
+	static CText *m_Cube;		// テキスト表示
 };
 #endif

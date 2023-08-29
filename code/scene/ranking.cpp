@@ -15,8 +15,8 @@
 // 定義
 const char* CRanking::FILE_PATH = "data\\SAVEDATA\\RANKING_DATA.csv";
 const char* CRanking::TEXT_FILE_PATH = "data\\GAMEDATA\\TEXT\\WORDS_DATA.txt";
-int CRanking::m_nGameScore = 1200;
-bool CRanking::m_bSetScore = true;
+int CRanking::m_nGameScore = 0;
+bool CRanking::m_bSetScore = false;
 
 //========================================
 // コンストラクタ
@@ -100,6 +100,13 @@ HRESULT CRanking::Init(void)
 			&pFont,false);
 	}
 
+	int nRank = SetScore(m_nGameScore);
+
+	if (nRank < RANK_NUM)
+	{
+		m_bSetScore = true;
+	}
+
 	if (m_bSetScore)
 	{
 		// 操作テキストの説明
@@ -155,7 +162,7 @@ HRESULT CRanking::Init(void)
 				&pFont, false);
 		}
 
-		SetNameEntry(SetScore(m_nGameScore));
+		SetNameEntry(nRank);
 	}
 
 	return S_OK;
@@ -347,7 +354,6 @@ int CRanking::SetScore(int nScore)
 void CRanking::SetScore11(int nScore)
 {
 	m_nGameScore = nScore;
-	m_bSetScore = true;
 }
 
 //========================================
@@ -360,6 +366,7 @@ void CRanking::SetNameEntry(int nUpdateRank)
 	if (m_Info.nUpdateRank != -1)
 	{// 更新順位が-1(更新無し)でない時、
 		m_Info.bNameEntry = true;
+		m_bSetScore = true;
 		m_Info.nCntName = 0;
 		m_Info.nCntBlink = 0;
 
@@ -415,7 +422,7 @@ void CRanking::NameEntry(void)
 
 		int nRank = m_Info.nUpdateRank;
 
-		if (m_Text[nRank]->SetWords("_", NAME_START_DEX + m_Info.nCntName, col))
+		if (m_Text[nRank]->ChgWords("_", NAME_START_DEX + m_Info.nCntName, col))
 		{
 			UpdateWords();
 		}
@@ -519,7 +526,7 @@ void CRanking::NameInput(void)
 			}
 			m_Info.nCntChar -= 2;
 
-			if (m_Text[nRank]->SetWords(aWords, NAME_START_DEX + m_Info.nCntName,INIT_D3DXCOLOR))
+			if (m_Text[nRank]->ChgWords(aWords, NAME_START_DEX + m_Info.nCntName,INIT_D3DXCOLOR))
 			{
 				m_Info.bNameInput = false;
 			}
@@ -547,7 +554,7 @@ void CRanking::NameInput(void)
 
 			m_Info.nCntChar += 2;
 
-			if (m_Text[nRank]->SetWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, NAME_START_DEX + m_Info.nCntName, RANKING_COLOR))
+			if (m_Text[nRank]->ChgWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, NAME_START_DEX + m_Info.nCntName, RANKING_COLOR))
 			{
 				UpdateWords();
 			}
@@ -572,7 +579,7 @@ void CRanking::NameInput(void)
 					strinit(m_aNameData, TXT_MAX);
 					strcat(m_aNameData, m_Ranking[nRank].aName);
 
-					if (m_Text[nRank]->SetWords(" ", NAME_START_DEX + (m_Info.nCntName + nCnt), RANKING_COLOR))
+					if (m_Text[nRank]->ChgWords(" ", NAME_START_DEX + (m_Info.nCntName + nCnt), RANKING_COLOR))
 					{
 						m_Info.bNameInput = false;
 					}
@@ -593,7 +600,7 @@ void CRanking::NameInput(void)
 					strinit(m_aNameData, TXT_MAX);
 					strcat(m_aNameData, m_Ranking[nRank].aName);
 
-					if (m_Text[nRank]->SetWords(&aData[nCntName], NAME_START_DEX + (m_Info.nCntName + nCnt), RANKING_COLOR))
+					if (m_Text[nRank]->ChgWords(&aData[nCntName], NAME_START_DEX + (m_Info.nCntName + nCnt), RANKING_COLOR))
 					{
 						m_Info.bNameInput = false;
 					}
@@ -685,11 +692,11 @@ void CRanking::UpdateWords(void)
 	IntLoopControl(&nNextLetter, nLetterMax+1, 0);
 	IntLoopControl(&nPrevLetter, nLetterMax+1, 0);
 
-	m_Words[0]->SetWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, 0, INIT_D3DXCOLOR);
-	m_Words[1]->SetWords(m_pString[nPrevString].pConv[0].pLetter[0].aConv, 0, INIT_D3DXCOLOR);
-	m_Words[2]->SetWords(m_pString[nNextString].pConv[0].pLetter[0].aConv, 0, INIT_D3DXCOLOR);
-	m_Words[3]->SetWords(m_pString[nString].pConv[nConv].pLetter[nPrevLetter].aConv, 0, INIT_D3DXCOLOR);
-	m_Words[4]->SetWords(m_pString[nString].pConv[nConv].pLetter[nNextLetter].aConv, 0, INIT_D3DXCOLOR);
+	m_Words[0]->ChgWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, 0, INIT_D3DXCOLOR);
+	m_Words[1]->ChgWords(m_pString[nPrevString].pConv[0].pLetter[0].aConv, 0, INIT_D3DXCOLOR);
+	m_Words[2]->ChgWords(m_pString[nNextString].pConv[0].pLetter[0].aConv, 0, INIT_D3DXCOLOR);
+	m_Words[3]->ChgWords(m_pString[nString].pConv[nConv].pLetter[nPrevLetter].aConv, 0, INIT_D3DXCOLOR);
+	m_Words[4]->ChgWords(m_pString[nString].pConv[nConv].pLetter[nNextLetter].aConv, 0, INIT_D3DXCOLOR);
 
 }
 

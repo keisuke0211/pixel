@@ -59,12 +59,6 @@ HRESULT CTime::Init(void)
 	m_nTime = 0;	// タイム
 	m_nCounter = 0;	// カウンター
 
-	{// スコアを文字列に設定
-		char aString[TXT_MAX];
-		sprintf(aString, "TIME:%d", m_nTime);
-		SetString(aString);
-	}
-
 	// 種類設定
 	SetType(TYPE_TIME);
 
@@ -92,7 +86,7 @@ void CTime::Update(void)
 		bool bPause = CPause::IsPause();
 		bool bCameraExit = CBlock::IsExitCamera();
 
-		if (!bPause && bCameraExit)
+		if (!bPause && !bCameraExit)
 		{
 			// 更新処理
 			CText2D::Update();
@@ -116,14 +110,14 @@ void CTime::Update(void)
 			char aTime[TXT_MAX];
 			int nNumSet = 0;
 
-			sprintf(aTime, "%d", m_nTime);
+			sprintf(aTime, "%02d", m_nTime);
 
 			// 長さを取得
 			m_Digit = strlen(aTime);
 
 			for (int nTime = 0; nTime < m_Digit; nTime++)
 			{
-				if (m_Time->SetWords(&aTime[nTime], TIME_START_DEX + nTime, INIT_D3DXCOLOR))
+				if (m_Time->ChgWords(&aTime[nTime], TIME_START_DEX + nTime, INIT_D3DXCOLOR))
 				{
 					nNumSet++;
 				}
@@ -158,7 +152,7 @@ void CTime::SetTime(int nTime)
 
 		// タイムを文字列に設定
 		char aString[TXT_MAX];
-		sprintf(aString, "TIME ：%d", m_nTime);
+		sprintf(aString, "TIME ：%02d", m_nTime);
 
 		FormFont pFont = {
 			INIT_D3DXCOLOR,

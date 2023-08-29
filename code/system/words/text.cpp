@@ -224,8 +224,6 @@ CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Te
 			pText->TextLetter(Text, 1);
 		}
 
-		/*pText->TextShadow(Shadow);*/
-
 		if (Shadow == NULL)
 		{
 			pText->m_Info.aShadow.col = INIT_D3DXCOLOR;
@@ -542,9 +540,9 @@ bool CText::SetTextColor(D3DXCOLOR col)
 }
 
 //========================================
-// 文字設定
+// 文字変更(単体)
 //========================================
-bool CText::SetWords(char* Text, int nIdx, D3DXCOLOR col)
+bool CText::ChgWords(char* Text, int nIdx, D3DXCOLOR col)
 {
 	if (m_Info.words[nIdx] != NULL)
 	{
@@ -581,6 +579,48 @@ bool CText::SetWords(char* Text, int nIdx, D3DXCOLOR col)
 		}
 
 		return TRUE;
+	}
+	return FALSE;
+}
+
+//========================================
+// 文字変更(全体)　半角のみ
+//========================================
+bool CText::ChgText(char* Text, D3DXCOLOR col)
+{
+	int nDigit = strlen(Text);
+	char aString[TXT_MAX];
+
+	sprintf(aString,Text);
+
+	if (m_Info.words != NULL)
+	{
+		if (nDigit <= m_Info.nLetterPopCount)
+		{
+			for (int nIdx = 0; nIdx < nDigit; nIdx++)
+			{
+				if (!ChgWords(&aString[nIdx], nIdx, col))
+				{
+					return FALSE;
+				}
+			}
+
+			int nRest = m_Info.nLetterPopCount - nDigit;
+
+			if (nRest > 0)
+			{
+				for (int nIdx = 0; nIdx < nRest; nIdx++)
+				{
+					int nCntRest = nIdx + nDigit;
+
+					if (!ChgWords("", nCntRest, col))
+					{
+						return FALSE;
+					}
+				}
+			}
+			return TRUE;
+		}
 	}
 	return FALSE;
 }

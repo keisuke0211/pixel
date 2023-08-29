@@ -76,7 +76,7 @@ HRESULT CScore::Init(void)
 		};
 
 		m_Score = CText::Create(CText::BOX_NORMAL,
-			D3DXVECTOR3(SCREEN_WIDTH - 290.0f, 42.0f, 0.0f),
+			D3DXVECTOR3(SCREEN_WIDTH - 290.0f, 63.0f, 0.0f),
 			D3DXVECTOR2(0.0f, 0.0f),
 			aString,
 			CFont::FONT_BESTTEN,
@@ -114,7 +114,7 @@ void CScore::Update(void)
 
 		for (int nTime = 0; nTime < m_Digit; nTime++)
 		{
-			if (m_Score->SetWords(&aString[nTime], SCORE_START_DEX + nTime, INIT_D3DXCOLOR))
+			if (m_Score->ChgWords(&aString[nTime], SCORE_START_DEX + nTime, INIT_D3DXCOLOR))
 			{
 				nNumSet++;
 			}
