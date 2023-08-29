@@ -19,8 +19,12 @@
 //========================================
 CTime::CTime(int nPriority) : CText2D(nPriority)
 {
-	m_nTime = 0;	// タイム
-	m_nCounter = 0;	// カウンター
+	m_nTime = 0;			// タイム
+	m_nCounter = 0;			// カウンター
+	m_Digit = 0;			// 桁数
+	m_bSetTime = false;		// 設定フラグ
+	m_bUpdateTime = false;	// 更新フラグ
+	m_Time = NULL;
 }
 
 //========================================
@@ -88,7 +92,7 @@ void CTime::Update(void)
 		bool bPause = CPause::IsPause();
 		bool bCameraExit = CBlock::IsExitCamera();
 
-		if (!bPause || bCameraExit)
+		if (!bPause && bCameraExit)
 		{
 			// 更新処理
 			CText2D::Update();
@@ -105,6 +109,31 @@ void CTime::Update(void)
 				}
 			}
 		}
+
+		if (m_bUpdateTime)
+		{
+			// タイムを文字列に設定
+			char aTime[TXT_MAX];
+			int nNumSet = 0;
+
+			sprintf(aTime, "%d", m_nTime);
+
+			// 長さを取得
+			m_Digit = strlen(aTime);
+
+			for (int nTime = 0; nTime < m_Digit; nTime++)
+			{
+				if (m_Time->SetWords(&aTime[nTime], TIME_START_DEX + nTime, INIT_D3DXCOLOR))
+				{
+					nNumSet++;
+				}
+			}
+
+			if (nNumSet == m_Digit)
+			{
+				m_bUpdateTime = false;
+			}
+		}
 	}
 }
 
@@ -113,8 +142,7 @@ void CTime::Update(void)
 //========================================
 void CTime::Draw(void)
 {
-	// 描画処理
-	CText2D::Draw();
+
 }
 
 //========================================
@@ -122,33 +150,42 @@ void CTime::Draw(void)
 //========================================
 void CTime::SetTime(int nTime)
 {
-	// タイム代入
-	m_nTime = nTime;
+	// 時間設定
+	if (!m_bSetTime)
+	{
+		// タイム代入
+		m_nTime = nTime;
 
-	// タイムを文字列に設定
-	char aString[TXT_MAX];
-	sprintf(aString, "TIME :%d", m_nTime);
-	SetString(aString);
+		// タイムを文字列に設定
+		char aString[TXT_MAX];
+		sprintf(aString, "TIME ：%d", m_nTime);
 
-	//FormFont pFont = {
-	//	INIT_D3DXCOLOR,
-	//	12.0f,
-	//	1,
-	//	10,
-	//	-1
-	//};
+		FormFont pFont = {
+			INIT_D3DXCOLOR,
+			11.0f,
+			1,
+			10,
+			-1
+		};
 
-	//FormShadow pShadow = {
-	//	D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
-	//	true,
-	//	D3DXVECTOR3(2.0f,2.0f,0.0f),
-	//	D3DXVECTOR2(1.0f,1.0f)
-	//};
+		FormShadow pShadow = {
+			D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
+			true,
+			D3DXVECTOR3(2.0f,2.0f,0.0f),
+			D3DXVECTOR2(1.0f,1.0f)
+		};
 
-	//CText::Create(CText::BOX_NORMAL,
-	//	D3DXVECTOR3(SCREEN_WIDTH - 760.0f, 32.0f, 0.0f),
-	//	D3DXVECTOR2(55.0f, 10.0f),
-	//	aString,
-	//	CFont::FONT_BESTTEN,
-	//	&pFont,false,&pShadow);
+		m_Time = CText::Create(CText::BOX_NORMAL,
+			D3DXVECTOR3(SCREEN_WIDTH - 290.0f, 21.0f, 0.0f),
+			D3DXVECTOR2(0.0f, 0.0f),
+			aString,
+			CFont::FONT_BESTTEN,
+			&pFont,false,&pShadow);
+
+		m_bSetTime = true;
+	}
+	else
+	{
+		m_bUpdateTime = true;
+	}
 }

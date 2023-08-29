@@ -12,10 +12,18 @@
 #include "text2D.h"
 
 //****************************************
+// 前方宣言
+//****************************************
+class CText;
+
+//****************************************
 // クラス
 //****************************************
 class CTime : public CText2D
 {
+	// 定義
+	static const int TIME_START_DEX = 6;	// 時間の開始位置
+
 public:
 
 	CTime(int nPriority = PRIO_UI);
@@ -38,5 +46,10 @@ private:
 	// ***** 変数 *****
 	int m_nTime;		// タイム
 	int m_nCounter;		// カウンター
+	int m_Digit;		// 桁数
+	bool m_bSetTime;	// 時間の設定をしたか
+	bool m_bUpdateTime;	// 時間の更新フラグ
+	CText *m_Time;		// テキスト表示
+
 };
 #endif 

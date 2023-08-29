@@ -12,20 +12,18 @@
 #include "text2D.h"
 
 //****************************************
-// マクロ定義
-//****************************************
-#define	MAX_SCORE	(8)
-
-//****************************************
 // 前方宣言
 //****************************************
-class CText2D;
+class CText;
 
 //****************************************
 // クラス
 //****************************************
 class CScore : public CText2D
 {
+	// 定義
+	static const int SCORE_START_DEX = 6;	// スコアの開始位置
+
 public:
 
 	CScore(int nPriority = PRIO_UI);
@@ -49,5 +47,8 @@ public:
 private:
 	// ***** 変数 *****
 	static int m_nScore;
+	static bool m_bUpdateText;	// スコアの更新フラグ
+	int m_Digit;				// 桁数
+	CText *m_Score;				// テキスト表示
 };
 #endif 

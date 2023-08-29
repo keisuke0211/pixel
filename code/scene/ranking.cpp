@@ -409,9 +409,6 @@ void CRanking::NameEntry(void)
 	{
 		++m_Info.nCounterBlink %= (BLINK_TIME * 2);	// 点滅カウンターを加算制御
 
-		// 操作
-		NameInput();
-
 		D3DXCOLOR col =
 			!(m_Info.nCounterBlink / BLINK_TIME) ?
 			RANKING_COLOR : BLINK_COLOR;
@@ -422,6 +419,9 @@ void CRanking::NameEntry(void)
 		{
 			UpdateWords();
 		}
+
+		// 操作
+		NameInput();
 	}
 	
 	if (m_Info.bNameInput)

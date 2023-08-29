@@ -315,6 +315,8 @@ void CText::LetterForm(void)
 					if (m_Info.sText != "\n")
 					{// 終端文字なら、
 
+						m_Info.nAddLetter++;
+
 						// 影
 						if (m_Info.aShadow.bShadow)
 						{
@@ -327,7 +329,6 @@ void CText::LetterForm(void)
 								m_Info.FontType, m_Info.aShadow.col);
 						}
 
-						m_Info.nAddLetter++;
 						m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
 							D3DXVECTOR3((pos.x + 10.0f) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), pos.y + m_Info.nNiCount*40.0f, pos.z),
 							D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
@@ -548,12 +549,29 @@ bool CText::SetWords(char* Text, int nIdx, D3DXCOLOR col)
 	if (m_Info.words[nIdx] != NULL)
 	{
 		float fTxtSize = m_Info.fTextSize;
-		D3DXVECTOR3 pos;
+		D3DXVECTOR3 pos = m_Info.words[nIdx]->GetPos();
 
-		pos = m_Info.words[nIdx]->GetPos();
 		m_Info.words[nIdx]->Uninit();
 
+		// 影の再生成
+		if (m_Info.aShadow.bShadow)
+		{
+			D3DXVECTOR3 AddPos = m_Info.aShadow.AddPos;
+			D3DXVECTOR2 AddSize = m_Info.aShadow.AddSize;
+			D3DXCOLOR ShadowCol = m_Info.aShadow.col;
 
+			m_Info.aShadow.shadow[nIdx]->Uninit();
+
+			if (Text != NULL)
+			{
+				m_Info.aShadow.shadow[nIdx] = CWords::Create(Text,
+					D3DXVECTOR3(pos.x + AddPos.x, pos.y + AddPos.y, pos.z + AddPos.z),
+					D3DXVECTOR3(fTxtSize + AddSize.x, fTxtSize + AddSize.y, 0.0f),
+					m_Info.FontType, ShadowCol);
+			}
+		}
+
+		// テキストの再生成
 		if (Text != NULL)
 		{
 			m_Info.words[nIdx] = CWords::Create(Text,
@@ -561,6 +579,7 @@ bool CText::SetWords(char* Text, int nIdx, D3DXCOLOR col)
 				D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
 				m_Info.FontType, col);
 		}
+
 		return TRUE;
 	}
 	return FALSE;

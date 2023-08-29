@@ -46,10 +46,6 @@ CGame::CGame()
 	m_nStartTime = 0;
 	m_nEndTime = 0;
 	m_bEnd = false;
-
-	m_nCounter = 0;
-	m_nPos = 0;
-	m_nSize = 0;
 }
 
 //========================================
@@ -109,7 +105,7 @@ HRESULT CGame::Init(void)
 		m_pScore->SetSize(20.0f, 20.0f);
 
 		// 位置設定
-		m_pScore->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 52.0f, 0.0f));
+		m_pScore->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 52.0f, 0.0f));// D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 52.0f, 0.0f)
 
 		// スコア設定
 		CScore::SetScore();
