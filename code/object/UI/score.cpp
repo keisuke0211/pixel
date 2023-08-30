@@ -77,7 +77,7 @@ HRESULT CScore::Init(void)
 			D3DXVECTOR2(1.0f,1.0f)
 		};
 
-		m_Score = CText::Create(CText::BOX_NORMAL,
+		m_Score = CText::Create(CText::BOX_NORMAL_RECT,
 			D3DXVECTOR3(SCREEN_WIDTH - 290.0f, 63.0f, 0.0f),
 			D3DXVECTOR2(0.0f, 0.0f),
 			aString,

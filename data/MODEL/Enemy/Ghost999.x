@@ -1021,7 +1021,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Ghost999.png";
+    "data\\TEXTURE\\OBJ\\Ghost999.png";
    }
   }
  }

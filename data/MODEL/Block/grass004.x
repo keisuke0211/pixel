@@ -945,7 +945,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\GrassBlock00.png";
+    "data\\TEXTURE\\OBJ\\GrassBlock00.png";
    }
   }
   Material {
@@ -954,7 +954,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\GrassBlock01.png";
+    "data\\TEXTURE\\OBJ\\GrassBlock01.png";
    }
   }
   Material {
@@ -963,7 +963,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\GrassBlock02.png";
+    "data\\TEXTURE\\OBJ\\GrassBlock02.png";
    }
   }
  }

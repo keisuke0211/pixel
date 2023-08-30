@@ -26,7 +26,7 @@ class CRanking : public CScene
 	static const int RANK_NUM = 8;			// 順位数
 	static const int NAME_NUM = 5;			// ランキングのの文字数
 	static const int EXPLAIN_MAX = 6;		// 操作説明のテキスト数
-	static const int TEXT_MAX = 9;			// 文字表示のテキスト数
+	static const int TEXT_MAX = 10;			// 文字表示のテキスト数
 	static const int NAME_START_DEX = 5;	// 名前の開始位置
 	static const int BLINK_TIME = 4;		// 点滅時間
 

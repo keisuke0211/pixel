@@ -16,6 +16,7 @@
 //****************************************
 class CWords;
 class CText;
+class CStage;
 
 //****************************************
 // クラス
@@ -26,6 +27,7 @@ class CTitle : public CScene
 	static const int STAND_MAX = 20;	// テキストの待機時間
 	static const int TEXT_TIME = 150;	// テキストの表示時間
 	static const int WORDS_MAX = 4;		// 文字の最大数
+	static const int STAGE_MAX = 6;		// ステージ画像の最大数
 
 public:
 
@@ -36,6 +38,7 @@ public:
 	{
 		TITLE_OUTSET = 0,	// タイトル
 		TITLE_MENU,			// メニュー
+		TITLE_STAGE,		// ステージ選択
 		TITLE_NEXT,			// 次の画面に移動 
 		TITLE_MAX
 	};
@@ -63,6 +66,8 @@ public:
 	/* タイトル		*/void TitleAnime(void);
 	/* メニュー生成 */void MenuCreate(void);
 	/* メニュー		*/void Menu(void);
+	/* ステージ生成	*/void StageCreate(void);
+	/* ステージ選択	*/void SelectStage(void);
 	/* テキスト削除 */void TextClear(int nWords,int nText, TITLE aTitle);
 
 	// -- 設定 ------------------------------------------
@@ -83,13 +88,23 @@ private:
 	static bool m_bClear;	// クリアフラグ
 
 	// ***** 変数 *****
-	TITLE Title;	// 現在のモード
-	CWords *m_Words[4]; // タイトル
-	bool m_bMove[4];
-	CText *m_Text[MENU_MAX];
-	int m_nTextTime;	// テキストの表示時間
-	int m_nStandTime;	// 待機時間
-	int m_nSelectMenu;	// 現在選択しているメニュー
+	TITLE Title;				// 現在のモード
+	CWords *m_Words[4];			// タイトル
+	bool m_bMove[4];			// タイトル移動フラグ
+	CText *m_Menu[MENU_MAX];	// メニューテキスト
+	CText *m_StageText[3];		// ステージテキスト
+	bool m_bStageText;			// ステージテキストの生成フラグ
+	CStage *m_Stage[STAGE_MAX];	// ステージ
+	int m_nTextTime;			// テキストの表示時間
+	int m_nStandTime;			// 待機時間
+	int m_nSelectMenu;			// 現在選択しているメニュー
+	int m_nSelectStage;			// 現在選択しているステージ
+
+	char aStageText[3][TXT_MAX] = {
+		"初級",
+		"中級",
+		"上級",
+	};
 };
 
 #endif

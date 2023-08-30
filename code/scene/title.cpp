@@ -6,6 +6,8 @@
 // *** title.cpp ***
 //========================================
 #include "title.h"
+#include "game.h"
+#include "../object/UI/stage_menu.h"
 #include "../object\model\model.h"
 #include "../system/input.h"
 #include "../object\UI\text2D.h"
@@ -30,6 +32,8 @@ CTitle::CTitle()
 	m_nStandTime = 0;
 
 	m_nSelectMenu = 0;
+	m_nSelectStage = 0;
+	m_bStageText = false;
 	Title = TITLE_OUTSET;
 
 	for (int nCnt = 0; nCnt < WORDS_MAX; nCnt++)
@@ -40,7 +44,12 @@ CTitle::CTitle()
 
 	for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
 	{
-		m_Text[nCnt] = NULL;
+		m_Menu[nCnt] = NULL;
+	}
+
+	for (int nCnt = 0; nCnt < STAGE_MAX; nCnt++)
+	{
+		m_Stage[nCnt] = NULL;
 	}
 }
 
@@ -78,7 +87,7 @@ HRESULT CTitle::Init(void)
 		1,
 		-1
 	};
-	m_Text[0] = CText::Create(CText::BOX_NORMAL,
+	m_Menu[0] = CText::Create(CText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
 		" ",
@@ -93,7 +102,7 @@ HRESULT CTitle::Init(void)
 		-1
 	};
 
-	m_Text[1] = CText::Create(CText::BOX_NORMAL,
+	m_Menu[1] = CText::Create(CText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
 		"ENTERを押して始めてね!",
@@ -111,6 +120,7 @@ HRESULT CTitle::Init(void)
 //========================================
 void CTitle::Uninit(void)
 {
+	CObject::ReleaseAll(CObject::TYPE_BG);
 	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
 }
@@ -125,18 +135,19 @@ void CTitle::Update(void)
 	{
 		TitleAnime();
 	}
-
-	// メニュー
-	if (Title == TITLE_MENU)
+	else if (Title == TITLE_MENU)
 	{
 		Menu();
 	}
-
+	else if (Title == TITLE_STAGE)
+	{
+		SelectStage();
+	}
 
 	// --- 取得 ---------------------------------
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
-	CJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
 
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
 	{
@@ -144,7 +155,7 @@ void CTitle::Update(void)
 		{
 			switch (Title)
 			{
-			case CTitle::TITLE_OUTSET:
+			case TITLE_OUTSET:
 			{
 				TextClear(WORDS_MAX, 2, TITLE_MENU);
 
@@ -152,20 +163,21 @@ void CTitle::Update(void)
 				MenuCreate();
 			}
 				break;
-			case CTitle::TITLE_MENU:
+			case TITLE_MENU:
 			{
-				TextClear(1, MENU_MAX, TITLE_NEXT);
-
-
 				switch (m_nSelectMenu)
 				{
 				case MENU_GAME:
-					CManager::GetFade()->SetFade(MODE_GAME);
+					TextClear(1, MENU_MAX, TITLE_STAGE);
+					StageCreate();
+					/*CManager::GetFade()->SetFade(MODE_GAME);*/
 					break;
 				case MENU_TUTORIAL:
+					TextClear(1, MENU_MAX, TITLE_NEXT);
 					CManager::GetFade()->SetFade(MODE_TUTORIAL);
 					break;
 				case MENU_RANKING:
+					TextClear(1, MENU_MAX, TITLE_NEXT);
 					CManager::GetFade()->SetFade(MODE_RANKING);
 					break;
 				case MENU_END:
@@ -173,6 +185,12 @@ void CTitle::Update(void)
 					PostQuitMessage(0);
 					break;
 				}
+			}
+				break;
+			case TITLE_STAGE:
+			{
+				CManager::GetFade()->SetFade(MODE_GAME);
+				CGame::SetStage(m_nSelectStage);
 			}
 				break;
 			}
@@ -242,11 +260,11 @@ void CTitle::TitleAnime(void)
 	{
 		if (m_nStandTime == STAND_MAX)
 		{
-			if (m_Text[1] != NULL)
+			if (m_Menu[1] != NULL)
 			{
-				m_Text[1]->Uninit();
+				m_Menu[1]->Uninit();
 
-				m_Text[1] = NULL;
+				m_Menu[1] = NULL;
 			}
 		}
 		m_nStandTime--;
@@ -260,7 +278,7 @@ void CTitle::TitleAnime(void)
 				-1
 			};
 
-			m_Text[1] = CText::Create(CText::BOX_NORMAL,
+			m_Menu[1] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 				D3DXVECTOR2(1080.0f, 100.0f),
 				"ENTERを押して始めてね!",
@@ -274,6 +292,54 @@ void CTitle::TitleAnime(void)
 }
 
 //========================================
+// メニュー生成
+//========================================
+void CTitle::MenuCreate(void)
+{
+	FormFont pFont = {
+		INIT_D3DXCOLOR,
+		20.0f,
+		5,
+		10,
+		-1
+	};
+
+	{
+		m_Menu[0] = CText::Create(CText::BOX_NORMAL_RECT,
+			D3DXVECTOR3(640.0f, 150.0f, 0.0f),
+			D3DXVECTOR2(360.0f, 100.0f),
+			"ゲーム",
+			CFont::FONT_BESTTEN,
+			&pFont);
+	}
+
+	{
+		m_Menu[1] = CText::Create(CText::BOX_NORMAL_RECT,
+			D3DXVECTOR3(640.0f, 300.0f, 0.0f),
+			D3DXVECTOR2(360.0f, 100.0f),
+			"チュートリアル",
+			CFont::FONT_BESTTEN,
+			&pFont);
+	}
+	{
+		m_Menu[2] = CText::Create(CText::BOX_NORMAL_RECT,
+			D3DXVECTOR3(640.0f, 450.0f, 0.0f),
+			D3DXVECTOR2(360.0f, 100.0f),
+			"ランキング",
+			CFont::FONT_BESTTEN,
+			&pFont);
+	}
+	{
+		m_Menu[3] = CText::Create(CText::BOX_NORMAL_RECT,
+			D3DXVECTOR3(640.0f, 600.0f, 0.0f),
+			D3DXVECTOR2(360.0f, 100.0f),
+			"ゲームをやめる",
+			CFont::FONT_BESTTEN,
+			&pFont);
+	}
+}
+
+//========================================
 // メニュー
 //========================================
 void CTitle::Menu(void)
@@ -281,15 +347,15 @@ void CTitle::Menu(void)
 	// 色
 	for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
 	{
-		if (m_Text[nCnt] != NULL)
+		if (m_Menu[nCnt] != NULL)
 		{
 			if (nCnt == m_nSelectMenu)
 			{
-				m_Text[nCnt]->SetBoxColor(D3DXCOLOR(0.0f,1.0f,0.0f,1.0f));
+				m_Menu[nCnt]->SetBoxColor(D3DXCOLOR(0.0f,1.0f,0.0f,1.0f));
 			}
 			else
 			{
-				m_Text[nCnt]->SetBoxColor(INIT_D3DXCOLOR);
+				m_Menu[nCnt]->SetBoxColor(INIT_D3DXCOLOR);
 			}
 		}
 	}
@@ -309,61 +375,134 @@ void CTitle::Menu(void)
 		m_nSelectMenu++;
 	}
 
-	if (m_nSelectMenu > (MENU_MAX - 1))
-	{// メニューの最前線に移動
-		m_nSelectMenu = 0;
-	}
-	else if (m_nSelectMenu < 0)
-	{// メニューの最後尾に移動
-		m_nSelectMenu = (MENU_MAX - 1);
+	// ループ制御
+	IntLoopControl(&m_nSelectMenu, MENU_MAX, 0);
+}
+
+//========================================
+// ステージ生成
+//========================================
+void CTitle::StageCreate(void)
+{
+	// 生成
+	m_Stage[1] = CStage::Create(1, 0);	// 左端
+	m_Stage[2] = CStage::Create(2, 1);	// 左
+	m_Stage[0] = CStage::Create(0, 2);	// 中央
+	m_Stage[3] = CStage::Create(1, 3);	// 右
+	m_Stage[4] = CStage::Create(2, 4);	// 右端
+	m_Stage[5] = CStage::Create(0, 5);	// 空
+
+	{
+		FormFont pFont = { INIT_D3DXCOLOR,25.0f,1,1,-1 };
+		m_StageText[0] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(550.0f, 560.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+			aStageText[0], CFont::FONT_BESTTEN, &pFont, false);
+
+		pFont = { INIT_D3DXCOLOR,20.0f,1,1,-1 };
+
+		m_StageText[1] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(145.0f, 485.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+			aStageText[1], CFont::FONT_BESTTEN, &pFont, false);
+		m_StageText[2] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(990.0f, 485.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+			aStageText[2], CFont::FONT_BESTTEN, &pFont, false);
+
+		m_bStageText = true;
 	}
 }
 
 //========================================
-// メニュー生成
+// ステージ選択
 //========================================
-void CTitle::MenuCreate(void)
+void CTitle::SelectStage(void)
 {
-	FormFont pFont = {
-		INIT_D3DXCOLOR,
-		20.0f,
-		5,
-		10,
-		-1
-	};
+	int nSelect = 0;
+	bool bInput = false;
 
+
+	// --- 取得 ---------------------------------
+	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
+
+	// -- ステージ選択 ---------------------------
+	if (pInputKeyboard->GetTrigger(DIK_A) || pInputKeyboard->GetTrigger(DIK_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
 	{
-		m_Text[0] = CText::Create(CText::BOX_NORMAL,
-			D3DXVECTOR3(640.0f, 150.0f, 0.0f),
-			D3DXVECTOR2(360.0f, 100.0f),
-			"ゲーム",
-			CFont::FONT_BESTTEN,
-			&pFont);
+		nSelect = -1;
+		m_nSelectStage--;
+		bInput = true;
+	}
+	else if (pInputKeyboard->GetTrigger(DIK_D) || pInputKeyboard->GetTrigger(DIK_RIGHT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
+	{
+		nSelect = 1;
+		m_nSelectStage++;
+		bInput = true;
 	}
 
+	int nCntMove = 0;
+	for (int nCnt = 0; nCnt < STAGE_MAX; nCnt++)
 	{
-		m_Text[1] = CText::Create(CText::BOX_NORMAL,
-			D3DXVECTOR3(640.0f, 300.0f, 0.0f),
-			D3DXVECTOR2(360.0f, 100.0f),
-			"チュートリアル",
-			CFont::FONT_BESTTEN,
-			&pFont);
+		bool bMove = m_Stage[nCnt]->IsMove();
+
+		if (!bMove)
+		{
+			nCntMove++;
+		}
 	}
+
+	if (nCntMove == STAGE_MAX && !m_bStageText)
 	{
-		m_Text[2] = CText::Create(CText::BOX_NORMAL,
-			D3DXVECTOR3(640.0f, 450.0f, 0.0f),
-			D3DXVECTOR2(360.0f, 100.0f),
-			"ランキング",
-			CFont::FONT_BESTTEN,
-			&pFont);
+		for (int nCntText = 0; nCntText < 3; nCntText++)
+		{
+			int nText;
+
+			FormFont pFont = { INIT_D3DXCOLOR,25.0f,1,1,-1 };
+
+			switch (nCntText)
+			{
+			case 0:
+				nText = m_nSelectStage;
+
+				m_StageText[nCntText] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(550.0f, 560.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+					aStageText[nText], CFont::FONT_BESTTEN, &pFont, false);
+				break;
+			case 1:
+				nText = m_nSelectStage + 1;
+				IntLoopControl(&nText, CGame::Stage_MAX, 0);
+
+				pFont = { INIT_D3DXCOLOR,20.0f,1,1,-1 };
+
+				m_StageText[nCntText] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(145.0f, 485.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+					aStageText[nText], CFont::FONT_BESTTEN, &pFont, false);
+				break;
+			case 2:
+				nText = m_nSelectStage - 1;
+				IntLoopControl(&nText, CGame::Stage_MAX, 0);
+
+				pFont = { INIT_D3DXCOLOR,20.0f,1,1,-1 };
+
+				m_StageText[nCntText] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(990.0f, 485.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+					aStageText[nText], CFont::FONT_BESTTEN, &pFont, false);
+				break;
+			}
+		}
+		m_bStageText = true;
 	}
+
+	if (bInput && nCntMove == STAGE_MAX)
 	{
-		m_Text[3] = CText::Create(CText::BOX_NORMAL,
-			D3DXVECTOR3(640.0f, 600.0f, 0.0f),
-			D3DXVECTOR2(360.0f, 100.0f),
-			"ゲームをやめる",
-			CFont::FONT_BESTTEN,
-			&pFont);
+		IntLoopControl(&m_nSelectStage, CGame::Stage_MAX, 0);
+
+		// ステージの位置設定
+		for (int nCnt = 0; nCnt < STAGE_MAX; nCnt++)
+		{
+			m_Stage[nCnt]->SetStageInfo(0,nSelect);
+		}
+
+		if (m_bStageText)
+		{
+			for (int nCntText = 0; nCntText < 3; nCntText++)
+			{
+				m_StageText[nCntText]->Uninit();
+			}
+			m_bStageText = false;
+		}
 	}
 }
 
@@ -382,10 +521,10 @@ void CTitle::TextClear(int nWords, int nText, TITLE aTitle)
 	}
 	for (int nCnt = 0; nCnt < nText; nCnt++)
 	{
-		if (m_Text[nCnt] != NULL)
+		if (m_Menu[nCnt] != NULL)
 		{
-			m_Text[nCnt]->Uninit();
-			m_Text[nCnt] = NULL;
+			m_Menu[nCnt]->Uninit();
+			m_Menu[nCnt] = NULL;
 		}
 	}
 

@@ -209,7 +209,7 @@ void CTutorial::Update(void)
 						30
 					};
 
-					CText::Create(CText::BOX_NORMAL,
+					CText::Create(CText::BOX_NORMAL_RECT,
 						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 						D3DXVECTOR2(440.0f, 100.0f),
 						"Game Clear",
@@ -369,7 +369,7 @@ void CTutorial::TexCreate(int nIdx)
 			m_TextInfo[nIdx].nDisapTime
 		};
 
-		CText::Create(CText::BOX_NORMAL,
+		CText::Create(CText::BOX_NORMAL_RECT,
 			m_TextInfo[nIdx].pos,
 			m_TextInfo[nIdx].size,
 			*m_TextInfo[nIdx].ActionTex,

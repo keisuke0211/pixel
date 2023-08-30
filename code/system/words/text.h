@@ -51,7 +51,8 @@ public:
 	// テキストボックスの種類
 	enum Box
 	{
-		BOX_NORMAL = 0,	// シンプル
+		BOX_NORMAL_RECT = 0,	// ノーマル(長方形)
+		BOX_NORMAL_SQR,			// ノーマル(正方形)
 		BOX_MAX
 	};
 

@@ -433,7 +433,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\OneDrive\\デスクトップ\\作ったゲーム\\pixel\\data\\TEXTURE\\GrassBlock02.png";
+    "data\\TEXTURE\\OBJ\\GrassBlock02.png";
    }
   }
  }

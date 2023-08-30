@@ -164,12 +164,12 @@ void CTime::Update(void)
 
 			if (m_nTime == m_nTimeMax / 3)
 			{
-				CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(640.0f, 50.0f, 0.0f), D3DXVECTOR2(350.0f, 100.0f),
+				CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 50.0f, 0.0f), D3DXVECTOR2(350.0f, 100.0f),
 					aString, CFont::FONT_BESTTEN, &pFont, true, &pShadow);
 			}
 			else if (m_nTime == m_nTimeMax * 2 / 3)
 			{
-				CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(640.0f, 50.0f, 0.0f), D3DXVECTOR2(350.0f, 100.0f),
+				CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 50.0f, 0.0f), D3DXVECTOR2(350.0f, 100.0f),
 					aString, CFont::FONT_BESTTEN, &pFont, true, &pShadow);
 			}
 		}
@@ -215,7 +215,7 @@ void CTime::SetTime(int nTime)
 			D3DXVECTOR2(1.0f,1.0f)
 		};
 
-		m_Time = CText::Create(CText::BOX_NORMAL,
+		m_Time = CText::Create(CText::BOX_NORMAL_RECT,
 			D3DXVECTOR3(SCREEN_WIDTH - 290.0f, 21.0f, 0.0f),
 			D3DXVECTOR2(0.0f, 0.0f),
 			aString,

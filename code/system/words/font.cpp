@@ -12,6 +12,7 @@
 //　フォントパス
 const char* CFont::s_FileName[] =
 {
+	"data/font/Nosutaru.ttf",
 	"data/font/BestTen-CRT.otf",
 	"data/font/FZゴンタかな.otf",
 	"data/font/meiryob.ttc",
@@ -21,6 +22,7 @@ static_assert(sizeof(CFont::s_FileName) / sizeof(CFont::s_FileName[0]) == CFont:
 // フォント名
 const char* CFont::s_FontName[] =
 {
+	"ノスタルドット（M+）",
 	"BestTen-CRT",
 	"FZゴンタかな",
 	"メイリオ",

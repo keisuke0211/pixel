@@ -34,8 +34,18 @@ class CGame : public CScene
 	static const int TIME_SCORE = 50;	// １秒のスコアの加算値
 	static const int CUBE_SCORE = 100;	// １個のスコアの加算値
 
-
 public:
+
+	// ***** 列挙型 *****
+
+	// ステージ
+	enum Stage
+	{
+		Stage_EASY = 0,		// 初級
+		Stage_NORMAL,		// 中級
+		Stage_DIFFICULT,	// 難しい
+		Stage_MAX
+	};
 
 	// ***** 関数 *****
 	CGame();
@@ -48,14 +58,17 @@ public:
 	/* 描画		*/void Draw(void);
 	/* 生成		*/static CGame *Create(void);
 	
-	// -- 読み込み ----------
+	// -- 読み込み ------------------------------------------
 	/* 背景　天井	*/static void LoodCeiling(void);
 	/* 背景　側面	*/static void LoodSide(void);
 	/* 床			*/static void LoodFloor(void);
 	/* ブロック		*/static void LoodBlock(void);
 	/* エネミー		*/static void LoodEnemy(void);
 
-	// -- 取得 ------------------------
+	// -- 設定 ------------------------------------------
+	/* ステージ選択	*/static void SetStage(int nStage);
+
+	// -- 取得 ------------------------------------------
 	/* プレイヤー	*/static CPlayer *GetPlayer() { return m_pPlayer; }
 	/* タイム		*/static CTime *GetTime() { return m_pTime; }
 	/* スコア		*/static CScore *GetScore() { return m_pScore; };
@@ -88,14 +101,14 @@ private:
 	/* タイム		*/static CTime *m_pTime;
 	/* スコア		*/static CScore *m_pScore;
 
-	D3DXVECTOR3 m_rot;		// 向き
-	float m_nMoveRot;		// 向きの加速度
-	int m_nStartTime;		// 開始時間
-	int m_nEndTime;			// 終了時間
-	int m_nRstStgType;		// リザルト演出の種類
-	int m_nTextCreate;		// 次のテキストの生成するまでの時間
+	D3DXVECTOR3 m_rot;					// 向き
+	float m_nMoveRot;					// 向きの加速度
+	int m_nStartTime;					// 開始時間
+	int m_nEndTime;						// 終了時間
+	int m_nRstStgType;					// リザルト演出の種類
+	int m_nTextCreate;					// 次のテキストの生成するまでの時間
 
-	bool m_bEnd;			// 終了フラグ
+	bool m_bEnd;						// 終了フラグ
 
 	int m_nTimeTotal;					// タイムボーナスの合計値
 	int m_nCubeTotal;					// キューブボーナスの合計値
@@ -104,6 +117,8 @@ private:
 	CText *m_RstText[RST_ADD_SCORE];	// テキスト表示
 	bool m_bAddScore;					// スコアの加算フラグ
 	static bool m_bTime;				// 時間フラグ
+
+	static int m_nSelectStage;			// 現在選択しているステージ 
 };
 
 #endif

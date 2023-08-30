@@ -177,7 +177,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Effct000.png";
+    "data\\TEXTURE\\OBJ\\Effct000.png";
    }
   }
  }

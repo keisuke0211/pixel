@@ -31,6 +31,7 @@ CPlayer *CGame::m_pPlayer = NULL;
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
 bool CGame::m_bTime = false;
+int CGame::m_nSelectStage = Stage_EASY;
 
 const char* CGame::CEILING_FILE = "data\\GAMEDATA\\OBJECT\\CEILING_MULTI_DATA.txt";
 const char* CGame::SIDE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_MULTI_DATA.txt";
@@ -154,10 +155,10 @@ HRESULT CGame::Init(void)
 		30
 	};
 
-	CText::Create(CText::BOX_NORMAL,
+	CText::Create(CText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 		D3DXVECTOR2(440.0f, 100.0f),
-		"平原ステージ！\n90秒以内に攻略せよ！",
+		"90秒以内に攻略せよ！",
 		CFont::FONT_BESTTEN,
 		&pFont, false);
 
@@ -253,7 +254,7 @@ void CGame::Update(void)
 						D3DXVECTOR2(1.0f,1.0f)
 					};
 
-					CText::Create(CText::BOX_NORMAL,
+					CText::Create(CText::BOX_NORMAL_RECT,
 						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 						D3DXVECTOR2(440.0f, 100.0f),
 						"GAME CLEAR",
@@ -288,7 +289,7 @@ void CGame::Update(void)
 					30
 				};
 
-				CText::Create(CText::BOX_NORMAL,
+				CText::Create(CText::BOX_NORMAL_RECT,
 					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 					D3DXVECTOR2(440.0f, 100.0f),
 					"TIME UP",
@@ -441,7 +442,7 @@ void CGame::Result(void)
 			m_nTextCreate = 0;
 			nLength = strlen(aString);
 
-			m_RstText[m_nRstStgType] = CText::Create(CText::BOX_NORMAL, pos, D3DXVECTOR2(0.0f, 0.0f),
+			m_RstText[m_nRstStgType] = CText::Create(CText::BOX_NORMAL_RECT, pos, D3DXVECTOR2(0.0f, 0.0f),
 				aString, CFont::FONT_BESTTEN, &pFont, false, &pShadow);
 
 			m_nTextCreate = (nLength * 5) + 5;
@@ -450,6 +451,21 @@ void CGame::Result(void)
 	}	
 
 	
+}
+
+
+//================================================================================
+//--------------------------------------------------------------------------------
+// 設定
+//--------------------------------------------------------------------------------
+//================================================================================
+
+//========================================
+// ステージ選択
+//========================================
+void CGame::SetStage(int nStage)
+{
+	m_nSelectStage = nStage;
 }
 
 //================================================================================
@@ -479,7 +495,21 @@ void CGame::LoodSide(void)
 	FILE * pFile;
 
 	//ファイルを開く
-	pFile = fopen(SIDE_FILE, "r");
+	switch (m_nSelectStage)
+	{
+	case CGame::Stage_EASY:
+		pFile = fopen(SIDE_FILE, "r");
+		break;
+	case CGame::Stage_NORMAL:
+		pFile = fopen(SIDE_FILE, "r");
+		break;
+	case CGame::Stage_DIFFICULT:
+		pFile = fopen(SIDE_FILE, "r");
+		break;
+	default:
+		pFile = fopen(SIDE_FILE, "r");
+		break;
+	}
 
 	// ファイルが開けたら
 	if (pFile != NULL)
@@ -640,7 +670,21 @@ void CGame::LoodFloor(void)
 	FILE * pFile;
 
 	//ファイルを開く
-	pFile = fopen(FLOOR_FILE, "r");
+	switch (m_nSelectStage)
+	{
+	case CGame::Stage_EASY:
+		pFile = fopen(FLOOR_FILE, "r");
+		break;
+	case CGame::Stage_NORMAL:
+		pFile = fopen(FLOOR_FILE, "r");
+		break;
+	case CGame::Stage_DIFFICULT:
+		pFile = fopen(FLOOR_FILE, "r");
+		break;
+	default:
+		pFile = fopen(FLOOR_FILE, "r");
+		break;
+	}
 
 	// ファイルが開けたら
 	if (pFile != NULL)
@@ -815,7 +859,22 @@ void CGame::LoodBlock(void)
 	CSVFILE *pFile = new CSVFILE;
 
 	// 読み込み
-	pFile->FileLood(BLOCK_FILE1, true, true, ',');
+	switch (m_nSelectStage)
+	{
+	case CGame::Stage_EASY:
+		pFile->FileLood(BLOCK_FILE1, true, true, ',');
+		break;
+	case CGame::Stage_NORMAL:
+		pFile->FileLood(BLOCK_FILE1, true, true, ',');
+		break;
+	case CGame::Stage_DIFFICULT:
+		pFile->FileLood(BLOCK_FILE1, true, true, ',');
+		break;
+	default:
+		pFile->FileLood(BLOCK_FILE1, true, true, ',');
+		break;
+	}
+
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
@@ -867,7 +926,22 @@ void CGame::LoodEnemy(void)
 {
 	CSVFILE *pFile = new CSVFILE;
 
-	pFile->FileLood(ENEMY_FILE1, true, true, ',');
+	// 読み込み
+	switch (m_nSelectStage)
+	{
+	case CGame::Stage_EASY:
+		pFile->FileLood(ENEMY_FILE1, true, true, ',');
+		break;
+	case CGame::Stage_NORMAL:
+		pFile->FileLood(ENEMY_FILE1, true, true, ',');
+		break;
+	case CGame::Stage_DIFFICULT:
+		pFile->FileLood(ENEMY_FILE1, true, true, ',');
+		break;
+	default:
+		pFile->FileLood(ENEMY_FILE1, true, true, ',');
+		break;
+	}
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();

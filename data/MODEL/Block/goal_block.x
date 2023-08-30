@@ -72865,7 +72865,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\tnt.png";
+    "data\\TEXTURE\\OBJ\\tnt.png";
    }
   }
  }

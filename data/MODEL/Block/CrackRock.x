@@ -321,7 +321,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\OneDrive\\デスクトップ\\作ったゲーム\\pixel\\data\\TEXTURE\\CrackRock.png";
+    "data\\TEXTURE\\OBJ\\Bullet.png";
    }
   }
  }

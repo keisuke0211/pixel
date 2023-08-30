@@ -254,7 +254,7 @@ void CBlock::Update(void)
 					30
 				};
 
-				CText::Create(CText::BOX_NORMAL,
+				CText::Create(CText::BOX_NORMAL_RECT,
 					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 					D3DXVECTOR2(280.0f, 100.0f),
 					"èoå˚Ç™äJÇ¢ÇΩÅI",

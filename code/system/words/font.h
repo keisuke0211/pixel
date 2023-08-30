@@ -27,6 +27,7 @@ public:
 	enum FONT
 	{
 		FONT_BESTTEN = 0,
+		FONT_NOSUTARU,
 		FONT_FZGONTA,
 		FONT_MEIRIO,
 		FONT_MAX,

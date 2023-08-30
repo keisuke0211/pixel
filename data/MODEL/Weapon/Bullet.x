@@ -1665,7 +1665,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Bullet.png";
+    "data\\TEXTURE\\OBJ\\Bullet.png";
    }
   }
  }

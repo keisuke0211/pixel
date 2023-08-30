@@ -92,17 +92,21 @@ HRESULT CRanking::Init(void)
 		char aString[TXT_MAX];
 		sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_Ranking[nRank].aName,m_Ranking[nRank].nScore);
 
-		m_Text[nRank] = CText::Create(CText::BOX_NORMAL,
-			D3DXVECTOR3(10.0f, 200 + ( 30 * nRank), 0.0f),
+		m_Text[nRank] = CText::Create(CText::BOX_NORMAL_RECT,
+			D3DXVECTOR3(10.0f, 155 + ( 40 * nRank), 0.0f),
 			D3DXVECTOR2(0.0f, 100.0f),
 			aString,
 			CFont::FONT_BESTTEN,
 			&pFont,false);
 	}
 
+	// 枠(ランキングフレーム)
+	CText::Create(CText::BOX_NORMAL_SQR, D3DXVECTOR3(400.0f, 290, 0.0f), D3DXVECTOR2(740.0f, 400.0f),
+		"", CFont::FONT_BESTTEN, &pFont, true);
+
 	int nRank = SetScore(m_nGameScore);
 
-	if (nRank < RANK_NUM)
+	if (nRank < RANK_NUM && nRank > -1)
 	{
 		m_bSetScore = true;
 	}
@@ -111,51 +115,45 @@ HRESULT CRanking::Init(void)
 	{
 		// 操作テキストの説明
 		{
-			pFont = {
-				INIT_D3DXCOLOR,
-				12.0f,
-				1,
-				1,
-				-1
-			};
+			pFont = {INIT_D3DXCOLOR,12.0f,1,1,-1};
 
-			m_Explain[0] = CText::Create(CText::BOX_NORMAL,
-				D3DXVECTOR3(50.0f, 500, 0.0f),
+			m_Explain[0] = CText::Create(CText::BOX_NORMAL_RECT,
+				D3DXVECTOR3(50.0f, 550, 0.0f),
 				D3DXVECTOR2(0.0f, 0.0f),
 				"↑・→：行の変更",
 				CFont::FONT_BESTTEN,
 				&pFont, false);
 
-			m_Explain[1] = CText::Create(CText::BOX_NORMAL,
-				D3DXVECTOR3(50.0f, 550, 0.0f),
+			m_Explain[1] = CText::Create(CText::BOX_NORMAL_RECT,
+				D3DXVECTOR3(50.0f, 590, 0.0f),
 				D3DXVECTOR2(0.0f, 0.0f),
 				"←・→：文字の変更",
 				CFont::FONT_BESTTEN,
 				&pFont, false);
 
-			m_Explain[2] = CText::Create(CText::BOX_NORMAL,
-				D3DXVECTOR3(50.0f, 600, 0.0f),
+			m_Explain[2] = CText::Create(CText::BOX_NORMAL_RECT,
+				D3DXVECTOR3(50.0f, 630, 0.0f),
 				D3DXVECTOR2(0.0f, 0.0f),
 				"X・Y：変換",
 				CFont::FONT_BESTTEN,
 				&pFont, false);
 
-			m_Explain[3] = CText::Create(CText::BOX_NORMAL,
-				D3DXVECTOR3(640.0f, 500, 0.0f),
+			m_Explain[3] = CText::Create(CText::BOX_NORMAL_RECT,
+				D3DXVECTOR3(640.0f, 550, 0.0f),
 				D3DXVECTOR2(0.0f, 100.0f),
 				"A：決定",
 				CFont::FONT_BESTTEN,
 				&pFont, false);
 
-			m_Explain[4] = CText::Create(CText::BOX_NORMAL,
-				D3DXVECTOR3(640.0f, 550, 0.0f),
+			m_Explain[4] = CText::Create(CText::BOX_NORMAL_RECT,
+				D3DXVECTOR3(640.0f, 590, 0.0f),
 				D3DXVECTOR2(0.0f, 100.0f),
 				"B：削除",
 				CFont::FONT_BESTTEN,
 				&pFont, false);
 
-			m_Explain[5] = CText::Create(CText::BOX_NORMAL,
-				D3DXVECTOR3(640.0f, 600, 0.0f),
+			m_Explain[5] = CText::Create(CText::BOX_NORMAL_RECT,
+				D3DXVECTOR3(640.0f, 630, 0.0f),
 				D3DXVECTOR2(0.0f, 100.0f),
 				"途中で入力をやめる場合は ※ を選択して下さい",
 				CFont::FONT_BESTTEN,
@@ -388,8 +386,8 @@ void CRanking::SetNameEntry(int nUpdateRank)
 			-1
 		};
 
-		m_Text[m_Info.nUpdateRank] = CText::Create(CText::BOX_NORMAL,
-			D3DXVECTOR3(10.0f, 200 + (30 * m_Info.nUpdateRank), 0.0f),
+		m_Text[m_Info.nUpdateRank] = CText::Create(CText::BOX_NORMAL_RECT,
+			D3DXVECTOR3(10.0f, 155 + (30 * m_Info.nUpdateRank), 0.0f),
 			D3DXVECTOR2(0.0f, 100.0f),
 			aString,
 			CFont::FONT_BESTTEN,
@@ -546,7 +544,7 @@ void CRanking::NameInput(void)
 		if (nLetter != nLetterMax)
 		{
 			// 現在のカウントの文字を加える
-			strcat(m_Ranking[nRank].aName, m_pString[nString].pConv[0].pLetter[nLetter].aConv);
+			strcat(m_Ranking[nRank].aName, m_pString[nString].pConv[nConv].pLetter[nLetter].aConv);
 
 			// 現在のカウントの文字を反映する
 			strinit(m_aNameData, TXT_MAX);
@@ -632,42 +630,46 @@ void CRanking::SetWords(void)
 	FormFont pFont = {INIT_D3DXCOLOR,30.0f,1,1,-1};
 
 	// 中央
-	m_Words[0] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(950.0f, 250, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+	m_Words[0] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(950.0f, 250, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
 		m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, CFont::FONT_BESTTEN, &pFont, false);
 
 	// 上
-	m_Words[1] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(950.0f, 160, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+	m_Words[1] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(950.0f, 160, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
 		m_pString[nPrevString].pConv[nConv].pLetter[0].aConv, CFont::FONT_BESTTEN, &pFont, false);
 
 	// 下
-	m_Words[2] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(950.0f, 340, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+	m_Words[2] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(950.0f, 340, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
 		m_pString[nNextString].pConv[nConv].pLetter[0].aConv, CFont::FONT_BESTTEN, &pFont, false);
 
 	// 左
-	m_Words[3] = CText::Create(CText::BOX_NORMAL,D3DXVECTOR3(850.0f, 250, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
+	m_Words[3] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(850.0f, 250, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
 		m_pString[nString].pConv[nConv].pLetter[nPrevLetter].aConv,CFont::FONT_BESTTEN,&pFont, false);
 
 	// 右
-	m_Words[4] = CText::Create(CText::BOX_NORMAL,D3DXVECTOR3(1050.0f, 250, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
+	m_Words[4] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(1050.0f, 250, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
 		m_pString[nString].pConv[nConv].pLetter[nNextLetter].aConv,CFont::FONT_BESTTEN,&pFont, false);
 
 	pFont = {INIT_D3DXCOLOR,15.0f,1,1,-1};
 
 	// 上
-	m_Words[5] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(975.0f, 210, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+	m_Words[5] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(975.0f, 210, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
 		"↑", CFont::FONT_BESTTEN, &pFont, false);
 
 	// 下
-	m_Words[6] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(975.0f, 300, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+	m_Words[6] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(975.0f, 300, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
 		"↓", CFont::FONT_BESTTEN, &pFont, false);
 
 	// 左
-	m_Words[7] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(930.0f, 250, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+	m_Words[7] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(930.0f, 250, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
 		"←", CFont::FONT_BESTTEN, &pFont, false);
 
 	// 右
-	m_Words[8] = CText::Create(CText::BOX_NORMAL, D3DXVECTOR3(1030.0f, 250, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+	m_Words[8] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(1030.0f, 250, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
 		"→", CFont::FONT_BESTTEN, &pFont, false);
+
+	// 枠(文字)
+	m_Words[9] = CText::Create(CText::BOX_NORMAL_SQR, D3DXVECTOR3(1020.0f, 260, 0.0f), D3DXVECTOR2(320.0f, 320.0f),
+		"", CFont::FONT_BESTTEN, &pFont, true);
 }
 
 //========================================
@@ -968,7 +970,7 @@ void CRanking::WordsLoad(void)
 	//{
 	//	for (int nCnt = 0; nCnt < m_Info.aString[nLen].nLettreMax; nCnt++)
 	//	{
-	//		CText::Create(CText::BOX_NORMAL,
+	//		CText::Create(CText::BOX_NORMAL_RECT,
 	//			D3DXVECTOR3(640.0f + (60 * nLen), 200 + (30 * nCnt), 0.0f),
 	//			D3DXVECTOR2(1080.0f, 100.0f),
 	//			m_Info.aString[nLen].aLetter[nCnt].aLetter,

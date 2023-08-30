@@ -178,7 +178,7 @@ void CText2D::SetString(char *pString)
 		m_apObject2D[nCntDigit]->SetPtnInfo(PTN_WIDTH, PTN_HEIGHT, PTN_MAX);
 
 		// テクスチャ割り当て
-		m_apObject2D[nCntDigit]->BindTexture(CTexture::TYPE_FONT);
+		m_apObject2D[nCntDigit]->BindTexture(CTexture::TEX_SEA01);
 	}
 }
 

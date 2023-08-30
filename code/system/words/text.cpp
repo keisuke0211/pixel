@@ -186,8 +186,11 @@ CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Te
 		// テクスチャ設定
 		switch (type)
 		{
-		case CText::BOX_NORMAL:
-			pText->BindTexture(CTexture::TYPE_TEXBOX);
+		case CText::BOX_NORMAL_RECT:
+			pText->BindTexture(CTexture::TEX_TEXBOX);
+			break;
+		case CText::BOX_NORMAL_SQR:
+			pText->BindTexture(CTexture::TEX_TEXBOX1);
 			break;
 		case CText::BOX_MAX:
 			pText->BindTexture(-1);

@@ -901,7 +901,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\bullet001.png";
+    "data\\TEXTURE\\OBJ\\bullet001.png";
    }
   }
  }

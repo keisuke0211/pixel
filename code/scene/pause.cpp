@@ -182,7 +182,7 @@ void CPause::MenuCreate(void)
 	if (!m_Menu)
 	{
 		{
-			m_Text[0] = CText::Create(CText::BOX_NORMAL,
+			m_Text[0] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(640.0f, 250.0f, 0.0f),
 				D3DXVECTOR2(360.0f, 100.0f),
 				"再開",
@@ -192,7 +192,7 @@ void CPause::MenuCreate(void)
 		}
 
 		{
-			m_Text[1] = CText::Create(CText::BOX_NORMAL,
+			m_Text[1] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(640.0f, 400.0f, 0.0f),
 				D3DXVECTOR2(360.0f, 100.0f),
 				"やり直す",
@@ -201,7 +201,7 @@ void CPause::MenuCreate(void)
 			m_Text[1]->SetTetPause(true);
 		}
 		{
-			m_Text[2] = CText::Create(CText::BOX_NORMAL,
+			m_Text[2] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(640.0f, 550.0f, 0.0f),
 				D3DXVECTOR2(360.0f, 100.0f),
 				"タイトルに戻る",
@@ -225,7 +225,7 @@ void CPause::MenuCreate(void)
 				D3DXVECTOR2(1.0f,1.0f)
 			};
 
-			m_Text[3] = CText::Create(CText::BOX_NORMAL,
+			m_Text[3] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(640.0f, 100.0f, 0.0f),
 				D3DXVECTOR2(360.0f, 100.0f),
 				"ポーズ",

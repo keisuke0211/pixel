@@ -29,14 +29,17 @@ public:
 	// 画像種類
 	enum Tex
 	{
-		TEX_SKY00 = 0,	// 空00
-		TEX_SKY01,		// 空01
-		TEX_SKY02,		// 空02
-		TEX_SKY03,		// 空03
-		TEX_SEA01,		// 海01
-		TEX_SEA02,		// 海02
-		TYPE_FONT,		// フォント
-		TYPE_TEXBOX,	// テキストボックス
+		TEX_SKY00 = 0,		// 空00
+		TEX_SKY01,			// 空01
+		TEX_SKY02,			// 空02
+		TEX_SKY03,			// 空03
+		TEX_SEA01,			// 海01
+		TEX_SEA02,			// 海02
+		TEX_STAGE_EASY,		// ステージ・初級
+		TEX_STAGE_NORMAL,	// ステージ・中級
+		TEX_STAGE_DIFFICULT,// ステージ・上級
+		TEX_TEXBOX,			// テキストボックス
+		TEX_TEXBOX1,		// テキストボックス
 		TEX_MAX
 	};
 
