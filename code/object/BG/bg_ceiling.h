@@ -33,11 +33,11 @@ public:
 	~CBgCeiling();
 
 	/* メイン */
-	HRESULT Init(void);					// 初期化
-	void Uninit(void);					// 終了
-	void Update(void);					// 更新
-	void Draw(void);					// 描画
-	static CBgCeiling *Create(void);	// 生成
+	HRESULT Init(void);						// 初期化
+	void Uninit(void);						// 終了
+	void Update(void);						// 更新
+	void Draw(void);						// 描画
+	static CBgCeiling *Create(int nType);	// 生成
 
 	/* 設定 */
 	/* 位置			*/void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
@@ -56,5 +56,6 @@ private:
 	D3DXVECTOR3 m_pos;					// 位置
 	D3DXVECTOR3 m_rot;					// 向き
 	D3DXCOLOR m_color;					// 色
+	int m_nStage;						// ステージ
 };
 #endif

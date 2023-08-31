@@ -8,17 +8,20 @@
 #========================================
 #||||||||||||||||||||||||||||||||||||||||
 #========================================
-TEXTURE = data\\TEXTURE\\BG\\BgSky_layer00.png 		#00 空0
-TEXTURE = data\\TEXTURE\\BG\\PixelSky_layer01.png 	#01 空１
-TEXTURE = data\\TEXTURE\\BG\\PixelSky_layer02.png 	#02 空２
-TEXTURE = data\\TEXTURE\\BG\\PixelSky_layer03.png 	#03 空３
-TEXTURE = data\\TEXTURE\\BG\\sea000.jpg 			#04 海１
-TEXTURE = data\\TEXTURE\\BG\\river000.jpg 			#05 海２
-TEXTURE = data\\TEXTURE\\Others\\PixelSky01.png 	#06 ステージ・初級
-TEXTURE = data\\TEXTURE\\Others\\PixelSky02.png 	#07 ステージ・中級
-TEXTURE = data\\TEXTURE\\Others\\PixelSky03.png 	#08 ステージ・上級
-TEXTURE = data\\TEXTURE\\TextBox\\TextBox.png 		#09 テキストボックス 長方形
-TEXTURE = data\\TEXTURE\\TextBox\\TextBox01.png 	#10 テキストボックス 正方形
+TEXTURE = data\\TEXTURE\\BG\\PixelSky_layer01.png 	#00 朝空１
+TEXTURE = data\\TEXTURE\\BG\\PixelSky_layer02.png 	#01 朝空２
+TEXTURE = data\\TEXTURE\\BG\\PixelSky_layer03.png 	#02 朝空３
+TEXTURE = data\\TEXTURE\\BG\\BgSky_layer00.png 		#03 夜空0
+TEXTURE = data\\TEXTURE\\BG\\BgSky_layer01.png 		#04 夜空1
+TEXTURE = data\\TEXTURE\\BG\\BgSky_layer02.png 		#05 夜空2
+TEXTURE = data\\TEXTURE\\BG\\BgSky_layer03.png 		#06 夜空3
+TEXTURE = data\\TEXTURE\\BG\\sea000.jpg 			#07 海１
+TEXTURE = data\\TEXTURE\\BG\\river000.jpg 			#08 海２
+TEXTURE = data\\TEXTURE\\Others\\PixelSky01.png 	#09 ステージ・初級
+TEXTURE = data\\TEXTURE\\Others\\PixelSky02.png 	#10 ステージ・中級
+TEXTURE = data\\TEXTURE\\Others\\PixelSky03.png 	#11 ステージ・上級
+TEXTURE = data\\TEXTURE\\TextBox\\TextBox.png 		#12 テキストボックス 長方形
+TEXTURE = data\\TEXTURE\\TextBox\\TextBox01.png 	#13 テキストボックス 正方形
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||

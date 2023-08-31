@@ -10,6 +10,7 @@
 #include "../../system/renderer.h"
 #include "../../system/texture.h"
 #include "../../scene/pause.h"
+#include "../../scene/game.h"
 
 //****************************************
 // マクロ定義
@@ -46,12 +47,13 @@ CBgCeiling::~CBgCeiling()
 //========================================
 // 生成処理
 //========================================
-CBgCeiling *CBgCeiling::Create(void)
+CBgCeiling *CBgCeiling::Create(int nStage)
 {
 	CBgCeiling *pObj = new CBgCeiling;
 
 	if (pObj != NULL)
 	{
+		pObj->m_nStage = nStage;
 		// 初期化処理
 		pObj->Init();
 	}
@@ -186,8 +188,19 @@ HRESULT CBgCeiling::Init(void)
 	// テクスチャ設定
 	CTexture *pTexture = CManager::GetTexture();
 
-	m_pTexture = pTexture->GetAddress(CTexture::TEX_SKY01);
-
+	switch (m_nStage)
+	{
+	case CGame::Stage_EASY:
+		m_pTexture = pTexture->GetAddress(CTexture::TEX_SKY00);
+		break;
+	case CGame::Stage_NORMAL:
+		m_pTexture = pTexture->GetAddress(CTexture::TEX_NIGHT_SKY00);
+		break;
+	case CGame::Stage_DIFFICULT:
+		m_pTexture = pTexture->GetAddress(CTexture::TEX_SKY00);
+		break;
+	}
+	
 	return S_OK;
 }
 

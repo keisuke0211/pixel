@@ -38,10 +38,9 @@ CTime *CTutorial::m_pTime = NULL;
 CScore *CTutorial::m_pScore = NULL;
 int CTutorial::m_nCurAction = 0;
 
-const char* CTutorial::CEILING_FILE = "data\\GAMEDATA\\OBJECT\\CEILING_STAGE1_DATA.txt";
-const char* CTutorial::SIDE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE1_DATA.txt";
+const char* CTutorial::SIDE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_EASY_DATA .txt";
 const char* CTutorial::FLOOR_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE1_DATA.txt";
-const char* CTutorial::BLOCK_FILE1 = "data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv";
+const char* CTutorial::BLOCK_FILE1 = "data\\GAMEDATA\\BLOCK\\TUTORIAL_DATA.csv";
 const char* CTutorial::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\TUTORIAL_ENEMY.csv";
 
 //========================================
@@ -103,9 +102,6 @@ HRESULT CTutorial::Init(void)
 
 	m_pPlayer = CPlayer::Create();
 	m_pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
-
-	// キューブの制限数
-	CCube::SetLimit(60);
 
 	// 読み込み
 	TextLoad();
@@ -390,7 +386,10 @@ void CTutorial::TxtDelete(int nType, int nNextType)
 {
 	for (int nCnt = 0; nCnt < m_aCreateText.nCurMax[nType]; nCnt++)
 	{
-		m_Txt[nCnt]->Uninit();
+		if (m_Txt[nCnt] != NULL)
+		{
+			m_Txt[nCnt]->Uninit();
+		}
 	}
 
 	m_aCreateText.nNumCur = 0;
@@ -437,7 +436,7 @@ void CTutorial::TutorialTex(void)
 				TxtDelete(ACTION_CAMERA, ACTION_SHOT);
 
 				// キューブの制限数
-				CCube::SetLimit(60);
+				CCube::SetLimit(120);
 			}
 		}
 	}
@@ -510,7 +509,7 @@ void CTutorial::TutorialTex(void)
 //========================================
 void CTutorial::LoodCeiling(void)
 {
-	CBgCeiling *pBgCeiling = CBgCeiling::Create();
+	CBgCeiling *pBgCeiling = CBgCeiling::Create(0);
 }
 
 //========================================
@@ -856,7 +855,7 @@ void CTutorial::LoodBlock(void)
 	CSVFILE *pFile = new CSVFILE;
 
 	// 読み込み
-	pFile->FileLood("data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv", true, true, ',');
+	pFile->FileLood(BLOCK_FILE1, true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();

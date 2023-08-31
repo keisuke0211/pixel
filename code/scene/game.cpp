@@ -33,8 +33,8 @@ CScore *CGame::m_pScore = NULL;
 bool CGame::m_bTime = false;
 int CGame::m_nSelectStage = Stage_EASY;
 
-const char* CGame::CEILING_STAGE1_FILE = "data\\GAMEDATA\\OBJECT\\CEILING_STAGE1_DATA.txt";
-const char* CGame::SIDE_STAGE1_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE1_DATA.txt";
+const char* CGame::SIDE_STAGE_EASY_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_EASY_DATA .txt";
+const char* CGame::SIDE_STAGE_NORMAL_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_NORMAL_DATA.txt";
 const char* CGame::FLOOR_STAGE1_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE1_DATA.txt";
 const char* CGame::BLOCK_FILE1 = "data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv";
 const char* CGame::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\STAGE_ENEMY1.csv";
@@ -458,7 +458,7 @@ void CGame::SetStage(int nStage)
 //========================================
 void CGame::LoodCeiling(void)
 {
-	CBgCeiling *pBgCeiling = CBgCeiling::Create();
+	CBgCeiling *pBgCeiling = CBgCeiling::Create(m_nSelectStage);
 }
 
 //========================================
@@ -477,16 +477,16 @@ void CGame::LoodSide(void)
 	switch (m_nSelectStage)
 	{
 	case CGame::Stage_EASY:
-		pFile = fopen(SIDE_STAGE1_FILE, "r");
+		pFile = fopen(SIDE_STAGE_EASY_FILE, "r");
 		break;
 	case CGame::Stage_NORMAL:
-		pFile = fopen(SIDE_STAGE1_FILE, "r");
+		pFile = fopen(SIDE_STAGE_NORMAL_FILE, "r");
 		break;
 	case CGame::Stage_DIFFICULT:
-		pFile = fopen(SIDE_STAGE1_FILE, "r");
+		pFile = fopen(SIDE_STAGE_EASY_FILE, "r");
 		break;
 	default:
-		pFile = fopen(SIDE_STAGE1_FILE, "r");
+		pFile = fopen(SIDE_STAGE_EASY_FILE, "r");
 		break;
 	}
 

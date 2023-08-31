@@ -28,7 +28,6 @@ class CTutorial : public CScene
 	static const int MAX_TIME = 90;		// 制限時間
 	static const int NUM_TEXT = 10;		// テキスト数
 
-	static const char* CEILING_FILE;	// 天井のファイルパス
 	static const char* SIDE_FILE;		// 側面のファイルパス
 	static const char* FLOOR_FILE;		// 床のファイルパス
 	static const char* BLOCK_FILE1;		// ブロックのファイルパス

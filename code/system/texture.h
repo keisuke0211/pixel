@@ -29,10 +29,13 @@ public:
 	// 画像種類
 	enum Tex
 	{
-		TEX_SKY00 = 0,		// 空00
-		TEX_SKY01,			// 空01
-		TEX_SKY02,			// 空02
-		TEX_SKY03,			// 空03
+		TEX_SKY00 = 0,		// 朝空00
+		TEX_SKY01,			// 朝空01
+		TEX_SKY02,			// 朝空02
+		TEX_NIGHT_SKY00,	// 夜空00
+		TEX_NIGHT_SKY01,	// 夜空01
+		TEX_NIGHT_SKY02,	// 夜空02
+		TEX_NIGHT_SKY03,	// 夜空03
 		TEX_SEA01,			// 海01
 		TEX_SEA02,			// 海02
 		TEX_STAGE_EASY,		// ステージ・初級
