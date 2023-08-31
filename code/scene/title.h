@@ -113,6 +113,7 @@ private:
 	int m_nSelectMenu;			// 現在選択しているメニュー
 	int m_nSelectStage;			// 現在選択しているステージ
 	Text m_aText[3];			// テキスト情報
+	bool m_bStageInput;			// ステージ選択の入力フラグ
 };
 
 #endif

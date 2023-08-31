@@ -37,6 +37,7 @@ CTitle::CTitle()
 	m_nSelectMenu = 0;
 	m_nSelectStage = 0;
 	m_bStageText = false;
+	m_bStageInput = false;
 	Title = TITLE_OUTSET;
 
 	for (int nCnt = 0; nCnt < WORDS_MAX; nCnt++)
@@ -79,6 +80,7 @@ HRESULT CTitle::Init(void)
 	m_bStart = false;
 	m_bClear = false;
 	m_bExit = false;
+	m_bStageInput = false;
 
 	CModel::InitModel();	// モデル
 	CBlock::Load();			// ブロック
@@ -412,12 +414,12 @@ void CTitle::StageCreate(void)
 
 		pFont = { INIT_D3DXCOLOR,20.0f,1,1,-1 };
 
-		m_StageText[1] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(145.0f, 485.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+		m_StageText[1] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(990.0f, 485.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
 			m_aText[1].aStageText, CFont::FONT_BESTTEN, &pFont, false);
-		m_StageText[2] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(990.0f, 485.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+		m_StageText[2] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(145.0f, 485.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
 			m_aText[2].aStageText, CFont::FONT_BESTTEN, &pFont, false);
 
-		m_bStageText = true;
+		m_bStageText = true;// 145 990
 	}
 }
 
@@ -427,25 +429,26 @@ void CTitle::StageCreate(void)
 void CTitle::SelectStage(void)
 {
 	int nSelect = 0;
-	bool bInput = false;
-
 
 	// --- 取得 ---------------------------------
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
 
 	// -- ステージ選択 ---------------------------
-	if (pInputKeyboard->GetTrigger(DIK_A) || pInputKeyboard->GetTrigger(DIK_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
+	if (!m_bStageInput)
 	{
-		nSelect = 1;
-		m_nSelectStage++;
-		bInput = true;
-	}
-	else if (pInputKeyboard->GetTrigger(DIK_D) || pInputKeyboard->GetTrigger(DIK_RIGHT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
-	{
-		nSelect = -1;
-		m_nSelectStage--;
-		bInput = true;
+		if (pInputKeyboard->GetTrigger(DIK_A) || pInputKeyboard->GetTrigger(DIK_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
+		{
+			nSelect = 1;
+			m_nSelectStage--;
+			m_bStageInput = true;
+		}
+		else if (pInputKeyboard->GetTrigger(DIK_D) || pInputKeyboard->GetTrigger(DIK_RIGHT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
+		{
+			nSelect = -1;
+			m_nSelectStage++;
+			m_bStageInput = true;
+		}
 	}
 
 	int nCntMove = 0;
@@ -486,16 +489,17 @@ void CTitle::SelectStage(void)
 			}
 		}
 		m_bStageText = true;
+		m_bStageInput = false;
 	}
 
-	if (bInput && nCntMove == STAGE_MAX)
+	if (m_bStageInput && nCntMove == STAGE_MAX)
 	{
 		IntLoopControl(&m_nSelectStage, CGame::Stage_MAX, 0);
 
 		// ステージの位置設定
 		for (int nCnt = 0; nCnt < STAGE_MAX; nCnt++)
 		{
-			m_Stage[nCnt]->SetStageInfo(0,0);
+			m_Stage[nCnt]->SetStageInfo(0,nSelect);
 		}
 
 		if (m_bStageText)
