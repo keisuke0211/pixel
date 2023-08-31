@@ -25,6 +25,7 @@ class CText;	// テキスト
 class CGame : public CScene
 {
 	static const int GAME_TIME = 90;		// 制限時間
+	static const int MAX_CUBE = 30;			// ステージで配置出来るキューブの制限
 	static const char* CEILING_STAGE1_FILE;	// 天井のファイルパス(STAGE1)
 	static const char* SIDE_STAGE1_FILE;	// 側面のファイルパス(STAGE1)
 	static const char* FLOOR_STAGE1_FILE;	// 床のファイルパス(STAGE1)

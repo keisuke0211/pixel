@@ -74,6 +74,7 @@ public:
 	/* プレイヤー	*/static CPlayer *GetPlayer() { return m_pPlayer; }
 	/* タイム		*/static CTime *GetTime() { return m_pTime; }
 	/* スコア		*/static CScore *GetScore() { return m_pScore; };
+	/* 現在の行動	*/static int GetCurAction() { return m_nCurAction; }
 
 private:
 
@@ -115,6 +116,7 @@ private:
 	/* プレイヤー	*/static CPlayer*m_pPlayer;
 	/* タイム		*/static CTime	*m_pTime;
 	/* スコア		*/static CScore *m_pScore;
+	/* 現在の行動	*/static int m_nCurAction;
 
 	// ***** 変数 *****
 	CText *m_Txt[3];			// テキスト

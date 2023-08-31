@@ -111,7 +111,7 @@ HRESULT CGame::Init(void)
 	LoodEnemy();
 
 	// キューブの制限数
-	CCube::SetLimit();
+	CCube::SetLimit(MAX_CUBE);
 
 	// タイム生成
 	m_pTime = CTime::Create(GAME_TIME);

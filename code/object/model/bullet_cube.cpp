@@ -100,7 +100,7 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 
 	int nCubeLife = nLife;
 
-	if (m_nNumSet >= MAX_CUBE)
+	if (m_nNumSet >= m_nLimitCube)
 	{
 		nCubeLife = 1;
 	}
@@ -185,7 +185,6 @@ HRESULT CCube::Init(void)
 
 	// ê∂ê¨
 	SetPos(m_Info.pos);
-	//SetRot(m_Info.rot);
 	SetScale(m_Info.size);
 	SetColor(m_Info.col);
 
@@ -260,7 +259,7 @@ void CCube::Update(void)
 				Contact(0, VECTOR_Y, m_Info.pos);
 				Contact(0, VECTOR_Z, m_Info.pos);
 
-				if (m_nNumSet <= MAX_CUBE)
+				if (m_nNumSet <= m_nLimitCube)
 				{
 					// ìñÇΩÇËîªíË
 					/* ìG		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
@@ -752,12 +751,11 @@ void CCube::Destruction(CCube *pCube)
 //========================================
 // êßå¿êîÇÃê›íË
 //========================================
-void CCube::SetLimit(void)
+void CCube::SetLimit(int nLimit)
 {
 	m_nNumSet = 0;
-	m_nNumSet = 0;
-	m_nRestCube = MAX_CUBE;
-	m_nLimitCube = MAX_CUBE;
+	m_nRestCube = nLimit;
+	m_nLimitCube = nLimit;
 
 	// É^ÉCÉÄÇï∂éöóÒÇ…ê›íË
 	char aString[TXT_MAX];

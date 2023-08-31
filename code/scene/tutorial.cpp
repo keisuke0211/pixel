@@ -36,12 +36,13 @@ const char* CTutorial::FILE_PATH = "data\\GAMEDATA\\TEXT\\TUTORIAL_DATA.csv";
 CPlayer *CTutorial::m_pPlayer = NULL;
 CTime *CTutorial::m_pTime = NULL;
 CScore *CTutorial::m_pScore = NULL;
+int CTutorial::m_nCurAction = 0;
 
 const char* CTutorial::CEILING_FILE = "data\\GAMEDATA\\OBJECT\\CEILING_STAGE1_DATA.txt";
 const char* CTutorial::SIDE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE1_DATA.txt";
 const char* CTutorial::FLOOR_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE1_DATA.txt";
 const char* CTutorial::BLOCK_FILE1 = "data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv";
-const char* CTutorial::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\STAGE_ENEMY1.csv";
+const char* CTutorial::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\TUTORIAL_ENEMY.csv";
 
 //========================================
 // コンストラクタ
@@ -104,14 +105,7 @@ HRESULT CTutorial::Init(void)
 	m_pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
 	// キューブの制限数
-	CCube::SetLimit();
-
-	// タイム生成
-	m_pTime = CTime::Create(MAX_TIME);
-
-	// スコア生成
-	m_pScore = CScore::Create();
-	CScore::SetScore();
+	CCube::SetLimit(60);
 
 	// 読み込み
 	TextLoad();
@@ -174,7 +168,7 @@ void CTutorial::Update(void)
 	// エネミーの全滅
 	{
 		bool bExit = CTitle::IsExit();
-		if (!bExit && CEnemy::GetEnemyAll() <= 0)
+		if (!bExit && CEnemy::GetEnemyAll() <= 0 && m_aCreateText.nCurAction >= ACTION_ENEMY)
 		{
 			CTitle::SetExit(true);
 		}
@@ -326,6 +320,8 @@ void CTutorial::TxtInit(int nIdx)
 //========================================
 void CTutorial::TxtCreate(int nType)
 {
+	m_nCurAction = nType;
+
 	if (m_aCreateText.nCurAction == ACTION_MAX)
 	{
 		return;
@@ -439,6 +435,9 @@ void CTutorial::TutorialTex(void)
 			if (m_aCreateText.bCreate[ACTION_CAMERA])
 			{
 				TxtDelete(ACTION_CAMERA, ACTION_SHOT);
+
+				// キューブの制限数
+				CCube::SetLimit(60);
 			}
 		}
 	}
@@ -473,6 +472,10 @@ void CTutorial::TutorialTex(void)
 
 			// 敵の生成
 			LoodEnemy();
+
+			// スコア生成
+			m_pScore = CScore::Create();
+			CScore::SetScore();
 		}
 	}
 	break;
@@ -483,6 +486,9 @@ void CTutorial::TutorialTex(void)
 		if (nNumEnemy == 0 && m_aCreateText.bCreate[ACTION_ENEMY])
 		{
 			TxtDelete(ACTION_ENEMY, ACTION_CLEAR);
+
+			// タイム生成
+			m_pTime = CTime::Create(MAX_TIME);
 		}
 	}
 	break;
@@ -902,7 +908,7 @@ void CTutorial::LoodEnemy(void)
 {
 	CSVFILE *pFile = new CSVFILE;
 
-	pFile->FileLood("data\\GAMEDATA\\ENEMY\\TUTORIAL_ENEMY.csv", true, true, ',');
+	pFile->FileLood(ENEMY_FILE1, true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();

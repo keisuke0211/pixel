@@ -22,7 +22,6 @@ class CText;
 class CCube : public CObjectX
 {
 	// 定義
-	static const int MAX_CUBE = 30;			// ステージで配置出来るキューブの制限
 	static const int CUBE_START_DEX = 6;	// キューブの開始位置
 public:
 
@@ -85,7 +84,7 @@ public:
 	/* 寿命			*/void SetCubeLife(const int nLife) { m_Info.nLife = nLife; }
 	/* 種類			*/void SetCubeType(const int type) { m_Info.nShape = type; }
 	/* 先頭フラグ	*/void SetCubeLead(const bool bSet) { bLeadSet = bSet; }
-	/* 制限数		*/static void SetLimit(void);
+	/* 制限数		*/static void SetLimit(int nLimit);
 
 	// -- 取得 -------------------------------
 	/* 位置			*/D3DXVECTOR3 GetCubeos(void) { return m_Info.pos; }
