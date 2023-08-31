@@ -33,9 +33,9 @@ CScore *CGame::m_pScore = NULL;
 bool CGame::m_bTime = false;
 int CGame::m_nSelectStage = Stage_EASY;
 
-const char* CGame::CEILING_FILE = "data\\GAMEDATA\\OBJECT\\CEILING_MULTI_DATA.txt";
-const char* CGame::SIDE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_MULTI_DATA.txt";
-const char* CGame::FLOOR_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_MULTI_DATA.txt";
+const char* CGame::CEILING_STAGE1_FILE = "data\\GAMEDATA\\OBJECT\\CEILING_STAGE1_DATA.txt";
+const char* CGame::SIDE_STAGE1_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE1_DATA.txt";
+const char* CGame::FLOOR_STAGE1_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE1_DATA.txt";
 const char* CGame::BLOCK_FILE1 = "data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv";
 const char* CGame::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\STAGE_ENEMY1.csv";
 
@@ -113,33 +113,12 @@ HRESULT CGame::Init(void)
 	// キューブの制限数
 	CCube::SetLimit();
 
-	{
-		// タイム生成
-		m_pTime = CTime::Create();
+	// タイム生成
+	m_pTime = CTime::Create(GAME_TIME);
 
-		// サイズ設定
-		m_pTime->SetSize(20.0f, 20.0f);
-
-		// 位置設定
-		m_pTime->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 32.0f, 0.0f));
-
-		// タイム設定
-		m_pTime->SetTime(GAME_TIME);
-	}
-
-	{
-		// スコア生成
-		m_pScore = CScore::Create();
-
-		// サイズ設定
-		m_pScore->SetSize(20.0f, 20.0f);
-
-		// 位置設定
-		m_pScore->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 52.0f, 0.0f));// D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 52.0f, 0.0f)
-
-		// スコア設定
-		CScore::SetScore();
-	}
+	// スコア生成
+	m_pScore = CScore::Create();
+	CScore::SetScore();
 
 	CCamera *pCamera = CManager::GetCamera();					// カメラ
 
@@ -498,16 +477,16 @@ void CGame::LoodSide(void)
 	switch (m_nSelectStage)
 	{
 	case CGame::Stage_EASY:
-		pFile = fopen(SIDE_FILE, "r");
+		pFile = fopen(SIDE_STAGE1_FILE, "r");
 		break;
 	case CGame::Stage_NORMAL:
-		pFile = fopen(SIDE_FILE, "r");
+		pFile = fopen(SIDE_STAGE1_FILE, "r");
 		break;
 	case CGame::Stage_DIFFICULT:
-		pFile = fopen(SIDE_FILE, "r");
+		pFile = fopen(SIDE_STAGE1_FILE, "r");
 		break;
 	default:
-		pFile = fopen(SIDE_FILE, "r");
+		pFile = fopen(SIDE_STAGE1_FILE, "r");
 		break;
 	}
 
@@ -673,16 +652,16 @@ void CGame::LoodFloor(void)
 	switch (m_nSelectStage)
 	{
 	case CGame::Stage_EASY:
-		pFile = fopen(FLOOR_FILE, "r");
+		pFile = fopen(FLOOR_STAGE1_FILE, "r");
 		break;
 	case CGame::Stage_NORMAL:
-		pFile = fopen(FLOOR_FILE, "r");
+		pFile = fopen(FLOOR_STAGE1_FILE, "r");
 		break;
 	case CGame::Stage_DIFFICULT:
-		pFile = fopen(FLOOR_FILE, "r");
+		pFile = fopen(FLOOR_STAGE1_FILE, "r");
 		break;
 	default:
-		pFile = fopen(FLOOR_FILE, "r");
+		pFile = fopen(FLOOR_STAGE1_FILE, "r");
 		break;
 	}
 

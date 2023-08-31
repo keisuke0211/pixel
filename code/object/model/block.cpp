@@ -246,20 +246,15 @@ void CBlock::Update(void)
 				m_nCntExit = 0;
 				m_bExitCamera = false;
 
-				FormFont pFont = {
-					INIT_D3DXCOLOR,
-					20.0f,
-					10,
-					10,
-					30
-				};
+				FormFont pFont = {INIT_D3DXCOLOR,20.0f,10,10,30};
+				FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f) };
 
 				CText::Create(CText::BOX_NORMAL_RECT,
 					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 					D3DXVECTOR2(280.0f, 100.0f),
 					"èoå˚Ç™äJÇ¢ÇΩÅI",
 					CFont::FONT_BESTTEN,
-					&pFont, false);
+					&pFont, false,&pShadow);
 			}
 		}
 	}

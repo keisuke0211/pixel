@@ -36,12 +36,9 @@ public:
 	/* 終了			*/void Uninit(void);
 	/* 更新			*/void Update(void);
 	/* 描画			*/void Draw(void);
+	/* 生成			*/static CTime *Create(int nTime = 0);
 	/* タイム設定	*/void SetTime(int nTime = 0);
 	/* タイム所得	*/int GetTime(void) { return m_nTime; }
-
-	// 生成
-	static CTime *Create(void);
-
 private:
 	// ***** 変数 *****
 	int m_nTime;		// 時間

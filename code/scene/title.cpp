@@ -185,7 +185,6 @@ void CTitle::Update(void)
 				case MENU_GAME:
 					TextClear(1, MENU_MAX, TITLE_STAGE);
 					StageCreate();
-					/*CManager::GetFade()->SetFade(MODE_GAME);*/
 					break;
 				case MENU_TUTORIAL:
 					TextClear(1, MENU_MAX, TITLE_NEXT);

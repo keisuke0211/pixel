@@ -28,7 +28,7 @@
 #include "fade.h"
 
 // 静的変数
-CTutorial::TEXT_INFO *CTutorial::m_TextInfo = NULL;	// テキスト情報
+CTutorial::LoadTxt *CTutorial::m_LoadText = NULL;	// テキスト情報
 
 // サウンドのデータファイルの相対パス
 const char* CTutorial::FILE_PATH = "data\\GAMEDATA\\TEXT\\TUTORIAL_DATA.csv";
@@ -37,9 +37,9 @@ CPlayer *CTutorial::m_pPlayer = NULL;
 CTime *CTutorial::m_pTime = NULL;
 CScore *CTutorial::m_pScore = NULL;
 
-const char* CTutorial::CEILING_FILE = "data\\GAMEDATA\\OBJECT\\CEILING_MULTI_DATA.txt";
-const char* CTutorial::SIDE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_MULTI_DATA.txt";
-const char* CTutorial::FLOOR_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_MULTI_DATA.txt";
+const char* CTutorial::CEILING_FILE = "data\\GAMEDATA\\OBJECT\\CEILING_STAGE1_DATA.txt";
+const char* CTutorial::SIDE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE1_DATA.txt";
+const char* CTutorial::FLOOR_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE1_DATA.txt";
 const char* CTutorial::BLOCK_FILE1 = "data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv";
 const char* CTutorial::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\STAGE_ENEMY1.csv";
 
@@ -48,17 +48,27 @@ const char* CTutorial::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\STAGE_ENEMY1.csv";
 //========================================
 CTutorial::CTutorial()
 {
-	m_Text = NULL;
-	m_nStartTime = 0;
+	for (int nTxt = 0; nTxt < 4; nTxt++)
+	{
+		m_Txt[nTxt] = NULL;
+	}
 
-	m_nTextMax = 0;
-	m_nNumText = 0;
-	m_nTextType = 0;
+	m_nStartTime = 0;
 
 	Action = ACTION_MOVE;
 	m_nEndTime = 0;
 	m_bEnd = false;
 
+	m_aCreateText.nCreateTime = 0;
+	m_aCreateText.nCurAction = 0;
+	m_aCreateText.nNumCur = 0;
+	m_aCreateText.nNumCurAll = 0;
+
+	for (int nCur = 0; nCur < ACTION_MAX; nCur++)
+	{
+		m_aCreateText.nCurMax[nCur] = 0;
+		m_aCreateText.bCreate[nCur] = false;
+	}
 }
 
 //========================================
@@ -93,42 +103,21 @@ HRESULT CTutorial::Init(void)
 	m_pPlayer = CPlayer::Create();
 	m_pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
-	// 敵の生成
-	LoodEnemy();
+	// キューブの制限数
+	CCube::SetLimit();
 
-	{
-		// タイム生成
-		m_pTime = CTime::Create();
+	// タイム生成
+	m_pTime = CTime::Create(MAX_TIME);
 
-		// サイズ設定
-		m_pTime->SetSize(20.0f, 20.0f);
-
-		// 位置設定
-		m_pTime->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 32.0f, 0.0f));
-
-		// タイム設定
-		m_pTime->SetTime(MAX_TIME);
-	}
-
-	{
-		// スコア生成
-		m_pScore = CScore::Create();
-
-		// サイズ設定
-		m_pScore->SetSize(20.0f, 20.0f);
-
-		// 位置設定
-		m_pScore->SetPos(D3DXVECTOR3(SCREEN_WIDTH - 260.0f, 52.0f, 0.0f));
-
-		// スコア設定
-		CScore::SetScore();
-	}
+	// スコア生成
+	m_pScore = CScore::Create();
+	CScore::SetScore();
 
 	// 読み込み
 	TextLoad();
 
 	// テキスト生成
-	TexCreate(m_nNumText);
+	TxtCreate(ACTION_MOVE);
 
 	return S_OK;
 }
@@ -151,8 +140,8 @@ void CTutorial::Uninit(void)
 	CObject::ReleaseAll(CObject::TYPE_FONT);
 
 	// メモリ開放
-	delete m_TextInfo;
-	m_TextInfo = NULL;
+	delete m_LoadText;
+	m_LoadText = NULL;
 }
 
 //========================================
@@ -229,11 +218,11 @@ void CTutorial::Update(void)
 			}
 		}
 
-		// 時間切れ
-		if (m_pTime->GetTime() <= 0)
-		{
-			CManager::GetFade()->SetFade(MODE_TITLE);
-		}
+		//// 時間切れ
+		//if (m_pTime->GetTime() <= 0)
+		//{
+		//	CManager::GetFade()->SetFade(MODE_TITLE);
+		//}
 	}
 }
 
@@ -270,14 +259,12 @@ void CTutorial::TextLoad(void)
 	int nRowMax = pFile->GetRowSize();
 
 	// メモリ確保
-	m_TextInfo = new CTutorial::TEXT_INFO[nRowMax];
-	m_nTextMax = nRowMax - 1;
-	int nNumAll = 0;
+	m_LoadText = new CTutorial::LoadTxt[nRowMax];
 
 	for (int nRow = 0; nRow < nRowMax; nRow++)
 	{
 		// 初期化
-		TextInit(nRow);
+		TxtInit(nRow);
 
 		// 列数の取得
 		int nLineMax = pFile->GetLineSize(nRow);
@@ -288,17 +275,17 @@ void CTutorial::TextLoad(void)
 
 			switch (nLine)
 			{
-			case 0:	pFile->ToValue(m_TextInfo[nRow].nType, sData); break;		// 種類
-			case 1:	pFile->ToValue(m_TextInfo[nRow].pos.x, sData); break;		// 位置 X
-			case 2:	pFile->ToValue(m_TextInfo[nRow].pos.y, sData); break;		// 　　 Y
-			case 3:	pFile->ToValue(m_TextInfo[nRow].size.x, sData); break;		// サイズ X
-			case 4:	pFile->ToValue(m_TextInfo[nRow].size.y, sData); break;		// 　　　 Y
-			case 5:	pFile->ToValue(m_TextInfo[nRow].nStartTime, sData); break;	// 表示時間
-			case 6:	pFile->ToValue(m_TextInfo[nRow].nStandTime, sData); break;	// 待機時間
-			case 7:	pFile->ToValue(m_TextInfo[nRow].nDisapTime, sData); break;	// 消える時間
-			case 8:	pFile->ToValue(m_TextInfo[nRow].bTextBok, sData); break;	// Box表示
-			case 9:	pFile->ToValue(m_TextInfo[nRow].nTextSize, sData); break;	// テキスト サイズ
-			case 10:pFile->ToValue(*m_TextInfo[nRow].ActionTex, sData); break;	// テキスト
+			case 0:	pFile->ToValue(m_LoadText[nRow].nType, sData); break;		// 種類
+			case 1:	pFile->ToValue(m_LoadText[nRow].pos.x, sData); break;		// 位置 X
+			case 2:	pFile->ToValue(m_LoadText[nRow].pos.y, sData); break;		// 　　 Y
+			case 3:	pFile->ToValue(m_LoadText[nRow].size.x, sData); break;		// サイズ X
+			case 4:	pFile->ToValue(m_LoadText[nRow].size.y, sData); break;		// 　　　 Y
+			case 5:	pFile->ToValue(m_LoadText[nRow].nStartTime, sData); break;	// 表示時間
+			case 6:	pFile->ToValue(m_LoadText[nRow].nStandTime, sData); break;	// 待機時間
+			case 7:	pFile->ToValue(m_LoadText[nRow].nDisapTime, sData); break;	// 消える時間
+			case 8:	pFile->ToValue(m_LoadText[nRow].bTextBok, sData); break;	// Box表示
+			case 9:	pFile->ToValue(m_LoadText[nRow].nTextSize, sData); break;	// テキスト サイズ
+			case 10:pFile->ToValue(*m_LoadText[nRow].ActionTex, sData); break;	// テキスト
 			}
 		}
 
@@ -309,9 +296,8 @@ void CTutorial::TextLoad(void)
 		}
 
 		{
-			nNumAll++;
-			int nType = m_TextInfo[nRow].nType;
-			m_nTypeMax[nType] = nNumAll;
+			int nType = m_LoadText[nRow].nType;
+			m_aCreateText.nCurMax[nType]++;
 		}
 	}
 
@@ -322,74 +308,97 @@ void CTutorial::TextLoad(void)
 //========================================
 // テキスト情報の初期化
 //========================================
-void CTutorial::TextInit(int nIdx)
+void CTutorial::TxtInit(int nIdx)
 {
-	m_TextInfo[nIdx].pos = INIT_D3DXVECTOR3;
-	m_TextInfo[nIdx].size = INIT_D3DXVECTOR2;
-	m_TextInfo[nIdx].nType = 0;
-	m_TextInfo[nIdx].nStartTime = 0;
-	m_TextInfo[nIdx].nStandTime = 0;
-	m_TextInfo[nIdx].nDisapTime = 0;
-	*m_TextInfo[nIdx].ActionTex = NULL;
-	m_TextInfo[nIdx].nTextSize = 0;
-	m_TextInfo[nIdx].nEndTime = 0;
-	m_TextInfo[nIdx].bCreate = false;
-	m_TextInfo[nIdx].bEnd = false;
-	m_TextInfo[nIdx].bAction = false;
-	m_TextInfo[nIdx].bTextBok = false;
+	m_LoadText[nIdx].pos = INIT_D3DXVECTOR3;
+	m_LoadText[nIdx].size = INIT_D3DXVECTOR2;
+	m_LoadText[nIdx].nType = 0;
+	m_LoadText[nIdx].nStartTime = 0;
+	m_LoadText[nIdx].nStandTime = 0;
+	m_LoadText[nIdx].nDisapTime = 0;
+	*m_LoadText[nIdx].ActionTex = NULL;
+	m_LoadText[nIdx].nTextSize = 0;
+	m_LoadText[nIdx].bTextBok = false;
 }
 
 //========================================
 // テキスト生成
 //========================================
-void CTutorial::TexCreate(int nIdx)
+void CTutorial::TxtCreate(int nType)
 {
-	if (m_TextInfo[nIdx].nType == ACTION_CLEAR)
+	if (m_aCreateText.nCurAction == ACTION_MAX)
 	{
-		int nCntExit = CBlock::GetBlockExit();
-		bool bExit = CBlock::IsExit();
-
-		if (!bExit)
-		{
-			return;
-		}
-		else if (nCntExit >= 1)
-		{
-			return;
-		}
+		return;
 	}
 
-	if (m_TextInfo[nIdx].nType == m_nTextType && !m_TextInfo[nIdx].bCreate)
+	if (m_aCreateText.nCurAction == ACTION_CLEAR && CBlock::IsExitCamera())
 	{
-		FormFont pFont = {
-			INIT_D3DXCOLOR,
-			m_TextInfo[nIdx].nTextSize,
-			m_TextInfo[nIdx].nStartTime,
-			m_TextInfo[nIdx].nStandTime,
-			m_TextInfo[nIdx].nDisapTime
-		};
-
-		CText::Create(CText::BOX_NORMAL_RECT,
-			m_TextInfo[nIdx].pos,
-			m_TextInfo[nIdx].size,
-			*m_TextInfo[nIdx].ActionTex,
-			CFont::FONT_BESTTEN,
-			&pFont,
-			m_TextInfo[nIdx].bTextBok);
-
-		if (m_TextInfo[nIdx].nDisapTime == -1)
-		{
-			m_TextInfo[nIdx].nDisapTime = 5;
-		}
-
-		int nStrlen = (strlen(*m_TextInfo[nIdx].ActionTex) / 2);
-
-		m_nTextCreate = (nStrlen * m_TextInfo[nIdx].nStartTime) +
-			m_TextInfo[nIdx].nStandTime + (m_TextInfo[nIdx].nDisapTime - 5);
-
-		m_TextInfo[nIdx].bCreate = true;
-		m_nNumText++;
+		return;
 	}
+
+	// メモリ確保
+	//m_Text = new CText[3];
+
+	if (--m_aCreateText.nCreateTime <= 0 && !m_aCreateText.bCreate[nType])
+	{
+		int nNumCur = m_aCreateText.nNumCur;
+		int nNumCurAll = m_aCreateText.nNumCurAll;
+
+		m_aCreateText.nCreateTime = 0;
+
+		if (nNumCur < m_aCreateText.nCurMax[nType])
+		{
+			FormFont pFont = {
+				INIT_D3DXCOLOR,
+				m_LoadText[nNumCurAll].nTextSize,
+				m_LoadText[nNumCurAll].nStartTime,
+				m_LoadText[nNumCurAll].nStandTime,
+				m_LoadText[nNumCurAll].nDisapTime
+			};
+
+			int nText = m_aCreateText.nNumCur;
+
+			m_Txt[nText] = CText::Create(CText::BOX_NORMAL_RECT,
+				m_LoadText[nNumCurAll].pos,
+				m_LoadText[nNumCurAll].size,
+				*m_LoadText[nNumCurAll].ActionTex,
+				CFont::FONT_BESTTEN,
+				&pFont,
+				m_LoadText[nNumCurAll].bTextBok);
+
+			// 最低値の設定
+			if (m_LoadText[nNumCurAll].nDisapTime <= -1)
+			{
+				m_LoadText[nNumCurAll].nDisapTime = 5;
+			}
+
+			int nStrlen = (strlen(*m_LoadText[nNumCurAll].ActionTex) / 2);
+
+			m_aCreateText.nCreateTime = (nStrlen * m_LoadText[nNumCurAll].nStartTime) +
+				m_LoadText[nNumCurAll].nStandTime + (m_LoadText[nNumCurAll].nDisapTime - 5);
+
+			m_aCreateText.nNumCur++;
+			m_aCreateText.nNumCurAll++;
+		}
+		else if (nNumCur == m_aCreateText.nCurMax[nType])
+		{
+			m_aCreateText.bCreate[nType] = true;
+		}
+	}
+}
+
+//========================================
+// テキスト削除
+//========================================
+void CTutorial::TxtDelete(int nType, int nNextType)
+{
+	for (int nCnt = 0; nCnt < m_aCreateText.nCurMax[nType]; nCnt++)
+	{
+		m_Txt[nCnt]->Uninit();
+	}
+
+	m_aCreateText.nNumCur = 0;
+	m_aCreateText.nCurAction = nNextType;
 }
 
 //========================================
@@ -404,17 +413,9 @@ void CTutorial::TutorialTex(void)
 
 
 	// テキストの生成
-	if (--m_nTextCreate <= 0)
-	{
-		m_nTextCreate = 0;
+	TxtCreate(m_aCreateText.nCurAction);
 
-		if (m_nNumText < m_nTextMax)
-		{
-			TexCreate(m_nNumText);
-		}
-	}
-
-	switch (m_nTextType)
+	switch (m_aCreateText.nCurAction)
 	{
 	case ACTION_MOVE:// 移動
 	{
@@ -422,10 +423,9 @@ void CTutorial::TutorialTex(void)
 		
 		if (move.x <= -1.0f || move.x >= 1.0f)
 		{
-			if (m_nTextCreate <= 0 && m_nTypeMax[ACTION_MOVE] == m_nNumText)
+			if (m_aCreateText.bCreate[ACTION_MOVE])
 			{
-				CObject::ReleaseAll(CObject::TYPE_FONT);
-				m_nTextType = ACTION_CAMERA;
+				TxtDelete(ACTION_MOVE,ACTION_CAMERA);
 			}
 		}
 	}
@@ -436,10 +436,9 @@ void CTutorial::TutorialTex(void)
 
 		if (move.y <= -0.01f || move.y >= 0.01f)
 		{
-			if (m_nTextCreate <= 0 && m_nTypeMax[ACTION_CAMERA] == m_nNumText)
+			if (m_aCreateText.bCreate[ACTION_CAMERA])
 			{
-				CObject::ReleaseAll(CObject::TYPE_FONT);
-				m_nTextType = ACTION_SHOT;
+				TxtDelete(ACTION_CAMERA, ACTION_SHOT);
 			}
 		}
 	}
@@ -448,10 +447,9 @@ void CTutorial::TutorialTex(void)
 	{
 		int nNumAll = CBullet::GetNumAll();
 
-		if (nNumAll >= 3 && m_nTypeMax[ACTION_SHOT] == m_nNumText)
+		if (nNumAll >= 1 && m_aCreateText.bCreate[ACTION_SHOT])
 		{
-			CObject::ReleaseAll(CObject::TYPE_FONT);
-			m_nTextType = ACTION_SET;
+			TxtDelete(ACTION_SHOT, ACTION_SET);
 		}
 	}
 	break;
@@ -459,10 +457,9 @@ void CTutorial::TutorialTex(void)
 	{
 		int nNumAll = CCube::GetNumAll();
 
-		if (nNumAll >= 2 && m_nTypeMax[ACTION_SET] == m_nNumText)
+		if (nNumAll >= 1 && m_aCreateText.bCreate[ACTION_SET])
 		{
-			CObject::ReleaseAll(CObject::TYPE_FONT);
-			m_nTextType = ACTION_SET1;
+			TxtDelete(ACTION_SET, ACTION_SET1);
 		}
 	}
 	break;
@@ -470,10 +467,12 @@ void CTutorial::TutorialTex(void)
 	{
 		bool bSet = CPlayer::IsCubeSet();
 
-		if (bSet && m_nTypeMax[ACTION_SET1] == m_nNumText)
+		if (bSet && m_aCreateText.bCreate[ACTION_SET1])
 		{
-			CObject::ReleaseAll(CObject::TYPE_FONT);
-			m_nTextType = ACTION_ENEMY;
+			TxtDelete(ACTION_SET1, ACTION_ENEMY);
+
+			// 敵の生成
+			LoodEnemy();
 		}
 	}
 	break;
@@ -481,30 +480,22 @@ void CTutorial::TutorialTex(void)
 	{
 		int nNumEnemy = CEnemy::GetEnemyAll();
 
-		if (nNumEnemy == 0 && m_nTypeMax[ACTION_ENEMY] == m_nNumText)
+		if (nNumEnemy == 0 && m_aCreateText.bCreate[ACTION_ENEMY])
 		{
-			CObject::ReleaseAll(CObject::TYPE_FONT);
-			m_nTextType = ACTION_CLEAR;
+			TxtDelete(ACTION_ENEMY, ACTION_CLEAR);
 		}
 	}
 	break;
-	case ACTION_CLEAR:	// 出口
+	default:
 	{
-		if (m_nTextCreate <= 0 && m_nTypeMax[ACTION_CLEAR] == m_nNumText)
+		int nCurAction = m_aCreateText.nCurAction;
+
+		if (m_aCreateText.bCreate[nCurAction] && nCurAction != ACTION_MAX)
 		{
-			CObject::ReleaseAll(CObject::TYPE_FONT);
-			m_nTextType = ACTION_FREE;
+			TxtDelete(nCurAction, nCurAction + 1);
 		}
 	}
-	break;
-	case ACTION_FREE:	// 自由
-	{
-		if (m_nTextCreate <= 0 && m_nTypeMax[ACTION_FREE] == m_nNumText)
-		{
-			CObject::ReleaseAll(CObject::TYPE_FONT);
-			m_nTextType = ACTION_MAX;
-		}
-	}
+		break;
 	}
 }
 
@@ -911,7 +902,7 @@ void CTutorial::LoodEnemy(void)
 {
 	CSVFILE *pFile = new CSVFILE;
 
-	pFile->FileLood("data\\GAMEDATA\\ENEMY\\STAGE_ENEMY1.csv", true, true, ',');
+	pFile->FileLood("data\\GAMEDATA\\ENEMY\\TUTORIAL_ENEMY.csv", true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();

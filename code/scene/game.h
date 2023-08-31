@@ -24,12 +24,12 @@ class CText;	// テキスト
 //****************************************
 class CGame : public CScene
 {
-	static const int GAME_TIME = 90;	// 制限時間
-	static const char* CEILING_FILE;	// 天井のファイルパス
-	static const char* SIDE_FILE;		// 側面のファイルパス
-	static const char* FLOOR_FILE;		// 床のファイルパス
-	static const char* BLOCK_FILE1;		// ブロックのファイルパス
-	static const char* ENEMY_FILE1;		// エネミーのファイルパス
+	static const int GAME_TIME = 90;		// 制限時間
+	static const char* CEILING_STAGE1_FILE;	// 天井のファイルパス(STAGE1)
+	static const char* SIDE_STAGE1_FILE;	// 側面のファイルパス(STAGE1)
+	static const char* FLOOR_STAGE1_FILE;	// 床のファイルパス(STAGE1)
+	static const char* BLOCK_FILE1;			// ブロックのファイルパス
+	static const char* ENEMY_FILE1;			// エネミーのファイルパス
 
 	static const int TIME_SCORE = 50;	// １秒のスコアの加算値
 	static const int CUBE_SCORE = 100;	// １個のスコアの加算値

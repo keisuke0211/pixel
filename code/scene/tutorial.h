@@ -25,7 +25,7 @@ class CTutorial : public CScene
 {
 	// ***** 定義 *****
 	static const char* FILE_PATH;		// 読み込むファイルパス
-	static const int MAX_TIME = 99;		// 制限時間
+	static const int MAX_TIME = 90;		// 制限時間
 	static const int NUM_TEXT = 10;		// テキスト数
 
 	static const char* CEILING_FILE;	// 天井のファイルパス
@@ -80,7 +80,7 @@ private:
 	// ***** 構造体 *****
 
 	// テキスト情報
-	struct TEXT_INFO
+	struct LoadTxt
 	{
 		D3DXVECTOR3 pos;			// 位置
 		D3DXVECTOR2 size;			// サイズ
@@ -90,39 +90,42 @@ private:
 		int nDisapTime;				// 消える時間
 		char *ActionTex[TXT_MAX];	// 行動テキスト
 		int nTextSize;				// テキストサイズ
-		int nEndTime;				// 終了時間
-		bool bCreate;				// 生成フラグ
-		bool bEnd;					// 終了フラグ
-		bool bAction;				// テキストに書かれた行動を行ったか
-
 		bool bTextBok;				// テキストボックスの表示フラグ
+	};
 
+	// 
+	struct CreateTxt
+	{
+		int nNumCur;				// 現在の行動の生成数
+		int nNumCurAll;				// 全体で生成した総数
+		int nCurAction;				// 現在の行動
+		int nCreateTime;			// 次のテキストを生成するまでの時間
+		int nCurMax[ACTION_MAX];	// 各行動の最大数
+		bool bCreate[ACTION_MAX];	// 生成フラグ
 	};
 
 	// ***** 関数 *****
-	/* テキスト情報初期化	*/void TextInit(int nIdx);
-	/* テキスト生成			*/void TexCreate(int nIdx);
+	/* テキスト情報初期化	*/void TxtInit(int nIdx);
+	/* テキスト生成			*/void TxtCreate(int nType);
+	/* テキスト削除			*/void TxtDelete(int nType,int nNextType);
 	/* チュートリアル		*/void TutorialTex(void);
 
 	// ***** 静的変数 *****
-	/* テキスト情報	*/static TEXT_INFO	*m_TextInfo;
-	/* プレイヤー	*/static CPlayer *m_pPlayer;
-	/* タイム		*/static CTime *m_pTime;
+	/* テキスト情報	*/static LoadTxt*m_LoadText;
+	/* プレイヤー	*/static CPlayer*m_pPlayer;
+	/* タイム		*/static CTime	*m_pTime;
 	/* スコア		*/static CScore *m_pScore;
 
 	// ***** 変数 *****
-	CText *m_Text;				// テキスト
+	CText *m_Txt[3];			// テキスト
 	ACTION Action;				// 行動種類
-	int m_nTextMax;				// テキスト情報の最大数
-	int m_nNumText;				// 生成したテキスト数
-	int m_nTextType;			// 現在の表示テキスト種類
-	int m_nTextCreate;			// 次のテキストの生成するまでの時間
+	CreateTxt m_aCreateText;	// 
 
-	int m_nStartTime;			// 開始時間
-	int m_nEndTime;				// 終了時間
-	bool m_bEnd;				// 終了フラグ
+	int m_nStartTime;		// 開始時間
+	int m_nEndTime;			// 終了時間
+	bool m_bEnd;			// 終了フラグ
 
-	int m_nTypeMax[ACTION_MAX];	// 種類ごとの最終位置
+	
 
 };
 

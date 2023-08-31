@@ -175,7 +175,7 @@ void CText::Draw()
 //========================================
 CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, FormFont *pFont, bool bTextBok, FormShadow *Shadow)
 {
-	CText * pText = new CText;
+	CText *pText = new CText;
 
 	if (pText != NULL)
 	{

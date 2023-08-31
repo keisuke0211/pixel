@@ -39,12 +39,13 @@ CTime::~CTime(void)
 //========================================
 // ¶¬ˆ—
 //========================================
-CTime *CTime::Create(void)
+CTime *CTime::Create(int nTime)
 {
 	CTime *pTime = new CTime;
 
 	 // ‰Šú‰»ˆ—
 	pTime->Init();
+	pTime->SetTime(nTime);
 
 	return pTime;
 }
