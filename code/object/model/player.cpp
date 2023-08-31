@@ -173,7 +173,7 @@ void CPlayer::KeyInput(void)
 
 	m_Info.bMove = true;
 
-	if (pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
+	if (pInputJoypad->GetPress(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
 	{
 		MoveInput(DIRECTION_LEFT);
 	}

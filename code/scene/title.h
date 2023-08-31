@@ -24,6 +24,7 @@ class CStage;
 class CTitle : public CScene
 {
 	// ***** 定義 *****
+	static const char* TEXT_FILE_PATH;	// 読み込むファイルパス
 	static const int STAND_MAX = 20;	// テキストの待機時間
 	static const int TEXT_TIME = 150;	// テキストの表示時間
 	static const int WORDS_MAX = 4;		// 文字の最大数
@@ -82,6 +83,18 @@ public:
 
 private:
 
+	// ***** 構造体 *****
+
+	// テキスト情報
+	struct Text
+	{
+		char aStageText[TXT_MAX];
+		char aStageWords[2][TXT_MAX];
+	};
+
+	// ***** 関数 *****
+	/* テキスト読み込み	*/void TextLoad(void);
+
 	// ***** 静的変数 *****
 	static bool m_bStart;	// 開始フラグ
 	static bool m_bExit;	// 出口　（出口を開くかのフラク）
@@ -99,12 +112,7 @@ private:
 	int m_nStandTime;			// 待機時間
 	int m_nSelectMenu;			// 現在選択しているメニュー
 	int m_nSelectStage;			// 現在選択しているステージ
-
-	char aStageText[3][TXT_MAX] = {
-		"初級",
-		"中級",
-		"上級",
-	};
+	Text m_aText[3];			// テキスト情報
 };
 
 #endif

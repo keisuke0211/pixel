@@ -119,11 +119,11 @@ void CCamera::Update(void)
 				{// マウスの右ボタンが押されている間
 					m_Info.nRotType++;
 				}
-				else if (pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
+				else if (pInputJoypad->GetStick().aAngleTrigger[CJoypad::STICK_TYPE_RIGHT][CJoypad::STICK_ANGLE_LEFT])
 				{
 					m_Info.nRotType--;
 				}
-				else if (pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
+				else if (pInputJoypad->GetStick().aAngleTrigger[CJoypad::STICK_TYPE_RIGHT][CJoypad::STICK_ANGLE_RIGHT])
 				{
 					m_Info.nRotType++;
 				}
@@ -188,12 +188,12 @@ void CCamera::Update(void)
 		}
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_Q) || pInputMouse->GetTrigger(CMouse::MOUSE_5) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X))
-	{// マウスのサイドボタン2を押したら
+	//if (pInputKeyboard->GetTrigger(DIK_Q) || pInputMouse->GetTrigger(CMouse::MOUSE_5) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X))
+	//{// マウスのサイドボタン2を押したら
 
-		// 画面設定
-		SetScreen();
-	}
+	//	// 画面設定
+	//	SetScreen();
+	//}
 }
 
 //========================================
