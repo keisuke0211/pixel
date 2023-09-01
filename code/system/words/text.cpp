@@ -389,25 +389,25 @@ void CText::DisapTime(void)
 
 		// 色の推移
 		m_Info.TextBoxCol.a *= ((float)m_Info.nDisapTime / m_Info.nDisapTimeMax);
+		m_Info.FontCol.a *= ((float)m_Info.nDisapTime / m_Info.nDisapTimeMax);
 
 		// 文字色の推移
 		for (int wordsCount = 0; wordsCount < m_Info.nTextLength; wordsCount++)
 		{
 			if (m_Info.words[wordsCount] != NULL)
 			{
-				m_Info.FontCol.a *= ((float)m_Info.nDisapTime / m_Info.nDisapTimeMax);
-
 				m_Info.words[wordsCount]->SetColar(m_Info.FontCol);
 			}
 		}
 
 		if (m_Info.aShadow.bShadow)
 		{
+			m_Info.aShadow.col.a *= ((float)m_Info.nDisapTime / m_Info.nDisapTimeMax);
+
 			for (int wordsCount = 0; wordsCount < m_Info.nTextLength; wordsCount++)
 			{
 				if (m_Info.aShadow.shadow[wordsCount] != NULL)
 				{
-					m_Info.aShadow.col.a *= ((float)m_Info.nDisapTime / m_Info.nDisapTimeMax);
 					m_Info.aShadow.shadow[wordsCount]->SetColar(m_Info.aShadow.col);
 				}
 			}
@@ -493,10 +493,10 @@ void CText::TextShadow(FormShadow *Shadow)
 //========================================
 // 削除フラグ
 //========================================
-void CText::Disap(bool bDisap)
+void CText::Disap(bool bDisap, int nTime)
 {
 	m_Info.bRelease = bDisap;
-	EraseTime(60);
+	EraseTime(nTime);
 }
 
 //=============================================

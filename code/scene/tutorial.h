@@ -47,6 +47,7 @@ public:
 		ACTION_ENEMY,		// 敵
 		ACTION_CLEAR,		// 出口
 		ACTION_FREE,		// 自由
+		ACTION_FREE1,		// 自由
 		ACTION_MAX
 	};
 
@@ -88,6 +89,7 @@ private:
 		int nStartTime;				// 開始時間
 		int nStandTime;				// 待機時間
 		int nDisapTime;				// 消える時間
+		int nCreateTime;			// 生成待機時間
 		char *ActionTex[TXT_MAX];	// 行動テキスト
 		int nTextSize;				// テキストサイズ
 		bool bTextBok;				// テキストボックスの表示フラグ
@@ -125,9 +127,6 @@ private:
 	int m_nStartTime;		// 開始時間
 	int m_nEndTime;			// 終了時間
 	bool m_bEnd;			// 終了フラグ
-
-	
-
 };
 
 #endif

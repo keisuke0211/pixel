@@ -103,8 +103,11 @@ HRESULT CTutorial::Init(void)
 	m_pPlayer = CPlayer::Create();
 	m_pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
+
 	// 読み込み
 	TextLoad();
+
+	bool b = m_aCreateText.bCreate[0];
 
 	// テキスト生成
 	TxtCreate(ACTION_MOVE);
@@ -208,11 +211,14 @@ void CTutorial::Update(void)
 			}
 		}
 
-		//// 時間切れ
-		//if (m_pTime->GetTime() <= 0)
-		//{
-		//	CManager::GetFade()->SetFade(MODE_TITLE);
-		//}
+		// 時間切れ
+		if (m_aCreateText.nCurAction >= ACTION_CLEAR)
+		{
+			if (m_pTime->GetTime() <= 0)
+			{
+				CManager::GetFade()->SetFade(MODE_TITLE);
+			}
+		}
 	}
 }
 
@@ -273,9 +279,10 @@ void CTutorial::TextLoad(void)
 			case 5:	pFile->ToValue(m_LoadText[nRow].nStartTime, sData); break;	// 表示時間
 			case 6:	pFile->ToValue(m_LoadText[nRow].nStandTime, sData); break;	// 待機時間
 			case 7:	pFile->ToValue(m_LoadText[nRow].nDisapTime, sData); break;	// 消える時間
-			case 8:	pFile->ToValue(m_LoadText[nRow].bTextBok, sData); break;	// Box表示
-			case 9:	pFile->ToValue(m_LoadText[nRow].nTextSize, sData); break;	// テキスト サイズ
-			case 10:pFile->ToValue(*m_LoadText[nRow].ActionTex, sData); break;	// テキスト
+			case 8:	pFile->ToValue(m_LoadText[nRow].nCreateTime, sData); break;	// 生成待機時間
+			case 9:	pFile->ToValue(m_LoadText[nRow].bTextBok, sData); break;	// Box表示
+			case 10:pFile->ToValue(m_LoadText[nRow].nTextSize, sData); break;	// テキスト サイズ
+			case 11:pFile->ToValue(*m_LoadText[nRow].ActionTex, sData); break;	// テキスト
 			}
 		}
 
@@ -371,10 +378,33 @@ void CTutorial::TxtCreate(int nType)
 
 			m_aCreateText.nNumCur++;
 			m_aCreateText.nNumCurAll++;
+
+			if (m_aCreateText.nNumCur == m_aCreateText.nCurMax[nType])
+			{
+				if (m_LoadText[nNumCurAll].nDisapTime >= 1)
+				{
+					m_aCreateText.nCreateTime = (nStrlen * m_LoadText[nNumCurAll].nStartTime) +
+						m_LoadText[nNumCurAll].nStandTime;
+				}
+			}
 		}
-		else if (nNumCur == m_aCreateText.nCurMax[nType])
+		if (m_aCreateText.nNumCur == m_aCreateText.nCurMax[nType])
 		{
 			m_aCreateText.bCreate[nType] = true;
+		}
+	}
+	else if (m_aCreateText.nCreateTime <= 0 && m_aCreateText.bCreate[nType])
+	{
+		for (int nCnt = 0; nCnt < m_aCreateText.nCurMax[nType]; nCnt++)
+		{
+			if (m_LoadText[m_aCreateText.nNumCurAll - 1].nDisapTime >= 6)
+			{
+				if (m_Txt[nCnt] != NULL)
+				{
+					m_Txt[nCnt]->Disap(true, m_LoadText[m_aCreateText.nNumCurAll - 1].nDisapTime);
+					m_Txt[nCnt] = NULL;
+				}
+			}
 		}
 	}
 }
@@ -389,11 +419,18 @@ void CTutorial::TxtDelete(int nType, int nNextType)
 		if (m_Txt[nCnt] != NULL)
 		{
 			m_Txt[nCnt]->Uninit();
+			m_Txt[nCnt] = NULL;
 		}
 	}
 
 	m_aCreateText.nNumCur = 0;
 	m_aCreateText.nCurAction = nNextType;
+
+	int nNumCurAll = m_aCreateText.nNumCurAll - 1;
+	if (nNumCurAll >= 1)
+	{
+		m_aCreateText.nCreateTime = m_LoadText[nNumCurAll].nCreateTime;
+	}
 }
 
 //========================================
@@ -445,7 +482,7 @@ void CTutorial::TutorialTex(void)
 	{
 		int nNumAll = CBullet::GetNumAll();
 
-		if (nNumAll >= 1 && m_aCreateText.bCreate[ACTION_SHOT])
+		if (nNumAll > 1 && m_aCreateText.bCreate[ACTION_SHOT])
 		{
 			TxtDelete(ACTION_SHOT, ACTION_SET);
 		}
@@ -455,7 +492,7 @@ void CTutorial::TutorialTex(void)
 	{
 		int nNumAll = CCube::GetNumAll();
 
-		if (nNumAll >= 1 && m_aCreateText.bCreate[ACTION_SET])
+		if (nNumAll > 1 && m_aCreateText.bCreate[ACTION_SET])
 		{
 			TxtDelete(ACTION_SET, ACTION_SET1);
 		}
@@ -463,9 +500,7 @@ void CTutorial::TutorialTex(void)
 	break;
 	case ACTION_SET1:	// 配置(任意)
 	{
-		bool bSet = CPlayer::IsCubeSet();
-
-		if (bSet && m_aCreateText.bCreate[ACTION_SET1])
+		if (m_aCreateText.bCreate[ACTION_SET1])
 		{
 			TxtDelete(ACTION_SET1, ACTION_ENEMY);
 

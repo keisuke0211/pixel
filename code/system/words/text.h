@@ -79,7 +79,7 @@ public:
 	//--------------------------------------------------
 	static CText *CText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, FormFont *pFont = NULL, bool bTextBok = true, FormShadow *Shadow = NULL);
 
-	/* 削除 */void Disap(bool bDisap);
+	/* 削除 */void Disap(bool bDisap,int nTime);
 
 	// -- 設定 ------------------------------------------
 	/* ポーズ中の生成	*/void SetTetPause(bool bPause);
@@ -87,6 +87,9 @@ public:
 	/* テキストの色		*/bool SetTextColor(D3DXCOLOR col);
 	/* 文字変更(単体)	*/bool ChgWords(char* Text, int nIdx, D3DXCOLOR col);
 	/* 文字変更(全体)	*/bool ChgText(char* Text, D3DXCOLOR col);// ※ 元のテキストより多いと使えない また半角英数のみ
+
+	// -- 設定 ------------------------------------------
+	/*　サイズ	*/float GetTxtSize() { return m_Info.fTextSize; }
 
 private:
 
