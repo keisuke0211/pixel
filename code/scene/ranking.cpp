@@ -15,7 +15,7 @@
 // 定義
 const char* CRanking::FILE_PATH = "data\\SAVEDATA\\RANKING_DATA.csv";
 const char* CRanking::TEXT_FILE_PATH = "data\\GAMEDATA\\TEXT\\WORDS_DATA.txt";
-int CRanking::m_nGameScore = 0;
+int CRanking::m_nGameScore = 2100;
 bool CRanking::m_bSetScore = false;
 
 //========================================
@@ -589,20 +589,20 @@ void CRanking::NameInput(void)
 				int nCntName = 0;
 				for (int nCnt = 0; nCnt < NAME_NUM - m_Info.nCntName; nCnt++)
 				{
-					char aData[TXT_MAX] = { "名無し　　" };
+					char aData[6][TXT_MAX] = { "名","無","し"," "," "};
 
 					// 現在のカウントの文字を加える
-					strcat(m_Ranking[nRank].aName,&aData[nCntName]);
+					strcat(m_Ranking[nRank].aName,aData[nCntName]);
 
 					// 現在のカウントの文字を反映する
 					strinit(m_aNameData, TXT_MAX);
 					strcat(m_aNameData, m_Ranking[nRank].aName);
 
-					if (m_Text[nRank]->ChgWords(&aData[nCntName], NAME_START_DEX + (m_Info.nCntName + nCnt), RANKING_COLOR))
+					if (m_Text[nRank]->ChgWords(aData[nCntName], NAME_START_DEX + (m_Info.nCntName + nCnt), RANKING_COLOR))
 					{
 						m_Info.bNameInput = false;
 					}
-					nCntName += 2;
+					nCntName++;
 				}
 				m_Info.bNameEntry = false;
 			}
