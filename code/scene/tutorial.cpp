@@ -39,7 +39,7 @@ CScore *CTutorial::m_pScore = NULL;
 int CTutorial::m_nCurAction = 0;
 
 const char* CTutorial::SIDE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_EASY_DATA .txt";
-const char* CTutorial::FLOOR_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE1_DATA.txt";
+const char* CTutorial::FLOOR_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_EASY_DATA.txt";
 const char* CTutorial::BLOCK_FILE1 = "data\\GAMEDATA\\BLOCK\\TUTORIAL_DATA.csv";
 const char* CTutorial::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\TUTORIAL_ENEMY.csv";
 

@@ -345,7 +345,7 @@ void CBlock::ExitOpen(void)
 	pObj->Par_SetMove(D3DXVECTOR3(25.0f, 5.0f, 25.0f));
 	pObj->Par_SetType(0);
 	pObj->Par_SetLife(100);
-	pObj->Par_SetCol(D3DXCOLOR(0.9f, 0.0f, 0.0f, 1.0f));
+	pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
 	pObj->Par_SetForm(10);
 }
 

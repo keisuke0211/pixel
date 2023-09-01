@@ -35,7 +35,10 @@ int CGame::m_nSelectStage = Stage_EASY;
 
 const char* CGame::SIDE_STAGE_EASY_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_EASY_DATA .txt";
 const char* CGame::SIDE_STAGE_NORMAL_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_NORMAL_DATA.txt";
-const char* CGame::FLOOR_STAGE1_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE1_DATA.txt";
+const char* CGame::SIDE_STAGE_DIFFICULT_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_DIFFICULT_DATA.txt";
+const char* CGame::FLOOR_STAGE_EASY_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_EASY_DATA.txt";
+const char* CGame::FLOOR_STAGE_NORMAL_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_NORMAL_DATA.txt";
+const char* CGame::FLOOR_STAGE_DIFFICULT_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_DIFFICULT_DATA.txt";
 const char* CGame::BLOCK_FILE1 = "data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv";
 const char* CGame::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\STAGE_ENEMY1.csv";
 
@@ -483,7 +486,7 @@ void CGame::LoodSide(void)
 		pFile = fopen(SIDE_STAGE_NORMAL_FILE, "r");
 		break;
 	case CGame::Stage_DIFFICULT:
-		pFile = fopen(SIDE_STAGE_EASY_FILE, "r");
+		pFile = fopen(SIDE_STAGE_DIFFICULT_FILE, "r");
 		break;
 	default:
 		pFile = fopen(SIDE_STAGE_EASY_FILE, "r");
@@ -652,16 +655,16 @@ void CGame::LoodFloor(void)
 	switch (m_nSelectStage)
 	{
 	case CGame::Stage_EASY:
-		pFile = fopen(FLOOR_STAGE1_FILE, "r");
+		pFile = fopen(FLOOR_STAGE_EASY_FILE, "r");
 		break;
 	case CGame::Stage_NORMAL:
-		pFile = fopen(FLOOR_STAGE1_FILE, "r");
+		pFile = fopen(FLOOR_STAGE_NORMAL_FILE, "r");
 		break;
 	case CGame::Stage_DIFFICULT:
-		pFile = fopen(FLOOR_STAGE1_FILE, "r");
+		pFile = fopen(FLOOR_STAGE_DIFFICULT_FILE, "r");
 		break;
 	default:
-		pFile = fopen(FLOOR_STAGE1_FILE, "r");
+		pFile = fopen(FLOOR_STAGE_EASY_FILE, "r");
 		break;
 	}
 
