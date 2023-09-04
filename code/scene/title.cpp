@@ -7,6 +7,7 @@
 //========================================
 #include "title.h"
 #include "game.h"
+#include "ranking.h"
 #include "../object/UI/stage_menu.h"
 #include "../object\model\model.h"
 #include "../system/input.h"
@@ -193,6 +194,7 @@ void CTitle::Update(void)
 				case MENU_RANKING:
 					TextClear(1, MENU_MAX, TITLE_NEXT);
 					CManager::GetFade()->SetFade(MODE_RANKING);
+					CRanking::SetAllStage(true);
 					break;
 				case MENU_END:
 					//ƒQ[ƒ€‚ÌI—¹

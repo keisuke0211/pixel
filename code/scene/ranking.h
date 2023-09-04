@@ -10,6 +10,7 @@
 
 #include "../main.h"
 #include "../manager.h"
+#include "game.h"
 
 //****************************************
 // 前方宣言
@@ -21,7 +22,9 @@ class CText;
 //****************************************
 class CRanking : public CScene
 {
-	static const char* FILE_PATH;			// 読み込むファイルパス
+	static const char* STAGE_EASY_FILE;		// 初級ステージ
+	static const char* STAGE_NORMAL_FILE;	// 中級ステージ
+	static const char* STAGE_DIFFICULT_FILE;// 上級ステージ
 	static const char* TEXT_FILE_PATH;		// 読み込むファイルパス
 	static const int RANK_NUM = 8;			// 順位数
 	static const int NAME_NUM = 5;			// ランキングのの文字数
@@ -52,15 +55,14 @@ public:
 	/* 終了			*/void Uninit(void);
 	/* 更新			*/void Update(void);
 	/* 描画			*/void Draw(void);
-	/* 読み込み		*/void Load(void);
-	/* 文字読み込み	*/void WordsLoad(void);
-	/* 書き出し		*/void Save(void);
 	/* 生成			*/static CRanking *Create(void);
 
 	// -- 設定 ------------------------------------------
 	/* スコア	*/int SetScore(int nScore);
 	/* 名前入力	*/void SetNameEntry(int nUpdateRank);
 	/* スコア	*/static void SetScore11(int nScore);
+	/* ステージ	*/static void SetStage(int nStage) { m_nStage = nStage; }
+	/* 全体表示	*/static void SetAllStage(bool bAll) { m_bRankingAll = bAll; }
 
 	// -- 取得 ------------------------------------------
 	/* 順位の表示形式の取得	*/char *GetRankText(int nRank) { return m_aRank[nRank].aRankText; }
@@ -103,7 +105,9 @@ private:
 		int		nCntChar;		// 文字カウント
 		int		nUpdateRank;	// 更新順位
 		int		nCntBlink;		// 点滅カウンター
+		int		nCntStage;		// ステージカウント
 		bool	bNameInput;		// 入力フラグ
+		bool	bRankSwitch;	// ランキング切替フラグ
 
 		int		nCntString;		// 文字列カウント
 		int		nCntLetter;		// 文字カウント
@@ -125,26 +129,41 @@ private:
 		char aName[TXT_MAX];	// 名前 
 	};
 
+	struct AllRanking
+	{
+		int nScore;				// スコア
+		char aName[TXT_MAX];	// 名前 
+	};
+
 	// ***** 関数 *****
+	/* ステージ			*/void Load(void);
+	/* 全ステージ		*/void AllLoad(void);
+	/* 文字読み込み		*/void WordsLoad(void);
+	/* 書き出し			*/void Save(void);
 	/* 状態処理			*/void State(void);
 	/* 名前入力			*/void NameEntry(void);
 	/* 名前入力			*/void NameInput(void);
+	/* ランキング切替	*/void RankingSwitch(void);
 	/* ソート降順		*/void SortDesc(int *nUpdateRank);
 	/* 空白埋め			*/void strinit(char *pData, int nNum);
 	/* 文字表示(設定)	*/void SetWords(void);
 	/* 文字表示(更新)	*/void UpdateWords(void);
 
 	// ***** 変数 *****
-	Info m_Info;					// 共通情報
-	Ranking m_Ranking[RANK_NUM];	// 順位情報
-	CText *m_Text[RANK_NUM];		// 順位テキスト
-	char m_aNameData[TXT_MAX];		// 表示テキスト
+	Info m_Info;											// 共通情報
+	Ranking m_Ranking[RANK_NUM];							// 順位情報
+	AllRanking m_AllRanking[CGame::Stage_MAX][RANK_NUM];	// 全ステージのランキング情報
+	CText *m_Text[RANK_NUM];			// 順位テキスト
+	char m_aNameData[TXT_MAX];			// 表示テキスト
 
-	CText *m_Explain[EXPLAIN_MAX];	// 操作説明テキスト
-	CText *m_Words[TEXT_MAX];		// テキスト表示
+	CText *m_Explain[EXPLAIN_MAX];		// 操作説明テキスト
+	CText *m_Words[TEXT_MAX];			// テキスト表示
 
-	String	*m_pString;		// 文字列
-	int		nStringMax;		// 文字列の最大数
+	String	*m_pString;					// 文字列
+	int		nStringMax;					// 文字列の最大数
+
+	static int m_nStage;				// プレイしたステージ 
+	static bool m_bRankingAll;			// 全ステージのランキングの表示フラグ
 
 	// 順位の表示形式
 	Rank m_aRank[RANK_NUM] =

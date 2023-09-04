@@ -13,10 +13,14 @@
 #include "../system/words/font.h"
 
 // 定義
-const char* CRanking::FILE_PATH = "data\\SAVEDATA\\RANKING_DATA.csv";
+const char* CRanking::STAGE_EASY_FILE = "data\\SAVEDATA\\STAGE_EASY.csv";
+const char* CRanking::STAGE_NORMAL_FILE = "data\\SAVEDATA\\STAGE_NORMAL.csv";
+const char* CRanking::STAGE_DIFFICULT_FILE = "data\\SAVEDATA\\STAGE_DIFFICULT.csv";
 const char* CRanking::TEXT_FILE_PATH = "data\\GAMEDATA\\TEXT\\WORDS_DATA.txt";
 int CRanking::m_nGameScore = 2100;
 bool CRanking::m_bSetScore = false;
+int CRanking::m_nStage = CGame::Stage_EASY;
+bool CRanking::m_bRankingAll = false;
 
 //========================================
 // コンストラクタ
@@ -36,6 +40,8 @@ CRanking::CRanking()
 	m_Info.nCntBlink = 0;
 	m_Info.bNameInput = true;
 	m_Info.nCntChar = 0;
+	m_Info.nCntStage = 0;
+	m_Info.bRankSwitch = false;
 
 	m_Info.nCntString = 0;
 	m_Info.nCntLetter = 0;
@@ -72,8 +78,16 @@ HRESULT CRanking::Init(void)
 	int nUpdateRank = -1;	// スコアを更新した順位
 
 	// 読み込み
-	Load();
-	WordsLoad();
+	if (!m_bRankingAll)
+	{
+		Load();		// プレイしたステージだけ
+	}
+	else if (m_bRankingAll)
+	{
+		AllLoad();	// 全ステージ
+	}
+
+	WordsLoad();	// テキスト
 
 	// ソート
 	SortDesc(&nUpdateRank);
@@ -111,6 +125,7 @@ HRESULT CRanking::Init(void)
 		m_bSetScore = true;
 	}
 
+	// スコア更新したら
 	if (m_bSetScore)
 	{
 		// 操作テキストの説明
@@ -163,6 +178,19 @@ HRESULT CRanking::Init(void)
 		SetNameEntry(nRank);
 	}
 
+	// タイトルから来たら
+	if (m_bRankingAll)
+	{
+		pFont = { INIT_D3DXCOLOR,12.0f,1,1,-1 };
+
+		m_Explain[0] = CText::Create(CText::BOX_NORMAL_RECT,
+			D3DXVECTOR3(50.0f, 590, 0.0f),
+			D3DXVECTOR2(0.0f, 0.0f),
+			"←・→：文字の変更",
+			CFont::FONT_BESTTEN,
+			&pFont, false);
+	}
+
 	return S_OK;
 }
 
@@ -196,6 +224,12 @@ void CRanking::Update(void)
 	// 名前入力
 	NameEntry();
 
+	// ランキング切替
+	if (m_bRankingAll)
+	{
+		RankingSwitch();
+	}
+
 	if ((pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A)) && m_Info.bNameEntry == false)
 	{
 		if (CFade::GetFade() == CFade::FADE_NONE)
@@ -226,13 +260,27 @@ CRanking *CRanking::Create(void)
 }
 
 //========================================
-// 読み込み
+// プレイしたステージのみ読み込み
 //========================================
 void CRanking::Load(void)
 {
 	CSVFILE *pFile = new CSVFILE;
 
-	pFile->FileLood(FILE_PATH, true, true, ',');
+	switch (m_nStage)
+	{
+	case CGame::Stage_EASY:
+		pFile->FileLood(STAGE_EASY_FILE, true, true, ',');
+		break;
+	case CGame::Stage_NORMAL:
+		pFile->FileLood(STAGE_NORMAL_FILE, true, true, ',');
+		break;
+	case CGame::Stage_DIFFICULT:
+		pFile->FileLood(STAGE_DIFFICULT_FILE, true, true, ',');
+		break;
+	default:
+		pFile->FileLood(STAGE_EASY_FILE, true, true, ',');
+		break;
+	}
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
@@ -263,6 +311,64 @@ void CRanking::Load(void)
 		if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
 		{
 			return;
+		}
+	}
+
+	delete pFile;
+	pFile = NULL;
+}
+
+//========================================
+// 全ステージの読み込み
+//========================================
+void CRanking::AllLoad(void)
+{
+	CSVFILE *pFile = new CSVFILE;
+
+	for (int nStage = 0; nStage < CGame::Stage_MAX; nStage++)
+	{
+		switch (m_nStage)
+		{
+		case CGame::Stage_EASY:
+			pFile->FileLood(STAGE_EASY_FILE, true, true, ',');
+			break;
+		case CGame::Stage_NORMAL:
+			pFile->FileLood(STAGE_NORMAL_FILE, true, true, ',');
+			break;
+		case CGame::Stage_DIFFICULT:
+			pFile->FileLood(STAGE_DIFFICULT_FILE, true, true, ',');
+			break;
+		}
+
+		// 行数の取得
+		int nRowMax = pFile->GetRowSize();
+
+		for (int nRow = 0; nRow < nRowMax; nRow++)
+		{
+			// 列数の取得
+			int nLineMax = pFile->GetLineSize(nRow);
+
+			for (int nLine = 0; nLine < nLineMax; nLine++)
+			{
+				string sData = pFile->GetData(nRow, nLine);
+
+				switch (nLine)
+				{
+				case 0:
+					char *pNama;
+					pFile->ToValue(pNama, sData);
+
+					strcat(m_AllRanking[nStage][nRow].aName, pNama);
+					break;	// 名前
+				case 1:	pFile->ToValue(m_AllRanking[nStage][nRow].nScore, sData);		break;	// スコア
+				}
+			}
+
+			// 最大数に達したら抜ける
+			if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
+			{
+				break;
+			}
 		}
 	}
 
@@ -303,7 +409,21 @@ void CRanking::Save(void)
 	}
 
 	// 書き出し
-	pFile->FileSave(FILE_PATH, ',');
+	switch (m_nStage)
+	{
+	case CGame::Stage_EASY:
+		pFile->FileSave(STAGE_EASY_FILE, ',');
+		break;
+	case CGame::Stage_NORMAL:
+		pFile->FileSave(STAGE_NORMAL_FILE, ',');
+		break;
+	case CGame::Stage_DIFFICULT:
+		pFile->FileSave(STAGE_DIFFICULT_FILE, ',');
+		break;
+	default:
+		pFile->FileSave(STAGE_EASY_FILE, ',');
+		break;
+	}
 }
 
 //========================================
@@ -607,6 +727,51 @@ void CRanking::NameInput(void)
 				m_Info.bNameEntry = false;
 			}
 		}
+	}
+}
+
+//========================================
+// ランキング切替
+//========================================
+void CRanking::RankingSwitch(void)
+{
+	// -- 取得 -------------------------------------------
+	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
+
+	if (pInputKeyboard->GetRepeat(DIK_A) || pInputKeyboard->GetRepeat(DIK_LEFT) ||
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
+	{
+		m_Info.nCntStage--;
+		m_Info.bRankSwitch = true;
+	}
+	else if (
+		pInputKeyboard->GetRepeat(DIK_D) || pInputKeyboard->GetRepeat(DIK_RIGHT) ||
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
+	{
+		m_Info.nCntStage++;
+		m_Info.bRankSwitch = true;
+	}
+
+	if (m_Info.bRankSwitch)
+	{
+		FormFont pFont = {INIT_D3DXCOLOR,20.0f,5,1,-1};
+
+		int nStage = m_Info.nCntStage;
+
+		/*for (int nRank = 0; nRank < RANK_NUM; nRank++)
+		{
+			char aString[TXT_MAX];
+			sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_AllRanking[nStage][nRank].aName, m_AllRanking[nStage][nRank].nScore);
+
+			m_Text[nRank] = CText::Create(CText::BOX_NORMAL_RECT,
+				D3DXVECTOR3(10.0f, 155 + (40 * nRank), 0.0f),
+				D3DXVECTOR2(0.0f, 100.0f),
+				aString,
+				CFont::FONT_BESTTEN,
+				&pFont, false);
+		}*/
+		m_Info.bRankSwitch = false;
 	}
 }
 
@@ -949,34 +1114,4 @@ void CRanking::WordsLoad(void)
 		// 処理を終了する
 		return;
 	}
-
-	//// ファイルを開く
-	//pFile = fopen("data\\GAMEDATA\\TEXT\\WORDS.txt", "w");
-
-	//if (pFile != NULL)
-	//{// ファイルが開けた場合
-	//	for (int nLen = 0; nLen < m_Info.nStringMax; nLen++)
-	//	{
-	//		for (int nCnt = 0; nCnt < m_Info.aString[nLen].nLettreMax; nCnt++)
-	//		{
-	//			fprintf(pFile, "WORDS:%s\n", m_Info.aString[nLen].aLetter[nCnt].aLetter);
-	//		}
-	//	}
-	//	// ファイルを閉じる
-	//	fclose(pFile);
-	//}
-
-	//for (int nLen = 0; nLen < m_Info.nStringMax; nLen++)
-	//{
-	//	for (int nCnt = 0; nCnt < m_Info.aString[nLen].nLettreMax; nCnt++)
-	//	{
-	//		CText::Create(CText::BOX_NORMAL_RECT,
-	//			D3DXVECTOR3(640.0f + (60 * nLen), 200 + (30 * nCnt), 0.0f),
-	//			D3DXVECTOR2(1080.0f, 100.0f),
-	//			m_Info.aString[nLen].aLetter[nCnt].aLetter,
-	//			CFont::FONT_DOTGOTHIC,
-	//			20.0f,
-	//			5, 1, -1, false);
-	//	}
-	//}
 }

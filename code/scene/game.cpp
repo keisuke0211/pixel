@@ -286,6 +286,9 @@ void CGame::Update(void)
 				if (--m_nEndTime <= 0)
 				{
 					CManager::GetFade()->SetFade(MODE_RANKING);
+					CRanking::SetScore11(m_pScore->GetScore());
+					CRanking::SetStage(m_nSelectStage);
+					CRanking::SetAllStage(false);
 				}
 			}
 		}
@@ -412,6 +415,8 @@ void CGame::Result(void)
 	{
 		CManager::GetFade()->SetFade(MODE_RANKING);
 		CRanking::SetScore11(m_pScore->GetScore());
+		CRanking::SetStage(m_nSelectStage);
+		CRanking::SetAllStage(false);
 	}
 		break;
 	}
@@ -431,8 +436,6 @@ void CGame::Result(void)
 			m_nRstStgType++;
 		}
 	}	
-
-	
 }
 
 

@@ -104,10 +104,14 @@ HRESULT CTutorial::Init(void)
 	m_pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
 
+	CCamera *pCamera = CManager::GetCamera();					// カメラ
+
+	pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pCamera->SetHeigth(0.4f);
+	pCamera->SetDistance(500.0f);
+
 	// 読み込み
 	TextLoad();
-
-	bool b = m_aCreateText.bCreate[0];
 
 	// テキスト生成
 	TxtCreate(ACTION_MOVE);
