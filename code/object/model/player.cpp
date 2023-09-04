@@ -29,11 +29,9 @@
 #define JUMP_POWER		(7.0f)		// ジャンプ量
 #define GRAVITY_MAG		(0.08f)		// 重力係数 0.08
 #define GRAVITY_POWER	(9.5f)		// 重力加速度
-#define ROT_DIAMETER	(0.15f)		// 回転倍率
+#define ROT_DIAMETER	(0.25f)		// 回転倍率
 #define DUST_MAXCNT		(15)		// カウントの最大値
-
-#define ROT_FORCE_BY_CURSOR	(D3DXVECTOR3(0.0005f,0.00075f,0.0f))	// カーソルの回転力
-#define CUBE_LIFE1			(120)	// 壁や床に配置した場合の寿命
+#define CUBE_LIFE1		(120)		// 壁や床に配置した場合の寿命
 
 // 静的変数
 bool CPlayer::m_bCubeSet = false;
@@ -195,16 +193,16 @@ void CPlayer::KeyInput(void)
 	else if (pInputKeyboard->GetTrigger(DIK_S)) { MoveInput(DIRECTION_FRONT); }	// 手前移動
 	else
 	{
-		if (m_Info.bAction)
+		if (m_Info.bAction && (m_Info.move.x < 0.02f && m_Info.move.x > -0.02f) && (m_Info.move.z < 0.02f && m_Info.move.z > -0.02f))
 		{
 			CMotion *pMotion = CMotionModel::GetMotion();	// モーション情報
 			pMotion->SetNumMotion(0, true);
 
 			m_Info.bAction = false;
+			m_Info.bMotion = false;
 		}
 
 		m_Info.bMove = false;
-		m_Info.bMotion = false;
 	}
 
 	// ジャンプ
@@ -344,7 +342,7 @@ void CPlayer::UpdatePos(void)
 		m_Info.pos.x += m_Info.move.x;
 
 		// 移動量の減衰
-		m_Info.move.x *= 0.8f; 
+		m_Info.move.x *= 0.75f; 
 
 		// X方向の当たり判定
 		m_Info.pos = Collision(PRIO_BLOCK,TYPE_BLOCK,VECTOR_X, m_Info.pos);
@@ -357,7 +355,7 @@ void CPlayer::UpdatePos(void)
 		m_Info.pos.z += m_Info.move.z;
 
 		// 移動量の減衰
-		m_Info.move.z *= 0.8f;
+		m_Info.move.z *= 0.75f;
 
 		// Z方向の当たり判定
 		m_Info.pos = Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos);

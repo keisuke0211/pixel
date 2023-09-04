@@ -17,7 +17,7 @@ const char* CRanking::STAGE_EASY_FILE = "data\\SAVEDATA\\STAGE_EASY.csv";
 const char* CRanking::STAGE_NORMAL_FILE = "data\\SAVEDATA\\STAGE_NORMAL.csv";
 const char* CRanking::STAGE_DIFFICULT_FILE = "data\\SAVEDATA\\STAGE_DIFFICULT.csv";
 const char* CRanking::TEXT_FILE_PATH = "data\\GAMEDATA\\TEXT\\WORDS_DATA.txt";
-int CRanking::m_nGameScore = 2100;
+int CRanking::m_nGameScore = 0;
 bool CRanking::m_bSetScore = false;
 int CRanking::m_nStage = CGame::Stage_EASY;
 bool CRanking::m_bRankingAll = false;
@@ -95,7 +95,7 @@ HRESULT CRanking::Init(void)
 	FormFont pFont = {
 		INIT_D3DXCOLOR,
 		20.0f,
-		5,
+		1,
 		1,
 		-1
 	};
@@ -104,7 +104,15 @@ HRESULT CRanking::Init(void)
 	for (int nRank = 0; nRank < RANK_NUM; nRank++)
 	{
 		char aString[TXT_MAX];
-		sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_Ranking[nRank].aName,m_Ranking[nRank].nScore);
+
+		if (!m_bRankingAll)
+		{
+			sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_Ranking[nRank].aName, m_Ranking[nRank].nScore);
+		}
+		else if (m_bRankingAll)
+		{
+			sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_AllRanking[0][nRank].aName, m_AllRanking[0][nRank].nScore);
+		}
 
 		m_Text[nRank] = CText::Create(CText::BOX_NORMAL_RECT,
 			D3DXVECTOR3(10.0f, 155 + ( 40 * nRank), 0.0f),
@@ -186,7 +194,14 @@ HRESULT CRanking::Init(void)
 		m_Explain[0] = CText::Create(CText::BOX_NORMAL_RECT,
 			D3DXVECTOR3(50.0f, 590, 0.0f),
 			D3DXVECTOR2(0.0f, 0.0f),
-			"←・→：文字の変更",
+			"←・→：ステージの変更",
+			CFont::FONT_BESTTEN,
+			&pFont, false);
+
+		m_Explain[1] = CText::Create(CText::BOX_NORMAL_RECT,
+			D3DXVECTOR3(640.0f, 590, 0.0f),
+			D3DXVECTOR2(0.0f, 0.0f),
+			"現在のステージ：STAGE1",
 			CFont::FONT_BESTTEN,
 			&pFont, false);
 	}
@@ -323,11 +338,12 @@ void CRanking::Load(void)
 //========================================
 void CRanking::AllLoad(void)
 {
-	CSVFILE *pFile = new CSVFILE;
 
 	for (int nStage = 0; nStage < CGame::Stage_MAX; nStage++)
 	{
-		switch (m_nStage)
+		CSVFILE *pFile = new CSVFILE;
+
+		switch (nStage)
 		{
 		case CGame::Stage_EASY:
 			pFile->FileLood(STAGE_EASY_FILE, true, true, ',');
@@ -370,10 +386,10 @@ void CRanking::AllLoad(void)
 				break;
 			}
 		}
-	}
 
-	delete pFile;
-	pFile = NULL;
+		delete pFile;
+		pFile = NULL;
+	}
 }
 
 //========================================
@@ -753,13 +769,20 @@ void CRanking::RankingSwitch(void)
 		m_Info.bRankSwitch = true;
 	}
 
+	IntLoopControl(&m_Info.nCntStage, CGame::Stage_MAX, 0);
+
 	if (m_Info.bRankSwitch)
 	{
-		FormFont pFont = {INIT_D3DXCOLOR,20.0f,5,1,-1};
+		FormFont pFont = {INIT_D3DXCOLOR,20.0f,1,1,-1};
 
 		int nStage = m_Info.nCntStage;
 
-		/*for (int nRank = 0; nRank < RANK_NUM; nRank++)
+		for (int nRank = 0; nRank < RANK_NUM; nRank++)
+		{
+			m_Text[nRank]->Uninit();
+		}
+
+		for (int nRank = 0; nRank < RANK_NUM; nRank++)
 		{
 			char aString[TXT_MAX];
 			sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_AllRanking[nStage][nRank].aName, m_AllRanking[nStage][nRank].nScore);
@@ -770,7 +793,12 @@ void CRanking::RankingSwitch(void)
 				aString,
 				CFont::FONT_BESTTEN,
 				&pFont, false);
-		}*/
+		}
+
+		char aText[TXT_MAX];
+		sprintf(aText, "%d", nStage + 1);
+		m_Explain[1]->ChgWords(aText, 13, INIT_D3DXCOLOR);
+
 		m_Info.bRankSwitch = false;
 	}
 }

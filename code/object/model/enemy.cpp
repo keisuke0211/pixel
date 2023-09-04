@@ -40,6 +40,7 @@ CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 	m_Info.move = INIT_D3DXVECTOR3;
 	m_Info.nType = 0;
 	m_Info.nLife = 0;
+	m_Info.nLifeMax = 0;
 	m_Info.state = STATE_NORMAL;
 	m_Info.nCntState = 0;
 	m_Info.nCntTime = 0;
@@ -70,12 +71,18 @@ CEnemy *CEnemy::Create(int nType, int nMove, D3DXVECTOR3 pos, D3DXVECTOR3 rot,in
 
 	pEnemy->m_Info.pos = pos;
 	pEnemy->m_Info.rot = rot;
+	pEnemy->m_Info.moveRot = rot;
 	pEnemy->m_Info.nMove = nMove;
 	pEnemy->m_Info.nTimeMax = nCntTime;
 	pEnemy->SetPos(pEnemy->m_Info.pos);
 	pEnemy->SetRot(pEnemy->m_Info.rot);
 	pEnemy->SetColor(pEnemy->m_Info.col);
 
+	if (nMove != 0)
+	{
+		pEnemy->m_Info.move.x = sinf(pEnemy->m_Info.moveRot.y) * -3;
+		pEnemy->m_Info.move.z = cosf(pEnemy->m_Info.moveRot.y) * -3;
+	}
 	return pEnemy;
 }
 
@@ -94,6 +101,7 @@ HRESULT CEnemy::Init(void)
 	m_Info.moveRot = D3DXVECTOR3(0.0f,0.0f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.nLife = 3;
+	m_Info.nLifeMax = 3;
 	m_Info.nType = 0;
 
 	// 生成
@@ -252,9 +260,9 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 		D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
 		D3DXVECTOR3 RotOld = GetRotOld();	// 向き(過去)
 
-		float fWidth = 10;		// 幅
+		float fWidth = 15;		// 幅
 		float fHeight = 10;		// 高さ
-		float fDepth = 10;		// 奥行き
+		float fDepth = 15;		// 奥行き
 
 		if (TYPE_BLOCK == nType)
 		{
@@ -377,8 +385,10 @@ void CEnemy::HitLife(int nDamage)
 		// 敵の破棄
 		Uninit();
 
+		int nScore = (100 * m_Info.nLifeMax) * nDamage;
+
 		// スコア設定
-		CScore::SetScore(300);
+		CScore::SetScore(nScore);
 
 		// 爆発のSE再生
 		pSound->PlaySound(3);

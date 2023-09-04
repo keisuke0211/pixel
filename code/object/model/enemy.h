@@ -48,6 +48,7 @@ public:
 		int nType;				// 種類
 		int nMove;				// 移動種類
 		int nLife;				// 寿命
+		int nLifeMax;			// 寿命の最大値
 		STATE state;			// 状態
 		int nCntState;			// 状態管理カウンター
 		int nCntTime;			// 行動カウンター
