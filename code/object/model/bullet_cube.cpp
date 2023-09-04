@@ -33,7 +33,7 @@ CText *CCube::m_Cube = NULL;
 #define SIZE_DIAMETER		(2.0f)	// サイズの倍率
 #define COLLSION_DIAMETER	(1.0f)	// 判定の倍率
 #define BOM_COLLSION		(2.5f)	// 爆発の判定
-#define DAMAGE_DIAMETER		(3)		// 連続爆破のダメージの割合		BOM_DAMAGE　+ (連鎖カウント / DAMAGE_DIAMETER)
+#define DAMAGE_DIAMETER		(2)		// 連続爆破のダメージの割合		BOM_DAMAGE　+ (連鎖カウント / DAMAGE_DIAMETER)
 #define BOM_DAMAGE			(1)		// 爆発ダメージ
 
 //========================================
@@ -269,7 +269,7 @@ void CCube::Update(void)
 				// オブジェクト破棄
 				Uninit();
 
-				m_nNumChain = 1;
+				m_nNumChain = 0;
 
 				return;
 			}

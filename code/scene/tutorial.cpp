@@ -953,7 +953,7 @@ void CTutorial::LoodEnemy(void)
 
 	for (int nRow = 0; nRow < nRowMax; nRow++)
 	{
-		int nType, nMove;
+		int nType, nMove,nTime;
 		D3DXVECTOR3 pos;
 
 		// 列数の取得
@@ -970,6 +970,7 @@ void CTutorial::LoodEnemy(void)
 			case 2:	pFile->ToValue(pos.x, sData); break;	// 位置 X
 			case 3:	pFile->ToValue(pos.y, sData); break;	// 位置 Y
 			case 4:	pFile->ToValue(pos.z, sData); break;	// 位置 Z
+			case 5: pFile->ToValue(nTime, sData); break;	// 行動間隔
 			}
 		}
 
@@ -979,7 +980,7 @@ void CTutorial::LoodEnemy(void)
 			return;
 		}
 
-		CEnemy *pObj = CEnemy::Create(nType, nMove, pos);
+		CEnemy *pObj = CEnemy::Create(nType, nMove, pos,nTime);
 	}
 
 	delete pFile;

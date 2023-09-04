@@ -20,6 +20,7 @@ public:
 
 	// ***** 定義 *****
 	static const int MAX_ENEMY = 30;	// 敵の最大数
+	static const int STAND_TIME = 30;	// 待機時間の最大値
 
 	// ***** 列挙型 *****
 
@@ -27,6 +28,7 @@ public:
 	enum STATE
 	{
 		STATE_NORMAL,	// 通常
+		STATE_STAND,	// 待機
 		STATE_DAMAGE,	// ダメージ
 		STATE_MAX,
 	};
@@ -36,18 +38,22 @@ public:
 	// 敵情報
 	struct Info
 	{
-		D3DXVECTOR3 pos;	// 位置
-		D3DXVECTOR3 posOld;	// 位置(過去)
-		D3DXVECTOR3 rot;	// 向き
-		D3DXVECTOR3 rotOld;	// 向き(過去)
-		D3DXVECTOR3 move;	// 移動量
-		D3DCOLOR col;		// 頂点カラー
-		int nType;			// 種類
-		int nMove;			// 移動種類
-		int nLife;			// 寿命
-		STATE state;		// 状態
-		int nCntState;		// 状態管理カウンター
-		int nCntTime;		// 行動カウンター
+		D3DXVECTOR3 pos;		// 位置
+		D3DXVECTOR3 posOld;		// 位置(過去)
+		D3DXVECTOR3 rot;		// 向き
+		D3DXVECTOR3 moveRot;	// 移動向き
+		D3DXVECTOR3 targetRot;	// 目標向き
+		D3DXVECTOR3 move;		// 移動量
+		D3DCOLOR col;			// 頂点カラー
+		int nType;				// 種類
+		int nMove;				// 移動種類
+		int nLife;				// 寿命
+		STATE state;			// 状態
+		int nCntState;			// 状態管理カウンター
+		int nCntTime;			// 行動カウンター
+		int nTimeMax;			// 行動時間の最大値
+		int nStandTime;			// 待機時間
+		bool bRotMove;			// 向きの推移フラグ
 	};
 
 	// ***** 関数 *****
@@ -57,14 +63,14 @@ public:
 	/* メイン */
 
 	// 生成
-	static CEnemy *Create(int nType,int nMove,D3DXVECTOR3 pos);
+	static CEnemy *Create(int nType,int nMove,D3DXVECTOR3 pos, int nCntTime);
 
 	HRESULT Init(void);	// 初期化
 	void Uninit(void);	// 終了
 	void Update(void);	// 更新
 	void Draw(void);	// 描画
 
-	void HitLife(int nDamage);						// Hit処理
+	void HitLife(int nDamage);								// Hit処理
 
 	/* 取得 */
 	Info GetInfo(void) { return m_Info; }					// エネミー情報
@@ -73,21 +79,6 @@ public:
 	static int GetEnemyAll(void) { return m_nNumAll; }
 
 private:
-
-	// ***** 列挙型 *****
-
-	// 設定項目
-	typedef enum
-	{
-		SET_TYPE,	// 種類
-		SET_POS,	// 位置
-		SET_POS_Y,	// 位置 Y
-		SET_POS_Z,	// 位置 Z
-		SET_SPEED,	// 移動量
-		SET_STAGE,	// ステージID
-		SET_UNIT,	// 部隊ID
-		SET_MAX,
-	}SET;
 
 	// ***** 構造体 *****
 
@@ -107,7 +98,7 @@ private:
 	// ***** 関数 *****
 	void SetState(STATE state);	// 状態設定
 	void StateShift(void);		// 状態推移
-	bool Collsion(VECTOR vector, D3DXVECTOR3 pos);	// 当たり判定
+	bool Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos);	// 当たり判定
 
 	// ***** 変数 *****
 	Info m_Info;			// 情報
