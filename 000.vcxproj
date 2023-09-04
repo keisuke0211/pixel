@@ -43,6 +43,7 @@
     <ClCompile Include="code\object\UI\stage_menu.cpp" />
     <ClCompile Include="code\object\UI\text2D.cpp" />
     <ClCompile Include="code\object\UI\time.cpp" />
+    <ClCompile Include="code\object\UI\UI_title.cpp" />
     <ClCompile Include="code\scene\fade.cpp" />
     <ClCompile Include="code\scene\game.cpp" />
     <ClCompile Include="code\scene\pause.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="code\object\UI\stage_menu.h" />
     <ClInclude Include="code\object\UI\text2D.h" />
     <ClInclude Include="code\object\UI\time.h" />
+    <ClInclude Include="code\object\UI\UI_title.h" />
     <ClInclude Include="code\scene\fade.h" />
     <ClInclude Include="code\scene\game.h" />
     <ClInclude Include="code\scene\pause.h" />

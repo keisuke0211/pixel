@@ -75,7 +75,7 @@ HRESULT CStage::Init(void)
 	CObject2D::Init();
 
 	// ОнЧёВћРЁТи
-	SetType(TYPE_BG);
+	SetType(TYPE_BLOCK);
 
 	// РЁТи
 	SetPos(m_Info.pos);

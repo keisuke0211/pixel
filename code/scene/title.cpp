@@ -8,6 +8,7 @@
 #include "title.h"
 #include "game.h"
 #include "ranking.h"
+#include "../object/UI/UI_title.h"
 #include "../object/UI/stage_menu.h"
 #include "../object\model\model.h"
 #include "../system/input.h"
@@ -44,6 +45,7 @@ CTitle::CTitle()
 	for (int nCnt = 0; nCnt < WORDS_MAX; nCnt++)
 	{
 		m_Words[nCnt] = NULL;
+		m_WordsShadow[nCnt] = NULL;
 		m_bMove[nCnt] = false;
 	}
 
@@ -85,15 +87,24 @@ HRESULT CTitle::Init(void)
 
 	CModel::InitModel();	// モデル
 	CBlock::Load();			// ブロック
+	CUiTitle::Create();		// タイトル背景
 
 	// テキスト読み込み
 	TextLoad();
 
-	m_Words[0] = CWords::Create("ブ", D3DXVECTOR3(440.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN,INIT_D3DXCOLOR);
-	m_Words[1] = CWords::Create("レ", D3DXVECTOR3(560.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN,INIT_D3DXCOLOR);
-	m_Words[2] = CWords::Create("パ", D3DXVECTOR3(680.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN,INIT_D3DXCOLOR);
-	m_Words[3] = CWords::Create("ズ", D3DXVECTOR3(800.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN,INIT_D3DXCOLOR);
+	{
+		FormFont pFont = {INIT_D3DXCOLOR,20.0f,50,1,-1};
 
+		m_WordsShadow[0] = CWords::Create("ブ", D3DXVECTOR3(443.0f, -57.0f, 0.0f), D3DXVECTOR3(52.0f, 52.0f, 0.0f), CFont::FONT_BESTTEN, D3DXCOLOR(0, 0, 0, 1));
+		m_WordsShadow[1] = CWords::Create("レ", D3DXVECTOR3(563.0f, -57.0f, 0.0f), D3DXVECTOR3(52.0f, 52.0f, 0.0f), CFont::FONT_BESTTEN, D3DXCOLOR(0, 0, 0, 1));
+		m_WordsShadow[2] = CWords::Create("パ", D3DXVECTOR3(683.0f, -57.0f, 0.0f), D3DXVECTOR3(52.0f, 52.0f, 0.0f), CFont::FONT_BESTTEN, D3DXCOLOR(0, 0, 0, 1));
+		m_WordsShadow[3] = CWords::Create("ズ", D3DXVECTOR3(803.0f, -57.0f, 0.0f), D3DXVECTOR3(52.0f, 52.0f, 0.0f), CFont::FONT_BESTTEN, D3DXCOLOR(0, 0, 0, 1));
+
+		m_Words[0] = CWords::Create("ブ", D3DXVECTOR3(440.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN, INIT_D3DXCOLOR);
+		m_Words[1] = CWords::Create("レ", D3DXVECTOR3(560.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN, INIT_D3DXCOLOR);
+		m_Words[2] = CWords::Create("パ", D3DXVECTOR3(680.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN, INIT_D3DXCOLOR);
+		m_Words[3] = CWords::Create("ズ", D3DXVECTOR3(800.0f, -60.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), CFont::FONT_BESTTEN, INIT_D3DXCOLOR);
+	}
 	m_bMove[0] = true;
 
 	FormFont pFont = {
@@ -137,6 +148,7 @@ HRESULT CTitle::Init(void)
 void CTitle::Uninit(void)
 {
 	CObject::ReleaseAll(CObject::TYPE_BG);
+	CObject::ReleaseAll(CObject::TYPE_BLOCK);
 	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
 }
@@ -256,12 +268,14 @@ void CTitle::TitleAnime(void)
 				move.y = 3.0f;
 
 				m_Words[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
+				m_WordsShadow[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
 
 				if (pos.y >= 100.0f)
 				{
 					move.y = 0.0f;
 
 					m_Words[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
+					m_WordsShadow[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
 				}
 				else if (pos.y >= 20 && nCnt != 3 && !m_bMove[nCnt + 1])
 				{
@@ -524,6 +538,11 @@ void CTitle::TextClear(int nWords, int nText, TITLE aTitle)
 {
 	for (int nCnt = 0; nCnt < nWords; nCnt++)
 	{
+		if (m_WordsShadow[nCnt] != NULL)
+		{
+			m_WordsShadow[nCnt]->Uninit();
+			m_WordsShadow[nCnt] = NULL;
+		}
 		if (m_Words[nCnt] != NULL)
 		{
 			m_Words[nCnt]->Uninit();

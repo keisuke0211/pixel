@@ -103,6 +103,7 @@ private:
 	// ***** 変数 *****
 	TITLE Title;				// 現在のモード
 	CWords *m_Words[4];			// タイトル
+	CWords *m_WordsShadow[4];	// タイトル・影
 	bool m_bMove[4];			// タイトル移動フラグ
 	CText *m_Menu[MENU_MAX];	// メニューテキスト
 	CText *m_StageText[3];		// ステージテキスト

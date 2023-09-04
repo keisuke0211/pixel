@@ -52,7 +52,7 @@ public:
 	};
 	
 	// ***** 関数 *****
-	CStage(int nPriority = PRIO_OBJECT);
+	CStage(int nPriority = PRIO_UI);
 	~CStage();
 
 	// -- メイン ------------------------------------------
@@ -90,5 +90,5 @@ private:
 	static int m_nSelectStage;	// 現在選択しているステージ
 };
 
-#endif // !_TEXTURE_H_
+#endif
 

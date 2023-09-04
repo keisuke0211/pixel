@@ -38,6 +38,7 @@ public:
 		TEX_NIGHT_SKY03,	// 夜空03
 		TEX_SEA01,			// 海01
 		TEX_SEA02,			// 海02
+		TEX_TITLE_BG,		// タイトル画面
 		TEX_STAGE_EASY,		// ステージ・初級
 		TEX_STAGE_NORMAL,	// ステージ・中級
 		TEX_STAGE_DIFFICULT,// ステージ・上級

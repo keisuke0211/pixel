@@ -171,6 +171,9 @@
     <ClCompile Include="code\object\UI\stage_menu.cpp">
       <Filter>ソース ファイル\01_object\03_UI</Filter>
     </ClCompile>
+    <ClCompile Include="code\object\UI\UI_title.cpp">
+      <Filter>ソース ファイル\01_object\03_UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\main.h">
@@ -297,6 +300,9 @@
       <Filter>ソース ファイル\01_object\01_bg</Filter>
     </ClInclude>
     <ClInclude Include="code\object\UI\stage_menu.h">
+      <Filter>ソース ファイル\01_object\03_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\UI\UI_title.h">
       <Filter>ソース ファイル\01_object\03_UI</Filter>
     </ClInclude>
   </ItemGroup>

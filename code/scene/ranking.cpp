@@ -7,6 +7,7 @@
 //========================================
 #include "ranking.h"
 #include "fade.h"
+#include "../object/UI/UI_title.h"
 #include "../system/csv_file.h"
 #include "../system/input.h"
 #include "../system/words/text.h"
@@ -76,6 +77,8 @@ CRanking::~CRanking()
 HRESULT CRanking::Init(void)
 {
 	int nUpdateRank = -1;	// スコアを更新した順位
+
+	CUiTitle::Create();		// タイトル背景
 
 	// 読み込み
 	if (!m_bRankingAll)
@@ -220,6 +223,7 @@ void CRanking::Uninit(void)
 	delete[] m_pString;
 	m_pString = NULL;
 
+	CObject::ReleaseAll(CObject::TYPE_BG);
 	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
 }
