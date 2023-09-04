@@ -137,12 +137,19 @@ HRESULT CGame::Init(void)
 		30
 	};
 
+	FormShadow pShadow = {
+		D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
+		true,
+		D3DXVECTOR3(2.0f,2.0f,0.0f),
+		D3DXVECTOR2(1.0f,1.0f)
+	};
+
 	CText::Create(CText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 		D3DXVECTOR2(440.0f, 100.0f),
-		"90秒以内に攻略せよ！",
+		"初級ステージ!\n90秒以内に脱出せよ！",
 		CFont::FONT_BESTTEN,
-		&pFont, false);
+		&pFont, false,&pShadow);
 
 	m_nStartTime = (15 * 18) + 10 + 25;
 	m_nMoveRot = ((D3DX_PI * 2) / m_nStartTime);
