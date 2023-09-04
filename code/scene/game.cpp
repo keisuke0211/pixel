@@ -934,6 +934,7 @@ void CGame::LoodEnemy(void)
 	for (int nRow = 0; nRow < nRowMax; nRow++)
 	{
 		int nType, nMove,nTime;
+		float fRotY;
 		D3DXVECTOR3 pos;
 
 		// 列数の取得
@@ -950,7 +951,8 @@ void CGame::LoodEnemy(void)
 			case 2:	pFile->ToValue(pos.x, sData); break;	// 位置 X
 			case 3:	pFile->ToValue(pos.y, sData); break;	// 位置 Y
 			case 4:	pFile->ToValue(pos.z, sData); break;	// 位置 Z
-			case 5: pFile->ToValue(nTime, sData); break;	// 行動カウント
+			case 5: pFile->ToValue(fRotY, sData); break;	// 向きY
+			case 6: pFile->ToValue(nTime, sData); break;	// 行動カウント
 			}
 		}
 
@@ -960,7 +962,7 @@ void CGame::LoodEnemy(void)
 			return;
 		}
 
-		CEnemy *pObj = CEnemy::Create(nType, nMove, pos,nTime);
+		CEnemy *pObj = CEnemy::Create(nType, nMove, pos, D3DXVECTOR3(0.0f,fRotY,0.0f),nTime);
 	}
 
 	delete pFile;

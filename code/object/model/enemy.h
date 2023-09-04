@@ -63,7 +63,7 @@ public:
 	/* ƒƒCƒ“ */
 
 	// ¶¬
-	static CEnemy *Create(int nType,int nMove,D3DXVECTOR3 pos, int nCntTime);
+	static CEnemy *Create(int nType,int nMove,D3DXVECTOR3 pos, D3DXVECTOR3 rot,int nCntTime);
 
 	HRESULT Init(void);	// ‰Šú‰»
 	void Uninit(void);	// I—¹

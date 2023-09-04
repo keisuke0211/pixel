@@ -59,7 +59,7 @@ CEnemy::~CEnemy()
 //========================================
 // ¶¬
 //========================================
-CEnemy *CEnemy::Create(int nType, int nMove, D3DXVECTOR3 pos, int nCntTime)
+CEnemy *CEnemy::Create(int nType, int nMove, D3DXVECTOR3 pos, D3DXVECTOR3 rot,int nCntTime)
 {
 	CEnemy *pEnemy = new CEnemy;
 
@@ -69,6 +69,7 @@ CEnemy *CEnemy::Create(int nType, int nMove, D3DXVECTOR3 pos, int nCntTime)
 	pEnemy->Init();
 
 	pEnemy->m_Info.pos = pos;
+	pEnemy->m_Info.rot = rot;
 	pEnemy->m_Info.nMove = nMove;
 	pEnemy->m_Info.nTimeMax = nCntTime;
 	pEnemy->SetPos(pEnemy->m_Info.pos);
@@ -162,13 +163,27 @@ void CEnemy::Update(void)
 				m_Info.nCntTime = 0;
 				m_Info.nStandTime = 0;
 
-				if (m_Info.rot.y == 0.0f)
+				if (m_Info.nMove == 1)
 				{
-					m_Info.moveRot.y = 3.14f;
+					if (m_Info.rot.y == 0.0f)
+					{
+						m_Info.moveRot.y = 3.14f;
+					}
+					else if (m_Info.rot.y = 3.14f)
+					{
+						m_Info.moveRot.y = 0.0f;
+					}
 				}
-				else if (m_Info.rot.y = 3.14f)
+				else if (m_Info.nMove == 2)
 				{
-					m_Info.moveRot.y = 0.0f;
+					if (m_Info.rot.y == 1.57f)
+					{
+						m_Info.moveRot.y = -1.57f;
+					}
+					else if (m_Info.rot.y = -1.57f)
+					{
+						m_Info.moveRot.y = 1.57f;
+					}
 				}
 
 				// –Ú•WŒü‚«‚ÉˆÚ“®Œü‚«‚ð‘ã“ü
