@@ -35,7 +35,13 @@ public:
 		MODEL_SOIL_06,		// ìy 5Å~1Å~5
 		MODEL_SOIL_07,		// ìy 3Å~3Å~1
 		MODEL_SOIL_08,		// ìy 5Å~5Å~1
-		MODEL_STONE,		// êŒ(âº)
+		MODEL_STONE,		// êŒ 1Å~1Å~1
+		MODEL_STONE01,		// êŒ 3Å~1Å~1
+		MODEL_STONE02,		// êŒ 5Å~1Å~1
+		MODEL_STONE03,		// êŒ 1Å~3Å~1
+		MODEL_STONE04,		// êŒ 1Å~5Å~1
+		MODEL_STONE05,		// êŒ 3Å~1Å~3
+		MODEL_STONE06,		// êŒ 5Å~1Å~5
 		MODEL_CRACK_ROCK,	// Ç–Ç—äÑÇÍä‚(âº)
 		MODEL_TNT,			// TNT(âº)
 		MODEL_GOAL,			// ÉSÅ[ÉãÉuÉçÉbÉN

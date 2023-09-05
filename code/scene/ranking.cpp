@@ -141,49 +141,50 @@ HRESULT CRanking::Init(void)
 	{
 		// 操作テキストの説明
 		{
-			pFont = {INIT_D3DXCOLOR,12.0f,1,1,-1};
+			pFont = {INIT_D3DXCOLOR,15.0f,1,1,-1};
+			FormShadow pShadow = {D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(1.0f,1.0f)};
 
 			m_Explain[0] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(50.0f, 550, 0.0f),
 				D3DXVECTOR2(0.0f, 0.0f),
 				"↑・→：行の変更",
 				CFont::FONT_BESTTEN,
-				&pFont, false);
+				&pFont, false,&pShadow);
 
 			m_Explain[1] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(50.0f, 590, 0.0f),
 				D3DXVECTOR2(0.0f, 0.0f),
 				"←・→：文字の変更",
 				CFont::FONT_BESTTEN,
-				&pFont, false);
+				&pFont, false, &pShadow);
 
 			m_Explain[2] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(50.0f, 630, 0.0f),
 				D3DXVECTOR2(0.0f, 0.0f),
 				"X・Y：変換",
 				CFont::FONT_BESTTEN,
-				&pFont, false);
+				&pFont, false, &pShadow);
 
 			m_Explain[3] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(640.0f, 550, 0.0f),
 				D3DXVECTOR2(0.0f, 100.0f),
 				"A：決定",
 				CFont::FONT_BESTTEN,
-				&pFont, false);
+				&pFont, false, &pShadow);
 
 			m_Explain[4] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(640.0f, 590, 0.0f),
 				D3DXVECTOR2(0.0f, 100.0f),
 				"B：削除",
 				CFont::FONT_BESTTEN,
-				&pFont, false);
+				&pFont, false, &pShadow);
 
 			m_Explain[5] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(640.0f, 630, 0.0f),
 				D3DXVECTOR2(0.0f, 100.0f),
-				"途中で入力をやめる場合は ※ を選択して下さい",
+				"途中で入力をやめる場合は※を選択!",
 				CFont::FONT_BESTTEN,
-				&pFont, false);
+				&pFont, false, &pShadow);
 		}
 
 		SetNameEntry(nRank);
@@ -192,21 +193,22 @@ HRESULT CRanking::Init(void)
 	// タイトルから来たら
 	if (m_bRankingAll)
 	{
-		pFont = { INIT_D3DXCOLOR,12.0f,1,1,-1 };
+		pFont = { INIT_D3DXCOLOR,15.0f,1,1,-1 };
+		FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
 
 		m_Explain[0] = CText::Create(CText::BOX_NORMAL_RECT,
 			D3DXVECTOR3(50.0f, 590, 0.0f),
 			D3DXVECTOR2(0.0f, 0.0f),
 			"←・→：ステージの変更",
 			CFont::FONT_BESTTEN,
-			&pFont, false);
+			&pFont, false,&pShadow);
 
 		m_Explain[1] = CText::Create(CText::BOX_NORMAL_RECT,
 			D3DXVECTOR3(640.0f, 590, 0.0f),
 			D3DXVECTOR2(0.0f, 0.0f),
 			"現在のステージ：STAGE1",
 			CFont::FONT_BESTTEN,
-			&pFont, false);
+			&pFont, false,&pShadow);
 	}
 
 	return S_OK;
@@ -218,7 +220,10 @@ HRESULT CRanking::Init(void)
 void CRanking::Uninit(void)
 {
 	// 書き出し処理
-	Save();
+	if (!m_bRankingAll)
+	{
+		Save();
+	}
 
 	delete[] m_pString;
 	m_pString = NULL;

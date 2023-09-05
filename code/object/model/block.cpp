@@ -465,3 +465,15 @@ void CBlock::Load(void)
 		}
 	}
 }
+
+//========================================
+// ƒŠƒZƒbƒg
+//========================================
+void CBlock::Reset(void)
+{
+	m_nCntExit = 0;
+	m_bExit = false;
+	m_bExitCamera = false;
+	m_CameraRot = INIT_D3DXVECTOR3;
+	m_CameraHeigth = 0.0f;
+}

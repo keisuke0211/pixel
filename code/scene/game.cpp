@@ -36,11 +36,18 @@ int CGame::m_nSelectStage = Stage_EASY;
 const char* CGame::SIDE_STAGE_EASY_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_EASY_DATA .txt";
 const char* CGame::SIDE_STAGE_NORMAL_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_NORMAL_DATA.txt";
 const char* CGame::SIDE_STAGE_DIFFICULT_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_DIFFICULT_DATA.txt";
+
 const char* CGame::FLOOR_STAGE_EASY_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_EASY_DATA.txt";
 const char* CGame::FLOOR_STAGE_NORMAL_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_NORMAL_DATA.txt";
 const char* CGame::FLOOR_STAGE_DIFFICULT_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_DIFFICULT_DATA.txt";
-const char* CGame::BLOCK_FILE1 = "data\\GAMEDATA\\BLOCK\\STAGE_DATA1.csv";
-const char* CGame::ENEMY_FILE1 = "data\\GAMEDATA\\ENEMY\\STAGE_ENEMY1.csv";
+
+const char* CGame::BLOCK_STAGE_EASY_FILE = "data\\GAMEDATA\\BLOCK\\STAGE_EASY_DATA.csv";
+const char* CGame::BLOCK_STAGE_NORMAL_FILE = "data\\GAMEDATA\\BLOCK\\STAGE_NORMAL_DATA.csv";
+const char* CGame::BLOCK_STAGE_DIFFICULT_FILE = "data\\GAMEDATA\\BLOCK\\STAGE_DIFFICULT_DATA.csv";
+
+const char* CGame::ENEMY_STAGE_EASY_FILE = "data\\GAMEDATA\\ENEMY\\STAGE_EASY_ENEMY.csv";
+const char* CGame::ENEMY_STAGE_NORMAL_FILE = "data\\GAMEDATA\\ENEMY\\STAGE_NORMAL_ENEMY.csv";
+const char* CGame::ENEMY_STAGE_DIFFICULT_FILE = "data\\GAMEDATA\\ENEMY\\STAGE_DIFFICULT_ENEMY.csv";
 
 
 //========================================
@@ -58,6 +65,7 @@ CGame::CGame()
 	m_nTimeTotal = 0;
 	m_nCubeTotal = 0;
 	m_nTotal = 0;
+	m_nAddTime = 0;
 	m_bAddScore = false;
 
 	for (int nRst = 0; nRst < RST_ADD_SCORE; nRst++)
@@ -79,6 +87,8 @@ CGame::~CGame()
 //========================================
 HRESULT CGame::Init(void)
 {
+	CBlock::Reset();
+
 	m_rot = INIT_D3DXVECTOR3;
 	m_nStartTime = 0;
 	m_nEndTime = 0;
@@ -90,6 +100,7 @@ HRESULT CGame::Init(void)
 	m_nTimeTotal = 0;
 	m_nCubeTotal = 0;
 	m_nTotal = 0;
+	m_nAddTime = ADDTIME_MAX;
 
 	CTitle::SetStart(false);
 	CTitle::SetExit(false);
@@ -125,9 +136,29 @@ HRESULT CGame::Init(void)
 
 	CCamera *pCamera = CManager::GetCamera();					// カメラ
 
-	pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	pCamera->SetHeigth(0.02f);
-	pCamera->SetDistance(300.0f);
+	switch (m_nSelectStage)
+	{
+	case CGame::Stage_EASY:
+		pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		pCamera->SetHeigth(0.4f);
+		pCamera->SetDistance(1400.0f);
+		break;
+	case CGame::Stage_NORMAL:
+		pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		pCamera->SetHeigth(0.04f);
+		pCamera->SetDistance(300.0f);
+		break;
+	case CGame::Stage_DIFFICULT:
+		pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		pCamera->SetHeigth(0.02f);
+		pCamera->SetDistance(300.0f);
+		break;
+	default:
+		pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		pCamera->SetHeigth(0.02f);
+		pCamera->SetDistance(300.0f);
+		break;
+	}
 
 	FormFont pFont = {
 		D3DXCOLOR(0.0f,0.63f,0.2f,1.0f),
@@ -144,10 +175,29 @@ HRESULT CGame::Init(void)
 		D3DXVECTOR2(1.0f,1.0f)
 	};
 
+	char aString[TXT_MAX];
+
+	// 読み込み
+	switch (m_nSelectStage)
+	{
+	case CGame::Stage_EASY:
+		sprintf(aString, "初級ステージ!\n90秒以内に脱出せよ！");
+		break;
+	case CGame::Stage_NORMAL:
+		sprintf(aString, "中級ステージ!\n90秒以内に脱出せよ！");
+		break;
+	case CGame::Stage_DIFFICULT:
+		sprintf(aString, "上級ステージ!\n90秒以内に脱出せよ！");
+		break;
+	default:
+		sprintf(aString, "初級ステージ!\n90秒以内に脱出せよ！");
+		break;
+	}
+
 	CText::Create(CText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 		D3DXVECTOR2(440.0f, 100.0f),
-		"初級ステージ!\n90秒以内に脱出せよ！",
+		aString,
 		CFont::FONT_BESTTEN,
 		&pFont, false,&pShadow);
 
@@ -328,7 +378,7 @@ CGame *CGame::Create(void)
 void CGame::Result(void)
 {
 	FormFont pFont = { INIT_D3DXCOLOR, 20.0f, 5, 5, 0};
-	FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(1.0f,1.0f)};
+	FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(2.0f,2.0f)};
 
 	char aString[TXT_MAX];
 	int nLength = 0;
@@ -391,8 +441,18 @@ void CGame::Result(void)
 			}
 			else
 			{
-				m_nTotal -= 10;
-				CScore::SetScore(10);
+				int AddScore;
+				AddScore = (m_nTotal / m_nAddTime);
+				m_nTotal -= AddScore;
+				m_nAddTime--;
+
+				if (m_nTotal <= 0)
+				{
+					m_nTotal = 0;
+					AddScore = AddScore - m_nTotal;
+				}
+
+				CScore::SetScore(AddScore);
 
 				char aTotal[TXT_MAX];
 
@@ -444,7 +504,6 @@ void CGame::Result(void)
 		}
 	}	
 }
-
 
 //================================================================================
 //--------------------------------------------------------------------------------
@@ -854,16 +913,16 @@ void CGame::LoodBlock(void)
 	switch (m_nSelectStage)
 	{
 	case CGame::Stage_EASY:
-		pFile->FileLood(BLOCK_FILE1, true, true, ',');
+		pFile->FileLood(BLOCK_STAGE_EASY_FILE, true, true, ',');
 		break;
 	case CGame::Stage_NORMAL:
-		pFile->FileLood(BLOCK_FILE1, true, true, ',');
+		pFile->FileLood(BLOCK_STAGE_NORMAL_FILE, true, true, ',');
 		break;
 	case CGame::Stage_DIFFICULT:
-		pFile->FileLood(BLOCK_FILE1, true, true, ',');
+		pFile->FileLood(BLOCK_STAGE_DIFFICULT_FILE, true, true, ',');
 		break;
 	default:
-		pFile->FileLood(BLOCK_FILE1, true, true, ',');
+		pFile->FileLood(BLOCK_STAGE_EASY_FILE, true, true, ',');
 		break;
 	}
 
@@ -922,16 +981,16 @@ void CGame::LoodEnemy(void)
 	switch (m_nSelectStage)
 	{
 	case CGame::Stage_EASY:
-		pFile->FileLood(ENEMY_FILE1, true, true, ',');
+		pFile->FileLood(ENEMY_STAGE_EASY_FILE, true, true, ',');
 		break;
 	case CGame::Stage_NORMAL:
-		pFile->FileLood(ENEMY_FILE1, true, true, ',');
+		pFile->FileLood(ENEMY_STAGE_NORMAL_FILE, true, true, ',');
 		break;
 	case CGame::Stage_DIFFICULT:
-		pFile->FileLood(ENEMY_FILE1, true, true, ',');
+		pFile->FileLood(ENEMY_STAGE_DIFFICULT_FILE, true, true, ',');
 		break;
 	default:
-		pFile->FileLood(ENEMY_FILE1, true, true, ',');
+		pFile->FileLood(ENEMY_STAGE_EASY_FILE, true, true, ',');
 		break;
 	}
 

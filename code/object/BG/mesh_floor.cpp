@@ -354,23 +354,23 @@ void CFloor::Draw(void)
 	if (m_Info.nNumTex >= 1)
 	{
 		pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-		pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+		pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-		pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+		pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 	}
 	if (m_Info.nNumTex >= 2)
 	{
-		pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_BLENDTEXTUREALPHA);
 		pDevice->SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_CURRENT);
-		pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
+		pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+		pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
 	}
 	if (m_Info.nNumTex >= 3)
 	{
-		pDevice->SetTextureStageState(2, D3DTSS_COLOROP, D3DTOP_BLENDTEXTUREALPHA);
 		pDevice->SetTextureStageState(2, D3DTSS_COLORARG2, D3DTA_CURRENT);
-		pDevice->SetTextureStageState(2, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
+		pDevice->SetTextureStageState(2, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		pDevice->SetTextureStageState(2, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+		pDevice->SetTextureStageState(2, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
 	}
 
 	// 頂点バッファをデータストリームに設定
@@ -415,17 +415,19 @@ void CFloor::Draw(void)
 	}
 	if (m_Info.nNumTex >= 2)
 	{
+		pDevice->SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 		pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-		pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-		pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+		pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+		pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	}
 	if (m_Info.nNumTex >= 3)
 	{
+		pDevice->SetTextureStageState(2, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 		pDevice->SetTextureStageState(2, D3DTSS_COLOROP, D3DTOP_DISABLE);
-		pDevice->SetTextureStageState(2, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-		pDevice->SetTextureStageState(2, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		pDevice->SetTextureStageState(2, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+		pDevice->SetTextureStageState(2, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+		pDevice->SetTextureStageState(2, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	}
 
 	// ライティングを有効にする

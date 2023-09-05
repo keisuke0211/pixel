@@ -19,21 +19,11 @@ SET_SIDE
 	RADIUS = 1080.0
 	
 	// テクスチャ関連
-	NUMTEX = 3
-	
-	SET_TEX
-		TYPE = 1
-		TEX_V = 0.0006
-	END_TEX
-	
-	SET_TEX
-		TYPE = 2
-		TEX_V = 0.0004
-	END_TEX
+	NUMTEX = 1
 	
 	SET_TEX
 		TYPE = 3
-		TEX_V = 0.0003
+		TEX_V = 0.0006
 	END_TEX
 	
 	// 分割数

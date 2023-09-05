@@ -19,17 +19,11 @@ SET_FLOOR
 	HEIGHT = 100.0
 	
 	// テクスチャ関連
-	NUMTEX = 2
+	NUMTEX = 1
 	DIVISION = 1
 	
 	SET_TEX
 		TYPE = 7
-		TEX_X = 0.00125
-		TEX_Y = 0.00125
-	END_TEX
-	
-	SET_TEX
-		TYPE = 8
 		TEX_X = 0.00125
 		TEX_Y = 0.00125
 	END_TEX
@@ -49,17 +43,11 @@ SET_FLOOR
 	HEIGHT = 100.0
 	
 	// テクスチャ関連
-	NUMTEX = 2
+	NUMTEX = 1
 	DIVISION = 1
 	
 	SET_TEX
 		TYPE = 7
-		TEX_X = 0.00125
-		TEX_Y = 0.00125
-	END_TEX
-	
-	SET_TEX
-		TYPE = 8
 		TEX_X = 0.00125
 		TEX_Y = 0.00125
 	END_TEX
@@ -79,17 +67,11 @@ SET_FLOOR
 	HEIGHT = 100.0
 	
 	// テクスチャ関連
-	NUMTEX = 2
+	NUMTEX = 1
 	DIVISION = 1
 	
 	SET_TEX
 		TYPE = 7
-		TEX_X = 0.00125
-		TEX_Y = 0.00125
-	END_TEX
-	
-	SET_TEX
-		TYPE = 8
 		TEX_X = 0.00125
 		TEX_Y = 0.00125
 	END_TEX
@@ -109,17 +91,11 @@ SET_FLOOR
 	HEIGHT = 100.0
 	
 	// テクスチャ関連
-	NUMTEX = 2
+	NUMTEX = 1
 	DIVISION = 1
 	
 	SET_TEX
 		TYPE = 7
-		TEX_X = 0.00125
-		TEX_Y = 0.00125
-	END_TEX
-	
-	SET_TEX
-		TYPE = 8
 		TEX_X = 0.00125
 		TEX_Y = 0.00125
 	END_TEX

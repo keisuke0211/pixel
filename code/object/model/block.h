@@ -76,6 +76,7 @@ public:
 	/* 向き		*/void SetBlockRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
 	/* 色		*/void SetBlockColor(const D3DXCOLOR col) { m_Info.col = col; }
 	/* 大きさ	*/void SetBlockSize(const D3DXVECTOR3 size) { m_Info.size = size; }
+	/* リセット	*/static void Reset(void);
 
 	// -- 所得 ---------------------------------------------
 	/* 位置		*/D3DXVECTOR3 GetBlockPos(void) { return m_Info.pos; }

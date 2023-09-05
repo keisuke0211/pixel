@@ -197,7 +197,7 @@ HRESULT CBgCeiling::Init(void)
 		m_pTexture = pTexture->GetAddress(CTexture::TEX_NIGHT_SKY00);
 		break;
 	case CGame::Stage_DIFFICULT:
-		m_pTexture = pTexture->GetAddress(CTexture::TEX_SKY00);
+		m_pTexture = pTexture->GetAddress(CTexture::TEX_NIGHT_SKY00);
 		break;
 	}
 	

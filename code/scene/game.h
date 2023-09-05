@@ -25,15 +25,23 @@ class CText;	// テキスト
 class CGame : public CScene
 {
 	static const int GAME_TIME = 90;				// 制限時間
+	static const int ADDTIME_MAX = 120;				// ボーナスをスコアに加算する時間
 	static const int MAX_CUBE = 30;					// ステージで配置出来るキューブの制限
-	static const char* SIDE_STAGE_EASY_FILE;		// 側面のファイルパス(STAGE1)
-	static const char* SIDE_STAGE_NORMAL_FILE;		// 側面のファイルパス(STAGE2)
-	static const char* SIDE_STAGE_DIFFICULT_FILE;	// 側面のファイルパス(STAGE3)
-	static const char* FLOOR_STAGE_EASY_FILE;		// 床のファイルパス(STAGE1)
-	static const char* FLOOR_STAGE_NORMAL_FILE;		// 床のファイルパス(STAGE2)
-	static const char* FLOOR_STAGE_DIFFICULT_FILE;	// 床のファイルパス(STAGE3)
-	static const char* BLOCK_FILE1;					// ブロックのファイルパス
-	static const char* ENEMY_FILE1;					// エネミーのファイルパス
+	static const char* SIDE_STAGE_EASY_FILE;		// 側面のファイル(STAGE1)
+	static const char* SIDE_STAGE_NORMAL_FILE;		// 側面のファイル(STAGE2)
+	static const char* SIDE_STAGE_DIFFICULT_FILE;	// 側面のファイル(STAGE3)
+
+	static const char* FLOOR_STAGE_EASY_FILE;		// 床のファイル(STAGE1)
+	static const char* FLOOR_STAGE_NORMAL_FILE;		// 床のファイル(STAGE2)
+	static const char* FLOOR_STAGE_DIFFICULT_FILE;	// 床のファイル(STAGE3)
+
+	static const char* BLOCK_STAGE_EASY_FILE;		// ブロックのファイル(STAGE1)
+	static const char* BLOCK_STAGE_NORMAL_FILE;		// ブロックのファイル(STAGE2)
+	static const char* BLOCK_STAGE_DIFFICULT_FILE;	// ブロックのファイル(STAFE3)
+
+	static const char* ENEMY_STAGE_EASY_FILE;		// エネミーのファイル(STAGE1)
+	static const char* ENEMY_STAGE_NORMAL_FILE;		// エネミーのファイル(STAGE2)
+	static const char* ENEMY_STAGE_DIFFICULT_FILE;	// エネミーのファイル(STAFE3)
 
 	static const int TIME_SCORE = 50;	// １秒のスコアの加算値
 	static const int CUBE_SCORE = 100;	// １個のスコアの加算値
@@ -117,6 +125,7 @@ private:
 	int m_nTimeTotal;					// タイムボーナスの合計値
 	int m_nCubeTotal;					// キューブボーナスの合計値
 	int m_nTotal;						// 全ての合計値
+	int m_nAddTime;						// スコアの加算時間
 	int m_nStandTime;					// 待機時間(リザルト演出終了後)
 	CText *m_RstText[RST_ADD_SCORE];	// テキスト表示
 	bool m_bAddScore;					// スコアの加算フラグ
