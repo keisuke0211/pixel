@@ -43,8 +43,8 @@ class CGame : public CScene
 	static const char* ENEMY_STAGE_NORMAL_FILE;		// エネミーのファイル(STAGE2)
 	static const char* ENEMY_STAGE_DIFFICULT_FILE;	// エネミーのファイル(STAFE3)
 
-	static const int TIME_SCORE = 50;	// １秒のスコアの加算値
-	static const int CUBE_SCORE = 100;	// １個のスコアの加算値
+	static const int TIME_SCORE = 100;	// １秒のスコアの加算値
+	static const int CUBE_SCORE = 10;	// １個のスコアの加算値
 
 public:
 

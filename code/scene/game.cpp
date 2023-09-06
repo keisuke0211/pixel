@@ -403,7 +403,7 @@ void CGame::Result(void)
 		break;
 	case RST_CUBE:
 	{
-		sprintf(aString, "CUBE BONUS");
+		sprintf(aString, "USE CUBE");
 		pos = D3DXVECTOR3(100.0f, 250.0f, 0.0f);
 	}
 		break;
@@ -412,7 +412,7 @@ void CGame::Result(void)
 		int nCube = CCube::GetUse();
 		m_nCubeTotal = CUBE_SCORE * nCube;
 
-		sprintf(aString, "%d * %d = %d", CUBE_SCORE, nCube, m_nCubeTotal);
+		sprintf(aString, "%d * %d = -%d", CUBE_SCORE, nCube, m_nCubeTotal);
 		pos = D3DXVECTOR3(100.0f, 300.0f, 0.0f);
 	}
 		break;
@@ -424,7 +424,7 @@ void CGame::Result(void)
 		break;
 	case RST_BONUS_CALC:
 	{
-		m_nTotal = m_nTimeTotal + m_nCubeTotal;
+		m_nTotal = m_nTimeTotal - m_nCubeTotal;
 
 		sprintf(aString, "%d",m_nTotal);
 		pos = D3DXVECTOR3(100.0f, 550.0f, 0.0f);
