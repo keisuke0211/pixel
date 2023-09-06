@@ -100,7 +100,14 @@ int CTexture::Regist(const char* pFilename)
 
 	if (m_NumAll >= MAX_TEXTURE)
 	{// Å‘å”’´‚¦‚½‚©
-		return nIdx;
+		for (int nCntFile = 0; nCntFile < m_NumAll; nCntFile++)
+		{
+			if (strcmp(&m_FileName[nCntFile][0], pFilename) == 0)
+			{
+				return nCntFile;
+			}
+		}
+		return 0;
 	}
 
 	// Šù‚É“Ç‚İ‚ñ‚¾‚©’²‚×‚é

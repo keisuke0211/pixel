@@ -108,6 +108,8 @@ public:
 
 	/* 角度の差を求める			*/float AngleDifference(float fAngle, float fTargetAngle);
 	/* 角度の制御				*/void ControlAngle(float *pAngle);
+	/* 位置の差を求める			*/float PosDifference(float fPos, float fTargetPos);
+	/* 距離を求める				*/D3DXVECTOR3 Length(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos);
 	/* 当たり判定(全方向)		*/bool Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3	PairSize);
 	/* 当たり判定(ｘ)			*/bool CollsionX(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize);
 	/* 当たり判定(ｙ)			*/bool CollsionY(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize);

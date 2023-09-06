@@ -592,6 +592,9 @@ D3DMATERIAL9 CModel::InitMtrl(D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D3DXCOLOR e
 	return mtrl;
 }
 
+//========================================
+// プレイヤー影の表示・非表示
+//========================================
 void CModel::SetPlayerShadow(bool bShadow)
 {
 	if (bShadow)
@@ -600,7 +603,7 @@ void CModel::SetPlayerShadow(bool bShadow)
 		{
 			for (int nCnt = 0; nCnt < 6; nCnt++)
 			{
-				m_material[nCnt + 20].bShadow = true;
+				m_material[nCnt + CPhysics::MODEL_PLAYER_00].bShadow = true;
 			}
 			m_bPlayerShadow = true;
 		}
@@ -611,7 +614,7 @@ void CModel::SetPlayerShadow(bool bShadow)
 		{
 			for (int nCnt = 0; nCnt < 6; nCnt++)
 			{
-				m_material[nCnt + 20].bShadow = false;
+				m_material[nCnt + CPhysics::MODEL_PLAYER_00].bShadow = false;
 			}
 			m_bPlayerShadow = false;
 		}

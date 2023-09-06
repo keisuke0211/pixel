@@ -486,7 +486,7 @@ void CTutorial::TutorialTex(void)
 	{
 		int nNumAll = CBullet::GetNumAll();
 
-		if (nNumAll > 1 && m_aCreateText.bCreate[ACTION_SHOT])
+		if (nNumAll > 0 && m_aCreateText.bCreate[ACTION_SHOT])
 		{
 			TxtDelete(ACTION_SHOT, ACTION_SET);
 		}
@@ -496,7 +496,7 @@ void CTutorial::TutorialTex(void)
 	{
 		int nNumAll = CCube::GetNumAll();
 
-		if (nNumAll > 1 && m_aCreateText.bCreate[ACTION_SET])
+		if (nNumAll > 0 && m_aCreateText.bCreate[ACTION_SET])
 		{
 			TxtDelete(ACTION_SET, ACTION_SET1);
 		}

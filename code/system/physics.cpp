@@ -189,6 +189,41 @@ void CPhysics::ControlAngle(float *pAngle)
 }
 
 //========================================
+// 位置の差を求める
+//========================================
+float CPhysics::PosDifference(float fPos, float fTargetPos)
+{
+	float fPosDifference = 0.0f;	// 位置の差
+
+	if ((fPos >= 0.0f) && (fTargetPos >= 0.0f))
+	{// どちらの角度もプラスの時、
+	 // 角度の差を設定
+		fPosDifference = fTargetPos - fPos;
+
+		return fPosDifference;
+	}
+	else if ((fPos <= 0.0f) && (fTargetPos <= 0.0f))
+	{// どちらの角度もマイナスの時、
+	 // 角度の差を設定
+		fPosDifference = fTargetPos - fPos;
+
+		return fPosDifference;
+	}
+
+	return fPosDifference;
+}
+
+//========================================
+// ２点の距離を求める
+//========================================
+D3DXVECTOR3 Length(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos)
+{
+	D3DXVECTOR3 PosDifference = INIT_D3DXVECTOR3;
+
+	return PosDifference;
+}
+
+//========================================
 // 当たり判定(全方向)
 //========================================
 bool CPhysics::Collsion(D3DXVECTOR3 pos, D3DXVECTOR3 PairPos, D3DXVECTOR3 size, D3DXVECTOR3 PairSize)
