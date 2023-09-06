@@ -37,7 +37,7 @@
 bool CPlayer::m_bCubeSet = false;
 
 // 定義
-const float CPlayer::PLAYER_SPEED = 10.0f;
+const float CPlayer::PLAYER_SPEED = 40.0f;
 
 //========================================
 // コンストラクタ
@@ -137,6 +137,9 @@ void CPlayer::Update(void)
 		// 位置更新処理
 		UpdatePos();
 
+		// カメラの当たり判定
+		CameraCollision();
+
 		// 向き/移動向き/目標向きを制御
 		RotControl(&m_Info.rot);
 		RotControl(&m_Info.moveRot);
@@ -171,26 +174,26 @@ void CPlayer::KeyInput(void)
 
 	m_Info.bMove = true;
 
-	if (pInputJoypad->GetTrigger(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
+	if (pInputJoypad->GetRepeat(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
 	{
 		MoveInput(DIRECTION_LEFT);
 	}
-	else if (pInputJoypad->GetTrigger(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
+	else if (pInputJoypad->GetRepeat(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick(0).aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
 	{
 		MoveInput(DIRECTION_RIGHT);
 	}
-	else if (pInputJoypad->GetTrigger(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
+	else if (pInputJoypad->GetRepeat(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
 	{
 		MoveInput(DIRECTION_FRONT);
 	}
-	else if (pInputJoypad->GetTrigger(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
+	else if (pInputJoypad->GetRepeat(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
 	{
 		MoveInput(DIRECTION_BACK);
 	}
-	else if (pInputKeyboard->GetTrigger(DIK_A)) { MoveInput(DIRECTION_LEFT); }	// 左移動
-	else if (pInputKeyboard->GetTrigger(DIK_D)) { MoveInput(DIRECTION_RIGHT); }	// 右移動
-	else if (pInputKeyboard->GetTrigger(DIK_W)) { MoveInput(DIRECTION_BACK); }	// 奥移動
-	else if (pInputKeyboard->GetTrigger(DIK_S)) { MoveInput(DIRECTION_FRONT); }	// 手前移動
+	else if (pInputKeyboard->GetRepeat(DIK_A)) { MoveInput(DIRECTION_LEFT); }	// 左移動
+	else if (pInputKeyboard->GetRepeat(DIK_D)) { MoveInput(DIRECTION_RIGHT); }	// 右移動
+	else if (pInputKeyboard->GetRepeat(DIK_W)) { MoveInput(DIRECTION_BACK); }	// 奥移動
+	else if (pInputKeyboard->GetRepeat(DIK_S)) { MoveInput(DIRECTION_FRONT); }	// 手前移動
 	else
 	{
 		if (m_Info.bAction && (m_Info.move.x < 0.02f && m_Info.move.x > -0.02f) && (m_Info.move.z < 0.02f && m_Info.move.z > -0.02f))
@@ -218,12 +221,12 @@ void CPlayer::KeyInput(void)
 	// 攻撃
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CMouse::MOUSE_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_B))
 	{
-		CBullet::Create(D3DXVECTOR3(m_Info.pos.x,m_Info.pos.y + 15,m_Info.pos.z),m_Info.rot);
+		CBullet::Create(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 15, m_Info.pos.z), m_Info.rot);
 	}
-	
+
 	// 最初の弾を止める
 	BulletStop();
-	
+
 	// 位置更新
 	MovePos(PLAYER_SPEED);
 }
@@ -325,8 +328,11 @@ void CPlayer::MovePos(float fMove)
 		m_Info.bMotion = false;
 	}
 
-	m_Info.move.x += sinf(m_Info.moveRot.y) * fMove;
-	m_Info.move.z += cosf(m_Info.moveRot.y) * fMove;
+	float MoveX = round(sinf(m_Info.moveRot.y) * fMove);
+	float MoveY = round(cosf(m_Info.moveRot.y) * fMove);
+
+	m_Info.pos.x += MoveX;
+	m_Info.pos.z += MoveY;
 }
 
 //========================================
@@ -430,7 +436,7 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 		D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
 		D3DXVECTOR3 RotOld = GetRotOld();	// 向き(過去)
 		D3DXVECTOR3 Scale = GetSize();
-		float fSizeXZ = 10.0f;
+		float fSizeXZ = 20.0f;
 		float fSizeY = 10.0f;
 
 		if (type == nType)
@@ -445,6 +451,10 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 			float fPairWidth = pObj->GetWidth();	// 幅
 			float fPairHeight = pObj->GetHeight();	// 高さ
 			float fPairDepth = pObj->GetDepth();	// 奥行き
+
+			fPairWidth = round(fPairWidth);
+			fPairHeight = round(fPairHeight);
+			fPairDepth = round(fPairDepth);
 
 			// ゴールブロックだと
 			if (type == TYPE_BLOCK)
@@ -553,6 +563,14 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 		pObj = pObjNext;	// 次のオブジェクトを代入
 	}
 	return pos;
+}
+
+//========================================
+// カメラの当たり判定
+//========================================
+void CPlayer::CameraCollision(void)
+{
+
 }
 
 //========================================

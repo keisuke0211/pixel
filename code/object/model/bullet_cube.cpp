@@ -19,10 +19,9 @@
 
 // 静的変数
 int CCube::m_nNumAll = -1;
-int CCube::m_nNumSet = 0;
 int CCube::m_nNumChain = 0;
 int CCube::m_nLimitCube = 0;
-int CCube::m_nRestCube = 0;
+int CCube::m_nUseCube = 0;
 bool CCube::bLeadSet = false;
 CText *CCube::m_Cube = NULL;
 
@@ -42,8 +41,7 @@ CText *CCube::m_Cube = NULL;
 CCube::CCube(int nPriority) : CObjectX(nPriority)
 {
 	m_nNumAll++;	// 総数を加算
-	m_nNumSet++;	// キューブの配置数
-	m_nRestCube--;	// キューブの残り数
+	m_nUseCube++;	// キューブの使用数
 
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;		// 位置
@@ -99,11 +97,6 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 	pCube->Init();
 
 	int nCubeLife = nLife;
-
-	if (m_nNumSet >= m_nLimitCube)
-	{
-		nCubeLife = 1;
-	}
 	
 	pCube->m_Info.nShape = nShape;
 	pCube->m_Info.nLife = nCubeLife;
@@ -112,10 +105,6 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 	pCube->SetPos(pos);
 
 	pCube->m_Info.posOld = pCube->m_Info.pos;
-
-	int nNumSet = 0;
-	char aString[TXT_MAX];
-	sprintf(aString, "%02d", m_nRestCube);
 
 	// テキストの更新
 	CubeText();
@@ -170,11 +159,6 @@ HRESULT CCube::Init(void)
 
 	// 種類の設定
 	SetType(TYPE_CUBE);
-
-	if (m_nRestCube <= 0)
-	{
-		m_nRestCube = 0;
-	}
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -259,12 +243,9 @@ void CCube::Update(void)
 				Contact(0, VECTOR_Y, m_Info.pos);
 				Contact(0, VECTOR_Z, m_Info.pos);
 
-				if (m_nNumSet <= m_nLimitCube)
-				{
-					// 当たり判定
-					/* 敵		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
-					/* ブロック	*/ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
-				}
+				// 当たり判定
+				/* 敵		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
+				/* ブロック	*/ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
 
 				// オブジェクト破棄
 				Uninit();
@@ -749,17 +730,13 @@ void CCube::Destruction(CCube *pCube)
 }
 
 //========================================
-// 制限数の設定
+// 使用数の設定
 //========================================
-void CCube::SetLimit(int nLimit)
+void CCube::SetUseCube(void)
 {
-	m_nNumSet = 0;
-	m_nRestCube = nLimit;
-	m_nLimitCube = nLimit;
-
 	// タイムを文字列に設定
 	char aString[TXT_MAX];
-	sprintf(aString, "CUBE ：%d", m_nLimitCube);
+	sprintf(aString, "CUBE ：%02d", m_nUseCube);
 
 	FormFont pFont = {
 		INIT_D3DXCOLOR,
@@ -792,27 +769,29 @@ void CCube::CubeText(void)
 	int nNumSet = 0;
 	D3DXCOLOR col;
 	char aString[TXT_MAX];
-	sprintf(aString, "%02d", m_nRestCube);// m_nLimitCube
+	sprintf(aString, "%02d", m_nUseCube);
 
 	// 長さを取得
 	int m_Digit = strlen(aString);
 
-	if (m_nRestCube <= 0)
+	/*if (m_nUseCube <= 0)
 	{
 		col = D3DXCOLOR(0.45f, 0.45f, 0.45f, 1.0f);
 	}
-	else if (m_nRestCube <= m_nLimitCube / 3)
+	else if (m_nUseCube <= m_nLimitCube / 3)
 	{
 		col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
 	}
-	else if (m_nRestCube <= m_nLimitCube * 2/3)
+	else if (m_nUseCube <= m_nLimitCube * 2/3)
 	{
 		col = D3DXCOLOR(0.8f,0.8f,0.0f,1.0f);
 	}
-	else if (m_nRestCube <= m_nLimitCube)
+	else if (m_nUseCube <= m_nLimitCube)
 	{
 		col = INIT_D3DXCOLOR;
-	}
+	}*/
+
+	col = INIT_D3DXCOLOR;
 
 	for (int nTime = 0; nTime < m_Digit; nTime++)
 	{

@@ -476,8 +476,8 @@ void CTutorial::TutorialTex(void)
 			{
 				TxtDelete(ACTION_CAMERA, ACTION_SHOT);
 
-				// キューブの制限数
-				CCube::SetLimit(120);
+				// キューブの使用数
+				CCube::SetUseCube();
 			}
 		}
 	}

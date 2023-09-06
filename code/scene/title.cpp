@@ -206,6 +206,7 @@ void CTitle::Update(void)
 				case MENU_RANKING:
 					TextClear(1, MENU_MAX, TITLE_NEXT);
 					CManager::GetFade()->SetFade(MODE_RANKING);
+					CRanking::SetScore11(0);
 					CRanking::SetAllStage(true);
 					break;
 				case MENU_END:

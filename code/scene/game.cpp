@@ -125,7 +125,7 @@ HRESULT CGame::Init(void)
 	LoodEnemy();
 
 	// キューブの制限数
-	CCube::SetLimit(MAX_CUBE);
+	CCube::SetUseCube();
 
 	// タイム生成
 	m_pTime = CTime::Create(GAME_TIME);
@@ -409,7 +409,7 @@ void CGame::Result(void)
 		break;
 	case RST_CUBE_CALC:
 	{
-		int nCube = CCube::GetRest();
+		int nCube = CCube::GetUse();
 		m_nCubeTotal = CUBE_SCORE * nCube;
 
 		sprintf(aString, "%d * %d = %d", CUBE_SCORE, nCube, m_nCubeTotal);
@@ -481,7 +481,7 @@ void CGame::Result(void)
 	case RST_END:
 	{
 		CManager::GetFade()->SetFade(MODE_RANKING);
-		CRanking::SetScore11(m_pScore->GetScore());
+		CRanking::SetScore11(500);
 		CRanking::SetStage(m_nSelectStage);
 		CRanking::SetAllStage(false);
 	}

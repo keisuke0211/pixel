@@ -532,7 +532,7 @@ void CRanking::SetNameEntry(int nUpdateRank)
 		};
 
 		m_Text[m_Info.nUpdateRank] = CText::Create(CText::BOX_NORMAL_RECT,
-			D3DXVECTOR3(10.0f, 155 + (30 * m_Info.nUpdateRank), 0.0f),
+			D3DXVECTOR3(10.0f, 155 + (40 * m_Info.nUpdateRank), 0.0f),
 			D3DXVECTOR2(0.0f, 100.0f),
 			aString,
 			CFont::FONT_BESTTEN,
