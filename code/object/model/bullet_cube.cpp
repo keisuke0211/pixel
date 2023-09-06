@@ -736,7 +736,7 @@ void CCube::SetUseCube(void)
 {
 	// タイムを文字列に設定
 	char aString[TXT_MAX];
-	sprintf(aString, "CUBE ：%02d", m_nUseCube);
+	sprintf(aString, "CUBE ：%03d", m_nUseCube);
 
 	FormFont pFont = {
 		INIT_D3DXCOLOR,
@@ -769,7 +769,7 @@ void CCube::CubeText(void)
 	int nNumSet = 0;
 	D3DXCOLOR col;
 	char aString[TXT_MAX];
-	sprintf(aString, "%02d", m_nUseCube);
+	sprintf(aString, "%03d", m_nUseCube);
 
 	// 長さを取得
 	int m_Digit = strlen(aString);
