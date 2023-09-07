@@ -39,7 +39,6 @@ public:
 	{
 		TITLE_OUTSET = 0,	// タイトル
 		TITLE_MENU,			// メニュー
-		TITLE_STAGE,		// ステージ選択
 		TITLE_NEXT,			// 次の画面に移動 
 		TITLE_MAX
 	};
@@ -67,8 +66,6 @@ public:
 	/* タイトル		*/void TitleAnime(void);
 	/* メニュー生成 */void MenuCreate(void);
 	/* メニュー		*/void Menu(void);
-	/* ステージ生成	*/void StageCreate(void);
-	/* ステージ選択	*/void SelectStage(void);
 	/* テキスト削除 */void TextClear(int nWords,int nText, TITLE aTitle);
 
 	// -- 設定 ------------------------------------------
@@ -80,15 +77,6 @@ public:
 	/* クリア		*/static bool IsClear() { return m_bClear; }
 
 private:
-
-	// ***** 構造体 *****
-
-	// テキスト情報
-	struct Text
-	{
-		char aStageText[TXT_MAX];
-		char aStageWords[2][TXT_MAX];
-	};
 
 	// ***** 関数 *****
 	/* テキスト読み込み	*/void TextLoad(void);
@@ -103,15 +91,9 @@ private:
 	CWords *m_WordsShadow[4];	// タイトル・影
 	bool m_bMove[4];			// タイトル移動フラグ
 	CText *m_Menu[MENU_MAX];	// メニューテキスト
-	CText *m_StageText[3];		// ステージテキスト
-	bool m_bStageText;			// ステージテキストの生成フラグ
-	CStage *m_Stage[STAGE_MAX];	// ステージ
 	int m_nTextTime;			// テキストの表示時間
 	int m_nStandTime;			// 待機時間
 	int m_nSelectMenu;			// 現在選択しているメニュー
-	int m_nSelectStage;			// 現在選択しているステージ
-	Text m_aText[3];			// テキスト情報
-	bool m_bStageInput;			// ステージ選択の入力フラグ
 };
 
 #endif

@@ -40,7 +40,6 @@
     <ClCompile Include="code\object\object3D.cpp" />
     <ClCompile Include="code\object\objectX.cpp" />
     <ClCompile Include="code\object\UI\score.cpp" />
-    <ClCompile Include="code\object\UI\stage_menu.cpp" />
     <ClCompile Include="code\object\UI\text2D.cpp" />
     <ClCompile Include="code\object\UI\time.cpp" />
     <ClCompile Include="code\object\UI\UI_title.cpp" />
@@ -84,7 +83,6 @@
     <ClInclude Include="code\object\object3D.h" />
     <ClInclude Include="code\object\objectX.h" />
     <ClInclude Include="code\object\UI\score.h" />
-    <ClInclude Include="code\object\UI\stage_menu.h" />
     <ClInclude Include="code\object\UI\text2D.h" />
     <ClInclude Include="code\object\UI\time.h" />
     <ClInclude Include="code\object\UI\UI_title.h" />
