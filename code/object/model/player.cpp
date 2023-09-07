@@ -471,14 +471,8 @@ void CPlayer::UpdatePos(void)
 	// 目標向きに移動向きを代入
 	m_Info.targetRot = m_Info.moveRot;
 
-
-	bool bExit = CBlock::IsExitCamera();
-
-	if (!bExit)
-	{
-		// カメラの注視点を設定
-		pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 95, m_Info.pos.z));
-	}
+	// カメラの注視点を設定
+	pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 95, m_Info.pos.z));
 }
 
 //========================================
@@ -521,36 +515,6 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 			fPairWidth = round(fPairWidth);
 			fPairHeight = round(fPairHeight);
 			fPairDepth = round(fPairDepth);
-
-			// ゴールブロックだと
-			if (type == TYPE_BLOCK)
-			{
-				// ダイナミックキャストする
-				CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
-
-				int nBlockType = pBlock->GetBlockType();
-				if (nBlockType == MODEL_GOAL)
-				{
-					fPairWidth *= 0.8f;
-					fPairHeight *= 0.8f;
-					fPairDepth *= 0.8f;
-
-					// クリア
-					{
-						bool bClear = CTitle::IsClear();
-						if (!bClear)
-						{
-							if (Collsion(pos, pBlock->GetBlockPos(), D3DXVECTOR3(fSizeXZ, fSizeY, fSizeXZ), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
-							{
-								CTitle::SetClear(true);
-							}
-						}
-					}
-
-					pObj = pObjNext;	// 次のオブジェクトを代入
-					continue;
-				}
-			}
 
 			// --- 当たり判定 ----------------------------------------------
 			switch (vector)

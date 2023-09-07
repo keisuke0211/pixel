@@ -85,7 +85,6 @@ CTutorial::~CTutorial()
 HRESULT CTutorial::Init(void)
 {
 	CTitle::SetStart(false);
-	CTitle::SetExit(false);
 	CTitle::SetClear(false);
 
 	// 背景(側面)の生成
@@ -170,10 +169,10 @@ void CTutorial::Update(void)
 
 	// エネミーの全滅
 	{
-		bool bExit = CTitle::IsExit();
-		if (!bExit && CEnemy::GetEnemyAll() <= 0 && m_aCreateText.nCurAction >= ACTION_ENEMY)
+		bool bClear = CTitle::IsClear();
+		if (!bClear && CEnemy::GetEnemyAll() <= 0 && m_aCreateText.nCurAction >= ACTION_ENEMY)
 		{
-			CTitle::SetExit(true);
+			CTitle::SetClear(true);
 		}
 	}
 
@@ -334,7 +333,7 @@ void CTutorial::TxtCreate(int nType)
 		return;
 	}
 
-	if (m_aCreateText.nCurAction == ACTION_CLEAR && CBlock::IsExitCamera())
+	if (m_aCreateText.nCurAction == ACTION_CLEAR)
 	{
 		return;
 	}

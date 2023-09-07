@@ -20,9 +20,6 @@
 
 // 静的変数
 CBlock::TypeInfo *CBlock::m_TypeInfo = NULL;
-int CBlock::m_nCntExit = 0;
-bool CBlock::m_bExit = false;
-bool CBlock::m_bExitCamera = false;
 D3DXVECTOR3 CBlock::m_CameraRot = INIT_D3DXVECTOR3;
 float CBlock::m_CameraHeigth = 0.0f;
 
@@ -197,65 +194,12 @@ void CBlock::Update(void)
 				CrackRock();
 			}
 				break;
-			default:
-			{
-				ExitOpen();
-			}
-			break;
 			}
 
 			// 破棄
 			Uninit();
 
 			return;
-		}
-	}
-
-	bool bExit = CTitle::IsExit();
-	if (bExit)
-	{
-		if (m_Info.state == STATE_BREAK && !m_Info.bErase)
-		{
-			if (m_Info.nModelID != MODEL_TNT && m_Info.nModelID != MODEL_CRACK_ROCK)
-			{
-				m_Info.nEraseTime = 60;
-				m_Info.bErase = true;
-			}
-		}
-
-		if (m_Info.nModelID == MODEL_GOAL && !m_bExit)
-		{
-			m_CameraRot = pCamera->GetInfo().rot;
-			m_CameraHeigth = pCamera->GetInfo().fHeight;
-
-			pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-			pCamera->SetHeigth(0.0f);
-			pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 5, m_Info.pos.z + 100));
-
-			m_nCntExit = 90;
-			m_bExit = true;
-			m_bExitCamera = true;
-
-		}
-		else if (m_Info.nModelID == MODEL_GOAL && m_bExit)
-		{
-			if (--m_nCntExit <= 0 && m_bExitCamera)
-			{
-				pCamera->SetRot(m_CameraRot);
-				pCamera->SetHeigth(m_CameraHeigth);
-
-				m_nCntExit = 0;
-				m_bExitCamera = false;
-
-				if (CScene::GetMode() == CScene::MODE_GAME)
-				{
-					FormFont pFont = { INIT_D3DXCOLOR,20.0f,10,10,30 };
-					FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f) };
-
-					CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 300.0f, 0.0f), D3DXVECTOR2(280.0f, 100.0f),
-						"出口が開いた！", CFont::FONT_BESTTEN, &pFont, false, &pShadow);
-				}
-			}
 		}
 	}
 
@@ -331,22 +275,6 @@ void CBlock::TntBlock(void)
 
 	// キューブとの当たり判定
 	ModelCollsion(PRIO_CUBE, TYPE_CUBE,m_Info.pos);
-}
-
-//========================================
-// 出口解放
-//========================================
-void CBlock::ExitOpen(void)
-{
-	// パーティクル生成
-	CParticleX *pObj = CParticleX::Create();
-	pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y, m_Info.pos.z));
-	pObj->Par_SetRot(INIT_D3DXVECTOR3);
-	pObj->Par_SetMove(D3DXVECTOR3(25.0f, 5.0f, 25.0f));
-	pObj->Par_SetType(0);
-	pObj->Par_SetLife(100);
-	pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
-	pObj->Par_SetForm(10);
 }
 
 //========================================
@@ -471,9 +399,6 @@ void CBlock::Load(void)
 //========================================
 void CBlock::Reset(void)
 {
-	m_nCntExit = 0;
-	m_bExit = false;
-	m_bExitCamera = false;
 	m_CameraRot = INIT_D3DXVECTOR3;
 	m_CameraHeigth = 0.0f;
 }

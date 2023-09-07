@@ -149,51 +149,39 @@ void CCamera::Update(void)
 		}
 	}
 
-	bool bExit = CBlock::IsExitCamera();
-
-	if (!bExit)
+	if (m_Info.bRotMove)
 	{
-		if (m_Info.bRotMove)
-		{
-			m_Info.rot.y += m_Info.spin.y;					// 向きに移動向きを代入
-			m_Info.spin *= CAMERA_SPIN_DAMP;				// 回転量を減衰
-		}
-		else
-		{
-			m_Info.targetRot = m_Info.spin;				// 目標向きに移動向きを代入
-		}
-		m_Info.fTargetHeight = m_Info.fVerticalMove;	// 目標高さに移動量を代入
+		m_Info.rot.y += m_Info.spin.y;					// 向きに移動向きを代入
+		m_Info.spin *= CAMERA_SPIN_DAMP;				// 回転量を減衰
+	}
+	else
+	{
+		m_Info.targetRot = m_Info.spin;				// 目標向きに移動向きを代入
+	}
+	m_Info.fTargetHeight = m_Info.fVerticalMove;	// 目標高さに移動量を代入
 
-		// 向きを制御
-		RotControl(&m_Info.rot);
+	// 向きを制御
+	RotControl(&m_Info.rot);
 
-		// 高さを制御
-		FloatControl(&m_Info.fHeight, D3DX_PI * 0.30f, D3DX_PI * 0.01f);
+	// 高さを制御
+	FloatControl(&m_Info.fHeight, D3DX_PI * 0.30f, D3DX_PI * 0.01f);
 
-		if (!m_Info.bRotMove)
-		{
-			// 高さを目標に向けて推移する
-			m_Info.rot.y += AngleDifference(m_Info.rot.y, m_Info.targetRot.y) * ROT_DIAMETER;
-		}
-
+	if (!m_Info.bRotMove)
+	{
 		// 高さを目標に向けて推移する
-		m_Info.fHeight += AngleDifference(m_Info.fHeight, m_Info.fTargetHeight) * ROT_DIAMETER;
-
-		// 距離を目標距離に向けて推移する
-		m_Info.fDistance += AngleDifference(m_Info.fDistance, m_Info.fTargetDistance) * ROT_DIAMETER;
-
-		if (m_Info.bRotMove)
-		{
-			m_Info.bRotMove = false;
-		}
+		m_Info.rot.y += AngleDifference(m_Info.rot.y, m_Info.targetRot.y) * ROT_DIAMETER;
 	}
 
-	//if (pInputKeyboard->GetTrigger(DIK_Q) || pInputMouse->GetTrigger(CMouse::MOUSE_5) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X))
-	//{// マウスのサイドボタン2を押したら
+	// 高さを目標に向けて推移する
+	m_Info.fHeight += AngleDifference(m_Info.fHeight, m_Info.fTargetHeight) * ROT_DIAMETER;
 
-	//	// 画面設定
-	//	SetScreen();
-	//}
+	// 距離を目標距離に向けて推移する
+	m_Info.fDistance += AngleDifference(m_Info.fDistance, m_Info.fTargetDistance) * ROT_DIAMETER;
+
+	if (m_Info.bRotMove)
+	{
+		m_Info.bRotMove = false;
+	}
 }
 
 //========================================

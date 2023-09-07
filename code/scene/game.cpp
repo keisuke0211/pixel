@@ -103,7 +103,6 @@ HRESULT CGame::Init(void)
 	m_nAddTime = ADDTIME_MAX;
 
 	CTitle::SetStart(false);
-	CTitle::SetExit(false);
 	CTitle::SetClear(false);
 
 	// 背景(側面)の生成
@@ -261,10 +260,10 @@ void CGame::Update(void)
 
 	// エネミーの全滅
 	{
-		bool bExit = CTitle::IsExit();
-		if (!bExit && CEnemy::GetEnemyAll() <= 0)
+		bool bClear = CTitle::IsClear();
+		if (!bClear && CEnemy::GetEnemyAll() <= 0)
 		{
-			CTitle::SetExit(true);
+			CTitle::SetClear(true);
 		}
 	}
 
@@ -481,7 +480,7 @@ void CGame::Result(void)
 	case RST_END:
 	{
 		CManager::GetFade()->SetFade(MODE_RANKING);
-		CRanking::SetScore11(500);
+		CRanking::SetScore11(m_pScore->GetScore());
 		CRanking::SetStage(m_nSelectStage);
 		CRanking::SetAllStage(false);
 	}

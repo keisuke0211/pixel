@@ -84,16 +84,12 @@ public:
 	/* 色		*/D3DXCOLOR GetBlockColor(void) { return m_Info.col; }
 	/* 大きさ	*/D3DXVECTOR3 GetBlockSize(void) { return m_Info.size; }
 	/* 種類		*/int GetBlockType(void) { return m_Info.nModelID; }
-	/* 出口		*/static bool IsExit(void) { return m_bExit; }
-	/* 出口		*/static int GetBlockExit(void) { return m_nCntExit; }
-	/* 出口		*/static bool IsExitCamera(void) { return m_bExitCamera; }
 
 private:	
 
 	// ***** 関数 *****
 	/* TNT			*/void TntBlock(void);
 	/* ひび割れ岩	*/void CrackRock(void);
-	/* 出口解放		*/void ExitOpen(void);
 
 	// ***** 変数 *****
 	static D3DXVECTOR3 m_CameraRot;	// 向きの保存
@@ -101,11 +97,6 @@ private:
 
 	Info m_Info;					// ブロック情報
 	static TypeInfo *m_TypeInfo;	// 種類情報
-	
-	static bool m_bExit;			// 出口　（出口を開くかのフラク）
-	static bool m_bExitCamera;		// 出口カメラ
-	static int m_nCntExit;			// 出口にカメラを向ける時間
-
 
 };
 #endif

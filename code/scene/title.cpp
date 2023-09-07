@@ -26,7 +26,6 @@ const char* CTitle::TEXT_FILE_PATH = "data\\GAMEDATA\\TEXT\\TITLE_DATA.txt";
 // 静的変数
 bool CTitle::m_bStart = false;
 bool CTitle::m_bClear = false;
-bool CTitle::m_bExit = false;
 
 //========================================
 // コンストラクタ
@@ -82,7 +81,6 @@ HRESULT CTitle::Init(void)
 {
 	m_bStart = false;
 	m_bClear = false;
-	m_bExit = false;
 	m_bStageInput = false;
 
 	CModel::InitModel();	// モデル
