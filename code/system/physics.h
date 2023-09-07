@@ -22,30 +22,15 @@ public:
 	enum MODEL
 	{
 		MODEL_GRASS_00 = 0,	// ëê 1Å~1Å~1
-		MODEL_GRASS_01,		// ëê 3Å~1Å~1
-		MODEL_GRASS_02,		// ëê 5Å~1Å~1
-		MODEL_GRASS_03,		// ëê 3Å~3Å~1
-		MODEL_GRASS_04,		// ëê 5Å~5Å~1
+		MODEL_GRASS_01,		// ëê 3Å~1Å~3
+		MODEL_GRASS_02,		// ëê 5Å~1Å~5
 		MODEL_SOIL_00,		// ìy 1Å~1Å~1
-		MODEL_SOIL_01,		// ìy 3Å~1Å~1
-		MODEL_SOIL_02,		// ìy 5Å~1Å~1
-		MODEL_SOIL_03,		// ìy 1Å~3Å~1
-		MODEL_SOIL_04,		// ìy 1Å~5Å~1
-		MODEL_SOIL_05,		// ìy 3Å~1Å~3
-		MODEL_SOIL_06,		// ìy 5Å~1Å~5
-		MODEL_SOIL_07,		// ìy 3Å~3Å~1
-		MODEL_SOIL_08,		// ìy 5Å~5Å~1
 		MODEL_STONE,		// êŒ 1Å~1Å~1
-		MODEL_STONE01,		// êŒ 3Å~1Å~1
-		MODEL_STONE02,		// êŒ 5Å~1Å~1
-		MODEL_STONE03,		// êŒ 1Å~3Å~1
-		MODEL_STONE04,		// êŒ 1Å~5Å~1
-		MODEL_STONE05,		// êŒ 3Å~1Å~3
-		MODEL_STONE06,		// êŒ 5Å~1Å~5
+		MODEL_STONE01,		// êŒ 3Å~1Å~3
+		MODEL_STONE02,		// êŒ 5Å~1Å~5
 		MODEL_CRACK_ROCK,	// Ç–Ç—äÑÇÍä‚(âº)
 		MODEL_TNT,			// TNT(âº)
 		MODEL_GOAL,			// ÉSÅ[ÉãÉuÉçÉbÉN
-		MODEL_BARRIER,		// ÉoÉäÉAÉuÉçÉbÉN
 		MODEL_BULLET,		// íe
 		MODEL_PLAYER_00,	// ÉvÉåÉCÉÑÅ[ ëÃ
 		MODEL_PLAYER_01,	// ÉvÉåÉCÉÑÅ[ ì™

@@ -318,7 +318,7 @@ CGame *CGame::Create(void)
 //========================================
 void CGame::Result(void)
 {
-	FormFont pFont = { INIT_D3DXCOLOR, 18.0f, 5, 5, 0};
+	FormFont pFont = { INIT_D3DXCOLOR, 18.0f, 3, 5, 0};
 	FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(2.0f,2.0f)};
 
 	char aString[TXT_MAX];
@@ -387,7 +387,7 @@ void CGame::Result(void)
 				if (m_nStage < STAGE_MAX)
 				{
 					char aString[TXT_MAX];
-					sprintf(aString, "NEXTËSTAGE%d", m_nStage + 1);
+					sprintf(aString, "NEXTËSTAGE%d", m_nStage + 2);
 
 					int nStrlen = strlen(aString);
 
@@ -484,7 +484,7 @@ void CGame::Result(void)
 			}
 			else
 			{
-				m_nTextCreate = (nLength * 5) + 5;
+				m_nTextCreate = (nLength * 3) + 5;
 			}
 			m_nRstStgType++;
 		}
