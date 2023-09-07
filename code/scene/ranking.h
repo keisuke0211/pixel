@@ -31,8 +31,8 @@ class CRanking : public CScene
 	static const int NAME_START_DEX = 5;	// 名前の開始位置
 	static const int BLINK_TIME = 4;		// 点滅時間
 
-#define BLINK_COLOR		D3DXCOLOR{1.0f,1.0f,1.0f,1.0f}	// ランキングフレームの点滅色
-#define RANKING_COLOR	D3DXCOLOR{0.824f,0.824f,0.0f,1.0f}	// ランキングフレームの更新色
+#define BLINK_COLOR		D3DXCOLOR{0.057f,0.737f,0.0f,1.0f}		// ランキングフレームの点滅色
+#define RANKING_COLOR	D3DXCOLOR{0.23f,1.0f,0.0f,1.0f}			// ランキングフレームの更新色
 
 public:
 

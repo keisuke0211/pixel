@@ -100,6 +100,22 @@ HRESULT CRanking::Init(void)
 	{
 		char aString[TXT_MAX];
 
+		switch (nRank)
+		{
+		case 0:
+			pFont = { D3DXCOLOR(1.0f,0.96f,0,1)	, 20.0f, 1, 1, -1 };
+			break;
+		case 1:
+			pFont = { D3DXCOLOR(0.8f,0.8f,0.8f,1), 20.0f, 1, 1, -1 };
+			break;
+		case 2:
+			pFont = { D3DXCOLOR(0.78f,0.54f,0,1), 20.0f, 1, 1, -1 };
+			break;
+		default:
+			pFont = { INIT_D3DXCOLOR, 20.0f, 1, 1, -1 };
+			break;
+		}
+
 		sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_Ranking[nRank].aName, m_Ranking[nRank].nScore);
 
 		m_Text[nRank] = CText::Create(CText::BOX_NORMAL_RECT,
@@ -666,7 +682,6 @@ void CRanking::RankingSwitch(void)
 	// -- 取得 -------------------------------------------
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
-
 }
 
 //========================================
