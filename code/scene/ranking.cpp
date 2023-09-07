@@ -14,13 +14,10 @@
 #include "../system/words/font.h"
 
 // 定義
-const char* CRanking::STAGE_EASY_FILE = "data\\SAVEDATA\\STAGE_EASY.csv";
-const char* CRanking::STAGE_NORMAL_FILE = "data\\SAVEDATA\\STAGE_NORMAL.csv";
-const char* CRanking::STAGE_DIFFICULT_FILE = "data\\SAVEDATA\\STAGE_DIFFICULT.csv";
+const char* CRanking::STAGE_FILE = "data\\SAVEDATA\\RANKING_DATA.csv";
 const char* CRanking::TEXT_FILE_PATH = "data\\GAMEDATA\\TEXT\\WORDS_DATA.txt";
 int CRanking::m_nGameScore = 0;
 bool CRanking::m_bSetScore = false;
-int CRanking::m_nStage = CGame::Stage_EASY;
 bool CRanking::m_bRankingAll = false;
 
 //========================================
@@ -41,8 +38,6 @@ CRanking::CRanking()
 	m_Info.nCntBlink = 0;
 	m_Info.bNameInput = true;
 	m_Info.nCntChar = 0;
-	m_Info.nCntStage = 0;
-	m_Info.bRankSwitch = false;
 
 	m_Info.nCntString = 0;
 	m_Info.nCntLetter = 0;
@@ -81,14 +76,7 @@ HRESULT CRanking::Init(void)
 	CUiTitle::Create();		// タイトル背景
 
 	// 読み込み
-	if (!m_bRankingAll)
-	{
-		Load();		// プレイしたステージだけ
-	}
-	else if (m_bRankingAll)
-	{
-		AllLoad();	// 全ステージ
-	}
+	Load();		// プレイしたステージだけ
 
 	WordsLoad();	// テキスト
 
@@ -108,14 +96,7 @@ HRESULT CRanking::Init(void)
 	{
 		char aString[TXT_MAX];
 
-		if (!m_bRankingAll)
-		{
-			sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_Ranking[nRank].aName, m_Ranking[nRank].nScore);
-		}
-		else if (m_bRankingAll)
-		{
-			sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_AllRanking[0][nRank].aName, m_AllRanking[0][nRank].nScore);
-		}
+		sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_Ranking[nRank].aName, m_Ranking[nRank].nScore);
 
 		m_Text[nRank] = CText::Create(CText::BOX_NORMAL_RECT,
 			D3DXVECTOR3(10.0f, 155 + ( 40 * nRank), 0.0f),
@@ -290,21 +271,7 @@ void CRanking::Load(void)
 {
 	CSVFILE *pFile = new CSVFILE;
 
-	switch (m_nStage)
-	{
-	case CGame::Stage_EASY:
-		pFile->FileLood(STAGE_EASY_FILE, true, true, ',');
-		break;
-	case CGame::Stage_NORMAL:
-		pFile->FileLood(STAGE_NORMAL_FILE, true, true, ',');
-		break;
-	case CGame::Stage_DIFFICULT:
-		pFile->FileLood(STAGE_DIFFICULT_FILE, true, true, ',');
-		break;
-	default:
-		pFile->FileLood(STAGE_EASY_FILE, true, true, ',');
-		break;
-	}
+	pFile->FileLood(STAGE_FILE, true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
@@ -343,65 +310,6 @@ void CRanking::Load(void)
 }
 
 //========================================
-// 全ステージの読み込み
-//========================================
-void CRanking::AllLoad(void)
-{
-
-	for (int nStage = 0; nStage < CGame::Stage_MAX; nStage++)
-	{
-		CSVFILE *pFile = new CSVFILE;
-
-		switch (nStage)
-		{
-		case CGame::Stage_EASY:
-			pFile->FileLood(STAGE_EASY_FILE, true, true, ',');
-			break;
-		case CGame::Stage_NORMAL:
-			pFile->FileLood(STAGE_NORMAL_FILE, true, true, ',');
-			break;
-		case CGame::Stage_DIFFICULT:
-			pFile->FileLood(STAGE_DIFFICULT_FILE, true, true, ',');
-			break;
-		}
-
-		// 行数の取得
-		int nRowMax = pFile->GetRowSize();
-
-		for (int nRow = 0; nRow < nRowMax; nRow++)
-		{
-			// 列数の取得
-			int nLineMax = pFile->GetLineSize(nRow);
-
-			for (int nLine = 0; nLine < nLineMax; nLine++)
-			{
-				string sData = pFile->GetData(nRow, nLine);
-
-				switch (nLine)
-				{
-				case 0:
-					char *pNama;
-					pFile->ToValue(pNama, sData);
-
-					strcat(m_AllRanking[nStage][nRow].aName, pNama);
-					break;	// 名前
-				case 1:	pFile->ToValue(m_AllRanking[nStage][nRow].nScore, sData);		break;	// スコア
-				}
-			}
-
-			// 最大数に達したら抜ける
-			if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
-			{
-				break;
-			}
-		}
-
-		delete pFile;
-		pFile = NULL;
-	}
-}
-
-//========================================
 // 書き出し
 //========================================
 void CRanking::Save(void)
@@ -434,21 +342,7 @@ void CRanking::Save(void)
 	}
 
 	// 書き出し
-	switch (m_nStage)
-	{
-	case CGame::Stage_EASY:
-		pFile->FileSave(STAGE_EASY_FILE, ',');
-		break;
-	case CGame::Stage_NORMAL:
-		pFile->FileSave(STAGE_NORMAL_FILE, ',');
-		break;
-	case CGame::Stage_DIFFICULT:
-		pFile->FileSave(STAGE_DIFFICULT_FILE, ',');
-		break;
-	default:
-		pFile->FileSave(STAGE_EASY_FILE, ',');
-		break;
-	}
+	pFile->FileSave(STAGE_FILE, ',');
 }
 
 //========================================
@@ -764,52 +658,6 @@ void CRanking::RankingSwitch(void)
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
 
-	if (pInputKeyboard->GetRepeat(DIK_A) || pInputKeyboard->GetRepeat(DIK_LEFT) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
-	{
-		m_Info.nCntStage--;
-		m_Info.bRankSwitch = true;
-	}
-	else if (
-		pInputKeyboard->GetRepeat(DIK_D) || pInputKeyboard->GetRepeat(DIK_RIGHT) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
-	{
-		m_Info.nCntStage++;
-		m_Info.bRankSwitch = true;
-	}
-
-	IntLoopControl(&m_Info.nCntStage, CGame::Stage_MAX, 0);
-
-	if (m_Info.bRankSwitch)
-	{
-		FormFont pFont = {INIT_D3DXCOLOR,20.0f,1,1,-1};
-
-		int nStage = m_Info.nCntStage;
-
-		for (int nRank = 0; nRank < RANK_NUM; nRank++)
-		{
-			m_Text[nRank]->Uninit();
-		}
-
-		for (int nRank = 0; nRank < RANK_NUM; nRank++)
-		{
-			char aString[TXT_MAX];
-			sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_AllRanking[nStage][nRank].aName, m_AllRanking[nStage][nRank].nScore);
-
-			m_Text[nRank] = CText::Create(CText::BOX_NORMAL_RECT,
-				D3DXVECTOR3(10.0f, 155 + (40 * nRank), 0.0f),
-				D3DXVECTOR2(0.0f, 100.0f),
-				aString,
-				CFont::FONT_BESTTEN,
-				&pFont, false);
-		}
-
-		char aText[TXT_MAX];
-		sprintf(aText, "%d", nStage + 1);
-		m_Explain[1]->ChgWords(aText, 13, INIT_D3DXCOLOR);
-
-		m_Info.bRankSwitch = false;
-	}
 }
 
 //========================================

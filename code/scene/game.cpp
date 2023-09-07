@@ -33,11 +33,12 @@ CScore *CGame::m_pScore = NULL;
 bool CGame::m_bTime = false;
 int CGame::m_nStage = Stage_EASY;
 int CGame::m_nSelectStage = Stage_EASY;
+int CGame::m_nScore = 0;
 CGame::StageInfo CGame::m_aStageInfo = { NULL,NULL };
 
 const char* CGame::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE_DATA.txt";
-const char* CGame::SIDE_STAGE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_EASY_DATA .txt";
-const char* CGame::FLOOR_STAGE_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_EASY_DATA.txt";
+const char* CGame::SIDE_STAGE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_DATA .txt";
+const char* CGame::FLOOR_STAGE_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_DATA.txt";
 
 //========================================
 // コンストラクタ
@@ -116,37 +117,16 @@ HRESULT CGame::Init(void)
 	CCube::SetUseCube();
 
 	// タイム生成
-	m_pTime = CTime::Create(GAME_TIME);
+	m_pTime = CTime::Create(m_aStageInfo.nTime[m_nStage]);
 
 	// スコア生成
 	m_pScore = CScore::Create();
 	CScore::SetScore();
 
 	CCamera *pCamera = CManager::GetCamera();					// カメラ
-
-	switch (m_nSelectStage)
-	{
-	case CGame::Stage_EASY:
-		pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		pCamera->SetHeigth(0.4f);
-		pCamera->SetDistance(1400.0f);
-		break;
-	case CGame::Stage_NORMAL:
-		pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		pCamera->SetHeigth(0.04f);
-		pCamera->SetDistance(300.0f);
-		break;
-	case CGame::Stage_DIFFICULT:
-		pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		pCamera->SetHeigth(0.02f);
-		pCamera->SetDistance(300.0f);
-		break;
-	default:
-		pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		pCamera->SetHeigth(0.02f);
-		pCamera->SetDistance(300.0f);
-		break;
-	}
+	pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pCamera->SetHeigth(0.4f);
+	pCamera->SetDistance(1400.0f);
 
 	FormFont pFont = {
 		D3DXCOLOR(0.0f,0.63f,0.2f,1.0f),
@@ -166,21 +146,7 @@ HRESULT CGame::Init(void)
 	char aString[TXT_MAX];
 
 	// 読み込み
-	switch (m_nSelectStage)
-	{
-	case CGame::Stage_EASY:
-		sprintf(aString, "初級ステージ!\n90秒以内に脱出せよ！");
-		break;
-	case CGame::Stage_NORMAL:
-		sprintf(aString, "中級ステージ!\n90秒以内に脱出せよ！");
-		break;
-	case CGame::Stage_DIFFICULT:
-		sprintf(aString, "上級ステージ!\n90秒以内に脱出せよ！");
-		break;
-	default:
-		sprintf(aString, "初級ステージ!\n90秒以内に脱出せよ！");
-		break;
-	}
+	sprintf(aString, "初級ステージ!\n90秒以内に脱出せよ！");
 
 	CText::Create(CText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
@@ -332,7 +298,6 @@ void CGame::Update(void)
 				{
 					CManager::GetFade()->SetFade(MODE_RANKING);
 					CRanking::SetScore11(m_pScore->GetScore());
-					CRanking::SetStage(m_nSelectStage);
 					CRanking::SetAllStage(false);
 				}
 			}
@@ -469,8 +434,8 @@ void CGame::Result(void)
 	case RST_END:
 	{
 		CManager::GetFade()->SetFade(MODE_RANKING);
-		CRanking::SetScore11(m_pScore->GetScore());
-		CRanking::SetStage(m_nSelectStage);
+		m_nScore = m_pScore->GetScore();
+		CRanking::SetScore11(m_nScore);
 		CRanking::SetAllStage(false);
 	}
 		break;
@@ -500,8 +465,7 @@ void CGame::Reset(void)
 {
 	m_nStage = Stage_EASY;
 	m_bTime = false;
-
-
+	m_nScore = 0;
 	m_aStageInfo = { NULL,NULL };
 }
 
@@ -558,7 +522,7 @@ void CGame::LoodStage(void)
 		else if (!strcmp(aDataSearch, "SET_INFO"))
 		{// 生成開始
 
-			int nBlock = 0;
+			int nCntStage = 0;
 
 			while (1)
 			{
@@ -568,13 +532,33 @@ void CGame::LoodStage(void)
 				{// 生成終了
 					break;
 				}
-				else if (!strcmp(aDataSearch, "BLOCK"))
+				else if (!strcmp(aDataSearch, "SET_STAGE"))
 				{
-					if (nBlock < Stage_MAX)
+					while (1)
 					{
-						fscanf(pFile, "%s", &aDataSearch[0]);
-						fscanf(pFile, "%s", &m_aStageInfo.aBlockFile[nBlock][0]); // ファイル名
-						nBlock++;
+						fscanf(pFile, "%s", aDataSearch);
+
+						if (!strcmp(aDataSearch, "END_STAGE"))
+						{// 生成終了
+							nCntStage++;
+							break;
+						}
+						else if (!strcmp(aDataSearch, "TIME"))
+						{
+							if (nCntStage < Stage_MAX)
+							{
+								fscanf(pFile, "%s", &aDataSearch[0]);
+								fscanf(pFile, "%d", &m_aStageInfo.nTime[nCntStage]);
+							}
+						}
+						else if (!strcmp(aDataSearch, "BLOCK"))
+						{
+							if (nCntStage < Stage_MAX)
+							{
+								fscanf(pFile, "%s", &aDataSearch[0]);
+								fscanf(pFile, "%s", &m_aStageInfo.aBlockFile[nCntStage][0]); // ファイル名
+							}
+						}
 					}
 				}
 				else if (!strcmp(aDataSearch, "ENEMY"))

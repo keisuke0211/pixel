@@ -22,9 +22,7 @@ class CText;
 //****************************************
 class CRanking : public CScene
 {
-	static const char* STAGE_EASY_FILE;		// 初級ステージ
-	static const char* STAGE_NORMAL_FILE;	// 中級ステージ
-	static const char* STAGE_DIFFICULT_FILE;// 上級ステージ
+	static const char* STAGE_FILE;			// ファイルパス
 	static const char* TEXT_FILE_PATH;		// 読み込むファイルパス
 	static const int RANK_NUM = 8;			// 順位数
 	static const int NAME_NUM = 5;			// ランキングのの文字数
@@ -32,14 +30,6 @@ class CRanking : public CScene
 	static const int TEXT_MAX = 10;			// 文字表示のテキスト数
 	static const int NAME_START_DEX = 5;	// 名前の開始位置
 	static const int BLINK_TIME = 4;		// 点滅時間
-
-
-// ランキング名の文字下限
-// ランキング名の文字上限
-// ランキング名の開始文字
-#define NAME_MIN_CHAR	('0')
-#define NAME_MAX_CHAR	('Z' + 1)
-#define NAME_START_CHAR	('A')
 
 #define BLINK_COLOR		D3DXCOLOR{1.0f,1.0f,1.0f,1.0f}	// ランキングフレームの点滅色
 #define RANKING_COLOR	D3DXCOLOR{0.824f,0.824f,0.0f,1.0f}	// ランキングフレームの更新色
@@ -61,12 +51,10 @@ public:
 	/* スコア	*/int SetScore(int nScore);
 	/* 名前入力	*/void SetNameEntry(int nUpdateRank);
 	/* スコア	*/static void SetScore11(int nScore);
-	/* ステージ	*/static void SetStage(int nStage) { m_nStage = nStage; }
 	/* 全体表示	*/static void SetAllStage(bool bAll) { m_bRankingAll = bAll; }
 
 	// -- 取得 ------------------------------------------
 	/* 順位の表示形式の取得	*/char *GetRankText(int nRank) { return m_aRank[nRank].aRankText; }
-
 
 	// ***** 変数 *****
 	static int m_nGameScore;
@@ -105,9 +93,7 @@ private:
 		int		nCntChar;		// 文字カウント
 		int		nUpdateRank;	// 更新順位
 		int		nCntBlink;		// 点滅カウンター
-		int		nCntStage;		// ステージカウント
 		bool	bNameInput;		// 入力フラグ
-		bool	bRankSwitch;	// ランキング切替フラグ
 
 		int		nCntString;		// 文字列カウント
 		int		nCntLetter;		// 文字カウント
@@ -129,15 +115,8 @@ private:
 		char aName[TXT_MAX];	// 名前 
 	};
 
-	struct AllRanking
-	{
-		int nScore;				// スコア
-		char aName[TXT_MAX];	// 名前 
-	};
-
 	// ***** 関数 *****
 	/* ステージ			*/void Load(void);
-	/* 全ステージ		*/void AllLoad(void);
 	/* 文字読み込み		*/void WordsLoad(void);
 	/* 書き出し			*/void Save(void);
 	/* 状態処理			*/void State(void);
@@ -150,9 +129,8 @@ private:
 	/* 文字表示(更新)	*/void UpdateWords(void);
 
 	// ***** 変数 *****
-	Info m_Info;											// 共通情報
-	Ranking m_Ranking[RANK_NUM];							// 順位情報
-	AllRanking m_AllRanking[CGame::Stage_MAX][RANK_NUM];	// 全ステージのランキング情報
+	Info m_Info;						// 共通情報
+	Ranking m_Ranking[RANK_NUM];		// 順位情報
 	CText *m_Text[RANK_NUM];			// 順位テキスト
 	char m_aNameData[TXT_MAX];			// 表示テキスト
 
@@ -162,7 +140,6 @@ private:
 	String	*m_pString;					// 文字列
 	int		nStringMax;					// 文字列の最大数
 
-	static int m_nStage;				// プレイしたステージ 
 	static bool m_bRankingAll;			// 全ステージのランキングの表示フラグ
 
 	// 順位の表示形式

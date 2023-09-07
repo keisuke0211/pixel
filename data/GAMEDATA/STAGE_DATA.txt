@@ -6,9 +6,26 @@
 #||||||||||||||||||||||||||||||||||||||||
 #========================================
 SET_INFO
-	BLOCK = data\\GAMEDATA\\BLOCK\\STAGE01_DATA.csv		# STAGE01
-	BLOCK = data\\GAMEDATA\\BLOCK\\STAGE02_DATA.csv		# STAGE02
-	BLOCK = data\\GAMEDATA\\BLOCK\\STAGE03_DATA.csv		# STAGE03
+
+#-- STAGE01 ----------------------
+	SET_STAGE
+		TIME = 20
+		BLOCK = data\\GAMEDATA\\BLOCK\\STAGE01_DATA.csv
+	END_STAGE
+	
+#-- STAGE02 ----------------------
+	SET_STAGE
+		TIME = 30
+		BLOCK = data\\GAMEDATA\\BLOCK\\STAGE02_DATA.csv
+	END_STAGE
+
+#-- STAGE03 ----------------------
+	SET_STAGE
+		TIME = 40
+		BLOCK = data\\GAMEDATA\\BLOCK\\STAGE03_DATA.csv
+	END_STAGE
+	
+#-- Others ----------------------
 	ENEMY = data\\GAMEDATA\\ENEMY\\STAGE_ENEMY.csv
 
 END_INFO

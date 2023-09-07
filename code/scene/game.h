@@ -81,6 +81,7 @@ public:
 	// ステージ情報
 	struct StageInfo
 	{
+		int nTime[Stage_MAX];
 		char aBlockFile[Stage_MAX][TXT_MAX];
 		char aEnemyFile[TXT_MAX];
 	};
@@ -131,7 +132,7 @@ private:
 	CText *m_RstText[RST_ADD_SCORE];	// テキスト表示
 	bool m_bAddScore;					// スコアの加算フラグ
 	static bool m_bTime;				// 時間フラグ
-
+	static int m_nScore;				// スコアの保存用
 	static int m_nSelectStage;			// 現在選択しているステージ 
 };
 
