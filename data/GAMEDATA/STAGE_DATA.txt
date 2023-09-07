@@ -10,7 +10,7 @@ SET_INFO
 #-- STAGE01 ----------------------
 	SET_STAGE
 		TIME = 10
-		CUBE = 1
+		CUBE = 3
 		CLEAR = 100
 		BLOCK = data\\GAMEDATA\\BLOCK\\STAGE01_DATA.csv
 		PLAYER_POS = 0 20 80
@@ -20,7 +20,7 @@ SET_INFO
 #-- STAGE02 ----------------------
 	SET_STAGE
 		TIME = 20
-		CUBE = 1
+		CUBE = 5
 		CLEAR = 100
 		BLOCK = data\\GAMEDATA\\BLOCK\\STAGE02_DATA.csv
 		PLAYER_POS = 0 20 200
@@ -30,7 +30,7 @@ SET_INFO
 #-- STAGE03 ----------------------
 	SET_STAGE
 		TIME = 20
-		CUBE = 1
+		CUBE = 10
 		CLEAR = 100
 		BLOCK = data\\GAMEDATA\\BLOCK\\STAGE03_DATA.csv
 		PLAYER_POS = 0 20 0

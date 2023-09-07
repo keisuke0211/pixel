@@ -110,6 +110,15 @@ private:
 		RST_MAX
 	};
 
+	// ゲーム評価
+	enum Eve
+	{
+		EVE_PERFECT = 0,	// パーフェクト Perfect
+		EVE_GREAT,			// グレイト　great
+		EVE_USUALLY,		//　ユージュアリー usually
+		EVE_MAX
+	};
+
 	// ***** 関数 *****
 	/* リザルト	*/void  Result(void);
 
@@ -132,6 +141,7 @@ private:
 	int m_nTotal;						// 全ての合計値
 	int m_nAddTime;						// スコアの加算時間
 	int m_nStandTime;					// 待機時間(リザルト演出終了後)
+	int m_nEveGame;						// ゲーム評価
 	CText *m_RstText[RST_ADD_SCORE];	// テキスト表示
 	bool m_bAddScore;					// スコアの加算フラグ
 	static bool m_bTime;				// 時間フラグ
