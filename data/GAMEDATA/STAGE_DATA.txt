@@ -1,0 +1,20 @@
+#========================================
+#
+# 複数ステージの情報
+#
+#========================================
+#||||||||||||||||||||||||||||||||||||||||
+#========================================
+SET_INFO
+	BLOCK = data\\GAMEDATA\\BLOCK\\STAGE01_DATA.csv		# STAGE01
+	BLOCK = data\\GAMEDATA\\BLOCK\\STAGE02_DATA.csv		# STAGE02
+	BLOCK = data\\GAMEDATA\\BLOCK\\STAGE03_DATA.csv		# STAGE03
+	ENEMY = data\\GAMEDATA\\ENEMY\\STAGE_ENEMY.csv
+
+END_INFO
+
+#========================================
+#||||||||||||||||||||||||||||||||||||||||
+#========================================
+
+END_SCRIPT

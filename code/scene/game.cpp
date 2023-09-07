@@ -31,24 +31,13 @@ CPlayer *CGame::m_pPlayer = NULL;
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
 bool CGame::m_bTime = false;
+int CGame::m_nStage = Stage_EASY;
 int CGame::m_nSelectStage = Stage_EASY;
+CGame::StageInfo CGame::m_aStageInfo = { NULL,NULL };
 
-const char* CGame::SIDE_STAGE_EASY_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_EASY_DATA .txt";
-const char* CGame::SIDE_STAGE_NORMAL_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_NORMAL_DATA.txt";
-const char* CGame::SIDE_STAGE_DIFFICULT_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_DIFFICULT_DATA.txt";
-
-const char* CGame::FLOOR_STAGE_EASY_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_EASY_DATA.txt";
-const char* CGame::FLOOR_STAGE_NORMAL_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_NORMAL_DATA.txt";
-const char* CGame::FLOOR_STAGE_DIFFICULT_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_DIFFICULT_DATA.txt";
-
-const char* CGame::BLOCK_STAGE_EASY_FILE = "data\\GAMEDATA\\BLOCK\\STAGE_EASY_DATA.csv";
-const char* CGame::BLOCK_STAGE_NORMAL_FILE = "data\\GAMEDATA\\BLOCK\\STAGE_NORMAL_DATA.csv";
-const char* CGame::BLOCK_STAGE_DIFFICULT_FILE = "data\\GAMEDATA\\BLOCK\\STAGE_DIFFICULT_DATA.csv";
-
-const char* CGame::ENEMY_STAGE_EASY_FILE = "data\\GAMEDATA\\ENEMY\\STAGE_EASY_ENEMY.csv";
-const char* CGame::ENEMY_STAGE_NORMAL_FILE = "data\\GAMEDATA\\ENEMY\\STAGE_NORMAL_ENEMY.csv";
-const char* CGame::ENEMY_STAGE_DIFFICULT_FILE = "data\\GAMEDATA\\ENEMY\\STAGE_DIFFICULT_ENEMY.csv";
-
+const char* CGame::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE_DATA.txt";
+const char* CGame::SIDE_STAGE_FILE = "data\\GAMEDATA\\OBJECT\\SIDE_STAGE_EASY_DATA .txt";
+const char* CGame::FLOOR_STAGE_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_STAGE_EASY_DATA.txt";
 
 //========================================
 // コンストラクタ
@@ -504,6 +493,18 @@ void CGame::Result(void)
 	}	
 }
 
+//========================================
+// リセット
+//========================================
+void CGame::Reset(void)
+{
+	m_nStage = Stage_EASY;
+	m_bTime = false;
+
+
+	m_aStageInfo = { NULL,NULL };
+}
+
 //================================================================================
 //--------------------------------------------------------------------------------
 // 設定
@@ -523,6 +524,68 @@ void CGame::SetStage(int nStage)
 // 読み込み
 //--------------------------------------------------------------------------------
 //================================================================================
+
+//========================================
+// ステージ情報
+//========================================
+void CGame::LoodStage(void)
+{
+	char aDataSearch[TXT_MAX];	// データ検索用
+
+	// ファイルの読み込み
+	FILE *pFile = fopen(STAGE_INFO_FILE, "r");
+
+	if (pFile == NULL)
+	{// 種類毎の情報のデータファイルが開けなかった場合、
+	 //処理を終了する
+		return;
+	}
+
+	// END_SCRIPTが見つかるまで読み込みを繰り返す
+	while (1)
+	{
+		fscanf(pFile, "%s", &aDataSearch[0]);
+
+		if (!strcmp(aDataSearch, "END_SCRIPT"))
+		{// 読み込みを終了
+			fclose(pFile);
+			break;
+		}
+		else if (aDataSearch[0] == '#')
+		{// 折り返す
+			continue;
+		}
+		else if (!strcmp(aDataSearch, "SET_INFO"))
+		{// 生成開始
+
+			int nBlock = 0;
+
+			while (1)
+			{
+				fscanf(pFile, "%s", aDataSearch);
+
+				if (!strcmp(aDataSearch, "END_INFO"))
+				{// 生成終了
+					break;
+				}
+				else if (!strcmp(aDataSearch, "BLOCK"))
+				{
+					if (nBlock < Stage_MAX)
+					{
+						fscanf(pFile, "%s", &aDataSearch[0]);
+						fscanf(pFile, "%s", &m_aStageInfo.aBlockFile[nBlock][0]); // ファイル名
+						nBlock++;
+					}
+				}
+				else if (!strcmp(aDataSearch, "ENEMY"))
+				{
+					fscanf(pFile, "%s", &aDataSearch[0]);
+					fscanf(pFile, "%s", &m_aStageInfo.aEnemyFile[0]); // ファイル名
+				}
+			}
+		}
+	}
+}
 
 //========================================
 // 天井
@@ -545,21 +608,7 @@ void CGame::LoodSide(void)
 	FILE * pFile;
 
 	//ファイルを開く
-	switch (m_nSelectStage)
-	{
-	case CGame::Stage_EASY:
-		pFile = fopen(SIDE_STAGE_EASY_FILE, "r");
-		break;
-	case CGame::Stage_NORMAL:
-		pFile = fopen(SIDE_STAGE_NORMAL_FILE, "r");
-		break;
-	case CGame::Stage_DIFFICULT:
-		pFile = fopen(SIDE_STAGE_DIFFICULT_FILE, "r");
-		break;
-	default:
-		pFile = fopen(SIDE_STAGE_EASY_FILE, "r");
-		break;
-	}
+	pFile = fopen(SIDE_STAGE_FILE, "r");
 
 	// ファイルが開けたら
 	if (pFile != NULL)
@@ -720,21 +769,7 @@ void CGame::LoodFloor(void)
 	FILE * pFile;
 
 	//ファイルを開く
-	switch (m_nSelectStage)
-	{
-	case CGame::Stage_EASY:
-		pFile = fopen(FLOOR_STAGE_EASY_FILE, "r");
-		break;
-	case CGame::Stage_NORMAL:
-		pFile = fopen(FLOOR_STAGE_NORMAL_FILE, "r");
-		break;
-	case CGame::Stage_DIFFICULT:
-		pFile = fopen(FLOOR_STAGE_DIFFICULT_FILE, "r");
-		break;
-	default:
-		pFile = fopen(FLOOR_STAGE_EASY_FILE, "r");
-		break;
-	}
+	pFile = fopen(FLOOR_STAGE_FILE, "r");
 
 	// ファイルが開けたら
 	if (pFile != NULL)
@@ -909,22 +944,7 @@ void CGame::LoodBlock(void)
 	CSVFILE *pFile = new CSVFILE;
 
 	// 読み込み
-	switch (m_nSelectStage)
-	{
-	case CGame::Stage_EASY:
-		pFile->FileLood(BLOCK_STAGE_EASY_FILE, true, true, ',');
-		break;
-	case CGame::Stage_NORMAL:
-		pFile->FileLood(BLOCK_STAGE_NORMAL_FILE, true, true, ',');
-		break;
-	case CGame::Stage_DIFFICULT:
-		pFile->FileLood(BLOCK_STAGE_DIFFICULT_FILE, true, true, ',');
-		break;
-	default:
-		pFile->FileLood(BLOCK_STAGE_EASY_FILE, true, true, ',');
-		break;
-	}
-
+	pFile->FileLood(m_aStageInfo.aBlockFile[m_nStage], true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
@@ -977,28 +997,14 @@ void CGame::LoodEnemy(void)
 	CSVFILE *pFile = new CSVFILE;
 
 	// 読み込み
-	switch (m_nSelectStage)
-	{
-	case CGame::Stage_EASY:
-		pFile->FileLood(ENEMY_STAGE_EASY_FILE, true, true, ',');
-		break;
-	case CGame::Stage_NORMAL:
-		pFile->FileLood(ENEMY_STAGE_NORMAL_FILE, true, true, ',');
-		break;
-	case CGame::Stage_DIFFICULT:
-		pFile->FileLood(ENEMY_STAGE_DIFFICULT_FILE, true, true, ',');
-		break;
-	default:
-		pFile->FileLood(ENEMY_STAGE_EASY_FILE, true, true, ',');
-		break;
-	}
+	pFile->FileLood(m_aStageInfo.aEnemyFile, true, true, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
 
 	for (int nRow = 0; nRow < nRowMax; nRow++)
 	{
-		int nType, nMove,nTime;
+		int nStage, nType, nMove, nTime;
 		float fRotY;
 		D3DXVECTOR3 pos;
 
@@ -1011,13 +1017,14 @@ void CGame::LoodEnemy(void)
 
 			switch (nLine)
 			{
-			case 0:	pFile->ToValue(nType, sData); break;	// 種類
-			case 1:	pFile->ToValue(nMove, sData); break;	// 移動種類
-			case 2:	pFile->ToValue(pos.x, sData); break;	// 位置 X
-			case 3:	pFile->ToValue(pos.y, sData); break;	// 位置 Y
-			case 4:	pFile->ToValue(pos.z, sData); break;	// 位置 Z
-			case 5: pFile->ToValue(fRotY, sData); break;	// 向きY
-			case 6: pFile->ToValue(nTime, sData); break;	// 行動カウント
+			case 0: pFile->ToValue(nStage, sData); break;	// ステージ
+			case 1:	pFile->ToValue(nType, sData); break;	// 種類
+			case 2:	pFile->ToValue(nMove, sData); break;	// 移動種類
+			case 3:	pFile->ToValue(pos.x, sData); break;	// 位置 X
+			case 4:	pFile->ToValue(pos.y, sData); break;	// 位置 Y
+			case 5:	pFile->ToValue(pos.z, sData); break;	// 位置 Z
+			case 6: pFile->ToValue(fRotY, sData); break;	// 向きY
+			case 7: pFile->ToValue(nTime, sData); break;	// 行動カウント
 			}
 		}
 
@@ -1027,7 +1034,10 @@ void CGame::LoodEnemy(void)
 			return;
 		}
 
-		CEnemy *pObj = CEnemy::Create(nType, nMove, pos, D3DXVECTOR3(0.0f,fRotY,0.0f),nTime);
+		if (nStage == m_nStage)
+		{
+			CEnemy *pObj = CEnemy::Create(nType, nMove, pos, D3DXVECTOR3(0.0f, fRotY, 0.0f), nTime);
+		}
 	}
 
 	delete pFile;

@@ -188,18 +188,7 @@ HRESULT CBgCeiling::Init(void)
 	// テクスチャ設定
 	CTexture *pTexture = CManager::GetTexture();
 
-	switch (m_nStage)
-	{
-	case CGame::Stage_EASY:
-		m_pTexture = pTexture->GetAddress(CTexture::TEX_SKY00);
-		break;
-	case CGame::Stage_NORMAL:
-		m_pTexture = pTexture->GetAddress(CTexture::TEX_NIGHT_SKY00);
-		break;
-	case CGame::Stage_DIFFICULT:
-		m_pTexture = pTexture->GetAddress(CTexture::TEX_NIGHT_SKY00);
-		break;
-	}
+	m_pTexture = pTexture->GetAddress(CTexture::TEX_SKY00);
 	
 	return S_OK;
 }

@@ -216,6 +216,9 @@ void CTitle::Update(void)
 				break;
 			case TITLE_STAGE:
 			{
+				CGame::Reset();
+				CGame::LoodStage();
+
 				CManager::GetFade()->SetFade(MODE_GAME);
 				CGame::SetStage(m_nSelectStage);
 			}
