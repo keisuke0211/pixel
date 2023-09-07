@@ -163,43 +163,50 @@ void CEnemy::Update(void)
 		// 移動処理
 		if (m_Info.state != STATE_STAND && !bCube && !m_Info.bRotMove)
 		{
-			if (++m_Info.nCntTime >= m_Info.nTimeMax && m_Info.nMove != 0)
+			// 当たり判定
+			if (!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos) ||
+				!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos) ||
+				!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos) ||
+				!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos))
 			{
-				// 待機状態にする
-				SetState(STATE_STAND);
-
-				m_Info.nCntTime = 0;
-				m_Info.nStandTime = 0;
-
-				if (m_Info.nMove == 1)
+				if (++m_Info.nCntTime >= m_Info.nTimeMax && m_Info.nMove != 0)
 				{
-					if (m_Info.rot.y == 0.0f)
-					{
-						m_Info.moveRot.y = 3.14f;
-					}
-					else if (m_Info.rot.y = 3.14f)
-					{
-						m_Info.moveRot.y = 0.0f;
-					}
-				}
-				else if (m_Info.nMove == 2)
-				{
-					if (m_Info.rot.y == 1.57f)
-					{
-						m_Info.moveRot.y = -1.57f;
-					}
-					else if (m_Info.rot.y = -1.57f)
-					{
-						m_Info.moveRot.y = 1.57f;
-					}
-				}
+					// 待機状態にする
+					SetState(STATE_STAND);
 
-				// 目標向きに移動向きを代入
-				m_Info.targetRot = m_Info.moveRot;
-				m_Info.bRotMove = true;
+					m_Info.nCntTime = 0;
+					m_Info.nStandTime = 0;
 
-				m_Info.move.x = sinf(m_Info.moveRot.y) * -3;
-				m_Info.move.z = cosf(m_Info.moveRot.y) * -3;
+					if (m_Info.nMove == 1)
+					{
+						if (m_Info.rot.y == 0.0f)
+						{
+							m_Info.moveRot.y = 3.14f;
+						}
+						else if (m_Info.rot.y = 3.14f)
+						{
+							m_Info.moveRot.y = 0.0f;
+						}
+					}
+					else if (m_Info.nMove == 2)
+					{
+						if (m_Info.rot.y == 1.57f)
+						{
+							m_Info.moveRot.y = -1.57f;
+						}
+						else if (m_Info.rot.y = -1.57f)
+						{
+							m_Info.moveRot.y = 1.57f;
+						}
+					}
+
+					// 目標向きに移動向きを代入
+					m_Info.targetRot = m_Info.moveRot;
+					m_Info.bRotMove = true;
+
+					m_Info.move.x = sinf(m_Info.moveRot.y) * -3;
+					m_Info.move.z = cosf(m_Info.moveRot.y) * -3;
+				}
 			}
 		}
 		else if (m_Info.state == STATE_STAND && m_Info.bRotMove)
