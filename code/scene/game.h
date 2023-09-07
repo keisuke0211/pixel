@@ -24,15 +24,13 @@ class CText;	// テキスト
 //****************************************
 class CGame : public CScene
 {
-	static const int GAME_TIME = 90;				// 制限時間
 	static const int ADDTIME_MAX = 120;				// ボーナスをスコアに加算する時間
 	static const int MAX_CUBE = 30;					// ステージで配置出来るキューブの制限
 	static const char* STAGE_INFO_FILE;				// ステージ情報のファイルパス
 	static const char* SIDE_STAGE_FILE;				// 側面のファイル
 	static const char* FLOOR_STAGE_FILE;			// 床のファイル
 
-	static const int TIME_SCORE = 100;	// １秒のスコアの加算値
-	static const int CUBE_SCORE = 10;	// １個のスコアの加算値
+	static const int TIME_SCORE = 50;	// １秒のスコアの加算値
 
 public:
 
@@ -41,10 +39,10 @@ public:
 	// ステージ
 	enum Stage
 	{
-		Stage_EASY = 0,		// 初級
-		Stage_NORMAL,		// 中級
-		Stage_DIFFICULT,	// 難しい
-		Stage_MAX
+		STAGE_EASY = 0,		// 初級
+		STAGE_NORMAL,		// 中級
+		STAGE_DIFFICULT,	// 難しい
+		STAGE_MAX
 	};
 
 	// ***** 関数 *****
@@ -81,9 +79,13 @@ public:
 	// ステージ情報
 	struct StageInfo
 	{
-		int nTime[Stage_MAX];
-		char aBlockFile[Stage_MAX][TXT_MAX];
+		int nTime[STAGE_MAX];
+		int nCube[STAGE_MAX];
+		int nClearBonus[STAGE_MAX];
+		char aBlockFile[STAGE_MAX][TXT_MAX];
 		char aEnemyFile[TXT_MAX];
+		D3DXVECTOR3 PlayerPos[STAGE_MAX];
+		float PlayerRot[STAGE_MAX];
 	};
 
 	static StageInfo m_aStageInfo;
@@ -95,10 +97,11 @@ private:
 	// リザルト演出
 	enum Rst
 	{
-		RST_TIME = 0,	// タイムボーナス(テキスト)
+		RST_TEXT = 0,	// クリアボーナス！
+		RST_TIME,		// タイムボーナス(テキスト)
 		RST_TIME_CALC,	// タイムボーナス(計算)
-		RST_CUBE,		// キューブボーナス(テキスト)
-		RST_CUBE_CALC,	// キューブボーナス(結果)
+		RST_CLEAR,		// クリアボーナス(テキスト)
+		RST_CLEAR_CALC,	// クリアボーナス(数値)
 		RST_BONUS,		// ボーナスの合計(テキスト)
 		RST_BONUS_CALC,	// ボーナスの合計(計算)
 		RST_ADD_SCORE,	// スコア加算
@@ -125,7 +128,7 @@ private:
 	bool m_bEnd;						// 終了フラグ
 
 	int m_nTimeTotal;					// タイムボーナスの合計値
-	int m_nCubeTotal;					// キューブボーナスの合計値
+	int m_nClearTotal;					// クリアボーナスの合計値
 	int m_nTotal;						// 全ての合計値
 	int m_nAddTime;						// スコアの加算時間
 	int m_nStandTime;					// 待機時間(リザルト演出終了後)

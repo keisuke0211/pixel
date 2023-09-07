@@ -212,7 +212,7 @@ void CCamera::SetCamera(void)
 			D3DXToRadian(45.0f),							/* 視野角 */
 			(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,		/*画面のアスペクト比*/
 			10.0f,											/*Z値の最小値*/
-			2000.0f);										/*Z値の最大値*/
+			2500.0f);										/*Z値の最大値*/
 	}
 		break;
 	}

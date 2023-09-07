@@ -31,8 +31,8 @@ CPlayer *CGame::m_pPlayer = NULL;
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
 bool CGame::m_bTime = false;
-int CGame::m_nStage = Stage_EASY;
-int CGame::m_nSelectStage = Stage_EASY;
+int CGame::m_nStage = STAGE_EASY;
+int CGame::m_nSelectStage = STAGE_EASY;
 int CGame::m_nScore = 0;
 CGame::StageInfo CGame::m_aStageInfo = { NULL,NULL };
 
@@ -53,7 +53,7 @@ CGame::CGame()
 	m_nRstStgType = 0;
 	m_nTextCreate = 0;
 	m_nTimeTotal = 0;
-	m_nCubeTotal = 0;
+	m_nClearTotal = 0;
 	m_nTotal = 0;
 	m_nAddTime = 0;
 	m_bAddScore = false;
@@ -88,7 +88,7 @@ HRESULT CGame::Init(void)
 	m_nRstStgType = 0;
 	m_nTextCreate = 0;
 	m_nTimeTotal = 0;
-	m_nCubeTotal = 0;
+	m_nClearTotal = 0;
 	m_nTotal = 0;
 	m_nAddTime = ADDTIME_MAX;
 
@@ -107,7 +107,7 @@ HRESULT CGame::Init(void)
 	// ブロックの生成
 	LoodBlock();
 
-	CPlayer *pPlayer = CPlayer::Create();
+	CPlayer *pPlayer = CPlayer::Create(m_aStageInfo.PlayerPos[m_nStage],m_aStageInfo.PlayerRot[m_nStage]);
 	pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
 	// 敵の生成
@@ -121,41 +121,29 @@ HRESULT CGame::Init(void)
 
 	// スコア生成
 	m_pScore = CScore::Create();
-	CScore::SetScore();
+	CScore::SetScore(m_nScore);
 
 	CCamera *pCamera = CManager::GetCamera();					// カメラ
 	pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	pCamera->SetHeigth(0.4f);
 	pCamera->SetDistance(1400.0f);
 
-	FormFont pFont = {
-		D3DXCOLOR(0.0f,0.63f,0.2f,1.0f),
-		20.0f,
-		15,
-		10,
-		30
-	};
+	FormFont pFont = {INIT_D3DXCOLOR,20.0f,15,40,30};
 
-	FormShadow pShadow = {
-		D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
-		true,
-		D3DXVECTOR3(2.0f,2.0f,0.0f),
-		D3DXVECTOR2(1.0f,1.0f)
-	};
+	FormShadow pShadow = {D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)};
 
 	char aString[TXT_MAX];
 
 	// 読み込み
-	sprintf(aString, "初級ステージ!\n90秒以内に脱出せよ！");
+	sprintf(aString, "STAGE %d",m_nStage + 1);
+
+	int nStrlen = strlen(aString);
 
 	CText::Create(CText::BOX_NORMAL_RECT,
-		D3DXVECTOR3(640.0f, 300.0f, 0.0f),
-		D3DXVECTOR2(440.0f, 100.0f),
-		aString,
-		CFont::FONT_BESTTEN,
-		&pFont, false,&pShadow);
+		D3DXVECTOR3(640.0f, 350.0f, 0.0f),D3DXVECTOR2(440.0f, 100.0f),
+		aString,CFont::FONT_BESTTEN,&pFont, false,&pShadow);
 
-	m_nStartTime = (15 * 18) + 10 + 25;
+	m_nStartTime = (nStrlen * 15) + 10 + 10;
 	m_nMoveRot = ((D3DX_PI * 2) / m_nStartTime);
 
 	return S_OK;
@@ -200,8 +188,8 @@ void CGame::Update(void)
 		bool bStart = CTitle::IsStart();
 		if (!bStart)
 		{
-			pCamera->SetRot(m_rot);
-			m_rot.y += m_nMoveRot;
+			/*pCamera->SetRot(m_rot);
+			m_rot.y += m_nMoveRot;*/
 
 			if (--m_nStartTime <= 0)
 			{
@@ -330,7 +318,7 @@ CGame *CGame::Create(void)
 //========================================
 void CGame::Result(void)
 {
-	FormFont pFont = { INIT_D3DXCOLOR, 20.0f, 5, 5, 0};
+	FormFont pFont = { INIT_D3DXCOLOR, 18.0f, 5, 5, 0};
 	FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(2.0f,2.0f)};
 
 	char aString[TXT_MAX];
@@ -339,10 +327,16 @@ void CGame::Result(void)
 
 	switch (m_nRstStgType)
 	{
+	case RST_TEXT:
+	{
+		sprintf(aString, "STAGE CLEAR RESULT BONUS");
+		pos = D3DXVECTOR3(20.0f, 50.0f, 0.0f);
+	}
+	break;
 	case RST_TIME:
 	{
 		sprintf(aString, "TIME BONUS");
-		pos = D3DXVECTOR3(100.0f, 100.0f, 0.0f);
+		pos = D3DXVECTOR3(100.0f, 120.0f, 0.0f);
 	}
 		break;
 	case RST_TIME_CALC:
@@ -351,22 +345,23 @@ void CGame::Result(void)
 		m_nTimeTotal = TIME_SCORE * nTime;
 
 		sprintf(aString, "%d * %d = %d",TIME_SCORE,nTime,m_nTimeTotal);
-		pos = D3DXVECTOR3(100.0f, 150.0f, 0.0f);
+		pos = D3DXVECTOR3(100.0f, 190.0f, 0.0f);
 	}
 		break;
-	case RST_CUBE:
+	case RST_CLEAR:
 	{
-		sprintf(aString, "USE CUBE");
-		pos = D3DXVECTOR3(100.0f, 250.0f, 0.0f);
+		sprintf(aString, "CLEAR BONUS");
+		pos = D3DXVECTOR3(100.0f, 260.0f, 0.0f);
 	}
 		break;
-	case RST_CUBE_CALC:
+	case RST_CLEAR_CALC:
 	{
-		int nCube = CCube::GetUse();
-		m_nCubeTotal = CUBE_SCORE * nCube;
+		int nClear = m_aStageInfo.nClearBonus[m_nStage];
 
-		sprintf(aString, "%d * %d = -%d", CUBE_SCORE, nCube, m_nCubeTotal);
-		pos = D3DXVECTOR3(100.0f, 300.0f, 0.0f);
+		m_nClearTotal = nClear * 1;
+
+		sprintf(aString, "%d * %d = %d", nClear,1,m_nClearTotal);
+		pos = D3DXVECTOR3(100.0f, 310.0f, 0.0f);
 	}
 		break;
 	case RST_BONUS:
@@ -377,7 +372,7 @@ void CGame::Result(void)
 		break;
 	case RST_BONUS_CALC:
 	{
-		m_nTotal = m_nTimeTotal - m_nCubeTotal;
+		m_nTotal = m_nTimeTotal + m_nClearTotal;
 
 		sprintf(aString, "%d",m_nTotal);
 		pos = D3DXVECTOR3(100.0f, 550.0f, 0.0f);
@@ -389,7 +384,24 @@ void CGame::Result(void)
 		{
 			if (m_nTotal <= 0)
 			{
-				m_nStandTime = 120;
+				if (m_nStage < STAGE_MAX)
+				{
+					char aString[TXT_MAX];
+					sprintf(aString, "NEXT⇒STAGE%d", m_nStage + 1);
+
+					int nStrlen = strlen(aString);
+
+					CText::Create(CText::BOX_NORMAL_RECT,
+						D3DXVECTOR3(1000.0f, 650.0f, 0.0f), D3DXVECTOR2(440.0f, 100.0f),
+						aString, CFont::FONT_BESTTEN, &pFont, false, &pShadow);
+
+					m_nStandTime = (nStrlen * 15) + 10 + 10;
+				}
+				else if (m_nStage == STAGE_MAX)
+				{
+					m_nStandTime = 120;
+				}
+
 				m_nRstStgType++;
 			}
 			else
@@ -433,10 +445,18 @@ void CGame::Result(void)
 		break;
 	case RST_END:
 	{
-		CManager::GetFade()->SetFade(MODE_RANKING);
-		m_nScore = m_pScore->GetScore();
-		CRanking::SetScore11(m_nScore);
-		CRanking::SetAllStage(false);
+		if (++m_nStage < STAGE_MAX)
+		{
+			m_nScore = m_pScore->GetScore();
+			CManager::GetFade()->SetFade(MODE_GAME);
+		}
+		else if (m_nStage >= STAGE_MAX)
+		{
+			CManager::GetFade()->SetFade(MODE_RANKING);
+			m_nScore = m_pScore->GetScore();
+			CRanking::SetScore11(m_nScore);
+			CRanking::SetAllStage(false);
+		}
 	}
 		break;
 	}
@@ -446,13 +466,26 @@ void CGame::Result(void)
 	{
 		if (--m_nTextCreate <= 0)
 		{
+			if (m_nRstStgType == RST_TEXT)
+			{
+				pFont = { D3DXCOLOR(1.0f,0.96f,0,1)	, 20.0f, 1, 5, 0 };
+				pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(3.0f,3.0f,0.0f), D3DXVECTOR2(3.0f,3.0f) };
+			}
+
 			m_nTextCreate = 0;
 			nLength = strlen(aString);
 
 			m_RstText[m_nRstStgType] = CText::Create(CText::BOX_NORMAL_RECT, pos, D3DXVECTOR2(0.0f, 0.0f),
 				aString, CFont::FONT_BESTTEN, &pFont, false, &pShadow);
 
-			m_nTextCreate = (nLength * 5) + 5;
+			if (m_nRstStgType == RST_TEXT)
+			{
+				m_nTextCreate = (nLength * 1) + 5;
+			}
+			else
+			{
+				m_nTextCreate = (nLength * 5) + 5;
+			}
 			m_nRstStgType++;
 		}
 	}	
@@ -463,7 +496,7 @@ void CGame::Result(void)
 //========================================
 void CGame::Reset(void)
 {
-	m_nStage = Stage_EASY;
+	m_nStage = STAGE_EASY;
 	m_bTime = false;
 	m_nScore = 0;
 	m_aStageInfo = { NULL,NULL };
@@ -523,7 +556,6 @@ void CGame::LoodStage(void)
 		{// 生成開始
 
 			int nCntStage = 0;
-
 			while (1)
 			{
 				fscanf(pFile, "%s", aDataSearch);
@@ -543,21 +575,41 @@ void CGame::LoodStage(void)
 							nCntStage++;
 							break;
 						}
+						else if (nCntStage > STAGE_MAX)
+						{// 折り返す
+							continue;
+						}
 						else if (!strcmp(aDataSearch, "TIME"))
 						{
-							if (nCntStage < Stage_MAX)
-							{
-								fscanf(pFile, "%s", &aDataSearch[0]);
-								fscanf(pFile, "%d", &m_aStageInfo.nTime[nCntStage]);
-							}
+							fscanf(pFile, "%s", &aDataSearch[0]);
+							fscanf(pFile, "%d", &m_aStageInfo.nTime[nCntStage]);
+						}
+						else if (!strcmp(aDataSearch, "CUBE"))
+						{
+							fscanf(pFile, "%s", &aDataSearch[0]);
+							fscanf(pFile, "%d", &m_aStageInfo.nCube[nCntStage]);
+						}
+						else if (!strcmp(aDataSearch, "CLEAR"))
+						{
+							fscanf(pFile, "%s", &aDataSearch[0]);
+							fscanf(pFile, "%d", &m_aStageInfo.nClearBonus[nCntStage]);
 						}
 						else if (!strcmp(aDataSearch, "BLOCK"))
 						{
-							if (nCntStage < Stage_MAX)
-							{
-								fscanf(pFile, "%s", &aDataSearch[0]);
-								fscanf(pFile, "%s", &m_aStageInfo.aBlockFile[nCntStage][0]); // ファイル名
-							}
+							fscanf(pFile, "%s", &aDataSearch[0]);
+							fscanf(pFile, "%s", &m_aStageInfo.aBlockFile[nCntStage][0]); // ファイル名
+						}
+						else if (!strcmp(aDataSearch, "PLAYER_POS"))
+						{
+							fscanf(pFile, "%s", &aDataSearch[0]);
+							fscanf(pFile, "%f", &m_aStageInfo.PlayerPos[nCntStage].x);
+							fscanf(pFile, "%f", &m_aStageInfo.PlayerPos[nCntStage].y);
+							fscanf(pFile, "%f", &m_aStageInfo.PlayerPos[nCntStage].z);
+						}
+						else if (!strcmp(aDataSearch, "PLAYER_ROT"))
+						{
+							fscanf(pFile, "%s", &aDataSearch[0]);
+							fscanf(pFile, "%f", &m_aStageInfo.PlayerRot[nCntStage]);
 						}
 					}
 				}

@@ -65,6 +65,7 @@ CEnemy *CEnemy::Create(int nType, int nMove, D3DXVECTOR3 pos, D3DXVECTOR3 rot,in
 	CEnemy *pEnemy = new CEnemy;
 
 	pEnemy->SetModel(MODEL_ENEMY_00 + nType);
+	pEnemy->m_Info.nType = nType;
 
 	// èâä˙âªèàóù
 	pEnemy->Init();
@@ -100,9 +101,8 @@ HRESULT CEnemy::Init(void)
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.moveRot = D3DXVECTOR3(0.0f,0.0f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
-	m_Info.nLife = 3;
-	m_Info.nLifeMax = 3;
-	m_Info.nType = 0;
+	m_Info.nLife = m_Info.nType + 1;
+	m_Info.nLifeMax = m_Info.nLife;
 
 	// ê∂ê¨
 	SetPos(m_Info.pos);

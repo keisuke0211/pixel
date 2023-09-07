@@ -77,13 +77,18 @@ CPlayer::~CPlayer()
 //========================================
 // ¶¬
 //========================================
-CPlayer *CPlayer::Create(void)
+CPlayer *CPlayer::Create(D3DXVECTOR3 pos, float rotY)
 {
 	CPlayer *pPlayer  = new CPlayer;
 
 	// ‰Šú‰»ˆ—
 	pPlayer->Init();
 
+	pPlayer->m_Info.pos = pos;
+	pPlayer->m_Info.targetPos = pos;
+	pPlayer->m_Info.rot = D3DXVECTOR3(0.0f, rotY, 0.0f);
+	pPlayer->m_Info.moveRot = D3DXVECTOR3(0.0f, rotY, 0.0f);
+	pPlayer->m_Info.targetRot = D3DXVECTOR3(0.0f, rotY, 0.0f);
 	return pPlayer;
 }
 

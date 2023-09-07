@@ -56,6 +56,10 @@ CRanking::CRanking()
 	{
 		m_Words[nCnt] = NULL;
 	}
+	for (int nCnt = 0; nCnt < NAME_NUM; nCnt++)
+	{
+		m_Info.nNameChar[nCnt] = 0;
+	}
 }
 
 //========================================
@@ -172,7 +176,7 @@ HRESULT CRanking::Init(void)
 	}
 
 	// タイトルから来たら
-	if (m_bRankingAll)
+	/*if (m_bRankingAll)
 	{
 		pFont = { INIT_D3DXCOLOR,15.0f,1,1,-1 };
 		FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
@@ -190,7 +194,7 @@ HRESULT CRanking::Init(void)
 			"現在のステージ：STAGE1",
 			CFont::FONT_BESTTEN,
 			&pFont, false,&pShadow);
-	}
+	}*/
 
 	return S_OK;
 }
@@ -556,12 +560,14 @@ void CRanking::NameInput(void)
 			int nRank = m_Info.nUpdateRank;
 			char aWords[] = "_";
 
+			int nChar = m_Info.nNameChar[m_Info.nCntName - 1];
+
 			// 現在のカウントの文字を反映する
-			for (int nCnt = 0; nCnt < 2; nCnt++)// 日本語用
+			for (int nCnt = 0; nCnt < nChar; nCnt++)// 日本語用
 			{
 				m_Ranking[nRank].aName[(m_Info.nCntChar - 1) - nCnt] = '\0';
 			}
-			m_Info.nCntChar -= 2;
+			m_Info.nCntChar -= nChar;
 
 			if (m_Text[nRank]->ChgWords(aWords, NAME_START_DEX + m_Info.nCntName,INIT_D3DXCOLOR))
 			{
@@ -589,7 +595,10 @@ void CRanking::NameInput(void)
 			strinit(m_aNameData, TXT_MAX);
 			strcat(m_aNameData, m_Ranking[nRank].aName);
 
-			m_Info.nCntChar += 2;
+			int nStrlen = strlen(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv);
+
+			m_Info.nCntChar += nStrlen;
+			m_Info.nNameChar[m_Info.nCntName] = nStrlen;
 
 			if (m_Text[nRank]->ChgWords(m_pString[nString].pConv[nConv].pLetter[nLetter].aConv, NAME_START_DEX + m_Info.nCntName, RANKING_COLOR))
 			{

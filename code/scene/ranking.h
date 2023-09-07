@@ -87,13 +87,14 @@ private:
 	// 共通情報
 	struct Info
 	{
-		int		nCounterState;	// 状態カウンター
-		bool	bNameEntry;		// 名前入力
-		int		nCntName;		// 名前カウント
-		int		nCntChar;		// 文字カウント
-		int		nUpdateRank;	// 更新順位
-		int		nCntBlink;		// 点滅カウンター
-		bool	bNameInput;		// 入力フラグ
+		int		nCounterState;			// 状態カウンター
+		bool	bNameEntry;				// 名前入力
+		int		nCntName;				// 名前カウント
+		int		nNameChar[NAME_NUM];	// 名前の文字数 (半角英数 1 : 全角英数 2)
+		int		nCntChar;				// 文字カウント
+		int		nUpdateRank;			// 更新順位
+		int		nCntBlink;				// 点滅カウンター
+		bool	bNameInput;				// 入力フラグ
 
 		int		nCntString;		// 文字列カウント
 		int		nCntLetter;		// 文字カウント

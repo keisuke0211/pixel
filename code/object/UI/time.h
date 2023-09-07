@@ -45,6 +45,7 @@ private:
 	int m_nTimeMax;		// 時間の最大値
 	int m_nCounter;		// カウンター
 	int m_Digit;		// 桁数
+	int m_nNumWarn;		// 生成した警告数
 	bool m_bSetTime;	// 時間の設定をしたか
 	bool m_bUpdateTime;	// 時間の更新フラグ
 	CText *m_Time;		// テキスト表示

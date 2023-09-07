@@ -57,7 +57,7 @@ public:
 	/* ƒƒCƒ“ */
 
 	// ¶¬
-	static CPlayer *Create(void);
+	static CPlayer *Create(D3DXVECTOR3 pos,float rotY);
 
 	HRESULT Init(void);				// ‰Šú‰»
 	void Uninit(void);				// I—¹

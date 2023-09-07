@@ -60,6 +60,7 @@ HRESULT CTime::Init(void)
 
 	m_nTime = 0;	// タイム
 	m_nCounter = 0;	// カウンター
+	m_nNumWarn = 0;
 
 	// 種類設定
 	SetType(TYPE_TIME);
@@ -162,15 +163,17 @@ void CTime::Update(void)
 			FormFont pFont = { INIT_D3DXCOLOR,20.0f,1,60,60 };
 			FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f) };
 
-			if (m_nTime == m_nTimeMax / 3)
+			if (m_nTime == m_nTimeMax / 3 && m_nNumWarn == 1)
 			{
 				CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 50.0f, 0.0f), D3DXVECTOR2(350.0f, 100.0f),
 					aString, CFont::FONT_BESTTEN, &pFont, true, &pShadow);
+				m_nNumWarn++;
 			}
-			else if (m_nTime == m_nTimeMax * 2 / 3)
+			else if (m_nTime == m_nTimeMax * 2 / 3 && m_nNumWarn == 0)
 			{
 				CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 50.0f, 0.0f), D3DXVECTOR2(350.0f, 100.0f),
 					aString, CFont::FONT_BESTTEN, &pFont, true, &pShadow);
+				m_nNumWarn++;
 			}
 		}
 	}

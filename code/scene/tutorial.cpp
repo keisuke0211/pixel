@@ -99,7 +99,7 @@ HRESULT CTutorial::Init(void)
 	// ƒuƒƒbƒN‚Ì¶¬
 	LoodBlock();
 
-	m_pPlayer = CPlayer::Create();
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 20.0f, 0.0f),0.0f);
 	m_pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
 
