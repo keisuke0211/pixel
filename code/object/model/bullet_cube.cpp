@@ -106,6 +106,15 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 
 	pCube->m_Info.posOld = pCube->m_Info.pos;
 
+	// 配置場所にプレイヤーがいるか
+	pCube->ModelCollsion(PRIO_OBJECT, TYPE_PLAYER, pCube->m_Info.pos);
+
+	if (pCube->m_Info.bErase)
+	{
+		pCube->Uninit();
+		return NULL;
+	}
+
 	// テキストの更新
 	CubeText();
 
@@ -113,38 +122,16 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 	// X軸
 	if (pCube->Correction(VECTOR_X, pCube->m_Info.pos)) 
 	{ 
-		pCube->ModelCollsion(PRIO_OBJECT, TYPE_PLAYER,pCube->m_Info.pos);
-
-		if (pCube->m_Info.bErase)
-		{
-			pCube->Uninit();
-			return NULL;
-		}
-
 		return pCube; 
 	}
 	// Y軸
 	if (pCube->Correction(VECTOR_Y, pCube->m_Info.pos)) 
 	{
-
-		if (pCube->m_Info.bErase)
-		{
-			pCube->Uninit();
-			return NULL;
-		}
-
 		return pCube;
 	}
 	// Z軸
 	if (pCube->Correction(VECTOR_Z, pCube->m_Info.pos))
 	{
-		pCube->ModelCollsion(PRIO_OBJECT, TYPE_PLAYER, pCube->m_Info.pos);
-
-		if (pCube->m_Info.bErase)
-		{
-			pCube->Uninit();
-			return NULL;
-		}
 		return pCube;
 	}
 	return pCube;
@@ -759,6 +746,18 @@ void CCube::SetUseCube(void)
 		aString,
 		CFont::FONT_BESTTEN,
 		&pFont, false, &pShadow);
+}
+
+//========================================
+// リセット
+//========================================
+void CCube::Reset(void)
+{
+	m_nNumAll = -1;
+	m_nNumChain = 0;
+	m_nLimitCube = 0;
+	m_nUseCube = 0;
+	bLeadSet = false;
 }
 
 //========================================

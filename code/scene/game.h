@@ -72,7 +72,8 @@ public:
 	/* プレイヤー	*/static CPlayer *GetPlayer() { return m_pPlayer; }
 	/* タイム		*/static CTime *GetTime() { return m_pTime; }
 	/* スコア		*/static CScore *GetScore() { return m_pScore; };
-	/* 時間フラグ	*/static bool IsTime() { return m_bTime; }
+	/* 時間			*/static bool IsTime() { return m_bTime; }
+	/* クリア		*/static bool IsClear() { return m_bClear; }
 	
 	static int m_nStage;							// 現在のステージ 
 
@@ -147,6 +148,7 @@ private:
 	static bool m_bTime;				// 時間フラグ
 	static int m_nScore;				// スコアの保存用
 	static int m_nSelectStage;			// 現在選択しているステージ 
+	static bool m_bClear;				// クリアフラグ
 };
 
 #endif

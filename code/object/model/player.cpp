@@ -137,8 +137,9 @@ void CPlayer::Update(void)
 		m_Info.rotOld = m_Info.rot;
 
 		bool bStart = CTitle::IsStart();
+		bool bClear = CGame::IsClear();
 
-		if (bStart)
+		if (bStart && !bClear)
 		{
 			// ƒL[“ü—Íˆ—
 			KeyInput();

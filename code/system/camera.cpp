@@ -11,6 +11,7 @@
 #include "input.h"
 #include "../scene/pause.h"
 #include "../scene/title.h"
+#include "../scene/game.h"
 #include "../object/model/block.h"
 
 //****************************************
@@ -110,10 +111,12 @@ void CCamera::Update(void)
 	// 視点移動
 	{
 		bool bPause = CPause::IsPause();
+		bool bClear = CGame::IsClear();
+
 		if (!bPause)
 		{
 			bool bStart = CTitle::IsStart();
-			if (bStart)
+			if (bStart && !bClear)
 			{
 				if (pInputMouse->GetTrigger(CMouse::MOUSE_RIGHT))
 				{// マウスの右ボタンが押されている間

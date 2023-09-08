@@ -30,8 +30,8 @@ SET_INFO
 #-- STAGE03 ----------------------
 	SET_STAGE
 		TIME = 30
-		CUBE = 10
-		CLEAR = 300
+		CUBE = 6
+		CLEAR = 6
 		BLOCK = data\\GAMEDATA\\BLOCK\\STAGE03_DATA.csv
 		PLAYER_POS = 0 20 0
 		PLAYER_ROT = 0.0

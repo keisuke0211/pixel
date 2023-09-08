@@ -33,6 +33,7 @@ CPlayer *CGame::m_pPlayer = NULL;
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
 bool CGame::m_bTime = false;
+bool CGame::m_bClear = false;
 int CGame::m_nStage = STAGE_EASY;
 int CGame::m_nSelectStage = STAGE_EASY;
 int CGame::m_nScore = 0;
@@ -51,6 +52,7 @@ CGame::CGame()
 	m_nStartTime = 0;
 	m_nEndTime = 0;
 	m_bEnd = false;
+	m_bClear = false;
 
 	m_nRstStgType = 0;
 	m_nTextCreate = 0;
@@ -80,6 +82,7 @@ CGame::~CGame()
 HRESULT CGame::Init(void)
 {
 	CBlock::Reset();
+	CCube::Reset();
 
 	m_rot = INIT_D3DXVECTOR3;
 	m_nStartTime = 0;
@@ -116,7 +119,7 @@ HRESULT CGame::Init(void)
 	// 敵の生成
 	LoodEnemy();
 
-	// キューブの制限数
+	// キューブの使用数
 	CCube::SetUseCube();
 
 	// タイム生成
@@ -223,14 +226,10 @@ void CGame::Update(void)
 			{
 				if (!m_bEnd)
 				{
-					FormFont pFont = {INIT_D3DXCOLOR,20.0f,10,60,30};
+					m_bClear = true;
 
-					FormShadow pShadow = {
-						D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
-						true,
-						D3DXVECTOR3(2.0f,2.0f,0.0f),
-						D3DXVECTOR2(1.0f,1.0f)
-					};
+					FormFont pFont = {INIT_D3DXCOLOR,20.0f,8,60,30};
+					FormShadow pShadow = {D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)};
 
 					CText::Create(CText::BOX_NORMAL_RECT,
 						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
@@ -239,7 +238,7 @@ void CGame::Update(void)
 						CFont::FONT_BESTTEN,
 						&pFont, false,&pShadow);
 
-					m_nEndTime = (10 * 10) + 60 + 15;
+					m_nEndTime = (8 * 10) + 60 + 15;
 					m_bEnd = true;
 					m_bTime = true;
 				}
@@ -259,7 +258,7 @@ void CGame::Update(void)
 		{
 			if (!m_bEnd)
 			{
-				FormFont pFont = {INIT_D3DXCOLOR,20.0f,10,60,30};
+				FormFont pFont = {INIT_D3DXCOLOR,20.0f,8,60,30};
 
 				CText::Create(CText::BOX_NORMAL_RECT,
 					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
@@ -268,7 +267,7 @@ void CGame::Update(void)
 					CFont::FONT_BESTTEN,
 					&pFont, false);
 
-				m_nEndTime = (7 * 10) + 60 + 15;
+				m_nEndTime = (7 * 8) + 60 + 15;
 				m_bEnd = true;
 			}
 			else

@@ -85,6 +85,7 @@ public:
 	/* 種類			*/void SetCubeType(const int type) { m_Info.nShape = type; }
 	/* 先頭フラグ	*/void SetCubeLead(const bool bSet) { bLeadSet = bSet; }
 	/* 使用数		*/static void SetUseCube(void);
+	/* リセット		*/static void Reset(void);
 
 	// -- 取得 -------------------------------
 	/* 位置			*/D3DXVECTOR3 GetCubeos(void) { return m_Info.pos; }
