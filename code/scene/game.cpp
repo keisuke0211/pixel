@@ -25,6 +25,7 @@
 #include "../system/words/text.h"
 #include "../system/words/font.h"
 #include "../system/camera.h"
+#include "../system/sound.h"
 #include "../scene/pause.h"
 #include "fade.h"
 
@@ -152,6 +153,9 @@ HRESULT CGame::Init(void)
 	m_nStartTime = (nStrlen * 10) + 60 + 10;
 	m_nMoveRot = ((D3DX_PI * 2) / m_nStartTime);
 
+	CSound *pSound = CManager::GetSound();
+	pSound->PlaySound(CSound::TYPE_GAME01);
+
 	return S_OK;
 }
 
@@ -171,6 +175,9 @@ void CGame::Uninit(void)
 	CObject::ReleaseAll(CObject::TYPE_SCORE);
 	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
+
+	CSound *pSound = CManager::GetSound();
+	pSound->StopSound();
 }
 
 //========================================

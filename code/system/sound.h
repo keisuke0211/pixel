@@ -36,6 +36,10 @@ public:
 	// サウンドの種類
 	enum TYPE
 	{
+		TYPE_TITLE,		// タイトル
+		TYPE_GAME00,	// ゲーム0
+		TYPE_GAME01,	// ゲーム1
+		TYPE_RANKING,	// ランキング
 		TYPE_SELECT,	// 選択
 		TYPE_CYBER,		// 決定
 		TYPE_SET,		// ブロック配置

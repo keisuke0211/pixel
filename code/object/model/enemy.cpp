@@ -119,7 +119,7 @@ void CEnemy::Uninit(void)
 {
 	CSound *pSound = CManager::GetSound();
 
-	pSound->StopSound();
+	pSound->StopSoundType(CSound::SOUND_TYPE_SE);
 
 	CObjectX::Uninit();
 }
@@ -430,7 +430,7 @@ void CEnemy::HitLife(int nDamage)
 		CScore::SetScore(nScore);
 
 		// ”š”­‚ÌSEÄ¶
-		pSound->PlaySound(CSound::TYPE_EXPLOSIO);
+		pSound->PlaySound(CSound::TYPE_HIT);
 
 		return;
 	}

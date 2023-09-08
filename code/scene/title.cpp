@@ -123,6 +123,9 @@ HRESULT CTitle::Init(void)
 	m_nTextTime = TEXT_TIME;
 	m_nStandTime = STAND_MAX;
 
+	CSound *pSound = CManager::GetSound();
+	pSound->PlaySound(CSound::TYPE_TITLE);
+
 	return S_OK;
 }
 
@@ -131,6 +134,9 @@ HRESULT CTitle::Init(void)
 //========================================
 void CTitle::Uninit(void)
 {
+	CSound *pSound = CManager::GetSound();
+	pSound->StopSound();
+
 	CObject::ReleaseAll(CObject::TYPE_BG);
 	CObject::ReleaseAll(CObject::TYPE_BLOCK);
 	CObject::ReleaseAll(CObject::TYPE_TEXT2D);

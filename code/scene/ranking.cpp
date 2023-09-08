@@ -7,6 +7,7 @@
 //========================================
 #include "ranking.h"
 #include "fade.h"
+#include "../system/sound.h"
 #include "../object/UI/UI_title.h"
 #include "../system/csv_file.h"
 #include "../system/input.h"
@@ -78,6 +79,9 @@ HRESULT CRanking::Init(void)
 	int nUpdateRank = -1;	// スコアを更新した順位
 
 	CUiTitle::Create();		// タイトル背景
+
+	CSound *pSound = CManager::GetSound();
+	pSound->PlaySound(CSound::TYPE_RANKING);
 
 	// 読み込み
 	Load();		// プレイしたステージだけ
@@ -215,6 +219,9 @@ HRESULT CRanking::Init(void)
 //========================================
 void CRanking::Uninit(void)
 {
+	CSound *pSound = CManager::GetSound();
+	pSound->StopSound();
+
 	// 書き出し処理
 	if (!m_bRankingAll)
 	{
