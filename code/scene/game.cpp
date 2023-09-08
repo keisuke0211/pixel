@@ -429,10 +429,10 @@ void CGame::Result(void)
 		{
 			if (m_nTotal <= 0)
 			{
-				if (m_nStage < STAGE_MAX)
+				if (++m_nStage < STAGE_MAX)
 				{
 					char aString[TXT_MAX];
-					sprintf(aString, "NEXTÅÀSTAGE%d", m_nStage + 2);
+					sprintf(aString, "NEXTÅÀSTAGE%d", m_nStage + 1);
 
 					int nStrlen = strlen(aString);
 
@@ -442,7 +442,7 @@ void CGame::Result(void)
 
 					m_nStandTime = (nStrlen * 15) + 10 + 10;
 				}
-				else if (m_nStage == STAGE_MAX)
+				else if (m_nStage >= STAGE_MAX)
 				{
 					char aString[TXT_MAX];
 					sprintf(aString, "NEXTÅÀRANKING");
@@ -499,7 +499,7 @@ void CGame::Result(void)
 		break;
 	case RST_END:
 	{
-		if (++m_nStage < STAGE_MAX)
+		if (m_nStage < STAGE_MAX)
 		{
 			m_nScore = m_pScore->GetScore();
 			CManager::GetFade()->SetFade(MODE_GAME);

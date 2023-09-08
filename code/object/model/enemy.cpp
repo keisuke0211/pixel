@@ -148,8 +148,8 @@ void CEnemy::Update(void)
 		}
 
 		// ìñÇΩÇËîªíË
+		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos)) {}
 		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos)) {}
-		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X,m_Info.pos)){ }
 		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos)) { bCube = true; }
 
 		if (m_Info.state != STATE_STAND)
@@ -157,9 +157,8 @@ void CEnemy::Update(void)
 			// à⁄ìÆó ÇÃë„ì¸
 			m_Info.pos.z += m_Info.move.z;
 		}
-
+		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos)) {}
 		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos)) {}
-		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos)){ }
 		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos)) { bCube = true; }
 
 		// à⁄ìÆèàóù
