@@ -72,7 +72,6 @@ public:
 private:
 	// ***** 関数 *****
 	/* 当たり判定			*/D3DXVECTOR3 Collision(PRIO nPrio, TYPE nType,VECTOR vector,D3DXVECTOR3 pos);
-	/* カメラの当たり判定	*/void CameraCollision(void);
 
 	/* 移動 */
 	void MoveInput(DIRECTION drct);	// キーボードの移動処理

@@ -148,6 +148,7 @@ void CEnemy::Update(void)
 		}
 
 		// 当たり判定
+		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos)) {}
 		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X,m_Info.pos)){ }
 		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos)) { bCube = true; }
 
@@ -157,6 +158,7 @@ void CEnemy::Update(void)
 			m_Info.pos.z += m_Info.move.z;
 		}
 
+		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos)) {}
 		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos)){ }
 		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos)) { bCube = true; }
 
@@ -164,8 +166,10 @@ void CEnemy::Update(void)
 		if (m_Info.state != STATE_STAND && !bCube && !m_Info.bRotMove)
 		{
 			// 当たり判定
-			if (!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos) ||
+			if (!Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos)||
+				!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos) ||
 				!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos) ||
+				!Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos) ||
 				!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos) ||
 				!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos))
 			{
@@ -177,7 +181,10 @@ void CEnemy::Update(void)
 					m_Info.nCntTime = 0;
 					m_Info.nStandTime = 0;
 
-					if (m_Info.nMove == 1)
+					switch (m_Info.nMove)
+					{
+					break;
+					case 1:
 					{
 						if (m_Info.rot.y == 0.0f)
 						{
@@ -188,7 +195,8 @@ void CEnemy::Update(void)
 							m_Info.moveRot.y = 0.0f;
 						}
 					}
-					else if (m_Info.nMove == 2)
+					break;
+					case 2:
 					{
 						if (m_Info.rot.y == 1.57f)
 						{
@@ -198,6 +206,22 @@ void CEnemy::Update(void)
 						{
 							m_Info.moveRot.y = 1.57f;
 						}
+					}
+					break;
+					case 3:
+					{
+						m_Info.moveRot.y += 1.57f;
+						ControlAngle(&m_Info.rot.y);
+					}
+					break;
+					case 4:
+					{
+						m_Info.moveRot.y -= 1.57f;
+						ControlAngle(&m_Info.rot.y);
+					}
+					break;
+					default:
+						break;
 					}
 
 					// 目標向きに移動向きを代入
@@ -267,7 +291,7 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 		D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
 		D3DXVECTOR3 RotOld = GetRotOld();	// 向き(過去)
 
-		float fWidth = 15;		// 幅
+		float fWidth = 30;		// 幅
 		float fHeight = 10;		// 高さ
 		float fDepth = 15;		// 奥行き
 
@@ -285,6 +309,17 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 			float fPairWidth = pObj->GetWidth();		// 幅
 			float fPairHeight = pObj->GetHeight();		// 高さ
 			float fPairDepth = pObj->GetDepth();		// 奥行き
+
+			fPairWidth = round(fPairWidth);
+			fPairHeight = round(fPairHeight);
+			fPairDepth = round(fPairDepth);
+
+			if (nType == TYPE_PLAYER)
+			{
+				fPairWidth = 20;
+				fPairHeight = 10;
+				fPairDepth = 20;
+			}
 
 			switch (vector)
 			{
@@ -355,10 +390,7 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 			}
 			else if (type == TYPE_CUBE)
 			{
-				//// ダイナミックキャストする
-				//CCube *pCube = dynamic_cast<CCube*>(pObj);
 
-				//pCube->SetCubeLife(1);
 			}
 			m_Info.pos = pos;
 			return TRUE;

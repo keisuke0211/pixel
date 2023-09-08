@@ -146,9 +146,6 @@ void CPlayer::Update(void)
 		// 位置更新処理
 		UpdatePos();
 
-		// カメラの当たり判定
-		CameraCollision();
-
 		// 向き/移動向き/目標向きを制御
 		RotControl(&m_Info.rot);
 		RotControl(&m_Info.moveRot);
@@ -228,7 +225,7 @@ void CPlayer::KeyInput(void)
 	//}
 
 	// 攻撃
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CMouse::MOUSE_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_B))
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CMouse::MOUSE_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
 	{
 		CBullet::Create(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 15, m_Info.pos.z), m_Info.rot);
 	}
@@ -375,6 +372,7 @@ void CPlayer::UpdatePos(void)
 		m_Info.pos = Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos);
 		m_Info.pos = Collision(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Z, m_Info.pos);
 
+
 	}
 
 	{
@@ -386,8 +384,8 @@ void CPlayer::UpdatePos(void)
 
 		// Y方向の当たり判定
 		m_Info.pos = Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Y, m_Info.pos);
-		m_Info.pos = Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Y, m_Info.pos);
-		m_Info.pos = Collision(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Y, m_Info.pos);
+		//m_Info.pos = Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Y, m_Info.pos);
+		//m_Info.pos = Collision(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Y, m_Info.pos);
 
 
 		float fSize = 10.0f;
@@ -537,14 +535,6 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 }
 
 //========================================
-// カメラの当たり判定
-//========================================
-void CPlayer::CameraCollision(void)
-{
-
-}
-
-//========================================
 // 弾停止
 //========================================
 void CPlayer::BulletStop(void)
@@ -572,7 +562,7 @@ void CPlayer::BulletStop(void)
 			CBullet *pBullet = dynamic_cast<CBullet*>(pObj);
 
 
-			if (pInputKeyboard->GetTrigger(DIK_E) || pInputMouse->GetTrigger(CMouse::MOUSE_4) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X))
+			if (pInputKeyboard->GetTrigger(DIK_E) || pInputMouse->GetTrigger(CMouse::MOUSE_4) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_B))
 			{
 				// ID取得
 				int nID = pBullet->GetID();
@@ -583,7 +573,6 @@ void CPlayer::BulletStop(void)
 
 				if (!nCubeSet)
 				{
-
 					int nType = pBullet->GetType();
 					D3DXVECTOR3 pos = pBullet->GetPos();
 
