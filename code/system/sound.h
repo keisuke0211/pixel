@@ -33,6 +33,18 @@ public:
 		SOUND_TYPE_MAX,
 	};
 
+	// サウンドの種類
+	enum TYPE
+	{
+		TYPE_SELECT,	// 選択
+		TYPE_CYBER,		// 決定
+		TYPE_SET,		// ブロック配置
+		TYPE_ERASE,		// ブロック消滅
+		TYPE_HIT,		// ヒット
+		TYPE_EXPLOSIO,	// 爆発
+		TYPE_MAX,
+	};
+
 	// ***** 構造体 *****
 
 	// サウンド情報

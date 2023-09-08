@@ -503,6 +503,7 @@ void CGame::Result(void)
 			m_nScore = m_pScore->GetScore();
 			CRanking::SetScore11(m_nScore);
 			CRanking::SetAllStage(false);
+			CPause::SetPause(false);
 		}
 	}
 		break;

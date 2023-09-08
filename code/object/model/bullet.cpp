@@ -95,10 +95,11 @@ HRESULT CBullet::Init(void)
 
 	m_Info.move.x = sinf(m_Info.rot.y) * BULLET_SPEED;
 	m_Info.move.z = cosf(m_Info.rot.y) * BULLET_SPEED;
+	m_Info.col = D3DXCOLOR(0.1f, 0.9f, 0.9f, 1.0f);
 
 	SetPos(m_Info.pos);
 	SetScale(m_Info.size);
-	SetColor(INIT_D3DXCOLOR);
+	SetColor(m_Info.col);
 	
 	return S_OK;
 }

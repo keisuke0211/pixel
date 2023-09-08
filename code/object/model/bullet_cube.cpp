@@ -19,7 +19,7 @@
 
 // 静的変数
 int CCube::m_nNumAll = -1;
-int CCube::m_nNumChain = 0;
+int CCube::m_nNumChain = 1;
 int CCube::m_nLimitCube = 0;
 int CCube::m_nUseCube = 0;
 bool CCube::bLeadSet = false;
@@ -54,7 +54,6 @@ CCube::CCube(int nPriority) : CObjectX(nPriority)
 	m_Info.col = INIT_D3DXCOLOR;		// 色
 	m_Info.nShape = -1;					// 形状
 	m_Info.nStandTime = 0;				// 待機時間
-	m_Info.bContact = false;			// 接触フラグ
 	m_Info.nLife = 0;					// 寿命
 	m_Info.nLifeMax = 0;				// 寿命の最大値
 	m_Info.fRadius = 0.0f;				// 半径
@@ -115,25 +114,19 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 		return NULL;
 	}
 
+	// --- 取得 ---------------------------------
+	CSound *pSound = CManager::GetSound();
+
+	pSound->PlaySound(CSound::TYPE_SET);
+
 	// テキストの更新
 	CubeText();
 
 	// 位置補正
-	// X軸
-	if (pCube->Correction(VECTOR_X, pCube->m_Info.pos)) 
-	{ 
-		return pCube; 
-	}
-	// Y軸
-	if (pCube->Correction(VECTOR_Y, pCube->m_Info.pos)) 
-	{
-		return pCube;
-	}
-	// Z軸
-	if (pCube->Correction(VECTOR_Z, pCube->m_Info.pos))
-	{
-		return pCube;
-	}
+	/* X軸	*/if (pCube->Correction(VECTOR_X, pCube->m_Info.pos)) { return pCube; }
+	/* Y軸	*/if (pCube->Correction(VECTOR_Y, pCube->m_Info.pos)) { return pCube;}
+	/* Z軸	*/if (pCube->Correction(VECTOR_Z, pCube->m_Info.pos)) { return pCube;}
+
 	return pCube;
 }
 
@@ -203,7 +196,7 @@ void CCube::Update(void)
 		}
 
 		// 寿命処理
-		if (m_Info.bSet && !m_Info.bContact)
+		if (m_Info.bSet)
 		{
 			// 寿命
 			if (--m_Info.nLife <= 0)
@@ -225,6 +218,9 @@ void CCube::Update(void)
 				pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.8f, 0.8f, 1.0f));
 				pObj->Par_SetForm(10);
 
+				CSound *pSound = CManager::GetSound();
+				pSound->PlaySound(CSound::TYPE_ERASE);
+
 				// 周囲にキューブがあるか
 				Contact(0, VECTOR_X, m_Info.pos);
 				Contact(0, VECTOR_Y, m_Info.pos);
@@ -237,7 +233,7 @@ void CCube::Update(void)
 				// オブジェクト破棄
 				Uninit();
 
-				m_nNumChain = 0;
+				m_nNumChain = 1;
 
 				return;
 			}
@@ -256,7 +252,6 @@ void CCube::Update(void)
 		m_Info.size = D3DXVECTOR3(m_Info.fRadius, m_Info.fRadius, m_Info.fRadius);
 
 		SetPos(m_Info.pos);
-		//SetRot(m_Info.rot);
 		SetScale(m_Info.size);
 		SetColor(m_Info.col);
 
@@ -702,7 +697,7 @@ void CCube::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 void CCube::Destruction(CCube *pCube)
 {
 	// オブジェクト破棄
-	pCube->m_Info.nLife = 20 + m_nNumChain;
+	pCube->m_Info.nLife = 10 + m_nNumChain;
 	pCube->m_Info.bBom = true;
 
 	m_nNumChain++;	// 連鎖カウントを加算
@@ -753,8 +748,8 @@ void CCube::SetUseCube(void)
 //========================================
 void CCube::Reset(void)
 {
-	m_nNumAll = -1;
-	m_nNumChain = 0;
+	m_nNumAll = 0;
+	m_nNumChain = 1;
 	m_nLimitCube = 0;
 	m_nUseCube = 0;
 	bLeadSet = false;

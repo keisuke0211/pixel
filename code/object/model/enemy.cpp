@@ -430,18 +430,17 @@ void CEnemy::HitLife(int nDamage)
 		CScore::SetScore(nScore);
 
 		// 爆発のSE再生
-		pSound->PlaySound(3);
+		pSound->PlaySound(CSound::TYPE_EXPLOSIO);
 
 		return;
 	}
 	else
 	{
 		// ヒットSEの再生
-		pSound->PlaySound(2);
+		pSound->PlaySound(CSound::TYPE_HIT);
 
 		// ダメージ状態
 		SetState(STATE_DAMAGE);
-
 
 		// パーティクル生成
 		CParticleX *pObj = CParticleX::Create();

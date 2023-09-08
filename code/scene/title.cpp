@@ -8,6 +8,7 @@
 #include "title.h"
 #include "game.h"
 #include "ranking.h"
+#include "../system/sound.h"
 #include "../object/UI/UI_title.h"
 #include "../object\model\model.h"
 #include "../system/input.h"
@@ -155,6 +156,7 @@ void CTitle::Update(void)
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
+	CSound *pSound = CManager::GetSound();
 
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
 	{
@@ -172,6 +174,8 @@ void CTitle::Update(void)
 			break;
 			case TITLE_MENU:
 			{
+				pSound->PlaySound(CSound::TYPE_CYBER);
+
 				switch (m_nSelectMenu)
 				{
 				case MENU_GAME:
@@ -366,14 +370,17 @@ void CTitle::Menu(void)
 	// --- 取得 ---------------------------------
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
+	CSound *pSound = CManager::GetSound();
 
 	// -- メニュー選択 ---------------------------
 	if (pInputKeyboard->GetTrigger(DIK_W) || pInputKeyboard->GetTrigger(DIK_UP) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
 	{
+		pSound->PlaySound(CSound::TYPE_SELECT);
 		m_nSelectMenu--;
 	}
 	else if (pInputKeyboard->GetTrigger(DIK_S) || pInputKeyboard->GetTrigger(DIK_DOWN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
 	{
+		pSound->PlaySound(CSound::TYPE_SELECT);
 		m_nSelectMenu++;
 	}
 

@@ -9,10 +9,12 @@
 #========================================
 #||||||||||||||||||||||||||||||||||||||||
 #========================================
-SOUND data/SOUND/SE/Cyber06-1.wav 				0  0.5 1	#00 決定SE
-SOUND data/SOUND/SE/shit001.wav 				0  0.15 1	#00 ショットSE
-SOUND data/SOUND/SE/damage00.wav 				0  0.02 1	#00 ダメージSE
-SOUND data/SOUND/SE/explosion001.wav 			0  0.03 1	#00 爆発SE
+SOUND data/SOUND/SE/select.wav 					0  0.5 1	# セレクトSE
+SOUND data/SOUND/SE/Cyber.wav 					0  0.5 1	# 決定SE
+SOUND data/SOUND/SE/shot.wav 					0  0.5 1	# キューブの配置音SE
+SOUND data/SOUND/SE/erase.wav 					0  0.5 1	# キューブの消滅音SE
+SOUND data/SOUND/SE/hit.wav 					0  0.5 1	# ダメージSE
+SOUND data/SOUND/SE/explosion001.wav 			0  0.3 1	# 爆発SE
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||

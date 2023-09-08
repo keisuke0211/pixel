@@ -178,6 +178,7 @@ void CPlayer::KeyInput(void)
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
+	CSound *pSound = CManager::GetSound();
 
 	m_Info.bMove = true;
 
@@ -229,6 +230,7 @@ void CPlayer::KeyInput(void)
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CMouse::MOUSE_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
 	{
 		CBullet::Create(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 15, m_Info.pos.z), m_Info.rot);
+		//pSound->PlaySound(CSound::TYPE_HIT);
 	}
 
 	// 最初の弾を止める

@@ -50,7 +50,6 @@ public:
 		D3DXCOLOR col;			// 頂点カラー
 		int nShape;				// 形状
 		int nStandTime;			// 待機時間
-		bool bContact;			// 接触フラグ
 		int nLife;				// 寿命
 		int nLifeMax;			// 寿命の最大値
 		float fRadius;			// 半径

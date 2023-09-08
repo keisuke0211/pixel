@@ -164,7 +164,7 @@ void CSound::Load(void)
 	{
 		fscanf(pFile, "%s", aDataSearch);	// åüçı
 
-		if (m_nSoundNum == SOUND_MAX)
+		if (m_nSoundNum == TYPE_MAX)
 		{
 			return;
 		}
