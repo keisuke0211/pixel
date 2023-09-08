@@ -9,6 +9,7 @@
 #include "../system/input.h"
 #include "../scene/fade.h"
 #include "../system/words/text.h"
+#include "../object/BG/blackout.h"
 
 // ê√ìIïœêî
 bool CPause::m_bPause = false;
@@ -20,6 +21,7 @@ CPause::CPause()
 {
 	m_Menu = false;
 	m_nSelectMenu = 0;
+	m_Blackout = NULL;
 
 	for (int nCnt = 0; nCnt < TEXT_MAX; nCnt++)
 	{
@@ -162,6 +164,9 @@ void CPause::Menu(void)
 				m_Text[nCnt] = NULL;
 			}
 		}
+		m_Blackout->Uninit();
+		m_Blackout = NULL;
+
 		m_Menu = false;
 	}
 }
@@ -181,6 +186,9 @@ void CPause::MenuCreate(void)
 
 	if (!m_Menu)
 	{
+		// à√ì]
+		m_Blackout = CBlackout::Create();
+
 		{
 			m_Text[0] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(640.0f, 250.0f, 0.0f),

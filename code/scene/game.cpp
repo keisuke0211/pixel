@@ -9,8 +9,6 @@
 #include "game.h"
 #include "ranking.h"
 #include "../system/csv_file.h"
-#include "../object\UI\score.h"
-#include "../object\UI\time.h"
 #include "../object\model\block.h"
 #include "../object/model/bullet_cube.h"
 #include "../object\model\player.h"
@@ -20,6 +18,9 @@
 #include "../object/BG/mesh_floor.h"
 #include "../object/BG/blackout.h"
 #include "../object\UI\text2D.h"
+#include "../object\UI\score.h"
+#include "../object\UI\time.h"
+#include "../object/UI/crown.h"
 #include "../system/input.h"
 #include "../system/words/text.h"
 #include "../system/words/font.h"
@@ -130,7 +131,7 @@ HRESULT CGame::Init(void)
 	pCamera->SetHeigth(0.4f);
 	pCamera->SetDistance(1400.0f);
 
-	FormFont pFont = {INIT_D3DXCOLOR,20.0f,15,40,30};
+	FormFont pFont = {INIT_D3DXCOLOR,20.0f,10,60,30};
 
 	FormShadow pShadow = {D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)};
 
@@ -145,7 +146,7 @@ HRESULT CGame::Init(void)
 		D3DXVECTOR3(640.0f, 350.0f, 0.0f),D3DXVECTOR2(440.0f, 100.0f),
 		aString,CFont::FONT_BESTTEN,&pFont, false,&pShadow);
 
-	m_nStartTime = (nStrlen * 15) + 10 + 10;
+	m_nStartTime = (nStrlen * 10) + 60 + 10;
 	m_nMoveRot = ((D3DX_PI * 2) / m_nStartTime);
 
 	return S_OK;
@@ -222,13 +223,7 @@ void CGame::Update(void)
 			{
 				if (!m_bEnd)
 				{
-					FormFont pFont = {
-						INIT_D3DXCOLOR,
-						20.0f,
-						12,
-						120,
-						30
-					};
+					FormFont pFont = {INIT_D3DXCOLOR,20.0f,10,60,30};
 
 					FormShadow pShadow = {
 						D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),
@@ -244,7 +239,7 @@ void CGame::Update(void)
 						CFont::FONT_BESTTEN,
 						&pFont, false,&pShadow);
 
-					m_nEndTime = (12 * 10) + 120 + 25;
+					m_nEndTime = (10 * 10) + 60 + 15;
 					m_bEnd = true;
 					m_bTime = true;
 				}
@@ -264,13 +259,7 @@ void CGame::Update(void)
 		{
 			if (!m_bEnd)
 			{
-				FormFont pFont = {
-					INIT_D3DXCOLOR,
-					20.0f,
-					12,
-					10,
-					30
-				};
+				FormFont pFont = {INIT_D3DXCOLOR,20.0f,10,60,30};
 
 				CText::Create(CText::BOX_NORMAL_RECT,
 					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
@@ -279,7 +268,7 @@ void CGame::Update(void)
 					CFont::FONT_BESTTEN,
 					&pFont, false);
 
-				m_nEndTime = (12 * 7) + 10 + 25;
+				m_nEndTime = (7 * 10) + 60 + 15;
 				m_bEnd = true;
 			}
 			else
@@ -333,7 +322,7 @@ void CGame::Result(void)
 	{
 		CBlackout::Create();
 		sprintf(aString, "STAGE CLEAR RESULT BONUS");
-		pos = D3DXVECTOR3(23.0f, 100.0f, 0.0f);
+		pos = D3DXVECTOR3(23.0f, 105.0f, 0.0f);
 
 		int nUseCube = CCube::GetUse();
 		int nPerfCube = m_aStageInfo.nCube[m_nStage];
@@ -354,6 +343,7 @@ void CGame::Result(void)
 	break;
 	case RST_TIME:
 	{
+		CCrown::Create(m_nEveGame);
 		sprintf(aString, "TIME BONUS");
 		pos = D3DXVECTOR3(100.0f, 170.0f, 0.0f);
 	}
@@ -535,7 +525,7 @@ void CGame::Result(void)
 					pFont = { D3DXCOLOR(0.5f,0.5f,0.5f,1), 20.0f, 1, 5, 0 };
 					break;
 				case EVE_USUALLY:
-					pFont = { D3DXCOLOR(0.0f,0.84f,1,1), 20.0f, 1, 5, 0 };
+					pFont = { D3DXCOLOR(0.78f,0.54f,0,1), 20.0f, 1, 5, 0 };
 					break;
 				default:
 					pFont = { INIT_D3DXCOLOR, 20.0f, 1, 5, 0 };

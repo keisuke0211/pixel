@@ -18,9 +18,9 @@ TEXTURE = data\\TEXTURE\\BG\\BgSky_layer03.png 		#06 夜空3
 TEXTURE = data\\TEXTURE\\BG\\sea000.jpg 			#07 海１
 TEXTURE = data\\TEXTURE\\BG\\river000.jpg 			#08 海２
 TEXTURE = data\\TEXTURE\\Others\\Title.png 			#09 タイトル画面
-TEXTURE = data\\TEXTURE\\Others\\PixelSky01.png 	#10 ステージ・初級
-TEXTURE = data\\TEXTURE\\Others\\PixelSky02.png 	#11 ステージ・中級
-TEXTURE = data\\TEXTURE\\Others\\PixelSky03.png 	#12 ステージ・上級
+TEXTURE = data\\TEXTURE\\Others\\crown01.png 		#10 王冠・金
+TEXTURE = data\\TEXTURE\\Others\\crown02.png 		#11 王冠・銀
+TEXTURE = data\\TEXTURE\\Others\\crown03.png 		#12 王冠・銅
 TEXTURE = data\\TEXTURE\\TextBox\\TextBox.png 		#13 テキストボックス 長方形
 TEXTURE = data\\TEXTURE\\TextBox\\TextBox01.png 	#14 テキストボックス 正方形
 

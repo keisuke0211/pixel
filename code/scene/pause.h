@@ -16,6 +16,7 @@
 //****************************************
 class CWords;
 class CText;
+class CBlackout;
 
 //****************************************
 // クラス
@@ -64,6 +65,7 @@ private:
 	bool m_Menu;
 	int m_nSelectMenu;	// 現在選択しているメニュー
 	CText *m_Text[TEXT_MAX];
+	CBlackout *m_Blackout;
 
 };
 

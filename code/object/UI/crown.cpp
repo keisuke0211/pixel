@@ -1,11 +1,11 @@
 //========================================
 // 
-// 暗転
+// 王冠
 // 
 //========================================
-// *** blackout.cpp ***
+// *** corown.h ***
 //========================================
-#include "blackout.h"
+#include "crown.h"
 #include "../../manager.h"
 #include "../../system/renderer.h"
 #include "../../system/texture.h"
@@ -13,7 +13,7 @@
 //========================================
 // コンストラクタ
 //========================================
-CBlackout::CBlackout(int nPriority) : CObject2D(nPriority)
+CCrown::CCrown(int nPriority) : CObject2D(nPriority)
 {
 	m_Info.pos = INIT_D3DXVECTOR3;
 	m_Info.size = INIT_D3DXVECTOR2;
@@ -24,7 +24,7 @@ CBlackout::CBlackout(int nPriority) : CObject2D(nPriority)
 //========================================
 // デストラクタ
 //========================================
-CBlackout::~CBlackout()
+CCrown::~CCrown()
 {
 
 }
@@ -32,12 +32,13 @@ CBlackout::~CBlackout()
 //========================================
 // 生成
 //========================================
-CBlackout *CBlackout::Create(void)
+CCrown *CCrown::Create(int nType)
 {
-	CBlackout *pObj = new CBlackout;
+	CCrown *pObj = new CCrown;
 
-	pObj->m_Info.pos = D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f);
-	pObj->m_Info.size = D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT);
+	pObj->m_Info.pos = D3DXVECTOR3(1075.0f, 100.0f, 0.0f);
+	pObj->m_Info.size = D3DXVECTOR2(65, 65);
+	pObj->m_Info.nType = nType;
 	pObj->Init();
 
 	return pObj;
@@ -46,7 +47,7 @@ CBlackout *CBlackout::Create(void)
 //========================================
 // 初期化
 //========================================
-HRESULT CBlackout::Init(void)
+HRESULT CCrown::Init(void)
 {
 	CObject2D::Init();
 
@@ -56,9 +57,23 @@ HRESULT CBlackout::Init(void)
 	// 設定
 	SetPos(m_Info.pos);
 	SetSize(m_Info.size.x, m_Info.size.y);
-	SetColar(D3DXCOLOR(0,0,0,0.7f));
+	SetColar(D3DXCOLOR(1, 1, 1, 1));
 
-	BindTexture(-1);
+	switch (m_Info.nType)
+	{
+	case 0:
+		BindTexture(CTexture::TEX_CROWN00);
+		break;
+	case 1:
+		BindTexture(CTexture::TEX_CROWN01);
+		break;
+	case 2:
+		BindTexture(CTexture::TEX_CROWN02);
+		break;
+	default:
+		BindTexture(CTexture::TEX_CROWN00);
+		break;
+	}
 
 	return S_OK;
 }
@@ -66,7 +81,7 @@ HRESULT CBlackout::Init(void)
 //========================================
 // 終了
 //========================================
-void CBlackout::Uninit(void)
+void CCrown::Uninit(void)
 {
 	CObject2D::Uninit();
 }
@@ -74,7 +89,7 @@ void CBlackout::Uninit(void)
 //========================================
 // 更新
 //========================================
-void CBlackout::Update(void)
+void CCrown::Update(void)
 {
 	CObject2D::Update();
 }
@@ -82,7 +97,7 @@ void CBlackout::Update(void)
 //========================================
 // 描画
 //========================================
-void CBlackout::Draw(void)
+void CCrown::Draw(void)
 {
 	CObject2D::Draw();
 }

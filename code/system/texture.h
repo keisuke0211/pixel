@@ -39,9 +39,9 @@ public:
 		TEX_SEA01,			// 海01
 		TEX_SEA02,			// 海02
 		TEX_TITLE_BG,		// タイトル画面
-		TEX_STAGE_EASY,		// ステージ・初級
-		TEX_STAGE_NORMAL,	// ステージ・中級
-		TEX_STAGE_DIFFICULT,// ステージ・上級
+		TEX_CROWN00,		// 王冠・金
+		TEX_CROWN01,		// 王冠・銀
+		TEX_CROWN02,		// 王冠・銅
 		TEX_TEXBOX,			// テキストボックス
 		TEX_TEXBOX1,		// テキストボックス
 		TEX_MAX
