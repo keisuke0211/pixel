@@ -29,7 +29,7 @@ SET_INFO
 
 #-- STAGE03 ----------------------
 	SET_STAGE
-		TIME = 20
+		TIME = 30
 		CUBE = 10
 		CLEAR = 300
 		BLOCK = data\\GAMEDATA\\BLOCK\\STAGE03_DATA.csv

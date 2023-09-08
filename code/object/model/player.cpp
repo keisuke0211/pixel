@@ -39,7 +39,7 @@
 bool CPlayer::m_bCubeSet = false;
 
 // 定義
-const float CPlayer::PLAYER_SPEED = 40.0f;
+const float CPlayer::PLAYER_SPEED = 1.0f;
 
 //========================================
 // コンストラクタ
@@ -49,7 +49,6 @@ CPlayer::CPlayer(int nPriority) : CMotionModel(nPriority)
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
 	m_Info.posOld = INIT_D3DXVECTOR3;
-	m_Info.targetPos = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
 	m_Info.rotOld = INIT_D3DXVECTOR3;
 	m_Info.moveRot = INIT_D3DXVECTOR3;
@@ -62,8 +61,6 @@ CPlayer::CPlayer(int nPriority) : CMotionModel(nPriority)
 	m_Info.bJump = false;
 	m_Info.bMotion = false;
 	m_Info.bAction = false;
-	m_Info.bMovePosX = false;
-	m_Info.bMovePosZ = false;
 }
 
 //========================================
@@ -85,7 +82,6 @@ CPlayer *CPlayer::Create(D3DXVECTOR3 pos, float rotY)
 	pPlayer->Init();
 
 	pPlayer->m_Info.pos = pos;
-	pPlayer->m_Info.targetPos = pos;
 	pPlayer->m_Info.rot = D3DXVECTOR3(0.0f, rotY, 0.0f);
 	pPlayer->m_Info.moveRot = D3DXVECTOR3(0.0f, rotY, 0.0f);
 	pPlayer->m_Info.targetRot = D3DXVECTOR3(0.0f, rotY, 0.0f);
@@ -106,7 +102,6 @@ HRESULT CPlayer::Init(void)
 	SetType(TYPE_PLAYER);
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 20.0f, 0.0f);
-	m_Info.targetPos = m_Info.pos;
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.col = INIT_D3DXCOLOR;
 	
@@ -188,26 +183,26 @@ void CPlayer::KeyInput(void)
 
 	m_Info.bMove = true;
 
-	if (pInputJoypad->GetRepeat(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
+	if (pInputJoypad->GetPress(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
 	{
 		MoveInput(DIRECTION_LEFT);
 	}
-	else if (pInputJoypad->GetRepeat(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick(0).aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
 	{
 		MoveInput(DIRECTION_RIGHT);
 	}
-	else if (pInputJoypad->GetRepeat(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
 	{
 		MoveInput(DIRECTION_FRONT);
 	}
-	else if (pInputJoypad->GetRepeat(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
 	{
 		MoveInput(DIRECTION_BACK);
 	}
-	else if (pInputKeyboard->GetRepeat(DIK_A)) { MoveInput(DIRECTION_LEFT);}	// 左移動
-	else if (pInputKeyboard->GetRepeat(DIK_D)) { MoveInput(DIRECTION_RIGHT);}	// 右移動
-	else if (pInputKeyboard->GetRepeat(DIK_W)) { MoveInput(DIRECTION_BACK); }	// 奥移動
-	else if (pInputKeyboard->GetRepeat(DIK_S)) { MoveInput(DIRECTION_FRONT); }	// 手前移動
+	else if (pInputKeyboard->GetPress(DIK_A)) { MoveInput(DIRECTION_LEFT);}	// 左移動
+	else if (pInputKeyboard->GetPress(DIK_D)) { MoveInput(DIRECTION_RIGHT);}	// 右移動
+	else if (pInputKeyboard->GetPress(DIK_W)) { MoveInput(DIRECTION_BACK); }	// 奥移動
+	else if (pInputKeyboard->GetPress(DIK_S)) { MoveInput(DIRECTION_FRONT); }	// 手前移動
 	else
 	{
 		if (m_Info.bAction && (m_Info.move.x < 0.02f && m_Info.move.x > -0.02f) && (m_Info.move.z < 0.02f && m_Info.move.z > -0.02f))
@@ -222,15 +217,15 @@ void CPlayer::KeyInput(void)
 		m_Info.bMove = false;
 	}
 
-	// ジャンプ
-	if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
-	{
-		if (m_Info.bJump == false)
-		{
-			m_Info.bJump = true;	// ジャンプフラグを真にする
-			m_Info.move.y += JUMP_POWER;
-		}
-	}
+	//// ジャンプ
+	//if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
+	//{
+	//	if (m_Info.bJump == false)
+	//	{
+	//		m_Info.bJump = true;	// ジャンプフラグを真にする
+	//		m_Info.move.y += JUMP_POWER;
+	//	}
+	//}
 
 	// 攻撃
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CMouse::MOUSE_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_B))
@@ -329,16 +324,6 @@ void CPlayer::MovePos(float fMove)
 			m_Info.bMotion = true;
 			m_Info.bAction = true;
 		}
-
-		// 移動推移フラグ
-		if (!m_Info.bMovePosX)
-		{
-			m_Info.bMovePosX = true;
-		}
-		if (!m_Info.bMovePosZ)
-		{
-			m_Info.bMovePosZ = true;
-		}
 	}
 	else
 	{
@@ -353,43 +338,8 @@ void CPlayer::MovePos(float fMove)
 		m_Info.bMotion = false;
 	}
 
-	float MoveX = round(sinf(m_Info.moveRot.y) * fMove);
-	float MoveZ = round(cosf(m_Info.moveRot.y) * fMove);
-
-	m_Info.targetPos.x += MoveX;
-	m_Info.targetPos.z += MoveZ;
-
-	if (m_Info.bMovePosX)
-	{
-		// X方向の当たり判定
-		if (TargetCollision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.targetPos) ||
-			TargetCollision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.targetPos) ||
-			TargetCollision(PRIO_OBJECT, TYPE_ENEMY, VECTOR_X, m_Info.targetPos))
-		{
-			m_Info.targetPos.x -= MoveX;
-
-			if (m_Info.pos.x > m_Info.targetPos.x - POS_RANGE_WIDE && m_Info.pos.x < m_Info.targetPos.x + POS_RANGE_WIDE)
-			{
-				m_Info.bMovePosX = false;
-			}
-		}
-	}
-
-	if (m_Info.bMovePosZ)
-	{
-		// Z方向の当たり判定
-		if (TargetCollision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.targetPos) ||
-			TargetCollision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.targetPos) ||
-			TargetCollision(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Z, m_Info.targetPos))
-		{
-			m_Info.targetPos.z -= MoveZ;
-
-			if (m_Info.pos.z > m_Info.targetPos.z - POS_RANGE_WIDE && m_Info.pos.z < m_Info.targetPos.z + POS_RANGE_WIDE)
-			{
-				m_Info.bMovePosZ = false;
-			}
-		}
-	}
+	m_Info.move.x += sinf(m_Info.moveRot.y) * fMove;
+	m_Info.move.z += cosf(m_Info.moveRot.y) * fMove;
 }
 
 //========================================
@@ -401,18 +351,11 @@ void CPlayer::UpdatePos(void)
 	CCamera *pCamera = CManager::GetCamera();		// カメラ
 
 	{
-		//	移動推移
-		if (m_Info.bMovePosX)
-		{
-			// 位置を目標位置に向けて推移する
-			m_Info.pos.x += PosDifference(m_Info.pos.x, m_Info.targetPos.x) * POS_DIAMETER;
+		// 移動量の代入
+		m_Info.pos.x += m_Info.move.x;
 
-			if (m_Info.pos.x > m_Info.targetPos.x - POS_RANGE_WIDE && m_Info.pos.x < m_Info.targetPos.x + POS_RANGE_WIDE)
-			{
-				m_Info.pos.x = m_Info.targetPos.x;
-				m_Info.bMovePosX = false;
-			}
-		}
+		// 移動量の減衰
+		m_Info.move.x *= 0.75f;
 
 		// X方向の当たり判定
 		m_Info.pos = Collision(PRIO_BLOCK,TYPE_BLOCK,VECTOR_X, m_Info.pos);
@@ -421,17 +364,11 @@ void CPlayer::UpdatePos(void)
 	}
 
 	{
-		if (m_Info.bMovePosZ)
-		{
-			// 位置を目標位置に向けて推移する
-			m_Info.pos.z += PosDifference(m_Info.pos.z, m_Info.targetPos.z) * POS_DIAMETER;
+		// 移動量の代入
+		m_Info.pos.z += m_Info.move.z;
 
-			if (m_Info.pos.z > m_Info.targetPos.z - POS_RANGE_WIDE && m_Info.pos.z < m_Info.targetPos.z + POS_RANGE_WIDE)
-			{
-				m_Info.pos.z = m_Info.targetPos.z;
-				m_Info.bMovePosZ = false;
-			}
-		}
+		// 移動量の減衰
+		m_Info.move.z *= 0.75f;
 
 		// Z方向の当たり判定
 		m_Info.pos = Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos);
@@ -459,7 +396,6 @@ void CPlayer::UpdatePos(void)
 			(m_Info.posOld.y - fSize) >= (-120))
 		{// 落下したら
 			m_Info.pos = D3DXVECTOR3(0.0f, 20.0f, 0.0f);
-			m_Info.targetPos = m_Info.pos;
 
 			CModel::SetPlayerShadow(true);
 		}
@@ -598,77 +534,6 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 		pObj = pObjNext;	// 次のオブジェクトを代入
 	}
 	return pos;
-}
-
-//========================================
-// 移動先のブロックがあるか
-//========================================
-bool CPlayer::TargetCollision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
-{
-	bool bHit = false;
-
-	// 先頭オブジェクトを取得
-	CObject *pObj = CObject::GetTop(nPrio);
-
-	while (pObj != NULL)
-	{// 使用されている時、
-
-	 // 次のオブジェクト
-		CObject *pObjNext = pObj->GetNext();
-
-		// 種類を取得
-		TYPE type = pObj->GetType();
-
-		// プレイヤーの各パーツの取得
-		D3DXVECTOR3 PosOld = pos;			// 位置(過去)
-		float fSizeXZ = 20.0f;
-		float fSizeY = 10.0f;
-
-		if (type == nType)
-		{// 種類がブロックの時、
-
-			// 相手の取得
-			D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
-			D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
-			D3DXVECTOR3 PairRot = pObj->GetRot();		// 向き
-			D3DXVECTOR3 PairRotOld = pObj->GetRotOld();	// 向き(過去)
-
-			float fPairWidth = pObj->GetWidth();	// 幅
-			float fPairHeight = pObj->GetHeight();	// 高さ
-			float fPairDepth = pObj->GetDepth();	// 奥行き
-
-			// --- 当たり判定 ----------------------------------------------
-			switch (vector)
-			{
-			case VECTOR_X: {	/* X方向 */
-
-				if (Collsion(pos, PairPos, D3DXVECTOR3(fSizeXZ, fSizeY, fSizeXZ), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
-				{// 奥辺と手前辺が相手の幅の内側の時、
-
-					bHit = true;
-				}
-			}
-			   break;
-			case VECTOR_Z: {	/* Z方向 */
-
-				if (Collsion(pos, PairPos, D3DXVECTOR3(fSizeXZ, fSizeY, fSizeXZ), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
-				{// 奥辺と手前辺が相手の幅の内側の時、
-
-					bHit = true;
-				}
-			}
-			   break;
-			}
-		}
-
-		if (bHit)
-		{
-			return TRUE;
-		}
-
-		pObj = pObjNext;	// 次のオブジェクトを代入
-	}
-	return FALSE;
 }
 
 //========================================

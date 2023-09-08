@@ -119,11 +119,11 @@ void CCamera::Update(void)
 				{// マウスの右ボタンが押されている間
 					m_Info.nRotType++;
 				}
-				else if (pInputJoypad->GetStick().aAngleTrigger[CJoypad::STICK_TYPE_RIGHT][CJoypad::STICK_ANGLE_LEFT])
+				else if (pInputJoypad->GetTrigger(CJoypad::JOYKEY_LEFT_SHOULDER) || pInputJoypad->GetStick().aAngleTrigger[CJoypad::STICK_TYPE_RIGHT][CJoypad::STICK_ANGLE_LEFT])
 				{
 					m_Info.nRotType--;
 				}
-				else if (pInputJoypad->GetStick().aAngleTrigger[CJoypad::STICK_TYPE_RIGHT][CJoypad::STICK_ANGLE_RIGHT])
+				else if (pInputJoypad->GetTrigger(CJoypad::JOYKEY_RIGHT_SHOULDER) || pInputJoypad->GetStick().aAngleTrigger[CJoypad::STICK_TYPE_RIGHT][CJoypad::STICK_ANGLE_RIGHT])
 				{
 					m_Info.nRotType++;
 				}

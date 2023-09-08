@@ -31,7 +31,6 @@ public:
 	{
 		D3DXVECTOR3 pos;		// 位置
 		D3DXVECTOR3 posOld;		// 位置(過去)
-		D3DXVECTOR3 targetPos;	// 目標位置
 		D3DXVECTOR3 rot;		// 向き
 		D3DXVECTOR3 rotOld;		// 向き(過去)
 		D3DXVECTOR3 moveRot;	// 移動向き
@@ -46,8 +45,6 @@ public:
 		bool bMotion;			// モーションフラグ
 		bool bAction;			// 行動フラグ
 
-		bool bMovePosX;			// 移動推移フラグ(X座標)
-		bool bMovePosZ;			// 移動推移フラグ(Z座標)
 	};
 
 	// ***** 関数 *****
@@ -75,7 +72,6 @@ public:
 private:
 	// ***** 関数 *****
 	/* 当たり判定			*/D3DXVECTOR3 Collision(PRIO nPrio, TYPE nType,VECTOR vector,D3DXVECTOR3 pos);
-	/* 移動先のブロック有無	*/bool TargetCollision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos);
 	/* カメラの当たり判定	*/void CameraCollision(void);
 
 	/* 移動 */
