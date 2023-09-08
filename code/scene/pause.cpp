@@ -9,6 +9,7 @@
 #include "../system/input.h"
 #include "../scene/fade.h"
 #include "../system/words/text.h"
+#include "../system/sound.h"
 #include "../object/BG/blackout.h"
 
 // ê√ìIïœêî
@@ -94,6 +95,8 @@ CPause *CPause::Create(void)
 //========================================
 void CPause::Menu(void)
 {
+	CSound *pSound = CManager::GetSound();
+
 	// êF
 	for (int nCnt = 0; nCnt < TEXT_MAX; nCnt++)
 	{
@@ -118,10 +121,12 @@ void CPause::Menu(void)
 	if (pInputKeyboard->GetTrigger(DIK_W) || pInputKeyboard->GetTrigger(DIK_UP) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
 	{
 		m_nSelectMenu--;
+		pSound->PlaySound(CSound::TYPE_SELECT);
 	}
 	else if (pInputKeyboard->GetTrigger(DIK_S) || pInputKeyboard->GetTrigger(DIK_DOWN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
 	{
 		m_nSelectMenu++;
+		pSound->PlaySound(CSound::TYPE_SELECT);
 	}
 
 	if (m_nSelectMenu > (MENU_MAX - 1))
@@ -137,6 +142,8 @@ void CPause::Menu(void)
 	{
 		if (CFade::GetFade() == CFade::FADE_NONE)
 		{
+			pSound->PlaySound(CSound::TYPE_CYBER);
+
 			switch (m_nSelectMenu)
 			{
 			case MENU_RESUME:

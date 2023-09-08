@@ -512,6 +512,7 @@ void CRanking::NameInput(void)
 	// -- 取得 -------------------------------------------
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
+	CSound *pSound = CManager::GetSound();
 
 	// -- 文字列切替 ---------------------------------------------
 	if (pInputKeyboard->GetRepeat(DIK_A) || pInputKeyboard->GetRepeat(DIK_LEFT) ||
@@ -519,6 +520,7 @@ void CRanking::NameInput(void)
 	{
 		m_Info.nCntLetter--;
 		m_Info.bNameInput = true;
+		pSound->PlaySound(CSound::TYPE_SELECT);
 	}
 	else if (
 		pInputKeyboard->GetRepeat(DIK_D) || pInputKeyboard->GetRepeat(DIK_RIGHT) ||
@@ -526,6 +528,7 @@ void CRanking::NameInput(void)
 	{
 		m_Info.nCntLetter++;
 		m_Info.bNameInput = true;
+		pSound->PlaySound(CSound::TYPE_SELECT);
 	}
 
 	// -- 文字切替 ---------------------------------------------
@@ -536,6 +539,7 @@ void CRanking::NameInput(void)
 		m_Info.nCntConv = 0;
 		m_Info.nCntString++;
 		m_Info.bNameInput = true;
+		pSound->PlaySound(CSound::TYPE_SELECT);
 	}
 	else if (
 		pInputKeyboard->GetRepeat(DIK_W) || pInputKeyboard->GetRepeat(DIK_UP) ||
@@ -545,6 +549,7 @@ void CRanking::NameInput(void)
 		m_Info.nCntConv = 0;
 		m_Info.nCntString--;
 		m_Info.bNameInput = true;
+		pSound->PlaySound(CSound::TYPE_SELECT);
 	}
 
 	// -- 変換 ---------------------------------------------
