@@ -18,6 +18,7 @@
 #include "../object\BG\bg_side.h"
 #include "../object\BG\bg_ceiling.h"
 #include "../object/BG/mesh_floor.h"
+#include "../object/BG/blackout.h"
 #include "../object\UI\text2D.h"
 #include "../system/input.h"
 #include "../system/words/text.h"
@@ -330,8 +331,9 @@ void CGame::Result(void)
 	{
 	case RST_TEXT:
 	{
+		CBlackout::Create();
 		sprintf(aString, "STAGE CLEAR RESULT BONUS");
-		pos = D3DXVECTOR3(20.0f, 50.0f, 0.0f);
+		pos = D3DXVECTOR3(23.0f, 100.0f, 0.0f);
 
 		int nUseCube = CCube::GetUse();
 		int nPerfCube = m_aStageInfo.nCube[m_nStage];
@@ -353,7 +355,7 @@ void CGame::Result(void)
 	case RST_TIME:
 	{
 		sprintf(aString, "TIME BONUS");
-		pos = D3DXVECTOR3(100.0f, 120.0f, 0.0f);
+		pos = D3DXVECTOR3(100.0f, 170.0f, 0.0f);
 	}
 		break;
 	case RST_TIME_CALC:
@@ -362,7 +364,7 @@ void CGame::Result(void)
 		m_nTimeTotal = TIME_SCORE * nTime;
 
 		sprintf(aString, "%d * %d = %d",TIME_SCORE,nTime,m_nTimeTotal);
-		pos = D3DXVECTOR3(100.0f, 190.0f, 0.0f);
+		pos = D3DXVECTOR3(100.0f, 240.0f, 0.0f);
 	}
 		break;
 	case RST_CLEAR:
@@ -380,7 +382,7 @@ void CGame::Result(void)
 			sprintf(aString, "CLEAR BONUS");
 		}
 
-		pos = D3DXVECTOR3(100.0f, 260.0f, 0.0f);
+		pos = D3DXVECTOR3(100.0f, 310.0f, 0.0f);
 	}
 		break;
 	case RST_CLEAR_CALC:
@@ -408,7 +410,7 @@ void CGame::Result(void)
 		m_nClearTotal = nClear * nEve;
 
 		sprintf(aString, "%d", m_nClearTotal);
-		pos = D3DXVECTOR3(100.0f, 310.0f, 0.0f);
+		pos = D3DXVECTOR3(100.0f, 380.0f, 0.0f);
 	}
 		break;
 	case RST_BONUS:
@@ -530,7 +532,7 @@ void CGame::Result(void)
 					pFont = { D3DXCOLOR(1.0f,0.96f,0,1)	, 20.0f, 1, 5, 0 };
 					break;
 				case EVE_GREAT:
-					pFont = { D3DXCOLOR(0.8f,0.8f,0.8f,1), 20.0f, 1, 5, 0 };
+					pFont = { D3DXCOLOR(0.5f,0.5f,0.5f,1), 20.0f, 1, 5, 0 };
 					break;
 				case EVE_USUALLY:
 					pFont = { D3DXCOLOR(0.0f,0.84f,1,1), 20.0f, 1, 5, 0 };
@@ -540,7 +542,7 @@ void CGame::Result(void)
 					break;
 				}
 
-				pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(3.0f,3.0f,0.0f), D3DXVECTOR2(3.0f,3.0f) };
+				pShadow = { INIT_D3DXCOLOR, true, D3DXVECTOR3(1.0f,1.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
 			}
 
 			m_nTextCreate = 0;

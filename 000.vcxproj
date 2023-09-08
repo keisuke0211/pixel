@@ -23,6 +23,7 @@
     <ClCompile Include="code\manager.cpp" />
     <ClCompile Include="code\object\BG\bg_ceiling.cpp" />
     <ClCompile Include="code\object\BG\bg_side.cpp" />
+    <ClCompile Include="code\object\BG\blackout.cpp" />
     <ClCompile Include="code\object\BG\mesh_floor.cpp" />
     <ClCompile Include="code\object\EFFECT\effectX.cpp" />
     <ClCompile Include="code\object\EFFECT\particleX.cpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="code\manager.h" />
     <ClInclude Include="code\object\BG\bg_ceiling.h" />
     <ClInclude Include="code\object\BG\bg_side.h" />
+    <ClInclude Include="code\object\BG\blackout.h" />
     <ClInclude Include="code\object\BG\mesh_floor.h" />
     <ClInclude Include="code\object\EFFECT\effectX.h" />
     <ClInclude Include="code\object\EFFECT\particleX.h" />

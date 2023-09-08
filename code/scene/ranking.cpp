@@ -87,13 +87,8 @@ HRESULT CRanking::Init(void)
 	// ソート
 	SortDesc(&nUpdateRank);
 
-	FormFont pFont = {
-		INIT_D3DXCOLOR,
-		20.0f,
-		1,
-		1,
-		-1
-	};
+	FormFont pFont = { INIT_D3DXCOLOR,20.0f,1,1,-1 };
+	FormShadow pShadow = { INIT_D3DXCOLOR, true, D3DXVECTOR3(1.0f,1.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
 
 	// テキスト生成
 	for (int nRank = 0; nRank < RANK_NUM; nRank++)
@@ -106,7 +101,7 @@ HRESULT CRanking::Init(void)
 			pFont = { D3DXCOLOR(1.0f,0.96f,0,1)	, 20.0f, 1, 1, -1 };
 			break;
 		case 1:
-			pFont = { D3DXCOLOR(0.8f,0.8f,0.8f,1), 20.0f, 1, 1, -1 };
+			pFont = { D3DXCOLOR(0.6f,0.6f,0.6f,1), 20.0f, 1, 1, -1 };
 			break;
 		case 2:
 			pFont = { D3DXCOLOR(0.78f,0.54f,0,1), 20.0f, 1, 1, -1 };
@@ -123,7 +118,7 @@ HRESULT CRanking::Init(void)
 			D3DXVECTOR2(0.0f, 100.0f),
 			aString,
 			CFont::FONT_BESTTEN,
-			&pFont,false);
+			&pFont,false,&pShadow);
 	}
 
 	// 枠(ランキングフレーム)
