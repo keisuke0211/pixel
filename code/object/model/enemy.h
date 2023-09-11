@@ -55,6 +55,7 @@ public:
 		int nTimeMax;			// 行動時間の最大値
 		int nStandTime;			// 待機時間
 		bool bRotMove;			// 向きの推移フラグ
+		bool bCube;				// キューブに当たったか
 	};
 
 	// ***** 関数 *****

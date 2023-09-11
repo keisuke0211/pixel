@@ -133,43 +133,21 @@ void CEnemy::Update(void)
 
 	if (!bPause)
 	{
-		bool bCube = false;	// キューブに当たったか
-
 		// 過去の位置・向きの更新
 		m_Info.posOld = m_Info.pos;
 
 		// 状態推移
 		StateShift();
 
-		if (m_Info.state != STATE_STAND)
-		{
-			// 移動量の代入
-			m_Info.pos.x += m_Info.move.x;
-		}
-
-		// 当たり判定
-		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos)) {}
-		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos)) {}
-		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos)) { bCube = true; }
-
-		if (m_Info.state != STATE_STAND)
-		{
-			// 移動量の代入
-			m_Info.pos.z += m_Info.move.z;
-		}
-		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos)) {}
-		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos)) {}
-		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos)) { bCube = true; }
-
 		// 移動処理
-		if (m_Info.state != STATE_STAND && !bCube && !m_Info.bRotMove)
+		if (m_Info.state != STATE_STAND && !m_Info.bCube && !m_Info.bRotMove)
 		{
 			// 当たり判定
-			if (!Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos)||
-				!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos) ||
-				!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos) ||
-				!Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos) ||
-				!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos) ||
+			if (!Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos) &&
+				!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos) &&
+				!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos) &&
+				!Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos) &&
+				!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos) &&
 				!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos))
 			{
 				if (++m_Info.nCntTime >= m_Info.nTimeMax && m_Info.nMove != 0)
@@ -182,7 +160,7 @@ void CEnemy::Update(void)
 
 					switch (m_Info.nMove)
 					{
-					break;
+						break;
 					case 1:
 					{
 						if (m_Info.rot.y == 0.0f)
@@ -250,7 +228,25 @@ void CEnemy::Update(void)
 			SetRot(m_Info.rot);
 		}
 
-		CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
+		if (m_Info.state != STATE_STAND && !m_Info.bCube)
+		{
+			// 移動量の代入
+			m_Info.pos.x += m_Info.move.x;
+		}
+
+		// 当たり判定
+		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos)) {}
+		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos)) { m_Info.bCube = true; }
+		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos)) {}
+
+		if (m_Info.state != STATE_STAND && !m_Info.bCube)
+		{
+			// 移動量の代入
+			m_Info.pos.z += m_Info.move.z;
+		}
+		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos)) {}
+		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos)) { m_Info.bCube = true; }
+		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos)) {}
 
 		SetPos(m_Info.pos);
 		SetColor(m_Info.col);
@@ -389,7 +385,7 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 			}
 			else if (type == TYPE_CUBE)
 			{
-
+				m_Info.pos = pos;
 			}
 			m_Info.pos = pos;
 			return TRUE;
@@ -407,6 +403,7 @@ void CEnemy::HitLife(int nDamage)
 	CSound *pSound = CManager::GetSound();
 
 	m_Info.nLife -= nDamage;
+	m_Info.bCube = false;
 
 	if (m_Info.nLife <= 0)
 	{

@@ -45,7 +45,6 @@ public:
 		TYPE_SET,		// ブロック配置
 		TYPE_ERASE,		// ブロック消滅
 		TYPE_HIT,		// ヒット
-		TYPE_EXPLOSIO,	// 爆発
 		TYPE_MAX,
 	};
 
