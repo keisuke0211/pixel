@@ -151,7 +151,15 @@ void CPause::Menu(void)
 				break;
 			case MENU_RESET:
 				m_bPause = false;
-				CManager::GetFade()->SetFade(MODE_GAME);
+
+				if (CScene::GetMode() == MODE_GAME)
+				{
+					CManager::GetFade()->SetFade(MODE_GAME);
+				}
+				else if (CScene::GetMode() == MODE_TUTORIAL)
+				{
+					CManager::GetFade()->SetFade(MODE_TUTORIAL);
+				}
 				break;
 			case MENU_TITLE:
 				m_bPause = false;

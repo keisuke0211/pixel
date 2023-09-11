@@ -87,6 +87,9 @@ HRESULT CTutorial::Init(void)
 	CTitle::SetStart(false);
 	CTitle::SetClear(false);
 
+	// キューブの使用数
+	CCube::SetUseCube();
+
 	// 背景(側面)の生成
 	LoodSide();
 
@@ -155,8 +158,12 @@ void CTutorial::Update(void)
 		CPause::SetPause(true);
 	}
 
-	// 各テキストの処理
-	TutorialTex();
+	bool bPause = CPause::GetPause();
+	if (!bPause)
+	{
+		// 各テキストの処理
+		TutorialTex();
+	}
 
 	// 開始フラグ
 	{
@@ -338,9 +345,6 @@ void CTutorial::TxtCreate(int nType)
 		return;
 	}
 
-	// メモリ確保
-	//m_Text = new CText[3];
-
 	if (--m_aCreateText.nCreateTime <= 0 && !m_aCreateText.bCreate[nType])
 	{
 		int nNumCur = m_aCreateText.nNumCur;
@@ -474,9 +478,6 @@ void CTutorial::TutorialTex(void)
 			if (m_aCreateText.bCreate[ACTION_CAMERA])
 			{
 				TxtDelete(ACTION_CAMERA, ACTION_SHOT);
-
-				// キューブの使用数
-				CCube::SetUseCube();
 			}
 		}
 	}
@@ -491,21 +492,11 @@ void CTutorial::TutorialTex(void)
 		}
 	}
 	break;
-	case ACTION_SET:	// 配置(壁)
+	case ACTION_SET:	// 配置(説明)
 	{
-		int nNumAll = CCube::GetNumAll();
-
-		if (nNumAll > 0 && m_aCreateText.bCreate[ACTION_SET])
+		if (m_aCreateText.bCreate[ACTION_SET])
 		{
-			TxtDelete(ACTION_SET, ACTION_SET1);
-		}
-	}
-	break;
-	case ACTION_SET1:	// 配置(任意)
-	{
-		if (m_aCreateText.bCreate[ACTION_SET1])
-		{
-			TxtDelete(ACTION_SET1, ACTION_ENEMY);
+			TxtDelete(ACTION_SET, ACTION_ENEMY);
 
 			// 敵の生成
 			LoodEnemy();

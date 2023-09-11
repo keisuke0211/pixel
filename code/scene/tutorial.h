@@ -42,12 +42,10 @@ public:
 		ACTION_MOVE = 0,	// 移動
 		ACTION_CAMERA,		// 視点移動
 		ACTION_SHOT,		// 発射
-		ACTION_SET,			// 配置(壁)
-		ACTION_SET1,		// 配置(任意)
+		ACTION_SET,			// 配置(説明)
 		ACTION_ENEMY,		// 敵
 		ACTION_CLEAR,		// 出口
 		ACTION_FREE,		// 自由
-		ACTION_FREE1,		// 自由
 		ACTION_MAX
 	};
 
