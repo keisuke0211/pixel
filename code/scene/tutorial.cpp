@@ -158,7 +158,7 @@ void CTutorial::Update(void)
 		CPause::SetPause(true);
 	}
 
-	bool bPause = CPause::GetPause();
+	bool bPause = CPause::IsPause();
 	if (!bPause)
 	{
 		// 各テキストの処理
@@ -213,7 +213,7 @@ void CTutorial::Update(void)
 				}
 				else
 				{
-					if (--m_nEndTime <= 0)
+					if (--m_nEndTime <= 0 && m_aCreateText.nCurAction >= ACTION_CLEAR)
 					{
 						CManager::GetFade()->SetFade(MODE_TITLE);
 					}
@@ -450,7 +450,6 @@ void CTutorial::TutorialTex(void)
 	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
 
-
 	// テキストの生成
 	TxtCreate(m_aCreateText.nCurAction);
 
@@ -492,11 +491,11 @@ void CTutorial::TutorialTex(void)
 		}
 	}
 	break;
-	case ACTION_SET:	// 配置(説明)
+	case ACTION_SET1:	// 配置(説明)
 	{
-		if (m_aCreateText.bCreate[ACTION_SET])
+		if (m_aCreateText.bCreate[ACTION_SET1] && m_aCreateText.nCreateTime <= 0)
 		{
-			TxtDelete(ACTION_SET, ACTION_ENEMY);
+			TxtDelete(ACTION_SET1, ACTION_ENEMY);
 
 			// 敵の生成
 			LoodEnemy();
@@ -524,9 +523,12 @@ void CTutorial::TutorialTex(void)
 	{
 		int nCurAction = m_aCreateText.nCurAction;
 
-		if (m_aCreateText.bCreate[nCurAction] && nCurAction != ACTION_MAX)
+		if (m_aCreateText.nCreateTime <= 0)
 		{
-			TxtDelete(nCurAction, nCurAction + 1);
+			if (m_aCreateText.bCreate[nCurAction] && nCurAction != ACTION_MAX)
+			{
+				TxtDelete(nCurAction, nCurAction + 1);
+			}
 		}
 	}
 		break;

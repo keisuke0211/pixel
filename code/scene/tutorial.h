@@ -43,9 +43,10 @@ public:
 		ACTION_CAMERA,		// 視点移動
 		ACTION_SHOT,		// 発射
 		ACTION_SET,			// 配置(説明)
+		ACTION_SET1,		// 配置(説明)
 		ACTION_ENEMY,		// 敵
-		ACTION_CLEAR,		// 出口
-		ACTION_FREE,		// 自由
+		ACTION_CLEAR,		// スコア説明
+		ACTION_FREE,		// 終了
 		ACTION_MAX
 	};
 
@@ -89,7 +90,7 @@ private:
 		int nDisapTime;				// 消える時間
 		int nCreateTime;			// 生成待機時間
 		char *ActionTex[TXT_MAX];	// 行動テキスト
-		int nTextSize;				// テキストサイズ
+		float nTextSize;			// テキストサイズ
 		bool bTextBok;				// テキストボックスの表示フラグ
 	};
 
