@@ -107,7 +107,7 @@ HRESULT CTutorial::Init(void)
 
 
 	CCamera *pCamera = CManager::GetCamera();					// カメラ
-
+	pCamera->Init();
 	pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	pCamera->SetHeigth(0.4f);
 	pCamera->SetDistance(500.0f);
@@ -180,54 +180,6 @@ void CTutorial::Update(void)
 		if (!bClear && CEnemy::GetEnemyAll() <= 0 && m_aCreateText.nCurAction >= ACTION_ENEMY)
 		{
 			CTitle::SetClear(true);
-		}
-	}
-
-	if (CFade::GetFade() == CFade::FADE_NONE)
-	{
-		// CLEAR
-		{
-			bool bClear = CTitle::IsClear();
-
-			if (bClear)
-			{
-				if (!m_bEnd)
-				{
-					FormFont pFont = {
-						INIT_D3DXCOLOR,
-						20.0f,
-						15,
-						10,
-						30
-					};
-
-					CText::Create(CText::BOX_NORMAL_RECT,
-						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
-						D3DXVECTOR2(440.0f, 100.0f),
-						"Game Clear",
-						CFont::FONT_BESTTEN,
-						&pFont, false);
-
-					m_nEndTime = (15 * 10) + 10 + 25;
-					m_bEnd = true;
-				}
-				else
-				{
-					if (--m_nEndTime <= 0 && m_aCreateText.nCurAction >= ACTION_CLEAR)
-					{
-						CManager::GetFade()->SetFade(MODE_TITLE);
-					}
-				}
-			}
-		}
-
-		// 時間切れ
-		if (m_aCreateText.nCurAction >= ACTION_CLEAR)
-		{
-			if (m_pTime->GetTime() <= 0)
-			{
-				CManager::GetFade()->SetFade(MODE_TITLE);
-			}
 		}
 	}
 }
@@ -336,11 +288,6 @@ void CTutorial::TxtCreate(int nType)
 	m_nCurAction = nType;
 
 	if (m_aCreateText.nCurAction == ACTION_MAX)
-	{
-		return;
-	}
-
-	if (m_aCreateText.nCurAction == ACTION_CLEAR)
 	{
 		return;
 	}
@@ -516,6 +463,19 @@ void CTutorial::TutorialTex(void)
 
 			// タイム生成
 			m_pTime = CTime::Create(MAX_TIME);
+		}
+	}
+	break;
+	case ACTION_FREE:// 終了
+	{
+		if (m_aCreateText.nCreateTime <= 0 && m_aCreateText.bCreate[ACTION_FREE])
+		{
+			TxtDelete(ACTION_FREE, ACTION_MAX);
+
+			if (CFade::GetFade() == CFade::FADE_NONE)
+			{
+				CManager::GetFade()->SetFade(MODE_TITLE);
+			}
 		}
 	}
 	break;

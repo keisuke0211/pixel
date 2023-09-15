@@ -82,6 +82,7 @@ public:
 	/* 削除 */void Disap(bool bDisap,int nTime);
 
 	// -- 設定 ------------------------------------------
+	/* 空白表示			*/void SetSpace(bool bSpace) { m_Info.bSpace = bSpace; }
 	/* ポーズ中の生成	*/void SetTetPause(bool bPause);
 	/* ボックスの色		*/void SetBoxColor(D3DXCOLOR col);
 	/* テキストの色		*/bool SetTextColor(D3DXCOLOR col);
@@ -110,6 +111,10 @@ private:
 	{
 		D3DXCOLOR TextBoxCol;	// テキストボックスの色
 		D3DXCOLOR FontCol;		// 文字の色
+		D3DXCOLOR TextBoxColOld;// 前回のテキストボックスの色
+		D3DXCOLOR FontColOld;	// 前回の文字の色
+		bool bCol;				// 色変更フラグ(ポーズ切替)
+
 		float fTextSize;		// 文字のサイズ
 		int nTextLength;		// 文字の長さ
 		int nAppearTime;		// 1つの文字が加算されるまでの時間
@@ -130,6 +135,7 @@ private:
 
 		bool bTextBok;			// テキストボックスの表示フラグ
 		bool bPause;			// ポーズ中でも動くか（false：動かない）
+		bool bSpace;			// 空白表示フラグ(sprintf用)
 		string sText;			// 表示するテキスト
 		string sALLText;		// テキストの全体
 		CWords** words;			// 文字
@@ -147,7 +153,6 @@ private:
 	/* 待機時間			*/void SetStandTime(int StandTime);
 	/* 文字の消す時間	*/void EraseTime(int time);
 	/* 文字の出現時間	*/void TextLetter(const char *Text, int DispText);
-	/* 文字の影			*/void TextShadow(FormShadow *Shadow);
 
 	// ***** 変数 *****
 	Info m_Info;

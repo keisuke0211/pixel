@@ -6,6 +6,7 @@
 // *** text.cpp ***
 //========================================
 #include "text.h"
+#include "../../scene/pause.h"
 #include "../../object/object.h"
 #include "../../system/texture.h"
 #include "../../manager.h"
@@ -35,6 +36,7 @@ CText::CText(int nPriority) : CObject2D(nPriority)
 	m_Info.nDisapTime = 0;
 	m_Info.nDisapTimeMax = 0;
 	m_Info.bRelease = false;
+	m_Info.bSpace = false;
 
 	m_Info.aShadow.col = INIT_D3DXCOLOR;
 	m_Info.aShadow.AddPos = INIT_D3DXVECTOR3;
@@ -63,6 +65,9 @@ HRESULT CText::Init()
 {
 	m_Info.TextBoxCol = INIT_D3DXCOLOR;
 	m_Info.FontCol = INIT_D3DXCOLOR;
+	m_Info.TextBoxColOld = INIT_D3DXCOLOR;
+	m_Info.FontColOld = INIT_D3DXCOLOR;
+	m_Info.bCol = false;
 	m_Info.fTextSize = 0.0f;
 	m_Info.nTextLength = 0;
 	m_Info.nAppearTime = 0;
@@ -128,11 +133,38 @@ void CText::Uninit()
 //========================================
 void CText::Update()
 {
+	bool bPause = CPause::IsPause();
+
+	if (!m_Info.bPause && bPause)
+	{
+		if (!m_Info.bCol)
+		{
+			if (m_Info.bTextBok)
+			{
+				m_Info.TextBoxColOld = m_Info.TextBoxCol;
+				SetBoxColor(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
+				CObject2D::SetColar(m_Info.TextBoxCol);
+			}
+			m_Info.FontColOld = m_Info.FontCol;
+			SetTextColor(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
+			m_Info.bCol = true;
+		}
+		return;
+	}
+	else if(m_Info.bCol && !bPause)
+	{
+		if (m_Info.bTextBok)
+		{
+			SetBoxColor(m_Info.TextBoxColOld);
+			CObject2D::SetColar(m_Info.TextBoxCol);
+		}
+		SetTextColor(m_Info.FontColOld);
+		m_Info.bCol = false;
+	}
+
 	// ÉeÉLÉXÉgê∂ê¨
 	if (!m_Info.bStand)
 	{
-		bool bPause = CPause::IsPause();
-
 		if (CScene::GetMode() == CScene::MODE_GAME && !m_Info.bPause && bPause)
 		{
 			return;
@@ -318,6 +350,15 @@ void CText::LetterForm(void)
 
 						m_Info.nAddLetter++;
 
+						if (m_Info.bSpace && m_Info.sText == "")
+						{
+							m_Info.nLetterPopCount++;
+							m_Info.nLetterPopCountX++;
+							m_Info.sText = "";
+							m_Info.nAddCount = 0;
+							return;
+						}
+
 						// âe
 						if (m_Info.aShadow.bShadow)
 						{
@@ -480,14 +521,6 @@ void CText::TextLetter(const char * Text, int AppearTime)
 	{
 		m_Info.words[wordsCount] = NULL;
 	}
-}
-
-//========================================
-// ï∂éöÇÃâe
-//========================================
-void CText::TextShadow(FormShadow *Shadow)
-{
-	
 }
 
 //========================================

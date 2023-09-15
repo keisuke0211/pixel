@@ -28,8 +28,8 @@ public:
 		MODEL_STONE,		// 石 1×1×1
 		MODEL_STONE01,		// 石 3×1×3
 		MODEL_STONE02,		// 石 5×1×5
-		MODEL_CRACK_ROCK,	// ひび割れ岩(仮)
-		MODEL_TNT,			// TNT(仮)
+		MODEL_WOOD_BOX,		// 木箱
+		MODEL_BOMB,			// 爆弾
 		MODEL_GOAL,			// ゴールブロック
 		MODEL_BULLET,		// 弾
 		MODEL_PLAYER_00,	// プレイヤー 体

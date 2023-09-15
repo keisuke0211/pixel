@@ -76,12 +76,16 @@ HRESULT CCamera::Init(void)
 	m_Info.posOldV = INIT_D3DXVECTOR3;				// 前回の注視点R3;
 	m_Info.vecU = INIT_VEC;							// 上方向ベクトル
 	m_Info.rot = INIT_D3DXVECTOR3;					// 向き
+	m_Info.targetRot = INIT_D3DXVECTOR3;			// 目標向き
 	m_Info.spin = INIT_D3DXVECTOR3;					// 回転力
 	m_Info.fDistance = 300.0f;						// 距離
 	m_Info.fTargetDistance = 300.0f;				// 目標距離
 	m_Info.fHeight = 0.05f;							// 高さ
+	m_Info.fTargetHeight = 0.05f;					// 目標高さ
 	m_Info.fVerticalMove = INIT_FLOAT;				// 縦の移動量
 	m_Info.nScreen = SCREEN_3D;						// 投影モード
+	m_Info.bRotMove = false;
+	m_Info.nRotType = 0;
 
 	return S_OK;
 }
@@ -331,6 +335,7 @@ void CCamera::SetPosR(D3DXVECTOR3 pos, int nIdx)
 void CCamera::SetRot(D3DXVECTOR3 rot, int nIdx)
 {
 	m_Info.rot = rot;
+	m_Info.targetRot = rot;
 	m_Info.bRotMove = true;
 }
 

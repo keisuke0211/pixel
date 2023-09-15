@@ -184,12 +184,12 @@ void CBlock::Update(void)
 		{
 			switch (m_Info.nModelID)
 			{
-			case MODEL_TNT:
+			case MODEL_BOMB:
 			{
-				TntBlock();
+				Bomb();
 			}
 				break;
-			case MODEL_CRACK_ROCK:
+			case MODEL_WOOD_BOX:
 			{
 				CrackRock();
 			}
@@ -226,13 +226,13 @@ void CBlock::HitBlock(void)
 	{
 		switch (m_Info.nModelID)
 		{
-		case MODEL_TNT:
+		case MODEL_BOMB:
 		{
-			m_Info.nEraseTime = 20;
+			m_Info.nEraseTime = 10;
 			m_Info.bErase = true;
 		}
 		break;
-		case MODEL_CRACK_ROCK:
+		case MODEL_WOOD_BOX:
 		{
 			m_Info.nEraseTime = 10;
 			m_Info.bErase = true;
@@ -243,7 +243,7 @@ void CBlock::HitBlock(void)
 }
 
 //========================================
-// ひび割れ岩
+// 木箱
 //========================================
 void CBlock::CrackRock(void)
 {
@@ -254,14 +254,14 @@ void CBlock::CrackRock(void)
 	pObj->Par_SetMove(D3DXVECTOR3(35.0f, 15.0f, 35.0f));
 	pObj->Par_SetType(0);
 	pObj->Par_SetLife(100);
-	pObj->Par_SetCol(D3DXCOLOR(0.49f, 0.49f, 0.49f, 1.0f));
+	pObj->Par_SetCol(D3DXCOLOR(0.6f, 0.337f, 0.086f, 1.0f));
 	pObj->Par_SetForm(20);
 }
 
 //========================================
-// TNTブロック
+// 爆弾
 //========================================
-void CBlock::TntBlock(void)
+void CBlock::Bomb(void)
 {
 	// パーティクル生成
 	CParticleX *pObj = CParticleX::Create();
@@ -270,8 +270,8 @@ void CBlock::TntBlock(void)
 	pObj->Par_SetMove(D3DXVECTOR3(25.0f, 15.0f, 25.0f));
 	pObj->Par_SetType(0);
 	pObj->Par_SetLife(100);
-	pObj->Par_SetCol(D3DXCOLOR(0.9f, 0.0f, 0.0f, 1.0f));
-	pObj->Par_SetForm(10);
+	pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
+	pObj->Par_SetForm(15);
 
 	// キューブとの当たり判定
 	ModelCollsion(PRIO_CUBE, TYPE_CUBE,m_Info.pos);
@@ -305,7 +305,7 @@ void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 			float fHeight = GetHeight();		// 高さ
 			float fDepth = GetDepth();			// 奥行き
 
-			if (nBlockType == MODEL_TNT)
+			if (nBlockType == MODEL_BOMB)
 			{
 				// サイズ調整
 				fWidth *= TNT_COLLSION;	// 幅

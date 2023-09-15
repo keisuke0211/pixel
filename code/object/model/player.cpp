@@ -216,16 +216,6 @@ void CPlayer::KeyInput(void)
 		m_Info.bMove = false;
 	}
 
-	//// ジャンプ
-	//if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
-	//{
-	//	if (m_Info.bJump == false)
-	//	{
-	//		m_Info.bJump = true;	// ジャンプフラグを真にする
-	//		m_Info.move.y += JUMP_POWER;
-	//	}
-	//}
-
 	// 攻撃
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CMouse::MOUSE_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
 	{
@@ -387,9 +377,6 @@ void CPlayer::UpdatePos(void)
 
 		// Y方向の当たり判定
 		m_Info.pos = Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Y, m_Info.pos);
-		//m_Info.pos = Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Y, m_Info.pos);
-		//m_Info.pos = Collision(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Y, m_Info.pos);
-
 
 		float fSize = 10.0f;
 		// 当たり判定（落下死用）

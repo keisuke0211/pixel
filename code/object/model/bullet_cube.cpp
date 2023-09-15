@@ -675,7 +675,7 @@ void CCube::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 
 					int nBlockType = pBlock->GetBlockType();
 
-					if (nBlockType = MODEL_TNT || nBlockType == MODEL_CRACK_ROCK)	// TNT or ‚Ð‚ÑŠ„‚êŠâ
+					if (nBlockType = MODEL_BOMB || nBlockType == MODEL_WOOD_BOX)	// TNT or ‚Ð‚ÑŠ„‚êŠâ
 					{
 						// Hitˆ—
 						pBlock->HitBlock();

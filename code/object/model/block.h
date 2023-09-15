@@ -88,7 +88,7 @@ public:
 private:	
 
 	// ***** ŠÖ” *****
-	/* TNT			*/void TntBlock(void);
+	/* TNT			*/void Bomb(void);
 	/* ‚Ğ‚ÑŠ„‚êŠâ	*/void CrackRock(void);
 
 	// ***** •Ï” *****

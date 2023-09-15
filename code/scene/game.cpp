@@ -114,6 +114,12 @@ HRESULT CGame::Init(void)
 	// ブロックの生成
 	LoodBlock();
 
+	CCamera *pCamera = CManager::GetCamera();					// カメラ
+	pCamera->Init();
+	pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pCamera->SetHeigth(0.4f);
+	pCamera->SetDistance(1400.0f);
+
 	CPlayer *pPlayer = CPlayer::Create(m_aStageInfo.PlayerPos[m_nStage],m_aStageInfo.PlayerRot[m_nStage]);
 	pPlayer->SetMotion("data\\GAMEDATA\\MODEL\\Player\\PLAYER_DATA.txt");
 
@@ -129,11 +135,6 @@ HRESULT CGame::Init(void)
 	// スコア生成
 	m_pScore = CScore::Create();
 	CScore::SetScore(m_nScore);
-
-	CCamera *pCamera = CManager::GetCamera();					// カメラ
-	pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	pCamera->SetHeigth(0.4f);
-	pCamera->SetDistance(1400.0f);
 
 	FormFont pFont = {INIT_D3DXCOLOR,20.0f,10,60,30};
 
@@ -201,9 +202,6 @@ void CGame::Update(void)
 		bool bStart = CTitle::IsStart();
 		if (!bStart)
 		{
-			/*pCamera->SetRot(m_rot);
-			m_rot.y += m_nMoveRot;*/
-
 			if (--m_nStartTime <= 0)
 			{
 				pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));

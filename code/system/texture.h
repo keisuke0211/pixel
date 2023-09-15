@@ -37,7 +37,7 @@ public:
 		TEX_NIGHT_SKY02,	// 夜空02
 		TEX_NIGHT_SKY03,	// 夜空03
 		TEX_SEA01,			// 海01
-		TEX_SEA02,			// 海02
+		TEX_GRASS,			// 草原
 		TEX_TITLE_BG,		// タイトル画面
 		TEX_CROWN00,		// 王冠・金
 		TEX_CROWN01,		// 王冠・銀

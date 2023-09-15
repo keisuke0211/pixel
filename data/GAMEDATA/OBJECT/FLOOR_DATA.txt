@@ -34,6 +34,30 @@ SET_FLOOR
 	
 END_FLOOR
 
+// -- 海 ------------------------------------
+SET_FLOOR
+	POS = 0.0 -19.1 0.0
+	ROT = 0.0 0.0 0.0
+	COLOR = 1.0 1.0 1.0 1.0
+	WIDTH = 40.0
+	HEIGHT = 40.0
+	
+	// テクスチャ関連
+	NUMTEX = 1
+	DIVISION = 1
+	
+	SET_TEX
+		TYPE = 8
+		TEX_X = 0.0
+		TEX_Y = 0.0
+	END_TEX
+	
+	// 分割数
+	DIVISION_X = 15
+	DIVISION_Y = 15
+	
+END_FLOOR
+
 END_CREATE_FLOOR
 
 #========================================
