@@ -48,10 +48,11 @@ public:
 	// 生成
 	static CBullet *Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
-	HRESULT Init(void);				// 初期化
-	void Uninit(void);				// 終了
-	void Update(void);				// 更新
-	void Draw(void);				// 描画
+	/* 初期化	*/HRESULT Init(void);
+	/* 終了		*/void Uninit(void);
+	/* 更新		*/void Update(void);
+	/* 描画		*/void Draw(void);
+	/* リセット	*/static void Reset(void);
 
 	/* 取得 */
 	/* 弾情報		*/Info GetInfo() { return m_Info; }

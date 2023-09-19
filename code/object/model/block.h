@@ -41,6 +41,7 @@ public:
 	{
 		D3DXVECTOR3 pos;		// 位置
 		D3DXVECTOR3 posOld;		// 位置(過去)
+		D3DXVECTOR3 move;		// 移動量
 		D3DXVECTOR3 rot;		// 向き
 		D3DXVECTOR3 rotOld;		// 向き(過去)
 		D3DXVECTOR3	size;		// サイズ
@@ -73,7 +74,7 @@ public:
 	/* 当たり判定	*/void ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos);
 	
 	// -- 設定 ---------------------------------------------
-	/* 位置		*/virtual void SetBlockPos(const D3DXVECTOR3 pos) { m_Info.pos = pos; }
+	/* 位置		*/virtual void SetBlockPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
 	/* 向き		*/void SetBlockRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
 	/* 色		*/void SetBlockColor(const D3DXCOLOR col) { m_Info.col = col; }
 	/* 大きさ	*/void SetBlockSize(const D3DXVECTOR3 size) { m_Info.size = size; }
@@ -91,8 +92,9 @@ public:
 private:	
 
 	// ***** 関数 *****
-	/* 爆弾	*/void Bomb(void);
-	/* 木箱	*/void CrackRock(void);
+	/* 当たり判定	*/D3DXVECTOR3 Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos);
+	/* 爆弾			*/void Bomb(void);
+	/* 木箱			*/void CrackRock(void);
 
 	// ***** 変数 *****
 	static int m_nNumAll;			// キューブの総数

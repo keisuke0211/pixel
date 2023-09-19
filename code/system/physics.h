@@ -30,7 +30,8 @@ public:
 		MODEL_STONE02,		// 石 5×1×5
 		MODEL_WOOD_BOX,		// 木箱
 		MODEL_BOMB,			// 爆弾
-		MODEL_GOAL,			// ゴールブロック
+		MODEL_FENCE,		// 柵
+		MODEL_FENCE1,		// 柵１
 		MODEL_BULLET,		// 弾
 		MODEL_PLAYER_00,	// プレイヤー 体
 		MODEL_PLAYER_01,	// プレイヤー 頭

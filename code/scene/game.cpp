@@ -10,6 +10,8 @@
 #include "ranking.h"
 #include "../system/csv_file.h"
 #include "../object\model\block.h"
+#include "../object/model/bullet.h"
+#include "../object/model/enemy.h"
 #include "../object/model/bullet_cube.h"
 #include "../object\model\player.h"
 #include "../object\model\enemy.h"
@@ -83,6 +85,8 @@ CGame::~CGame()
 HRESULT CGame::Init(void)
 {
 	CBlock::Reset();
+	CEnemy::Reset();
+	CBullet::Reset();
 	CCube::Reset();
 
 	m_rot = INIT_D3DXVECTOR3;

@@ -56,6 +56,7 @@ public:
 		int nStandTime;			// 待機時間
 		bool bRotMove;			// 向きの推移フラグ
 		bool bCube;				// キューブに当たったか
+		int nID;				// ID
 	};
 
 	// ***** 関数 *****
@@ -67,18 +68,19 @@ public:
 	// 生成
 	static CEnemy *Create(int nType,int nMove,D3DXVECTOR3 pos, D3DXVECTOR3 rot,int nCntTime);
 
-	HRESULT Init(void);	// 初期化
-	void Uninit(void);	// 終了
-	void Update(void);	// 更新
-	void Draw(void);	// 描画
-
-	void HitLife(int nDamage);								// Hit処理
+	/* 初期化	*/HRESULT Init(void);
+	/* 終了		*/void Uninit(void);
+	/* 更新		*/void Update(void);
+	/* 描画		*/void Draw(void);
+	/* リセット	*/static void Reset(void);
+	/* Hit処理	*/void HitLife(int nDamage);
 
 	/* 取得 */
-	Info GetInfo(void) { return m_Info; }					// エネミー情報
-	D3DXVECTOR3 GetPos(void) { return m_Info.pos; }			// 位置
-	D3DXVECTOR3 GetPosOld(void) { return m_Info.posOld; }	// 位置(過去)
-	static int GetEnemyAll(void) { return m_nNumAll; }
+	/* 敵情報	*/Info GetInfo(void) { return m_Info; }
+	/* 位置		*/D3DXVECTOR3 GetPos(void) { return m_Info.pos; }
+	/* 過去位置	*/D3DXVECTOR3 GetPosOld(void) { return m_Info.posOld; }
+	/* 敵の総数	*/static int GetEnemyAll(void) { return m_nNumAll; }
+	/* ID		*/int GetID(void) { return m_Info.nID; }
 
 private:
 

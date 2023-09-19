@@ -46,6 +46,7 @@ CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 	m_Info.nCntTime = 0;
 	m_Info.nStandTime = 0;
 	m_Info.bRotMove = false;
+	m_Info.nID = m_nNumAll;
 	m_nNumAll++;
 }
 
@@ -423,9 +424,9 @@ void CEnemy::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 			float fDepth = GetDepth();			// 奥行き
 
 			// サイズ調整
-			fWidth *= 2.5f;	// 幅
-			fHeight *= 2.5f;// 高さ
-			fDepth *= 2.5f;	// 奥行き
+			fWidth *= 3.5f;	// 幅
+			fHeight *= 3.5f;// 高さ
+			fDepth *= 3.5f;	// 奥行き
 
 			// 相手の取得
 			D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
@@ -440,6 +441,21 @@ void CEnemy::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 
 				switch (nType)
 				{
+				case TYPE_ENEMY:
+				{
+					// ダイナミックキャストする
+					CEnemy *pEnemy = dynamic_cast<CEnemy*>(pObj);
+
+					// IDを取得
+					int nID = pEnemy->GetID();
+
+					if (m_Info.nID != nID)
+					{
+						// Hit処理
+						pEnemy->HitLife(1);
+					}
+				}
+				break;
 				case TYPE_BLOCK:
 				{
 					// ダイナミックキャストする
@@ -476,6 +492,9 @@ void CEnemy::HitLife(int nDamage)
 
 	if (m_Info.nLife <= 0)
 	{
+		ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
+		ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
+
 		// パーティクル生成
 		CParticleX *pObj = CParticleX::Create();
 		pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 20, m_Info.pos.z));
@@ -589,4 +608,12 @@ void CEnemy::StateShift(void)
 	}
 	   break;
 	}
+}
+
+//========================================
+// リセット
+//========================================
+void CEnemy::Reset(void)
+{
+	m_nNumAll = 0;
 }

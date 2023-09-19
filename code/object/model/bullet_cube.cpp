@@ -639,7 +639,7 @@ void CCube::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 			if (m_Info.bSet)
 			{
 				fWidth *= BOM_COLLSION;	// ïù
-				fHeight *= BOM_COLLSION;// çÇÇ≥
+				fHeight *= 0.0f;		// çÇÇ≥
 				fDepth *= BOM_COLLSION;	// âúçsÇ´
 			}
 
@@ -762,7 +762,7 @@ void CCube::SetUseCube(void)
 //========================================
 void CCube::Reset(void)
 {
-	m_nNumAll = 0;
+	m_nNumAll = -1;
 	m_nNumChain = 1;
 	m_nLimitCube = 0;
 	m_nUseCube = 0;

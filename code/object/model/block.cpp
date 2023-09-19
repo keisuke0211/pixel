@@ -7,6 +7,7 @@
 //========================================
 #include "block.h"
 #include "bullet_cube.h"
+#include "enemy.h"
 #include "../../scene/game.h"
 #include "../../scene/title.h"
 #include "../../scene/tutorial.h"
@@ -27,7 +28,9 @@ int CBlock::m_nNumAll = 0;
 //========================================
 // マクロ定義
 //========================================
-#define TNT_COLLSION		(3.5f)	// TNTの爆発の判定
+#define GRAVITY_MAG		(0.08f)		// 重力係数 0.08
+#define GRAVITY_POWER	(1.5f)		// 重力加速度
+#define TNT_COLLSION	(3.5f)		// TNTの爆発の判定
 #define FILE_PATH	("data/GAMEDATA/BLOCK/BLOCK_DATA.txt")	// ファイルパス
 
 //========================================
@@ -38,6 +41,7 @@ CBlock::CBlock(int nPriority) : CObjectX(nPriority)
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;
 	m_Info.posOld = INIT_D3DXVECTOR3;
+	m_Info.move = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
 	m_Info.rotOld = INIT_D3DXVECTOR3;
 	m_Info.size = INIT_D3DXVECTOR3;
@@ -49,8 +53,8 @@ CBlock::CBlock(int nPriority) : CObjectX(nPriority)
 	m_Info.bSet = false;
 	m_Info.nEraseTime = 0;
 	m_Info.bErase = false;
-	m_nNumAll++;
 	m_Info.nID = m_nNumAll;
+	m_nNumAll++;
 }
 
 //========================================
@@ -118,6 +122,7 @@ HRESULT CBlock::Init(void)
 	SetType(TYPE_BLOCK);
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
+	m_Info.posOld = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	m_Info.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.size = D3DXVECTOR3(1.0f,1.0f,1.0f);
 	m_Info.fRadius = 1.0f;
@@ -169,6 +174,22 @@ void CBlock::Update(void)
 	m_Info.posOld = m_Info.pos;
 	m_Info.rotOld = m_Info.rot;
 
+
+	// 移動量の代入
+	m_Info.pos.y += m_Info.move.y;
+
+	if (m_Info.pos.y > -40.0f)
+	{
+		//Ｙの移動量に重力を加算
+		m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+		m_Info.pos = Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Y, m_Info.pos);
+	}
+	else if (m_Info.pos.y <= -40.0f)
+	{
+		m_Info.move.y = 0.0f;
+		m_Info.pos.y = -40.0f;
+	}
+	
 	SetPos(m_Info.pos);
 	SetScale(m_Info.size);
 
@@ -258,6 +279,7 @@ void CBlock::Bomb(void)
 	// キューブとの当たり判定
 	ModelCollsion(PRIO_CUBE, TYPE_CUBE, m_Info.pos);
 	ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
+	ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
 
 	// パーティクル生成
 	CParticleX *pObj = CParticleX::Create();
@@ -271,7 +293,7 @@ void CBlock::Bomb(void)
 }
 
 //========================================
-// オブジェクトの当たり判定
+// 爆発の当たり判定
 //========================================
 void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 {
@@ -302,7 +324,7 @@ void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 			{
 				// サイズ調整
 				fWidth *= TNT_COLLSION;	// 幅
-				fHeight *= TNT_COLLSION;// 高さ
+				fHeight *= 0.5f;// 高さ
 				fDepth *= TNT_COLLSION;	// 奥行き
 			}
 
@@ -319,15 +341,6 @@ void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 
 				switch (nType)
 				{
-				case TYPE_CUBE:
-				{
-					// ダイナミックキャストする
-					CCube *pCube = dynamic_cast<CCube*>(pObj);
-
-					// HIT処理
-					pCube->SetCubeLife(20);
-				}
-				break;
 				case TYPE_BLOCK:
 				{
 					// ダイナミックキャストする
@@ -347,12 +360,149 @@ void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 					}
 				}
 				break;
+				case TYPE_CUBE:
+				{
+					// ダイナミックキャストする
+					CCube *pCube = dynamic_cast<CCube*>(pObj);
+
+					// HIT処理
+					pCube->SetCubeLife(20);
+				}
+				break;
+				case TYPE_ENEMY:
+				{
+					// ダイナミックキャストする
+					CEnemy *pEnemy = dynamic_cast<CEnemy*>(pObj);
+
+					// HIT処理
+					pEnemy->HitLife(1);
+				}
+				break;
 				}
 			}
 		}
 
 		pObj = pObjNext;	// 次のオブジェクトを代入
 	}
+}
+
+//========================================
+// オブジェクトの当たり判定
+//========================================
+D3DXVECTOR3 CBlock::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
+{
+	// 先頭オブジェクトを取得
+	CObject *pObj = CObject::GetTop(nPrio);
+
+	while (pObj != NULL)
+	{// 使用されている時、
+
+		// 次のオブジェクト
+		CObject *pObjNext = pObj->GetNext();
+
+		// 種類を取得
+		TYPE type = pObj->GetType();
+
+		// ダイナミックキャストする
+		CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
+		int nID = pBlock->GetID();
+
+		if (m_Info.nID != nID)
+		{
+			// ブロックの取得
+			D3DXVECTOR3 PosOld = GetPosOld();	// 位置(過去)
+			D3DXVECTOR3 RotOld = GetRotOld();	// 向き(過去)
+			D3DXVECTOR3 Scale = GetSize();
+			float fWidth = GetWidth();		// 幅
+			float fHeight = GetHeight();	// 高さ
+			float fDepth = GetDepth();		// 奥行き
+
+			if (m_Info.nModelID == MODEL_BOMB)
+			{
+				fHeight = 20.0f;
+			}
+
+			fWidth = round(fWidth);
+			fHeight = round(fHeight);
+			fDepth = round(fDepth);
+
+			if (type == nType)
+			{// 種類がブロックの時、
+
+				// ブロックの取得
+				D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
+				D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
+				D3DXVECTOR3 PairRot = pObj->GetRot();		// 向き
+				D3DXVECTOR3 PairRotOld = pObj->GetRotOld();	// 向き(過去)
+
+				float fPairWidth = pObj->GetWidth();	// 幅
+				float fPairHeight = pObj->GetHeight();	// 高さ
+				float fPairDepth = pObj->GetDepth();	// 奥行き
+
+				fPairWidth = round(fPairWidth);
+				fPairHeight = round(fPairHeight);
+				fPairDepth = round(fPairDepth);
+
+				// --- 当たり判定 ----------------------------------------------
+				switch (vector)
+				{
+				case VECTOR_X: {	/* X方向 */
+
+					if (CollsionX(pos, PairPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+					{// 奥辺と手前辺が相手の幅の内側の時、
+
+						if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_LEFT))
+						{// 左からめり込んでいる時
+							pos.x = (PairPos.x - fPairWidth) - fWidth;
+						}
+						else if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_RIGHT))
+						{// 右からめり込んでいる時
+							pos.x = (PairPos.x + fPairWidth) + fWidth;
+						}
+					}
+				}
+							   break;
+				case VECTOR_Y: {	/* Y方向 */
+
+					if (CollsionY(pos, PairPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+					{// 左辺と右辺が相手の幅の内側の時、
+
+						if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_DOWN))
+						{// 下からめり込んでいる時
+							pos.y = (PairPos.y - fPairHeight) - fHeight;
+						}
+						else if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_UP))
+						{// 上からめり込んでいる時
+
+							m_Info.move.y = 0.0f;
+
+							pos.y = (PairPos.y + fPairHeight) + fHeight;
+						}
+					}
+				}
+							   break;
+				case VECTOR_Z: {	/* Z方向 */
+
+					if (CollsionZ(pos, PairPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+					{// 奥辺と手前辺が相手の幅の内側の時、
+
+						if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_BACK))
+						{// 後ろからめり込んでいる時
+							pos.z = (PairPos.z - fPairDepth) - fDepth;
+						}
+						else if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_FRONT))
+						{// 前からめり込んでいる時
+							pos.z = (PairPos.z + fPairDepth) + fDepth;
+						}
+					}
+				}
+							   break;
+				}
+			}
+		}
+		pObj = pObjNext;	// 次のオブジェクトを代入
+	}
+	return pos;
 }
 
 //========================================

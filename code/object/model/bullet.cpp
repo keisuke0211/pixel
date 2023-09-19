@@ -493,3 +493,11 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 	}
 	return FALSE;
 }
+
+//========================================
+// ƒŠƒZƒbƒg
+//========================================
+void CBullet::Reset(void)
+{
+	m_nNumAll = 0;
+}
