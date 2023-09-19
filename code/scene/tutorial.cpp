@@ -881,6 +881,10 @@ void CTutorial::LoodBlock(void)
 		{
 			return;
 		}
+		if (nRow == 150)
+		{
+			int n = nRow;
+		}
 
 		// ”z’u
 		CBlock *pObj = CBlock::Create(nType, pos, nState);

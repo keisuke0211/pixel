@@ -174,6 +174,10 @@ void CBlock::Update(void)
 	m_Info.posOld = m_Info.pos;
 	m_Info.rotOld = m_Info.rot;
 
+	if (m_Info.nID == 154)
+	{
+		m_Info.nID = 154;
+	}
 
 	// à⁄ìÆó ÇÃë„ì¸
 	m_Info.pos.y += m_Info.move.y;
@@ -469,7 +473,7 @@ D3DXVECTOR3 CBlock::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3
 
 						if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_DOWN))
 						{// â∫Ç©ÇÁÇﬂÇËçûÇÒÇ≈Ç¢ÇÈéû
-							pos.y = (PairPos.y - fPairHeight) - fHeight;
+
 						}
 						else if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_UP))
 						{// è„Ç©ÇÁÇﬂÇËçûÇÒÇ≈Ç¢ÇÈéû
