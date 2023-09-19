@@ -31,7 +31,7 @@ CText *CCube::m_Cube = NULL;
 #define RADIUS_TIME			(20)	// 半径・推移時間
 #define SIZE_DIAMETER		(2.0f)	// サイズの倍率
 #define COLLSION_DIAMETER	(1.0f)	// 判定の倍率
-#define BOM_COLLSION		(2.5f)	// 爆発の判定
+#define BOM_COLLSION		(2.0f)	// 爆発の判定
 #define DAMAGE_DIAMETER		(2)		// 連続爆破のダメージの割合		BOM_DAMAGE　+ (連鎖カウント / DAMAGE_DIAMETER)
 #define BOM_DAMAGE			(1)		// 爆発ダメージ
 
@@ -107,6 +107,7 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 
 	// 配置場所にプレイヤーがいるか
 	pCube->ModelCollsion(PRIO_OBJECT, TYPE_PLAYER, pCube->m_Info.pos);
+	pCube->ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, pCube->m_Info.pos);
 
 	if (pCube->m_Info.bErase)
 	{
@@ -635,9 +636,12 @@ void CCube::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 			float fDepth = GetDepth();			// 奥行き
 
 			// サイズ調整
-			fWidth *= BOM_COLLSION;	// 幅
-			fHeight *= BOM_COLLSION;// 高さ
-			fDepth *= BOM_COLLSION;	// 奥行き
+			if (m_Info.bSet)
+			{
+				fWidth *= BOM_COLLSION;	// 幅
+				fHeight *= BOM_COLLSION;// 高さ
+				fDepth *= BOM_COLLSION;	// 奥行き
+			}
 
 			// 相手の取得
 			D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
@@ -672,13 +676,23 @@ void CCube::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 					// ダイナミックキャストする
 					CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
 
-
-					int nBlockType = pBlock->GetBlockType();
-
-					if (nBlockType = MODEL_BOMB || nBlockType == MODEL_WOOD_BOX)	// TNT or ひび割れ岩
+					if (m_Info.bSet)
 					{
-						// Hit処理
-						pBlock->HitBlock();
+						int nBlockType = pBlock->GetBlockType();
+
+						if (nBlockType == MODEL_BOMB || nBlockType == MODEL_WOOD_BOX)
+						{
+							// Hit処理
+							pBlock->HitBlock();
+						}
+					}
+					else if (!m_Info.bSet)
+					{
+						CBlock::STATE aState = pBlock->GetBlockState();
+						if (aState == CBlock::STATE_ALLIE)
+						{// 状態が貫通なら
+							m_Info.bErase = true;
+						}
 					}
 				}
 				break;

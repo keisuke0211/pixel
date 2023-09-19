@@ -22,11 +22,12 @@
 CBlock::TypeInfo *CBlock::m_TypeInfo = NULL;
 D3DXVECTOR3 CBlock::m_CameraRot = INIT_D3DXVECTOR3;
 float CBlock::m_CameraHeigth = 0.0f;
+int CBlock::m_nNumAll = 0;
 
 //========================================
 // マクロ定義
 //========================================
-#define TNT_COLLSION		(3.0f)	// TNTの爆発の判定
+#define TNT_COLLSION		(3.5f)	// TNTの爆発の判定
 #define FILE_PATH	("data/GAMEDATA/BLOCK/BLOCK_DATA.txt")	// ファイルパス
 
 //========================================
@@ -48,6 +49,8 @@ CBlock::CBlock(int nPriority) : CObjectX(nPriority)
 	m_Info.bSet = false;
 	m_Info.nEraseTime = 0;
 	m_Info.bErase = false;
+	m_nNumAll++;
+	m_Info.nID = m_nNumAll;
 }
 
 //========================================
@@ -89,9 +92,9 @@ CBlock *CBlock::Create(int nType, D3DXVECTOR3 pos, int nState)
 		pBlock->m_Info.state = STATE_BREAK;
 	}
 	break;
-	case STATE_INVISIBLE:
+	case STATE_ALLIE:
 	{
-		pBlock->m_Info.state = STATE_INVISIBLE;
+		pBlock->m_Info.state = STATE_ALLIE;
 	}
 	break;
 	}
@@ -129,21 +132,13 @@ HRESULT CBlock::Init(void)
 	case STATE_BREAK:
 		m_Info.state = STATE_BREAK;
 		break;
-	case STATE_INVISIBLE:
-		m_Info.state = STATE_INVISIBLE;
+	case STATE_ALLIE:
+		m_Info.state = STATE_ALLIE;
 		break;
 	}
 	}
 
-
-	if (m_Info.state != STATE_INVISIBLE)
-	{
-		m_Info.col = INIT_D3DXCOLOR;
-	}
-	else
-	{
-		m_Info.col = D3DXCOLOR(0.0f,0.0f,0.0f,0.0f);
-	}
+	m_Info.col = INIT_D3DXCOLOR;
 
 	// 生成
 	SetPos(m_Info.pos);
@@ -211,10 +206,7 @@ void CBlock::Update(void)
 //========================================
 void CBlock::Draw(void)
 {
-	if (m_Info.state != STATE_INVISIBLE)
-	{
-		CObjectX::Draw();
-	}
+	CObjectX::Draw();
 }
 
 //========================================
@@ -226,13 +218,13 @@ void CBlock::HitBlock(void)
 	{
 		switch (m_Info.nModelID)
 		{
-		case MODEL_BOMB:
+		case MODEL_WOOD_BOX:
 		{
 			m_Info.nEraseTime = 10;
 			m_Info.bErase = true;
 		}
 		break;
-		case MODEL_WOOD_BOX:
+		case MODEL_BOMB:
 		{
 			m_Info.nEraseTime = 10;
 			m_Info.bErase = true;
@@ -263,6 +255,10 @@ void CBlock::CrackRock(void)
 //========================================
 void CBlock::Bomb(void)
 {
+	// キューブとの当たり判定
+	ModelCollsion(PRIO_CUBE, TYPE_CUBE, m_Info.pos);
+	ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
+
 	// パーティクル生成
 	CParticleX *pObj = CParticleX::Create();
 	pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y, m_Info.pos.z));
@@ -272,9 +268,6 @@ void CBlock::Bomb(void)
 	pObj->Par_SetLife(100);
 	pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
 	pObj->Par_SetForm(15);
-
-	// キューブとの当たり判定
-	ModelCollsion(PRIO_CUBE, TYPE_CUBE,m_Info.pos);
 }
 
 //========================================
@@ -333,6 +326,25 @@ void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 
 					// HIT処理
 					pCube->SetCubeLife(20);
+				}
+				break;
+				case TYPE_BLOCK:
+				{
+					// ダイナミックキャストする
+					CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
+
+					// IDを取得
+					int nID = pBlock->GetID();
+
+					int nBlockType = pBlock->GetBlockType();
+					if (nBlockType == MODEL_BOMB || nBlockType == MODEL_WOOD_BOX)
+					{
+						if (m_Info.nID != nID)
+						{
+							// Hit処理
+							pBlock->HitBlock();
+						}
+					}
 				}
 				break;
 				}
@@ -401,4 +413,5 @@ void CBlock::Reset(void)
 {
 	m_CameraRot = INIT_D3DXVECTOR3;
 	m_CameraHeigth = 0.0f;
+	m_nNumAll = 0;
 }

@@ -23,7 +23,7 @@ public:
 	{
 		STATE_NORMAL = 0,	// 通常
 		STATE_BREAK,		// 破壊可
-		STATE_INVISIBLE,	// 透明
+		STATE_ALLIE,		// 貫通
 		STATE_MAX,
 	};
 
@@ -51,6 +51,7 @@ public:
 		int nCntRadius;			// 半径・推移時間
 		float fRadiusRate;		// 半径の割合
 		bool bSet;				// 配置フラグ
+		int nID;				// 自身のID
 
 		int nEraseTime;			// 消すまでの時間
 		bool bErase;			// 消すフラグ
@@ -83,15 +84,18 @@ public:
 	/* 向き		*/D3DXVECTOR3 GetBlockRot(void) { return m_Info.rot; }
 	/* 色		*/D3DXCOLOR GetBlockColor(void) { return m_Info.col; }
 	/* 大きさ	*/D3DXVECTOR3 GetBlockSize(void) { return m_Info.size; }
+	/* 状態		*/STATE GetBlockState(void) { return m_Info.state; }
 	/* 種類		*/int GetBlockType(void) { return m_Info.nModelID; }
+	/* ID		*/int GetID(void) { return m_Info.nID; }
 
 private:	
 
 	// ***** 関数 *****
-	/* TNT			*/void Bomb(void);
-	/* ひび割れ岩	*/void CrackRock(void);
+	/* 爆弾	*/void Bomb(void);
+	/* 木箱	*/void CrackRock(void);
 
 	// ***** 変数 *****
+	static int m_nNumAll;			// キューブの総数
 	static D3DXVECTOR3 m_CameraRot;	// 向きの保存
 	static float m_CameraHeigth;	// 高さの保存
 

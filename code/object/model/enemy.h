@@ -98,10 +98,10 @@ private:
 	} SetInfo;
 
 	// ***** 関数 *****
-	void SetState(STATE state);	// 状態設定
-	void StateShift(void);		// 状態推移
-	bool Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos);	// 当たり判定
-
+	/* 状態設定				*/void SetState(STATE state);
+	/* 状態推移				*/void StateShift(void);
+	/* 当たり判定(方向指定)	*/bool Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos);
+	/* 当たり判定(全体)		*/void ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos);
 	// ***** 変数 *****
 	Info m_Info;			// 情報
 	static SetInfo *pSet;	// 配置

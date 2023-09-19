@@ -441,6 +441,20 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 			float fPairHeight = pObj->GetHeight();	// ‚‚³
 			float fPairDepth = pObj->GetDepth();	// ‰œs‚«
 
+			if (type == TYPE_BLOCK)
+			{
+				CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
+				int nBlockType = pBlock->GetBlockType();
+
+				if (nBlockType = MODEL_BOMB)
+				{
+					// ”»’è‚ÌC³
+					fPairWidth *= 0.8f;		// •
+					fPairHeight *= 0.8f;	// ‚‚³
+					fPairDepth *= 0.8f;		// ‰œs‚«
+				}
+			}
+
 			fPairWidth = round(fPairWidth);
 			fPairHeight = round(fPairHeight);
 			fPairDepth = round(fPairDepth);

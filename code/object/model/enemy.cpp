@@ -264,7 +264,7 @@ void CEnemy::Draw(void)
 }
 
 //========================================
-// 当たり判定
+// 当たり判定(方向指定)
 //========================================
 bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 {
@@ -393,6 +393,75 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 		pObj = pObjNext;	// 次のオブジェクトを代入
 	}
 	return FALSE;
+}
+
+//========================================
+// 当たり判定(全体)
+//========================================
+void CEnemy::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
+{
+	// 先頭オブジェクトを取得
+	CObject *pObj = CObject::GetTop(nPrio);
+
+	while (pObj != NULL)
+	{// 使用されている時、
+
+	 // 次のオブジェクト
+		CObject *pObjNext = pObj->GetNext();
+
+		TYPE type;
+
+		// 種類を取得
+		type = pObj->GetType();
+
+		if (type == nType)
+		{// 選択した種類の時、
+
+			// ブロックの取得
+			float fWidth = GetWidth();			// 幅
+			float fHeight = GetHeight();		// 高さ
+			float fDepth = GetDepth();			// 奥行き
+
+			// サイズ調整
+			fWidth *= 2.5f;	// 幅
+			fHeight *= 2.5f;// 高さ
+			fDepth *= 2.5f;	// 奥行き
+
+			// 相手の取得
+			D3DXVECTOR3 PairPos = pObj->GetPos();		// 位置
+			D3DXVECTOR3 PairPosOld = pObj->GetPosOld();	// 位置(過去)
+			float fPairWidth = pObj->GetWidth();		// 幅
+			float fPairHeight = pObj->GetHeight();		// 高さ
+			float fPairDepth = pObj->GetDepth();		// 奥行き
+
+			// 当たり判定
+			if (Collsion(pos, PairPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
+			{// 当たったら
+
+				switch (nType)
+				{
+				case TYPE_BLOCK:
+				{
+					// ダイナミックキャストする
+					CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
+
+					// IDを取得
+					int nID = pBlock->GetID();
+
+					int nBlockType = pBlock->GetBlockType();
+					if (nBlockType == MODEL_BOMB || nBlockType == MODEL_WOOD_BOX)
+					{
+						// Hit処理
+						pBlock->HitBlock();
+					}
+				}
+				break;
+				}
+			}
+		}
+
+		pObj = pObjNext;	// 次のオブジェクトを代入
+	}
 }
 
 //========================================

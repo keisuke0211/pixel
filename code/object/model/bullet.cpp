@@ -251,7 +251,7 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 				float fPairHeight = pObj->GetHeight();	// 高さ
 				float fPairDepth = pObj->GetDepth();	// 奥行き
 
-				// 少し小さくする
+				// 判定の修正
 				fPairWidth *= COLLSION_DIAMETER;	// 幅
 				fPairHeight *= COLLSION_DIAMETER;	// 高さ
 				fPairDepth *= COLLSION_DIAMETER;	// 奥行き
@@ -270,6 +270,16 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 							(PosOld.x + fWidth) <= (PairPos.x - fPairWidth))
 						{// 左からめり込んでいる時
 
+							// ダイナミックキャストする
+							if (type == TYPE_BLOCK)
+							{
+								CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
+								CBlock::STATE aState = pBlock->GetBlockState();
+								if (aState == CBlock::STATE_ALLIE)
+								{// 状態が貫通なら
+									return FALSE;
+								}
+							}
 							m_Info.bHit = true;
 							pos.x = (PairPos.x - (fPairWidth / COLLSION_DIAMETER)) - (fWidth / BULLET_DIAMETER);
 						}
@@ -277,6 +287,16 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 							(PosOld.x - fWidth) >= (PairPos.x + fPairWidth))
 						{// 右からめり込んでいる時
 
+							// ダイナミックキャストする
+							if (type == TYPE_BLOCK)
+							{
+								CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
+								CBlock::STATE aState = pBlock->GetBlockState();
+								if (aState == CBlock::STATE_ALLIE)
+								{// 状態が貫通なら
+									return FALSE;
+								}
+							}
 							m_Info.bHit = true;
 							pos.x = (PairPos.x + (fPairWidth / COLLSION_DIAMETER)) + (fWidth / BULLET_DIAMETER);
 						}
@@ -320,6 +340,16 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 							(PosOld.z + fDepth) <= (PairPos.z - fPairDepth))
 						{// 前からめり込んでいる時
 
+							// ダイナミックキャストする
+							if (type == TYPE_BLOCK)
+							{
+								CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
+								CBlock::STATE aState = pBlock->GetBlockState();
+								if (aState == CBlock::STATE_ALLIE)
+								{// 状態が貫通なら
+									return FALSE;
+								}
+							}
 							m_Info.bHit = true;
 							pos.z = (PairPos.z - (fPairDepth / COLLSION_DIAMETER)) - (fDepth / BULLET_DIAMETER);
 						}
@@ -327,6 +357,16 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 							(PosOld.z - fDepth) >= (PairPos.z + fPairDepth))
 						{// 奥からめり込んでいる時
 
+							 // ダイナミックキャストする
+							if (type == TYPE_BLOCK)
+							{
+								CBlock *pBlock = dynamic_cast<CBlock*>(pObj);
+								CBlock::STATE aState = pBlock->GetBlockState();
+								if (aState == CBlock::STATE_ALLIE)
+								{// 状態が貫通なら
+									return FALSE;
+								}
+							}
 							m_Info.bHit = true;
 							pos.z = (PairPos.z + (fPairDepth / COLLSION_DIAMETER)) + (fDepth / BULLET_DIAMETER);
 						}
