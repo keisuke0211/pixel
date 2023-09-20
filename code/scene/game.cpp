@@ -534,6 +534,7 @@ void CGame::Result(void)
 //========================================
 void CGame::Reset(void)
 {
+	m_bEnd = false;
 	m_nStage = STAGE_EASY;
 	m_bTime = false;
 	m_nScore = 0;

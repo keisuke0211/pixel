@@ -140,6 +140,12 @@ HRESULT CCube::Init(void)
 {
 	CObjectX::Init();
 
+	if (m_nLimitCube - m_nUseCube <= 0)
+	{
+		Uninit();
+		return S_OK;
+	}
+
 	// Ží—Þ‚ÌÝ’è
 	SetType(TYPE_CUBE);
 

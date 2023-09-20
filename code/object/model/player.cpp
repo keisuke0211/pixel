@@ -216,13 +216,18 @@ void CPlayer::KeyInput(void)
 		m_Info.bMove = false;
 	}
 
-	// UŒ‚
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CMouse::MOUSE_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
-	{
-		CBullet::Create(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 15, m_Info.pos.z), m_Info.rot);
-		//pSound->PlaySound(CSound::TYPE_HIT);
-	}
 
+	int nLimit = CCube::GetLimit();
+	int nNumUse = CCube::GetUse();
+	// UŒ‚
+	if (nLimit - nNumUse > 0)
+	{
+		if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CMouse::MOUSE_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
+		{
+			CBullet::Create(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 15, m_Info.pos.z), m_Info.rot);
+			//pSound->PlaySound(CSound::TYPE_HIT);
+		}
+	}
 	// Å‰‚Ì’e‚ğ~‚ß‚é
 	BulletStop();
 

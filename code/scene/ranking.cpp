@@ -6,6 +6,7 @@
 // *** ranking.h ***
 //========================================
 #include "ranking.h"
+#include "game.h"
 #include "fade.h"
 #include "../system/sound.h"
 #include "../object/UI/UI_title.h"
@@ -26,6 +27,9 @@ bool CRanking::m_bRankingAll = false;
 //========================================
 CRanking::CRanking()
 {
+	// リセット
+	CGame::Reset();
+
 	for (int nRank = 0; nRank < RANK_NUM; nRank++)
 	{
 		m_Ranking[nRank].nScore = 100 + (100 * nRank);
@@ -97,8 +101,6 @@ HRESULT CRanking::Init(void)
 	// テキスト生成
 	for (int nRank = 0; nRank < RANK_NUM; nRank++)
 	{
-		char aString[TXT_MAX];
-
 		switch (nRank)
 		{
 		case 0:
@@ -115,6 +117,7 @@ HRESULT CRanking::Init(void)
 			break;
 		}
 
+		char aString[TXT_MAX];
 		sprintf(aString, " %s %-5s %6d", GetRankText(nRank), m_Ranking[nRank].aName, m_Ranking[nRank].nScore);
 
 		m_Text[nRank] = CText::Create(CText::BOX_NORMAL_RECT,
@@ -123,6 +126,7 @@ HRESULT CRanking::Init(void)
 			aString,
 			CFont::FONT_BESTTEN,
 			&pFont,false,&pShadow);
+		m_Text[nRank]->SetSpace(true);
 	}
 
 	// 枠(ランキングフレーム)
@@ -134,6 +138,10 @@ HRESULT CRanking::Init(void)
 	if (nRank < RANK_NUM && nRank > -1)
 	{
 		m_bSetScore = true;
+	}
+	else
+	{
+		m_bSetScore = false;
 	}
 
 	// スコア更新したら

@@ -97,6 +97,7 @@ public:
 	/* ID			*/int GetID(void) { return m_Info.nID; }
 	/* ‘”			*/static int GetNumAll(void) { return m_nNumAll; }
 	/* c‚è”		*/static int GetRest(void) { return m_nRestCube; }
+	/* §ŒÀ”		*/static int GetLimit(void) { return m_nLimitCube; }
 	/* g—p”		*/static int GetUse(void) { return m_nUseCube; }
 
 private:

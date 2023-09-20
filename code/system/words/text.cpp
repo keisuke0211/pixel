@@ -350,7 +350,7 @@ void CText::LetterForm(void)
 
 						m_Info.nAddLetter++;
 
-						if (m_Info.bSpace && m_Info.sText == "")
+						if (m_Info.bSpace && m_Info.sText == " ")
 						{
 							m_Info.nLetterPopCount++;
 							m_Info.nLetterPopCountX++;
