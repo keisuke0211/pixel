@@ -56,6 +56,7 @@ public:
 		int nStandTime;			// 待機時間
 		bool bRotMove;			// 向きの推移フラグ
 		bool bCube;				// キューブに当たったか
+		bool bGravity;			// 重力
 		int nID;				// ID
 	};
 
@@ -75,12 +76,16 @@ public:
 	/* リセット	*/static void Reset(void);
 	/* Hit処理	*/void HitLife(int nDamage);
 
+	/* 設定	*/
+	/* 全体の重力	*/static void SetGravity(bool bSet) { m_bGravity = bSet; }
+
 	/* 取得 */
-	/* 敵情報	*/Info GetInfo(void) { return m_Info; }
-	/* 位置		*/D3DXVECTOR3 GetPos(void) { return m_Info.pos; }
-	/* 過去位置	*/D3DXVECTOR3 GetPosOld(void) { return m_Info.posOld; }
-	/* 敵の総数	*/static int GetEnemyAll(void) { return m_nNumAll; }
-	/* ID		*/int GetID(void) { return m_Info.nID; }
+	/* 敵情報		*/Info GetInfo(void) { return m_Info; }
+	/* 位置			*/D3DXVECTOR3 GetPos(void) { return m_Info.pos; }
+	/* 過去位置		*/D3DXVECTOR3 GetPosOld(void) { return m_Info.posOld; }
+	/* 全体の重力	*/static bool IsmGravity(void) { return m_bGravity; }
+	/* 敵の総数		*/static int GetEnemyAll(void) { return m_nNumAll; }
+	/* ID			*/int GetID(void) { return m_Info.nID; }
 
 private:
 
@@ -104,10 +109,12 @@ private:
 	/* 状態推移				*/void StateShift(void);
 	/* 当たり判定(方向指定)	*/bool Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos);
 	/* 当たり判定(全体)		*/void ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos);
+
 	// ***** 変数 *****
 	Info m_Info;			// 情報
 	static SetInfo *pSet;	// 配置
 
 	static int m_nNumAll;		// 敵の総数
+	static bool m_bGravity;		// 全体の重力
 };
 #endif

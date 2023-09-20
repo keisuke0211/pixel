@@ -267,6 +267,13 @@ void CBlock::HitBlock(void)
 //========================================
 void CBlock::CrackRock(void)
 {
+	bool bGravity = CEnemy::IsmGravity();
+
+	if (!bGravity)
+	{
+		CEnemy::SetGravity(true);
+	}
+
 	// パーティクル生成
 	CParticleX *pObj = CParticleX::Create();
 	pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y, m_Info.pos.z));
@@ -284,9 +291,15 @@ void CBlock::CrackRock(void)
 void CBlock::Bomb(void)
 {
 	// キューブとの当たり判定
-	ModelCollsion(PRIO_CUBE, TYPE_CUBE, m_Info.pos);
-	ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
-	ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
+	BombCollsion(PRIO_BLOCK, TYPE_BLOCK, VECTOR_NONE, m_Info.pos);
+	BombCollsion(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos);
+	BombCollsion(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Y, m_Info.pos);
+	BombCollsion(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos);
+
+	BombCollsion(PRIO_OBJECT, TYPE_ENEMY, VECTOR_NONE, m_Info.pos);
+	BombCollsion(PRIO_OBJECT, TYPE_ENEMY, VECTOR_X,m_Info.pos);
+	BombCollsion(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Y, m_Info.pos);
+	BombCollsion(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Z, m_Info.pos);
 
 	// パーティクル生成
 	CParticleX *pObj = CParticleX::Create();
@@ -302,7 +315,7 @@ void CBlock::Bomb(void)
 //========================================
 // 爆発の当たり判定
 //========================================
-void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
+void CBlock::BombCollsion(PRIO nPrio, TYPE nType, VECTOR vector,D3DXVECTOR3 pos)
 {
 	// 先頭オブジェクトを取得
 	CObject *pObj = CObject::GetTop(nPrio);
@@ -329,10 +342,32 @@ void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 
 			if (nBlockType == MODEL_BOMB)
 			{
-				// サイズ調整
-				fWidth *= TNT_COLLSION;	// 幅
-				fHeight *= 1.5f;// 高さ
-				fDepth *= TNT_COLLSION;	// 奥行き
+				if (vector != VECTOR_NONE)
+				{
+					fHeight *= 1.5f;
+				}
+
+				switch (vector)
+				{
+				case CPhysics::VECTOR_X:
+					fWidth *= TNT_COLLSION;
+					break;
+				case CPhysics::VECTOR_Y:
+					fHeight *= TNT_COLLSION;
+					break;
+				case CPhysics::VECTOR_Z:
+					fDepth *= TNT_COLLSION;
+					break;
+				case CPhysics::VECTOR_NONE:
+					fWidth *= (TNT_COLLSION - 1.5f);
+					fHeight *= 0.5f;
+					fDepth *= (TNT_COLLSION - 1.5f);
+					break;
+				default:
+					fWidth *= TNT_COLLSION;
+					fDepth *= TNT_COLLSION;
+					break;
+				}
 			}
 
 			// 相手の取得

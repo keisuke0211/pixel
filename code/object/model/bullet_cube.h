@@ -104,7 +104,7 @@ private:
 	// ***** 関数 *****
 	/* 位置補正				*/bool Correction(VECTOR vector, D3DXVECTOR3 pos);
 	/* 接触判定				*/bool Contact(int mode,VECTOR vector, D3DXVECTOR3 pos);
-	/* 当たり判定			*/void ModelCollsion(PRIO nPrio, TYPE nType,D3DXVECTOR3 pos);
+	/* 当たり判定			*/void ModelCollsion(PRIO nPrio, TYPE nType, VECTOR vector,D3DXVECTOR3 pos);
 	/* キューブの当たり判定	*/bool CubeCollsion(D3DXVECTOR3 pos,int ID);
 	/* 破壊処理				*/void Destruction(CCube *pCube);
 

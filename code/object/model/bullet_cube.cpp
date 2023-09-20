@@ -5,12 +5,13 @@
 //========================================
 // *** block.cpp ***
 //========================================
-#include "bullet_cube.h"
-#include "../../scene/pause.h"
-#include "../EFFECT/particleX.h"
 #include "model.h"
 #include "enemy.h"
 #include "block.h"
+#include "bullet_cube.h"
+#include "../../scene/pause.h"
+#include "../EFFECT/particleX.h"
+#include "../../system/physics.h"
 #include "../../system/sound.h"
 #include "../../system/csv_file.h"
 #include "../../system/words/text.h"
@@ -42,7 +43,6 @@ CText *CCube::m_Cube = NULL;
 CCube::CCube(int nPriority) : CObjectX(nPriority)
 {
 	m_nNumAll++;	// 総数を加算
-	m_nUseCube++;	// 使用数の加算
 
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;		// 位置
@@ -70,7 +70,6 @@ CCube::CCube(int nPriority) : CObjectX(nPriority)
 //========================================
 CCube::~CCube()
 {
-	m_nRestCube--;	// キューブの残り数
 	m_nNumAll--;	// 総数減算
 }
 
@@ -108,8 +107,8 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 	pCube->m_Info.posOld = pCube->m_Info.pos;
 
 	// 配置場所にプレイヤーがいるか
-	pCube->ModelCollsion(PRIO_OBJECT, TYPE_PLAYER, pCube->m_Info.pos);
-	pCube->ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, pCube->m_Info.pos);
+	pCube->ModelCollsion(PRIO_OBJECT, TYPE_PLAYER, VECTOR_NONE, pCube->m_Info.pos);
+	pCube->ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, VECTOR_NONE, pCube->m_Info.pos);
 
 	if (pCube->m_Info.bErase)
 	{
@@ -122,6 +121,7 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 
 	pSound->PlaySound(CSound::TYPE_SET);
 
+	m_nUseCube++;	// 使用数の加算
 	// テキストの更新
 	CubeText();
 
@@ -170,6 +170,11 @@ HRESULT CCube::Init(void)
 //========================================
 void CCube::Uninit(void)
 {
+	if (m_Info.bSet)
+	{
+		m_nRestCube--;	// キューブの残り数
+	}
+
 	CObjectX::Uninit();
 }
 
@@ -230,8 +235,10 @@ void CCube::Update(void)
 				Contact(0, VECTOR_Z, m_Info.pos);
 
 				// 当たり判定
-				/* 敵		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
-				/* ブロック	*/ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
+				/* 敵		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, VECTOR_X, m_Info.pos);
+				/* 敵		*/ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, VECTOR_Z, m_Info.pos);
+				/* ブロック	*/ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos);
+				/* ブロック	*/ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos);
 
 				// オブジェクト破棄
 				Uninit();
@@ -613,7 +620,7 @@ bool CCube::Contact(int mode, VECTOR vector, D3DXVECTOR3 pos)
 //========================================
 // オブジェクトの当たり判定
 //========================================
-void CCube::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
+void CCube::ModelCollsion(PRIO nPrio, TYPE nType, VECTOR vector,D3DXVECTOR3 pos)
 {
 	// 先頭オブジェクトを取得
 	CObject *pObj = CObject::GetTop(nPrio);
@@ -640,9 +647,31 @@ void CCube::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 			// サイズ調整
 			if (m_Info.bSet)
 			{
-				fWidth *= BOM_COLLSION;	// 幅
-				fHeight *= 0.0f;		// 高さ
-				fDepth *= BOM_COLLSION;	// 奥行き
+				if (vector != VECTOR_Y)
+				{
+					fHeight *= 0.05f;
+				}
+
+				switch (vector)
+				{
+				case CPhysics::VECTOR_X:
+					fWidth *= BOM_COLLSION;
+					break;
+				case CPhysics::VECTOR_Y:
+					fHeight *= BOM_COLLSION;
+					break;
+				case CPhysics::VECTOR_Z:
+					fDepth *= BOM_COLLSION;
+					break;
+				case CPhysics::VECTOR_NONE:
+					fWidth *= BOM_COLLSION;
+					fDepth *= BOM_COLLSION;
+					break;
+				default:
+					fWidth *= BOM_COLLSION;
+					fDepth *= BOM_COLLSION;
+					break;
+				}
 			}
 
 			// 相手の取得
@@ -651,6 +680,11 @@ void CCube::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 			float fPairWidth = pObj->GetWidth();		// 幅
 			float fPairHeight = pObj->GetHeight();		// 高さ
 			float fPairDepth = pObj->GetDepth();		// 奥行き
+
+			if (nType == TYPE_ENEMY)
+			{// 選択した種類の時、
+				fPairHeight = 24.0f;
+			}
 
 			// 当たり判定
 			if (Collsion(pos, PairPos, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth)))
@@ -781,7 +815,7 @@ void CCube::CubeText(void)
 {
 	int nNumSet = 0;
 	D3DXCOLOR col;
-	int nRest = m_nRestCube - m_nUseCube;
+	int nRest = m_nLimitCube - m_nUseCube;
 	char aString[TXT_MAX];
 	sprintf(aString, "%02d", nRest);
 

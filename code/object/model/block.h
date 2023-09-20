@@ -71,7 +71,6 @@ public:
 	/* ï`âÊ			*/void Draw(void);
 	/* ì«Ç›çûÇ›		*/static void Load(void);
 	/* HIT			*/void HitBlock(void);
-	/* ìñÇΩÇËîªíË	*/void ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos);
 	
 	// -- ê›íË ---------------------------------------------
 	/* à íu		*/virtual void SetBlockPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
@@ -92,6 +91,7 @@ public:
 private:	
 
 	// ***** ä÷êî *****
+	/* îöî≠îªíË		*/void BombCollsion(PRIO nPrio, TYPE nType, VECTOR vector,D3DXVECTOR3 pos);
 	/* ìñÇΩÇËîªíË	*/D3DXVECTOR3 Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos);
 	/* îöíe			*/void Bomb(void);
 	/* ñÿî†			*/void CrackRock(void);

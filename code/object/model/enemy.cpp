@@ -19,11 +19,14 @@
 // 静的変数
 CEnemy::SetInfo *CEnemy::pSet = NULL;
 int CEnemy::m_nNumAll = 0;
+bool CEnemy::m_bGravity = true;
 
-//****************************************
+//========================================
 // マクロ定義
-//****************************************
-#define ROT_DIAMETER	(0.075f)		// 回転倍率
+//========================================
+#define GRAVITY_MAG		(0.08f)		// 重力係数 0.08
+#define GRAVITY_POWER	(1.5f)		// 重力加速度
+#define ROT_DIAMETER	(0.075f)	// 回転倍率
 
 //========================================
 // コンストラクタ
@@ -44,8 +47,11 @@ CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 	m_Info.state = STATE_NORMAL;
 	m_Info.nCntState = 0;
 	m_Info.nCntTime = 0;
+	m_Info.nTimeMax = 0;
 	m_Info.nStandTime = 0;
 	m_Info.bRotMove = false;
+	m_Info.bCube = false;
+	m_Info.bGravity = false;
 	m_Info.nID = m_nNumAll;
 	m_nNumAll++;
 }
@@ -249,6 +255,27 @@ void CEnemy::Update(void)
 		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos)) { m_Info.bCube = true; }
 		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos)) {}
 
+
+		// 重力の変更
+		if (m_bGravity && !m_Info.bGravity)
+		{
+			m_Info.bGravity = true;
+		}
+		if (m_Info.nID == (m_nNumAll - 1))
+		{
+			m_bGravity = false;
+		}
+
+		// 移動量の代入
+		m_Info.pos.y += m_Info.move.y;
+
+		if (m_Info.bGravity)
+		{
+			//Ｙの移動量に重力を加算
+			m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+			Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Y, m_Info.pos);
+		}
+
 		SetPos(m_Info.pos);
 		SetColor(m_Info.col);
 
@@ -288,13 +315,13 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 		D3DXVECTOR3 RotOld = GetRotOld();	// 向き(過去)
 
 		float fWidth = 30;		// 幅
-		float fHeight = 10;		// 高さ
+		float fHeight = 8;		// 高さ
 		float fDepth = 15;		// 奥行き
 
-		if (TYPE_BLOCK == nType)
+		/*if (TYPE_BLOCK == nType)
 		{
 			fHeight = 1;
-		}
+		}*/
 
 		// 各種類の当たり判定
 		if (type == nType)
@@ -349,9 +376,10 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 					}
 					else if (CollsionDirection(pos, PairPos, PosOld, PairPosOld, D3DXVECTOR3(fWidth, fHeight, fDepth), D3DXVECTOR3(fPairWidth, fPairHeight, fPairDepth), DIRECTION_UP))
 					{// 上からめり込んでいる時
-						bHit = true;
-						pos.y = (PairPos.y + fPairHeight) + fHeight;
 						m_Info.move.y = 0.0f;
+						pos.y = (PairPos.y + fPairHeight) + fHeight;
+						bHit = true;
+						m_Info.bGravity = false;
 					}
 				}
 			}
@@ -380,14 +408,6 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 
 		if (bHit)
 		{
-			if (type == TYPE_BLOCK)
-			{
-
-			}
-			else if (type == TYPE_CUBE)
-			{
-				m_Info.pos = pos;
-			}
 			m_Info.pos = pos;
 			return TRUE;
 		}
@@ -492,8 +512,8 @@ void CEnemy::HitLife(int nDamage)
 
 	if (m_Info.nLife <= 0)
 	{
-		ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
-		ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);
+		/*ModelCollsion(PRIO_BLOCK, TYPE_BLOCK, m_Info.pos);
+		ModelCollsion(PRIO_OBJECT, TYPE_ENEMY, m_Info.pos);*/
 
 		// パーティクル生成
 		CParticleX *pObj = CParticleX::Create();
@@ -616,4 +636,5 @@ void CEnemy::StateShift(void)
 void CEnemy::Reset(void)
 {
 	m_nNumAll = 0;
+	m_bGravity = true;
 }

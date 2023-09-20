@@ -22,8 +22,8 @@
 
 #define BG_POS				(D3DXVECTOR3(0.0f,580.0f,0.0f))			// ˆÊ’u
 #define BG_HEIGHT			(475.0f)								// ‚‚³
-#define BG_RADIUS			(1080.0f)								// ”¼Œa
-#define BG_DIVISION_WIDTH	(16)									// •ªŠ„•
+#define BG_RADIUS			(960.0f)								// ”¼Œa
+#define BG_DIVISION_WIDTH	(32)									// •ªŠ„•
 #define BG_DIVISION_HEIGHT	(8)										// •ªŠ„‚‚³
 #define BG_SPIN				(D3DXVECTOR3(0.0f,-0.001f,0.0f))		// ‰ñ“]—Ê
 

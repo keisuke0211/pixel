@@ -15,8 +15,8 @@ SET_SIDE
 	POS = 0.0 -100.0 0.0
 	ROT = 0.0 0.0 0.0
 	COLOR = 1.0 1.0 1.0 1.0
-	HEIGHT = 700.0
-	RADIUS = 1080.0
+	HEIGHT = 720.0
+	RADIUS = 960.0
 	
 	// テクスチャ関連
 	NUMTEX = 3

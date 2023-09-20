@@ -202,9 +202,12 @@ void CGame::Update(void)
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
 
 	// ポーズ
-	if (pInputKeyboard->GetTrigger(DIK_P) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_START))
+	if (!m_bEnd)
 	{
-		CPause::SetPause(true);
+		if (pInputKeyboard->GetTrigger(DIK_P) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_START))
+		{
+			CPause::SetPause(true);
+		}
 	}
 
 	// 開始フラグ
@@ -352,19 +355,6 @@ void CGame::Result(void)
 		int nPerfCube = m_aStageInfo.nCube[m_nStage];
 
 		m_nEveGame = EVE_PERFECT;
-
-		/*if (nUseCube <= nPerfCube)
-		{
-			m_nEveGame = EVE_PERFECT;
-		}
-		else if (nUseCube <= nPerfCube + 10)
-		{
-			m_nEveGame = EVE_GREAT;
-		}
-		else
-		{
-			m_nEveGame = EVE_USUALLY;
-		}*/
 	}
 	break;
 	case RST_TIME:
@@ -385,20 +375,7 @@ void CGame::Result(void)
 		break;
 	case RST_CLEAR:
 	{
-		if (m_nEveGame == EVE_PERFECT)
-		{
-			//sprintf(aString, "PERFECT BONUS");
-			sprintf(aString, "CLEAR BONUS");
-		}
-		else if (m_nEveGame == EVE_GREAT)
-		{
-			sprintf(aString, "GREAT BONUS");
-		}
-		else
-		{
-			sprintf(aString, "CLEAR BONUS");
-		}
-
+		sprintf(aString, "CLEAR BONUS");
 		pos = D3DXVECTOR3(100.0f, 310.0f, 0.0f);
 	}
 		break;
@@ -409,21 +386,7 @@ void CGame::Result(void)
 		int nPerfCube = m_aStageInfo.nCube[m_nStage];
 		int nEve;
 
-		// 倍率
-		if (m_nEveGame == EVE_PERFECT)
-		{
-			nEve = 5;
-		}
-		else if (m_nEveGame == EVE_GREAT)
-		{
-			nEve = 3;
-		}
-		else
-		{
-			nEve = 1;
-		}
-
-		m_nClearTotal = nClear * nEve;
+		m_nClearTotal = nClear;
 
 		sprintf(aString, "%d", m_nClearTotal);
 		pos = D3DXVECTOR3(100.0f, 380.0f, 0.0f);
@@ -541,24 +504,9 @@ void CGame::Result(void)
 	{
 		if (--m_nTextCreate <= 0)
 		{
-			if (m_nRstStgType == RST_TEXT || m_nRstStgType == RST_CLEAR)
+			if (m_nRstStgType == RST_TEXT || m_nRstStgType == RST_TIME || m_nRstStgType == RST_BONUS || m_nRstStgType == RST_CLEAR)
 			{
-				switch (m_nEveGame)
-				{
-				case EVE_PERFECT:
-					pFont = { D3DXCOLOR(1.0f,0.96f,0,1)	, 20.0f, 1, 5, 0 };
-					break;
-				case EVE_GREAT:
-					pFont = { D3DXCOLOR(0.5f,0.5f,0.5f,1), 20.0f, 1, 5, 0 };
-					break;
-				case EVE_USUALLY:
-					pFont = { D3DXCOLOR(0.78f,0.54f,0,1), 20.0f, 1, 5, 0 };
-					break;
-				default:
-					pFont = { INIT_D3DXCOLOR, 20.0f, 1, 5, 0 };
-					break;
-				}
-
+				pFont = { D3DXCOLOR(1.0f,0.96f,0,1)	, 20.0f, 1, 5, 0 };
 				pShadow = { INIT_D3DXCOLOR, true, D3DXVECTOR3(1.0f,1.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
 			}
 
