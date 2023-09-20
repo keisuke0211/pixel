@@ -22,17 +22,17 @@ SET_SIDE
 	NUMTEX = 3
 	
 	SET_TEX
-		TYPE = 0
+		TYPE = 4
 		TEX_V = 0.0006
 	END_TEX
 	
 	SET_TEX
-		TYPE = 1
+		TYPE = 5
 		TEX_V = 0.0004
 	END_TEX
 	
 	SET_TEX
-		TYPE = 2
+		TYPE = 6
 		TEX_V = 0.0003
 	END_TEX
 	

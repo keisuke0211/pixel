@@ -145,16 +145,21 @@ HRESULT CGame::Init(void)
 
 	FormShadow pShadow = {D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)};
 
+	int nCntText = 0;
 	char aString[TXT_MAX];
+	char aCube[TXT_MAX];
 
 	// ì«Ç›çûÇ›
 	sprintf(aString, "STAGE %d",m_nStage + 1);
+	sprintf(aCube, "CUBE  %d", m_aStageInfo.nCube[m_nStage]);
 
 	int nStrlen = strlen(aString);
 
-	CText::Create(CText::BOX_NORMAL_RECT,
-		D3DXVECTOR3(640.0f, 350.0f, 0.0f),D3DXVECTOR2(440.0f, 100.0f),
+	CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 325.0f, 0.0f),D3DXVECTOR2(440.0f, 100.0f),
 		aString,CFont::FONT_BESTTEN,&pFont, false,&pShadow);
+
+	CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 375.0f, 0.0f), D3DXVECTOR2(440.0f, 100.0f),
+		aCube, CFont::FONT_BESTTEN, &pFont, false, &pShadow);
 
 	m_nStartTime = (nStrlen * 10) + 60 + 10;
 	m_nMoveRot = ((D3DX_PI * 2) / m_nStartTime);
