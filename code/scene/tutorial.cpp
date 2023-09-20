@@ -84,6 +84,10 @@ CTutorial::~CTutorial()
 //========================================
 HRESULT CTutorial::Init(void)
 {
+	CBlock::Reset();
+	CEnemy::Reset();
+	CBullet::Reset();
+	CCube::Reset();
 	CTitle::SetStart(false);
 	CTitle::SetClear(false);
 
