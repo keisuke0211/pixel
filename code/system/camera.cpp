@@ -115,7 +115,7 @@ void CCamera::Update(void)
 	// Ž‹“_ˆÚ“®
 	{
 		bool bPause = CPause::IsPause();
-		bool bClear = CGame::IsClear();
+		bool bClear = CGame::IsEnd();
 
 		if (!bPause)
 		{

@@ -73,7 +73,7 @@ public:
 	/* タイム		*/static CTime *GetTime() { return m_pTime; }
 	/* スコア		*/static CScore *GetScore() { return m_pScore; };
 	/* 時間			*/static bool IsTime() { return m_bTime; }
-	/* クリア		*/static bool IsClear() { return m_bClear; }
+	/* 終了			*/static bool IsEnd() { return m_bEnd; }
 	
 	static int m_nStage;							// 現在のステージ 
 
@@ -135,8 +135,6 @@ private:
 	int m_nRstStgType;					// リザルト演出の種類
 	int m_nTextCreate;					// 次のテキストの生成するまでの時間
 
-	bool m_bEnd;						// 終了フラグ
-
 	int m_nTimeTotal;					// タイムボーナスの合計値
 	int m_nClearTotal;					// クリアボーナスの合計値
 	int m_nTotal;						// 全ての合計値
@@ -148,7 +146,7 @@ private:
 	static bool m_bTime;				// 時間フラグ
 	static int m_nScore;				// スコアの保存用
 	static int m_nSelectStage;			// 現在選択しているステージ 
-	static bool m_bClear;				// クリアフラグ
+	static bool m_bEnd;					// 終了フラグ
 };
 
 #endif

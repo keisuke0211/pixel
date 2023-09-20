@@ -83,7 +83,7 @@ public:
 	/* 寿命			*/void SetCubeLife(const int nLife) { m_Info.nLife = nLife; }
 	/* 種類			*/void SetCubeType(const int type) { m_Info.nShape = type; }
 	/* 先頭フラグ	*/void SetCubeLead(const bool bSet) { bLeadSet = bSet; }
-	/* 使用数		*/static void SetUseCube(void);
+	/* 制限数		*/static void SetLimit(int nLimit);
 	/* リセット		*/static void Reset(void);
 
 	// -- 取得 -------------------------------
@@ -96,6 +96,7 @@ public:
 	/* 連鎖カウント	*/int GetChain(void) { return m_Info.nChain; }
 	/* ID			*/int GetID(void) { return m_Info.nID; }
 	/* 総数			*/static int GetNumAll(void) { return m_nNumAll; }
+	/* 残り数		*/static int GetRest(void) { return m_nRestCube; }
 	/* 使用数		*/static int GetUse(void) { return m_nUseCube; }
 
 private:
@@ -109,6 +110,7 @@ private:
 
 	// ***** 変数 *****
 	static int m_nNumAll;		// キューブの総数
+	static int m_nRestCube;		// キューブの残り数
 	static int m_nUseCube;		// キューブの使用数
 	static int m_nNumChain;		// 連爆の総数
 	static bool bLeadSet;		// 先頭配置フラグ

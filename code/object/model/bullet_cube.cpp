@@ -21,6 +21,7 @@
 int CCube::m_nNumAll = -1;
 int CCube::m_nNumChain = 1;
 int CCube::m_nLimitCube = 0;
+int CCube::m_nRestCube = 0;
 int CCube::m_nUseCube = 0;
 bool CCube::bLeadSet = false;
 CText *CCube::m_Cube = NULL;
@@ -41,7 +42,7 @@ CText *CCube::m_Cube = NULL;
 CCube::CCube(int nPriority) : CObjectX(nPriority)
 {
 	m_nNumAll++;	// 総数を加算
-	m_nUseCube++;	// キューブの使用数
+	m_nUseCube++;	// 使用数の加算
 
 	// 値をクリア
 	m_Info.pos = INIT_D3DXVECTOR3;		// 位置
@@ -69,6 +70,7 @@ CCube::CCube(int nPriority) : CObjectX(nPriority)
 //========================================
 CCube::~CCube()
 {
+	m_nRestCube--;	// キューブの残り数
 	m_nNumAll--;	// 総数減算
 }
 
@@ -728,11 +730,15 @@ void CCube::Destruction(CCube *pCube)
 //========================================
 // 使用数の設定
 //========================================
-void CCube::SetUseCube(void)
+void CCube::SetLimit(int nLimit)
 {
-	// タイムを文字列に設定
+	m_nRestCube = nLimit;
+	m_nUseCube = 0;
+	m_nLimitCube = nLimit;
+
+	// 制限数を文字列に設定
 	char aString[TXT_MAX];
-	sprintf(aString, "CUBE ：%03d", m_nUseCube);
+	sprintf(aString, "CUBE ：%02d", m_nRestCube);
 
 	FormFont pFont = {
 		INIT_D3DXCOLOR,
@@ -765,7 +771,6 @@ void CCube::Reset(void)
 	m_nNumAll = -1;
 	m_nNumChain = 1;
 	m_nLimitCube = 0;
-	m_nUseCube = 0;
 	bLeadSet = false;
 }
 
@@ -776,30 +781,30 @@ void CCube::CubeText(void)
 {
 	int nNumSet = 0;
 	D3DXCOLOR col;
+	int nRest = m_nRestCube - m_nUseCube;
 	char aString[TXT_MAX];
-	sprintf(aString, "%03d", m_nUseCube);
+	sprintf(aString, "%02d", nRest);
 
 	// 長さを取得
 	int m_Digit = strlen(aString);
 
-	/*if (m_nUseCube <= 0)
+	if (nRest <= 0)
 	{
 		col = D3DXCOLOR(0.45f, 0.45f, 0.45f, 1.0f);
 	}
-	else if (m_nUseCube <= m_nLimitCube / 3)
+	else if (nRest <= m_nLimitCube / 3)
 	{
 		col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
 	}
-	else if (m_nUseCube <= m_nLimitCube * 2/3)
+	else if (nRest <= m_nLimitCube * 2/3)
 	{
 		col = D3DXCOLOR(0.8f,0.8f,0.0f,1.0f);
 	}
-	else if (m_nUseCube <= m_nLimitCube)
+	else if (nRest <= m_nLimitCube)
 	{
 		col = INIT_D3DXCOLOR;
-	}*/
+	}
 
-	col = INIT_D3DXCOLOR;
 
 	for (int nTime = 0; nTime < m_Digit; nTime++)
 	{

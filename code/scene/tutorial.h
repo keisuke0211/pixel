@@ -45,7 +45,8 @@ public:
 		ACTION_SET,			// 配置(説明)
 		ACTION_SET1,		// 配置(説明)
 		ACTION_ENEMY,		// 敵
-		ACTION_CLEAR,		// スコア説明
+		ACTION_CLEAR,		// キューブ説明
+		ACTION_CLEAR1,		// キューブ説明
 		ACTION_FREE,		// 終了
 		ACTION_MAX
 	};

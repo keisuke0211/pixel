@@ -182,16 +182,19 @@ void CBlock::Update(void)
 	// 移動量の代入
 	m_Info.pos.y += m_Info.move.y;
 
-	if (m_Info.pos.y > -40.0f)
+	if (m_Info.state == STATE_BREAK)
 	{
-		//Ｙの移動量に重力を加算
-		m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
-		m_Info.pos = Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Y, m_Info.pos);
-	}
-	else if (m_Info.pos.y <= -40.0f)
-	{
-		m_Info.move.y = 0.0f;
-		m_Info.pos.y = -40.0f;
+		if (m_Info.pos.y > -40.0f)
+		{
+			//Ｙの移動量に重力を加算
+			m_Info.move.y -= (GRAVITY_POWER - m_Info.move.y) * GRAVITY_MAG;
+			m_Info.pos = Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Y, m_Info.pos);
+		}
+		else if (m_Info.pos.y <= -40.0f)
+		{
+			m_Info.move.y = 0.0f;
+			m_Info.pos.y = -40.0f;
+		}
 	}
 	
 	SetPos(m_Info.pos);
@@ -328,7 +331,7 @@ void CBlock::ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos)
 			{
 				// サイズ調整
 				fWidth *= TNT_COLLSION;	// 幅
-				fHeight *= 0.5f;// 高さ
+				fHeight *= 1.5f;// 高さ
 				fDepth *= TNT_COLLSION;	// 奥行き
 			}
 

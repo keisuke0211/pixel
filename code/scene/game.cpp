@@ -36,7 +36,7 @@ CPlayer *CGame::m_pPlayer = NULL;
 CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
 bool CGame::m_bTime = false;
-bool CGame::m_bClear = false;
+bool CGame::m_bEnd = false;
 int CGame::m_nStage = STAGE_EASY;
 int CGame::m_nSelectStage = STAGE_EASY;
 int CGame::m_nScore = 0;
@@ -55,7 +55,6 @@ CGame::CGame()
 	m_nStartTime = 0;
 	m_nEndTime = 0;
 	m_bEnd = false;
-	m_bClear = false;
 
 	m_nRstStgType = 0;
 	m_nTextCreate = 0;
@@ -64,6 +63,8 @@ CGame::CGame()
 	m_nTotal = 0;
 	m_nAddTime = 0;
 	m_bAddScore = false;
+	m_nStandTime = -1;
+	m_nEveGame = 1;
 
 	for (int nRst = 0; nRst < RST_ADD_SCORE; nRst++)
 	{
@@ -131,7 +132,7 @@ HRESULT CGame::Init(void)
 	LoodEnemy();
 
 	// キューブの使用数
-	CCube::SetUseCube();
+	CCube::SetLimit(m_aStageInfo.nCube[m_nStage]);
 
 	// タイム生成
 	m_pTime = CTime::Create(m_aStageInfo.nTime[m_nStage]);
@@ -230,24 +231,30 @@ void CGame::Update(void)
 		// CLEAR
 		{
 			bool bClear = CTitle::IsClear();
+			int nCubeRest = CCube::GetRest();
 
 			if (bClear)
-			{
+			{// ゲームクリア
 				if (!m_bEnd)
 				{
-					m_bClear = true;
+					m_bEnd = true;
 
-					FormFont pFont = {INIT_D3DXCOLOR,20.0f,8,60,30};
+					FormFont pFont = {INIT_D3DXCOLOR,20.0f,7,60,30};
 					FormShadow pShadow = {D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)};
+
+					char aString[TXT_MAX];
+					sprintf(aString, "STAGE CLEAR");
 
 					CText::Create(CText::BOX_NORMAL_RECT,
 						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 						D3DXVECTOR2(440.0f, 100.0f),
-						"GAME CLEAR",
+						aString,
 						CFont::FONT_BESTTEN,
 						&pFont, false,&pShadow);
 
-					m_nEndTime = (8 * 10) + 60 + 15;
+					int nLength = strlen(aString);
+
+					m_nEndTime = (nLength * 7) + 60 + 15;
 					m_bEnd = true;
 					m_bTime = true;
 				}
@@ -260,34 +267,38 @@ void CGame::Update(void)
 					}
 				}
 			}
-		}
-
-		// 時間切れ
-		if (m_pTime->GetTime() <= 0)
-		{
-			if (!m_bEnd)
-			{
-				FormFont pFont = {INIT_D3DXCOLOR,20.0f,8,60,30};
-
-				CText::Create(CText::BOX_NORMAL_RECT,
-					D3DXVECTOR3(640.0f, 300.0f, 0.0f),
-					D3DXVECTOR2(440.0f, 100.0f),
-					"TIME UP",
-					CFont::FONT_BESTTEN,
-					&pFont, false);
-
-				m_nEndTime = (7 * 8) + 60 + 15;
-				m_bEnd = true;
-			}
-			else
-			{
-				if (--m_nEndTime <= 0)
+			else if (!bClear && (m_pTime->GetTime() <= 0 || nCubeRest <= 0))
+			{// ゲームオーバー
+				if (!m_bEnd && m_nStandTime == -1)
 				{
-					CManager::GetFade()->SetFade(MODE_RANKING);
-					CRanking::SetScore11(m_pScore->GetScore());
-					CRanking::SetAllStage(false);
+					m_nStandTime = 30;
+				}
+				else if (!m_bEnd && --m_nStandTime <= 0)
+				{
+					FormFont pFont = { INIT_D3DXCOLOR,20.0f,8,60,30 };
+
+					CText::Create(CText::BOX_NORMAL_RECT,
+						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
+						D3DXVECTOR2(440.0f, 100.0f),
+						"GAME OVER",
+						CFont::FONT_BESTTEN,
+						&pFont, false);
+
+					m_nEndTime = (7 * 8) + 60 + 15;
+					m_bEnd = true;
+					m_bTime = true;
+				}
+				else if (m_bEnd)
+				{
+					if (--m_nEndTime <= 0)
+					{
+						CManager::GetFade()->SetFade(MODE_RANKING);
+						CRanking::SetScore11(m_pScore->GetScore());
+						CRanking::SetAllStage(false);
+					}
 				}
 			}
+
 		}
 	}
 }
@@ -332,10 +343,12 @@ void CGame::Result(void)
 		sprintf(aString, "STAGE CLEAR RESULT BONUS");
 		pos = D3DXVECTOR3(23.0f, 105.0f, 0.0f);
 
-		int nUseCube = CCube::GetUse();
+		int nUseCube = CCube::GetRest();
 		int nPerfCube = m_aStageInfo.nCube[m_nStage];
 
-		if (nUseCube <= nPerfCube)
+		m_nEveGame = EVE_PERFECT;
+
+		/*if (nUseCube <= nPerfCube)
 		{
 			m_nEveGame = EVE_PERFECT;
 		}
@@ -346,7 +359,7 @@ void CGame::Result(void)
 		else
 		{
 			m_nEveGame = EVE_USUALLY;
-		}
+		}*/
 	}
 	break;
 	case RST_TIME:
@@ -369,7 +382,8 @@ void CGame::Result(void)
 	{
 		if (m_nEveGame == EVE_PERFECT)
 		{
-			sprintf(aString, "PERFECT BONUS");
+			//sprintf(aString, "PERFECT BONUS");
+			sprintf(aString, "CLEAR BONUS");
 		}
 		else if (m_nEveGame == EVE_GREAT)
 		{
@@ -387,7 +401,6 @@ void CGame::Result(void)
 	{
 		int nClear = m_aStageInfo.nClearBonus[m_nStage];
 
-		int nUseCube = CCube::GetUse();
 		int nPerfCube = m_aStageInfo.nCube[m_nStage];
 		int nEve;
 

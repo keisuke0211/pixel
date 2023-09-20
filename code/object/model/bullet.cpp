@@ -7,13 +7,15 @@
 //========================================
 #include "bullet.h"
 #include "bullet_cube.h"
-#include "../../manager.h"
-#include "../../system/renderer.h"
 #include "enemy.h"
 #include "block.h"
+#include "../../manager.h"
+#include "../../system/renderer.h"
 #include "../../system/input.h"
 #include "../UI/score.h"
 #include "../effect/effectX.h"
+#include "../../scene/game.h"
+#include "../../scene/pause.h"
 
 // 静的変数
 int CBullet::m_nNumAll = 0;
@@ -122,83 +124,72 @@ void CBullet::Update(void)
 	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
 	CJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
 
-	// 過去の位置・向きの更新
-	m_Info.posOld = m_Info.pos;
-	m_Info.rotOld = m_Info.rot;
+	bool bPause = CPause::IsPause();
+	bool bEnd = CGame::IsEnd();
 
-	// X方向の当たり判定
-	if (Collsion(VECTOR_X, m_Info.pos))
+	if (!bPause && !bEnd)
 	{
-		return;
-	}
-	// Z方向の当たり判定
-	if (Collsion(VECTOR_Z, m_Info.pos))
-	{
-		return;
-	}
-	// Y方向の当たり判定
-	if (Collsion(VECTOR_Y, m_Info.pos))
-	{
-		return;
-	}
+		// 過去の位置・向きの更新
+		m_Info.posOld = m_Info.pos;
+		m_Info.rotOld = m_Info.rot;
 
-	// 寿命の減衰
-	if (--m_Info.nLife <= 0)
-	{// 寿命が尽きた時
+		// 寿命の減衰
+		if (--m_Info.nLife <= 0)
+		{// 寿命が尽きた時
 
-		// 弾の破棄
-		Uninit();
+			// 弾の破棄
+			Uninit();
 
-		return;
-	}
-
-	{
-		// 移動量を代入
-		m_Info.pos.x += m_Info.move.x;
-
-		// X方向の当たり判定
-		if (Collsion(VECTOR_X, m_Info.pos))
-		{
 			return;
 		}
-	}
 
-	{
-		// 移動量を代入
-		m_Info.pos.z += m_Info.move.z;
-
-		// Z方向の当たり判定
-		if (Collsion(VECTOR_Z, m_Info.pos))
 		{
-			return;
+			// 移動量を代入
+			m_Info.pos.x += m_Info.move.x;
+
+			// X方向の当たり判定
+			if (Collsion(VECTOR_X, m_Info.pos))
+			{
+				return;
+			}
 		}
-	}
 
-	{
-		// 移動量を代入
-		m_Info.pos.y += m_Info.move.y;
-
-		// Y方向の当たり判定
-		if (Collsion(VECTOR_Y, m_Info.pos))
 		{
-			return;
+			// 移動量を代入
+			m_Info.pos.z += m_Info.move.z;
+
+			// Z方向の当たり判定
+			if (Collsion(VECTOR_Z, m_Info.pos))
+			{
+				return;
+			}
 		}
+
+		{
+			// 移動量を代入
+			m_Info.pos.y += m_Info.move.y;
+
+			// Y方向の当たり判定
+			if (Collsion(VECTOR_Y, m_Info.pos))
+			{
+				return;
+			}
+		}
+
+		SetPos(m_Info.pos);
+		SetScale(m_Info.size);
+
+		CObjectX::Update();
+
+		CEffectX *pObj = CEffectX::Create();
+		pObj->Eff_SetPos(GetPosOld());
+		pObj->Eff_SetRot(GetRot());
+		pObj->Eff_SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		pObj->Eff_SetType(0);
+		pObj->Eff_SetLife(10);
+		pObj->Eff_SetCol(D3DXCOLOR(0.1f, 0.8f, 0.8f, 1.0f));
+		pObj->Eff_SetRadius(0.35f);
 	}
-
-	SetPos(m_Info.pos);
-	SetScale(m_Info.size);
-
-	CObjectX::Update();
-
-	CEffectX *pObj = CEffectX::Create();
-	pObj->Eff_SetPos(GetPosOld());
-	pObj->Eff_SetRot(GetRot());
-	pObj->Eff_SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	pObj->Eff_SetType(0);
-	pObj->Eff_SetLife(10);
-	pObj->Eff_SetCol(D3DXCOLOR(0.1f, 0.8f, 0.8f, 1.0f));
-	pObj->Eff_SetRadius(0.35f);
-
 }
 
 //========================================

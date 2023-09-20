@@ -88,7 +88,7 @@ HRESULT CTutorial::Init(void)
 	CTitle::SetClear(false);
 
 	// キューブの使用数
-	CCube::SetUseCube();
+	CCube::SetLimit(99);
 
 	// 背景(側面)の生成
 	LoodSide();
