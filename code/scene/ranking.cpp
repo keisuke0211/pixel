@@ -502,7 +502,7 @@ void CRanking::NameInput(void)
 
 	// -- •¶Žš—ñØ‘Ö ---------------------------------------------
 	if (pInputKeyboard->GetRepeat(DIK_A) || pInputKeyboard->GetRepeat(DIK_LEFT) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_LEFT)/* || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT]*/)
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
 	{
 		m_Info.nCntLetter--;
 		m_Info.bNameInput = true;
@@ -510,7 +510,7 @@ void CRanking::NameInput(void)
 	}
 	else if (
 		pInputKeyboard->GetRepeat(DIK_D) || pInputKeyboard->GetRepeat(DIK_RIGHT) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_RIGHT)/* || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT]*/)
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
 	{
 		m_Info.nCntLetter++;
 		m_Info.bNameInput = true;
@@ -519,7 +519,7 @@ void CRanking::NameInput(void)
 
 	// -- •¶ŽšØ‘Ö ---------------------------------------------
 	if (pInputKeyboard->GetRepeat(DIK_S) || pInputKeyboard->GetRepeat(DIK_DOWN) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_DOWN)/* || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN]*/)
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
 	{
 		m_Info.nCntLetter = 0;
 		m_Info.nCntConv = 0;
@@ -529,7 +529,7 @@ void CRanking::NameInput(void)
 	}
 	else if (
 		pInputKeyboard->GetRepeat(DIK_W) || pInputKeyboard->GetRepeat(DIK_UP) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_UP)/* || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP]*/)
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
 	{
 		m_Info.nCntLetter = 0;
 		m_Info.nCntConv = 0;
@@ -539,12 +539,12 @@ void CRanking::NameInput(void)
 	}
 
 	// -- •ÏŠ· ---------------------------------------------
-	if (pInputKeyboard->GetTrigger(DIK_Q)/* || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X)*/)
+	if (pInputKeyboard->GetTrigger(DIK_Q) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X))
 	{
 		m_Info.nCntConv--;
 		m_Info.bNameInput = true;
 	}
-	else if (pInputKeyboard->GetTrigger(DIK_E)/* || pInputJoypad->GetTrigger(CJoypad::JOYKEY_Y)*/)
+	else if (pInputKeyboard->GetTrigger(DIK_E) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_Y))
 	{
 		m_Info.nCntConv++;
 		m_Info.bNameInput = true;

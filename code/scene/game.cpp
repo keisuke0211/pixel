@@ -486,7 +486,7 @@ void CGame::Result(void)
 		break;
 	case RST_END:
 	{
-		/*if (m_nStage < STAGE_MAX)
+		if (m_nStage < STAGE_MAX)
 		{
 			m_nScore = m_pScore->GetScore();
 			CManager::GetFade()->SetFade(MODE_GAME);
@@ -498,12 +498,12 @@ void CGame::Result(void)
 			CRanking::SetScore11(m_nScore);
 			CRanking::SetAllStage(false);
 			CPause::SetPause(false);
-		}*/
-		CManager::GetFade()->SetFade(MODE_RANKING);
+		}
+		/*CManager::GetFade()->SetFade(MODE_RANKING);
 		m_nScore = m_pScore->GetScore();
 		CRanking::SetScore11(m_nScore);
 		CRanking::SetAllStage(false);
-		CPause::SetPause(false);
+		CPause::SetPause(false);*/
 	}
 		break;
 	}
