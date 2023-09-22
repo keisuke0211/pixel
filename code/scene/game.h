@@ -24,7 +24,7 @@ class CText;	// テキスト
 //****************************************
 class CGame : public CScene
 {
-	static const int ADDTIME_MAX = 120;				// ボーナスをスコアに加算する時間
+	static const int ADDTIME_MAX = 90;				// ボーナスをスコアに加算する時間
 	static const int MAX_CUBE = 30;					// ステージで配置出来るキューブの制限
 	static const char* STAGE_INFO_FILE;				// ステージ情報のファイルパス
 	static const char* SIDE_STAGE_FILE;				// 側面のファイル
@@ -39,9 +39,10 @@ public:
 	// ステージ
 	enum Stage
 	{
-		STAGE_EASY = 0,		// 初級
-		STAGE_NORMAL,		// 中級
-		STAGE_DIFFICULT,	// 難しい
+		STAGE_00 = 0,
+		STAGE_01,
+		STAGE_02,
+		STAGE_03,
 		STAGE_MAX
 	};
 

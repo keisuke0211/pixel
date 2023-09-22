@@ -36,8 +36,8 @@ CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
 bool CGame::m_bTime = false;
 bool CGame::m_bEnd = false;
-int CGame::m_nStage = STAGE_EASY;
-int CGame::m_nSelectStage = STAGE_EASY;
+int CGame::m_nStage = STAGE_00;
+int CGame::m_nSelectStage = STAGE_00;
 int CGame::m_nScore = 0;
 CGame::StageInfo CGame::m_aStageInfo = { NULL,NULL };
 
@@ -341,7 +341,7 @@ CGame *CGame::Create(void)
 //========================================
 void CGame::Result(void)
 {
-	FormFont pFont = { INIT_D3DXCOLOR, 18.0f, 3, 5, 0};
+	FormFont pFont = { INIT_D3DXCOLOR, 18.0f, 2, 5, 0};
 	FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(2.0f,2.0f)};
 
 	char aString[TXT_MAX];
@@ -427,7 +427,7 @@ void CGame::Result(void)
 						D3DXVECTOR3(1000.0f, 650.0f, 0.0f), D3DXVECTOR2(440.0f, 100.0f),
 						aString, CFont::FONT_BESTTEN, &pFont, false, &pShadow);
 
-					m_nStandTime = (nStrlen * 15) + 10 + 10;
+					m_nStandTime = (nStrlen * 2) + 30 + 10;
 				}
 				else if (m_nStage >= STAGE_MAX)
 				{
@@ -440,7 +440,7 @@ void CGame::Result(void)
 						D3DXVECTOR3(1000.0f, 650.0f, 0.0f), D3DXVECTOR2(440.0f, 100.0f),
 						aString, CFont::FONT_BESTTEN, &pFont, false, &pShadow);
 
-					m_nStandTime = 120;
+					m_nStandTime = 90;
 				}
 
 				m_nRstStgType++;
@@ -499,11 +499,6 @@ void CGame::Result(void)
 			CRanking::SetAllStage(false);
 			CPause::SetPause(false);
 		}
-		/*CManager::GetFade()->SetFade(MODE_RANKING);
-		m_nScore = m_pScore->GetScore();
-		CRanking::SetScore11(m_nScore);
-		CRanking::SetAllStage(false);
-		CPause::SetPause(false);*/
 	}
 		break;
 	}
@@ -515,7 +510,7 @@ void CGame::Result(void)
 		{
 			if (m_nRstStgType == RST_TEXT || m_nRstStgType == RST_TIME || m_nRstStgType == RST_BONUS || m_nRstStgType == RST_CLEAR)
 			{
-				pFont = { D3DXCOLOR(1.0f,0.96f,0,1)	, 20.0f, 1, 5, 0 };
+				pFont = { D3DXCOLOR(1.0f,0.96f,0,1)	, 20.0f, 2, 5, 0 };
 				pShadow = { INIT_D3DXCOLOR, true, D3DXVECTOR3(1.0f,1.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
 			}
 
@@ -544,8 +539,8 @@ void CGame::Result(void)
 void CGame::Reset(void)
 {
 	m_bEnd = false;
-	m_nStage = STAGE_EASY;
-	m_nSelectStage = STAGE_EASY;
+	m_nStage = STAGE_00;
+	m_nSelectStage = STAGE_00;
 	m_bTime = false;
 	m_nScore = 0;
 	m_aStageInfo = { NULL,NULL };

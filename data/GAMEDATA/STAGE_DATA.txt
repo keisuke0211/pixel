@@ -37,6 +37,16 @@ SET_INFO
 		PLAYER_ROT = 0.0
 	END_STAGE
 	
+#-- STAGE04 ----------------------
+	SET_STAGE
+		TIME = 60
+		CUBE = 12
+		CLEAR = 600
+		BLOCK = data\\GAMEDATA\\BLOCK\\STAGE04_DATA.csv
+		PLAYER_POS = 240 20 240
+		PLAYER_ROT = 0.0
+	END_STAGE
+	
 #-- Others ----------------------
 	ENEMY = data\\GAMEDATA\\ENEMY\\STAGE_ENEMY.csv
 

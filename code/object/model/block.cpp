@@ -182,7 +182,7 @@ void CBlock::Update(void)
 	// ˆÚ“®—Ê‚Ì‘ã“ü
 	m_Info.pos.y += m_Info.move.y;
 
-	if (m_Info.state == STATE_BREAK)
+	if (m_Info.state != STATE_NORMAL)
 	{
 		if (m_Info.pos.y > -40.0f)
 		{
