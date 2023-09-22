@@ -53,7 +53,6 @@ public:
 		TYPE_BULLET,	// バレット
 		TYPE_EFFECT,	// エフェクト
 		TYPE_PARTICLE,	// パーティクル
-		TYPE_TEXT2D,	// テキスト2D
 		TYPE_TIME,		// タイム
 		TYPE_SCORE,		// スコア
 		TYPE_FONT,		// フォント

@@ -19,12 +19,12 @@
 #include "../object\BG\bg_side.h"
 #include "../object\BG\bg_ceiling.h"
 #include "../object/BG/mesh_floor.h"
-#include "../object\UI\text2D.h"
 #include "../system/input.h"
 #include "../system/words/text.h"
 #include "../system/words/font.h"
 #include "../system/camera.h"
 #include "../scene/pause.h"
+#include "../system/sound.h"
 #include "fade.h"
 
 // 静的変数
@@ -122,6 +122,9 @@ HRESULT CTutorial::Init(void)
 	// テキスト生成
 	TxtCreate(ACTION_MOVE);
 
+	CSound *pSound = CManager::GetSound();
+	pSound->PlaySound(CSound::TYPE_GAME01);
+
 	return S_OK;
 }
 
@@ -130,6 +133,9 @@ HRESULT CTutorial::Init(void)
 //========================================
 void CTutorial::Uninit(void)
 {
+	CSound *pSound = CManager::GetSound();
+	pSound->StopSound();
+
 	CObject::ReleaseAll(CObject::TYPE_BG);
 	CObject::ReleaseAll(CObject::TYPE_BLOCK);
 	CObject::ReleaseAll(CObject::TYPE_CUBE);
@@ -139,7 +145,6 @@ void CTutorial::Uninit(void)
 	CObject::ReleaseAll(CObject::TYPE_PARTICLE);
 	CObject::ReleaseAll(CObject::TYPE_TIME);
 	CObject::ReleaseAll(CObject::TYPE_SCORE);
-	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
 
 	// メモリ開放

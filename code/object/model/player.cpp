@@ -35,9 +35,6 @@
 #define DUST_MAXCNT		(15)		// カウントの最大値
 #define CUBE_LIFE1		(120)		// 壁や床に配置した場合の寿命
 
-// 静的変数
-bool CPlayer::m_bCubeSet = false;
-
 // 定義
 const float CPlayer::PLAYER_SPEED = 1.0f;
 
@@ -58,7 +55,6 @@ CPlayer::CPlayer(int nPriority) : CMotionModel(nPriority)
 	m_Info.fHeight = INIT_FLOAT;
 	m_Info.fDepth = INIT_FLOAT;
 	m_Info.bMove = false;
-	m_Info.bJump = false;
 	m_Info.bMotion = false;
 	m_Info.bAction = false;
 }
@@ -93,7 +89,6 @@ CPlayer *CPlayer::Create(D3DXVECTOR3 pos, float rotY)
 //========================================
 HRESULT CPlayer::Init(void)
 {
-	m_bCubeSet = false;
 	CCamera *pCamera = CManager::GetCamera();	// カメラの取得
 
 	CMotionModel::Init();
@@ -182,23 +177,23 @@ void CPlayer::KeyInput(void)
 
 	m_Info.bMove = true;
 
-	if (pInputJoypad->GetPress(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
+	if (pInputJoypad->GetPress(CJoypad::JOYKEY_LEFT)/* || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT]*/)
 	{
 		MoveInput(DIRECTION_LEFT);
 	}
-	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_RIGHT)/* || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT]*/)
 	{
 		MoveInput(DIRECTION_RIGHT);
 	}
-	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_DOWN)/* || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN]*/)
 	{
 		MoveInput(DIRECTION_FRONT);
 	}
-	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_UP)/* || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP]*/)
 	{
 		MoveInput(DIRECTION_BACK);
 	}
-	else if (pInputKeyboard->GetPress(DIK_A)) { MoveInput(DIRECTION_LEFT);}	// 左移動
+	else if (pInputKeyboard->GetPress(DIK_A)) { MoveInput(DIRECTION_LEFT);}		// 左移動
 	else if (pInputKeyboard->GetPress(DIK_D)) { MoveInput(DIRECTION_RIGHT);}	// 右移動
 	else if (pInputKeyboard->GetPress(DIK_W)) { MoveInput(DIRECTION_BACK); }	// 奥移動
 	else if (pInputKeyboard->GetPress(DIK_S)) { MoveInput(DIRECTION_FRONT); }	// 手前移動
@@ -405,8 +400,14 @@ void CPlayer::UpdatePos(void)
 	// 目標向きに移動向きを代入
 	m_Info.targetRot = m_Info.moveRot;
 
-	// カメラの注視点を設定
-	pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 95, m_Info.pos.z));
+
+	bool bStart = CTitle::IsStart();
+
+	if (bStart)
+	{
+		// カメラの注視点を設定
+		pCamera->SetPosR(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 95, m_Info.pos.z));
+	}
 }
 
 //========================================
@@ -515,7 +516,6 @@ D3DXVECTOR3 CPlayer::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR
 						}
 
 						m_Info.move.y = 0.0f;
-						m_Info.bJump = false;
 					}
 				}
 			}
@@ -587,7 +587,7 @@ void CPlayer::BulletStop(void)
 
 					// キューブの生成
 					CCube::Create(nType, pos, CUBE_LIFE1);
-					m_bCubeSet = true;
+					CCube::SetCubeLead(true);
 
 					// オブジェクト破棄
 					pObj->Uninit();

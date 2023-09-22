@@ -122,7 +122,7 @@ private:
 	// ***** 変数 *****
 	CText *m_Txt[3];			// テキスト
 	ACTION Action;				// 行動種類
-	CreateTxt m_aCreateText;	// 
+	CreateTxt m_aCreateText;	// 生成情報
 
 	int m_nStartTime;		// 開始時間
 	int m_nEndTime;			// 終了時間

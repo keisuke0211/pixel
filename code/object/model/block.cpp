@@ -47,6 +47,7 @@ CBlock::CBlock(int nPriority) : CObjectX(nPriority)
 	m_Info.size = INIT_D3DXVECTOR3;
 	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.nModelID = 0;
+	m_Info.state = STATE_NORMAL;
 	m_Info.fRadius = 0.0f;
 	m_Info.nCntRadius = 0;
 	m_Info.fRadiusRate = 0.0f;
@@ -147,7 +148,6 @@ HRESULT CBlock::Init(void)
 
 	// 生成
 	SetPos(m_Info.pos);
-	//SetRot(m_Info.rot);
 	SetScale(m_Info.size);
 	SetColor(m_Info.col);
 
@@ -214,9 +214,14 @@ void CBlock::Update(void)
 				break;
 			case MODEL_WOOD_BOX:
 			{
-				CrackRock();
+				WoodenBox();
 			}
 				break;
+			case MODEL_IRON_BOX:
+			{
+				WoodenBox();
+			}
+			break;
 			}
 
 			// 破棄
@@ -258,6 +263,12 @@ void CBlock::HitBlock(void)
 			m_Info.bErase = true;
 		}
 		break;
+		case MODEL_IRON_BOX:
+		{
+			m_Info.nEraseTime = 10;
+			m_Info.bErase = true;
+		}
+		break;
 		}
 	}
 }
@@ -265,7 +276,7 @@ void CBlock::HitBlock(void)
 //========================================
 // 木箱
 //========================================
-void CBlock::CrackRock(void)
+void CBlock::WoodenBox(void)
 {
 	bool bGravity = CEnemy::IsmGravity();
 
@@ -310,6 +321,29 @@ void CBlock::Bomb(void)
 	pObj->Par_SetLife(100);
 	pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
 	pObj->Par_SetForm(15);
+}
+
+//========================================
+// 鉄箱
+//========================================
+void CBlock::IronBox(void)
+{
+	bool bGravity = CEnemy::IsmGravity();
+
+	if (!bGravity)
+	{
+		CEnemy::SetGravity(true);
+	}
+
+	// パーティクル生成
+	CParticleX *pObj = CParticleX::Create();
+	pObj->Par_SetPos(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y, m_Info.pos.z));
+	pObj->Par_SetRot(INIT_D3DXVECTOR3);
+	pObj->Par_SetMove(D3DXVECTOR3(35.0f, 15.0f, 35.0f));
+	pObj->Par_SetType(0);
+	pObj->Par_SetLife(100);
+	pObj->Par_SetCol(D3DXCOLOR(0.6f, 0.337f, 0.086f, 1.0f));
+	pObj->Par_SetForm(20);
 }
 
 //========================================
@@ -391,8 +425,9 @@ void CBlock::BombCollsion(PRIO nPrio, TYPE nType, VECTOR vector,D3DXVECTOR3 pos)
 					// IDを取得
 					int nID = pBlock->GetID();
 
-					int nBlockType = pBlock->GetBlockType();
-					if (nBlockType == MODEL_BOMB || nBlockType == MODEL_WOOD_BOX)
+					CBlock::STATE state = pBlock->GetBlockState();
+
+					if (state == STATE_BREAK)
 					{
 						if (m_Info.nID != nID)
 						{
@@ -554,6 +589,7 @@ void CBlock::Load(void)
 {
 	int nCntModel = 0;
 	char aDataSearch[TXT_MAX];	// データ検索用
+	m_TypeInfo = NULL;
 
 	// ファイルの読み込み
 	FILE *pFile = fopen(FILE_PATH, "r");

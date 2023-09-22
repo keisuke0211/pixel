@@ -18,10 +18,11 @@
 CWords::CWords(int nPriority) : CObject(nPriority)
 {
 	m_Info.pos = INIT_D3DXVECTOR3;
-	m_Info.move = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
-	m_Info.moveRot = INIT_D3DXVECTOR3;
 	m_Info.size = INIT_D3DXVECTOR3;
+	m_Info.move = INIT_D3DXVECTOR3;
+	m_Info.moveRot = INIT_D3DXVECTOR3;
+	m_Info.col = INIT_D3DXCOLOR;
 	m_Info.bDisp = false;
 }
 

@@ -94,7 +94,8 @@ private:
 	/* ”š”­”»’è		*/void BombCollsion(PRIO nPrio, TYPE nType, VECTOR vector,D3DXVECTOR3 pos);
 	/* “–‚½‚è”»’è	*/D3DXVECTOR3 Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos);
 	/* ”š’e			*/void Bomb(void);
-	/* –Ø” 			*/void CrackRock(void);
+	/* –Ø” 			*/void WoodenBox(void);
+	/* “S” 			*/void IronBox(void);
 
 	// ***** •Ï” *****
 	static int m_nNumAll;			// ƒLƒ…[ƒu‚Ì‘”

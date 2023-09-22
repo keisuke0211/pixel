@@ -17,7 +17,7 @@
 //========================================
 // コンストラクタ
 //========================================
-CTime::CTime(int nPriority) : CText2D(nPriority)
+CTime::CTime(int nPriority) : CObject(nPriority)
 {
 	m_nTime = 0;			// 時間
 	m_nTimeMax  = 0;		// 時間の最大値
@@ -55,9 +55,6 @@ CTime *CTime::Create(int nTime)
 //========================================
 HRESULT CTime::Init(void)
 {
-	// 初期化処理
-	CText2D::Init();
-
 	m_nTime = 0;	// タイム
 	m_nCounter = 0;	// カウンター
 	m_nNumWarn = 0;
@@ -73,8 +70,10 @@ HRESULT CTime::Init(void)
 //========================================
 void CTime::Uninit(void)
 {
-	// 終了処理
-	CText2D::Uninit();
+	if (m_Time != NULL)
+	{
+		m_Time = NULL;
+	}
 }
 
 //========================================
@@ -91,9 +90,6 @@ void CTime::Update(void)
 
 		if (!bPause && !bTime)
 		{
-			// 更新処理
-			CText2D::Update();
-
 			if (m_nTime > 0)
 			{// タイムが0以上の時、
 

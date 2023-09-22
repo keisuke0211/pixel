@@ -20,6 +20,10 @@ CText::CText(int nPriority) : CObject2D(nPriority)
 {
 	m_Info.TextBoxCol = INIT_D3DXCOLOR;
 	m_Info.FontCol = INIT_D3DXCOLOR;
+	m_Info.TextBoxColOld = INIT_D3DXCOLOR;
+	m_Info.FontColOld = INIT_D3DXCOLOR;
+	m_Info.bCol = false;
+
 	m_Info.fTextSize = 0.0f;
 	m_Info.nTextLength = 0;
 	m_Info.nAppearTime = 0;
@@ -32,10 +36,12 @@ CText::CText(int nPriority) : CObject2D(nPriority)
 	m_Info.nStandTime = 0;
 	m_Info.bStand = false;
 
-	m_Info.bTextBok = true;
 	m_Info.nDisapTime = 0;
 	m_Info.nDisapTimeMax = 0;
 	m_Info.bRelease = false;
+
+	m_Info.bTextBok = true;
+	m_Info.bPause = false;
 	m_Info.bSpace = false;
 
 	m_Info.aShadow.col = INIT_D3DXCOLOR;

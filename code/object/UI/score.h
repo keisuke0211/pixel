@@ -9,7 +9,7 @@
 #define _SCORE_H_
 
 #include "../../main.h"
-#include "text2D.h"
+#include "../object.h"
 
 //****************************************
 // 前方宣言
@@ -19,7 +19,7 @@ class CText;
 //****************************************
 // クラス
 //****************************************
-class CScore : public CText2D
+class CScore : public CObject
 {
 	// 定義
 	static const int SCORE_START_DEX = 6;	// スコアの開始位置

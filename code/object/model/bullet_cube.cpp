@@ -61,6 +61,8 @@ CCube::CCube(int nPriority) : CObjectX(nPriority)
 	m_Info.nCntRadius = 0;				// 半径推移	
 	m_Info.fRadiusRate = 0.0f;			// 半径の割合
 	m_Info.bSet = false;				// 配置フラグ
+	m_Info.nChain = 0;					// 連鎖
+	m_Info.bBom = false;				// 爆発
 	m_Info.nID = m_nNumAll;				// 自分自身のID
 	m_Info.bErase = false;
 }
@@ -720,9 +722,10 @@ void CCube::ModelCollsion(PRIO nPrio, TYPE nType, VECTOR vector,D3DXVECTOR3 pos)
 
 					if (m_Info.bSet)
 					{
+						CBlock::STATE state = pBlock->GetBlockState();
 						int nBlockType = pBlock->GetBlockType();
 
-						if (nBlockType == MODEL_BOMB || nBlockType == MODEL_WOOD_BOX)
+						if (state == CBlock::STATE_BREAK && nBlockType != MODEL_IRON_BOX)
 						{
 							// Hit処理
 							pBlock->HitBlock();
@@ -809,9 +812,16 @@ void CCube::SetLimit(int nLimit)
 void CCube::Reset(void)
 {
 	m_nNumAll = -1;
+	m_nRestCube = 0;
+	m_nUseCube = 0;
 	m_nNumChain = 1;
 	m_nLimitCube = 0;
 	bLeadSet = false;
+
+	if (m_Cube != NULL)
+	{
+		m_Cube = NULL;
+	}
 }
 
 //========================================

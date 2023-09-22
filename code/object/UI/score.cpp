@@ -17,7 +17,7 @@ bool CScore::m_bUpdateText = false;	// 更新フラグ
 //========================================
 // コンストラクタ
 //========================================
-CScore::CScore(int nPriority) : CText2D(nPriority)
+CScore::CScore(int nPriority) : CObject(nPriority)
 {
 	m_Score = NULL;
 	m_bUpdateText = false;
@@ -54,9 +54,6 @@ CScore *CScore::Create(void)
 HRESULT CScore::Init(void)
 {
 	m_nScore = 0;
-
-	// 初期化処理
-	CText2D::Init();
 
 	{// スコアを文字列に設定
 		char aString[TXT_MAX];
@@ -96,8 +93,10 @@ HRESULT CScore::Init(void)
 //========================================
 void CScore::Uninit(void)
 {
-	// 終了処理
-	CText2D::Uninit();
+	if (m_Score != NULL)
+	{
+		m_Score = NULL;
+	}
 }
 
 //========================================
@@ -134,8 +133,7 @@ void CScore::Update(void)
 //========================================
 void CScore::Draw(void)
 {
-	// 描画処理
-	CText2D::Draw();
+
 }
 
 //========================================

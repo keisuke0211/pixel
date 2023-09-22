@@ -42,7 +42,6 @@
     <ClCompile Include="code\object\objectX.cpp" />
     <ClCompile Include="code\object\UI\crown.cpp" />
     <ClCompile Include="code\object\UI\score.cpp" />
-    <ClCompile Include="code\object\UI\text2D.cpp" />
     <ClCompile Include="code\object\UI\time.cpp" />
     <ClCompile Include="code\object\UI\UI_title.cpp" />
     <ClCompile Include="code\scene\fade.cpp" />
@@ -87,7 +86,6 @@
     <ClInclude Include="code\object\objectX.h" />
     <ClInclude Include="code\object\UI\crown.h" />
     <ClInclude Include="code\object\UI\score.h" />
-    <ClInclude Include="code\object\UI\text2D.h" />
     <ClInclude Include="code\object\UI\time.h" />
     <ClInclude Include="code\object\UI\UI_title.h" />
     <ClInclude Include="code\scene\fade.h" />

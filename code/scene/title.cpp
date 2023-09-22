@@ -12,7 +12,6 @@
 #include "../object/UI/UI_title.h"
 #include "../object\model\model.h"
 #include "../system/input.h"
-#include "../object\UI\text2D.h"
 #include "fade.h"
 #include "../object/model/block.h"
 
@@ -32,9 +31,11 @@ bool CTitle::m_bClear = false;
 //========================================
 CTitle::CTitle()
 {
+	m_bStart = false;
+	m_bClear = false;
+
 	m_nTextTime = 0;
 	m_nStandTime = 0;
-
 	m_nSelectMenu = 0;
 
 	Title = TITLE_OUTSET;
@@ -139,7 +140,6 @@ void CTitle::Uninit(void)
 
 	CObject::ReleaseAll(CObject::TYPE_BG);
 	CObject::ReleaseAll(CObject::TYPE_BLOCK);
-	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
 }
 
@@ -379,12 +379,12 @@ void CTitle::Menu(void)
 	CSound *pSound = CManager::GetSound();
 
 	// -- ƒƒjƒ…[‘I‘ð ---------------------------
-	if (pInputKeyboard->GetTrigger(DIK_W) || pInputKeyboard->GetTrigger(DIK_UP) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
+	if (pInputKeyboard->GetTrigger(DIK_W) || pInputKeyboard->GetTrigger(DIK_UP) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_UP)/* || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP]*/)
 	{
 		pSound->PlaySound(CSound::TYPE_SELECT);
 		m_nSelectMenu--;
 	}
-	else if (pInputKeyboard->GetTrigger(DIK_S) || pInputKeyboard->GetTrigger(DIK_DOWN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
+	else if (pInputKeyboard->GetTrigger(DIK_S) || pInputKeyboard->GetTrigger(DIK_DOWN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_DOWN)/* || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN]*/)
 	{
 		pSound->PlaySound(CSound::TYPE_SELECT);
 		m_nSelectMenu++;

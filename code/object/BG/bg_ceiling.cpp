@@ -35,6 +35,7 @@ CBgCeiling::CBgCeiling(int nPriority) : CObject(nPriority)
 	m_pos = INIT_D3DXVECTOR3;
 	m_rot = INIT_D3DXVECTOR3;
 	m_color = INIT_D3DXCOLOR;
+	m_nStage = 0;
 }
 //****************************************
 // デストラクタ

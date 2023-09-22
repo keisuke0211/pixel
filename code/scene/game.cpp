@@ -19,7 +19,6 @@
 #include "../object\BG\bg_ceiling.h"
 #include "../object/BG/mesh_floor.h"
 #include "../object/BG/blackout.h"
-#include "../object\UI\text2D.h"
 #include "../object\UI\score.h"
 #include "../object\UI\time.h"
 #include "../object/UI/crown.h"
@@ -52,19 +51,24 @@ const char* CGame::FLOOR_STAGE_FILE = "data\\GAMEDATA\\OBJECT\\FLOOR_DATA.txt";
 CGame::CGame()
 {
 	m_rot = INIT_D3DXVECTOR3;
+	m_nMoveRot = INIT_FLOAT;
 	m_nStartTime = 0;
 	m_nEndTime = 0;
-	m_bEnd = false;
-
 	m_nRstStgType = 0;
 	m_nTextCreate = 0;
+
 	m_nTimeTotal = 0;
 	m_nClearTotal = 0;
 	m_nTotal = 0;
 	m_nAddTime = 0;
-	m_bAddScore = false;
 	m_nStandTime = -1;
 	m_nEveGame = 1;
+	m_bAddScore = false;
+
+	m_bTime = false;
+	m_nScore = 0;
+	m_bEnd = false;
+
 
 	for (int nRst = 0; nRst < RST_ADD_SCORE; nRst++)
 	{
@@ -184,7 +188,6 @@ void CGame::Uninit(void)
 	CObject::ReleaseAll(CObject::TYPE_PARTICLE);
 	CObject::ReleaseAll(CObject::TYPE_TIME);
 	CObject::ReleaseAll(CObject::TYPE_SCORE);
-	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
 
 	CSound *pSound = CManager::GetSound();
@@ -215,6 +218,8 @@ void CGame::Update(void)
 		bool bStart = CTitle::IsStart();
 		if (!bStart)
 		{
+			// ƒJƒƒ‰‚Ì’Ž‹“_‚ðÝ’è
+			pCamera->SetPosR(D3DXVECTOR3(0.0f, 95.0f, 0.0f));
 			if (--m_nStartTime <= 0)
 			{
 				pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -384,7 +389,6 @@ void CGame::Result(void)
 		int nClear = m_aStageInfo.nClearBonus[m_nStage];
 
 		int nPerfCube = m_aStageInfo.nCube[m_nStage];
-		int nEve;
 
 		m_nClearTotal = nClear;
 
@@ -482,7 +486,7 @@ void CGame::Result(void)
 		break;
 	case RST_END:
 	{
-		if (m_nStage < STAGE_MAX)
+		/*if (m_nStage < STAGE_MAX)
 		{
 			m_nScore = m_pScore->GetScore();
 			CManager::GetFade()->SetFade(MODE_GAME);
@@ -494,7 +498,12 @@ void CGame::Result(void)
 			CRanking::SetScore11(m_nScore);
 			CRanking::SetAllStage(false);
 			CPause::SetPause(false);
-		}
+		}*/
+		CManager::GetFade()->SetFade(MODE_RANKING);
+		m_nScore = m_pScore->GetScore();
+		CRanking::SetScore11(m_nScore);
+		CRanking::SetAllStage(false);
+		CPause::SetPause(false);
 	}
 		break;
 	}
@@ -536,6 +545,7 @@ void CGame::Reset(void)
 {
 	m_bEnd = false;
 	m_nStage = STAGE_EASY;
+	m_nSelectStage = STAGE_EASY;
 	m_bTime = false;
 	m_nScore = 0;
 	m_aStageInfo = { NULL,NULL };

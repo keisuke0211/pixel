@@ -24,14 +24,12 @@ public:
 		MODEL_GRASS_00 = 0,	// ‘ 1~1~1
 		MODEL_GRASS_01,		// ‘ 3~1~3
 		MODEL_GRASS_02,		// ‘ 5~1~5
-		MODEL_SOIL_00,		// “y 1~1~1
 		MODEL_STONE,		// Î 1~1~1
-		MODEL_STONE01,		// Î 3~1~3
-		MODEL_STONE02,		// Î 5~1~5
 		MODEL_WOOD_BOX,		// –Ø” 
+		MODEL_IRON_BOX,		// “S” 
 		MODEL_BOMB,			// ”š’e
-		MODEL_FENCE,		// ò
-		MODEL_FENCE1,		// ò‚P
+		MODEL_FENCE,		// òE‰¡
+		MODEL_FENCE1,		// òEc
 		MODEL_BULLET,		// ’e
 		MODEL_PLAYER_00,	// ƒvƒŒƒCƒ„[ ‘Ì
 		MODEL_PLAYER_01,	// ƒvƒŒƒCƒ„[ “ª

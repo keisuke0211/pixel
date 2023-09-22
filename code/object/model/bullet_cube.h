@@ -82,7 +82,7 @@ public:
 	/* サイズ		*/void SetCubeSize(const D3DXVECTOR3 size) { m_Info.size = size; }
 	/* 寿命			*/void SetCubeLife(const int nLife) { m_Info.nLife = nLife; }
 	/* 種類			*/void SetCubeType(const int type) { m_Info.nShape = type; }
-	/* 先頭フラグ	*/void SetCubeLead(const bool bSet) { bLeadSet = bSet; }
+	/* 先頭フラグ	*/static void SetCubeLead(const bool bSet) { bLeadSet = bSet; }
 	/* 制限数		*/static void SetLimit(int nLimit);
 	/* リセット		*/static void Reset(void);
 

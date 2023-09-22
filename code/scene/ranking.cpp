@@ -152,47 +152,26 @@ HRESULT CRanking::Init(void)
 			pFont = {INIT_D3DXCOLOR,15.0f,1,1,-1};
 			FormShadow pShadow = {D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(1.0f,1.0f)};
 
-			m_Explain[0] = CText::Create(CText::BOX_NORMAL_RECT,
-				D3DXVECTOR3(50.0f, 550, 0.0f),
-				D3DXVECTOR2(0.0f, 0.0f),
-				"↑・→：行の変更",
-				CFont::FONT_BESTTEN,
-				&pFont, false,&pShadow);
+			m_Explain[0] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(50.0f, 550, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
+				"↑・→：行の変更",CFont::FONT_BESTTEN,&pFont, false,&pShadow);
 
-			m_Explain[1] = CText::Create(CText::BOX_NORMAL_RECT,
-				D3DXVECTOR3(50.0f, 590, 0.0f),
-				D3DXVECTOR2(0.0f, 0.0f),
-				"←・→：文字の変更",
-				CFont::FONT_BESTTEN,
-				&pFont, false, &pShadow);
+			m_Explain[1] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(50.0f, 590, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
+				"←・→：文字の変更",CFont::FONT_BESTTEN,&pFont, false, &pShadow);
 
-			m_Explain[2] = CText::Create(CText::BOX_NORMAL_RECT,
-				D3DXVECTOR3(50.0f, 630, 0.0f),
-				D3DXVECTOR2(0.0f, 0.0f),
-				"X・Y：変換",
-				CFont::FONT_BESTTEN,
-				&pFont, false, &pShadow);
+			m_Explain[2] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(50.0f, 630, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
+				"X・Y：変換",CFont::FONT_BESTTEN,&pFont, false, &pShadow);
 
-			m_Explain[3] = CText::Create(CText::BOX_NORMAL_RECT,
-				D3DXVECTOR3(640.0f, 550, 0.0f),
-				D3DXVECTOR2(0.0f, 100.0f),
-				"A：決定",
-				CFont::FONT_BESTTEN,
-				&pFont, false, &pShadow);
+			m_Explain[3] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 550, 0.0f),D3DXVECTOR2(0.0f, 100.0f),
+				"A：決定",CFont::FONT_BESTTEN,&pFont, false, &pShadow);
 
-			m_Explain[4] = CText::Create(CText::BOX_NORMAL_RECT,
-				D3DXVECTOR3(640.0f, 590, 0.0f),
-				D3DXVECTOR2(0.0f, 100.0f),
-				"B：削除",
-				CFont::FONT_BESTTEN,
-				&pFont, false, &pShadow);
+			m_Explain[4] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 590, 0.0f),D3DXVECTOR2(0.0f, 100.0f),
+				"B：削除",CFont::FONT_BESTTEN,&pFont, false, &pShadow);
 
-			m_Explain[5] = CText::Create(CText::BOX_NORMAL_RECT,
-				D3DXVECTOR3(640.0f, 630, 0.0f),
-				D3DXVECTOR2(0.0f, 100.0f),
-				"途中で入力をやめる場合は※を選択!",
-				CFont::FONT_BESTTEN,
-				&pFont, false, &pShadow);
+			m_Explain[5] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 630, 0.0f),D3DXVECTOR2(0.0f, 100.0f),
+				"途中で入力をやめる場合は※を選択!",CFont::FONT_BESTTEN,&pFont, false, &pShadow);
+
+			/*m_Explain[6] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(50.0f, 690, 0.0f),D3DXVECTOR2(0.0f, 100.0f),
+				"※入力切り替え（十字ボタン・スティック）：MODE",CFont::FONT_BESTTEN,&pFont, false, &pShadow);*/
 		}
 
 		SetNameEntry(nRank);
@@ -240,7 +219,6 @@ void CRanking::Uninit(void)
 	m_pString = NULL;
 
 	CObject::ReleaseAll(CObject::TYPE_BG);
-	CObject::ReleaseAll(CObject::TYPE_TEXT2D);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
 }
 
@@ -524,7 +502,7 @@ void CRanking::NameInput(void)
 
 	// -- 文字列切替 ---------------------------------------------
 	if (pInputKeyboard->GetRepeat(DIK_A) || pInputKeyboard->GetRepeat(DIK_LEFT) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_LEFT)/* || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT]*/)
 	{
 		m_Info.nCntLetter--;
 		m_Info.bNameInput = true;
@@ -532,7 +510,7 @@ void CRanking::NameInput(void)
 	}
 	else if (
 		pInputKeyboard->GetRepeat(DIK_D) || pInputKeyboard->GetRepeat(DIK_RIGHT) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_RIGHT)/* || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT]*/)
 	{
 		m_Info.nCntLetter++;
 		m_Info.bNameInput = true;
@@ -541,7 +519,7 @@ void CRanking::NameInput(void)
 
 	// -- 文字切替 ---------------------------------------------
 	if (pInputKeyboard->GetRepeat(DIK_S) || pInputKeyboard->GetRepeat(DIK_DOWN) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_DOWN)/* || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN]*/)
 	{
 		m_Info.nCntLetter = 0;
 		m_Info.nCntConv = 0;
@@ -551,7 +529,7 @@ void CRanking::NameInput(void)
 	}
 	else if (
 		pInputKeyboard->GetRepeat(DIK_W) || pInputKeyboard->GetRepeat(DIK_UP) ||
-		pInputJoypad->GetRepeat(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
+		pInputJoypad->GetRepeat(CJoypad::JOYKEY_UP)/* || pInputJoypad->GetStick().aAngleRepeat[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP]*/)
 	{
 		m_Info.nCntLetter = 0;
 		m_Info.nCntConv = 0;
@@ -561,12 +539,12 @@ void CRanking::NameInput(void)
 	}
 
 	// -- 変換 ---------------------------------------------
-	if (pInputKeyboard->GetTrigger(DIK_Q) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X))
+	if (pInputKeyboard->GetTrigger(DIK_Q)/* || pInputJoypad->GetTrigger(CJoypad::JOYKEY_X)*/)
 	{
 		m_Info.nCntConv--;
 		m_Info.bNameInput = true;
 	}
-	else if (pInputKeyboard->GetTrigger(DIK_E) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_Y))
+	else if (pInputKeyboard->GetTrigger(DIK_E)/* || pInputJoypad->GetTrigger(CJoypad::JOYKEY_Y)*/)
 	{
 		m_Info.nCntConv++;
 		m_Info.bNameInput = true;
@@ -694,9 +672,7 @@ void CRanking::NameInput(void)
 //========================================
 void CRanking::RankingSwitch(void)
 {
-	// -- 取得 -------------------------------------------
-	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
-	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
+	
 }
 
 //========================================

@@ -41,7 +41,6 @@ public:
 		float fHeight;			// 高さ
 		float fDepth;			// 奥行き
 		bool bMove;				// 移動フラグ
-		bool bJump;				// ジャンプフラグ
 		bool bMotion;			// モーションフラグ
 		bool bAction;			// 行動フラグ
 
@@ -67,7 +66,6 @@ public:
 	/* 取得 */
 	D3DXVECTOR3 GetPos() { return m_Info.pos; }
 	D3DXVECTOR3 GetPlayerMove() { return m_Info.move; }
-	static bool IsCubeSet() { return m_bCubeSet; }
 
 private:
 	// ***** 関数 *****
@@ -84,6 +82,5 @@ private:
 
 	// ***** 変数 *****
 	Info m_Info;			// プレイヤー情報
-	static bool m_bCubeSet;	// キューブ配置フラグ
 };
 #endif

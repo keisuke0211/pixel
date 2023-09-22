@@ -43,10 +43,12 @@ CBullet::CBullet(int nPriority) : CObjectX(nPriority)
 	m_Info.rot = INIT_D3DXVECTOR3;
 	m_Info.rotOld = INIT_D3DXVECTOR3;
 	m_Info.move = INIT_D3DXVECTOR3;
+	m_Info.size = INIT_D3DXVECTOR3;
 	m_Info.nType = 0;
 	m_Info.nLife = 0;
 	m_Info.fHeight = 0.0f;
 	m_Info.fWidth = 0.0f;
+	m_Info.bHit = false;
 	m_Info.nID = m_nNumAll;
 
 	m_nNumAll++;	// ëçêîâ¡éZ

@@ -38,6 +38,7 @@ CCamera::CCamera()
 	m_Info.targetRot = INIT_D3DXVECTOR3;// 目標向き
 	m_Info.spin = INIT_D3DXVECTOR3;		// 回転量
 	m_Info.fDistance = INIT_FLOAT;		// 距離
+	m_Info.fTargetDistance = INIT_FLOAT;// 目標距離
 	m_Info.fHeight = INIT_FLOAT;		// 高さ
 	m_Info.fTargetHeight = INIT_FLOAT;	// 目標高さ
 	m_Info.fVerticalMove = INIT_FLOAT;	// 縦の移動量
@@ -53,7 +54,6 @@ CCamera::CCamera()
 	m_Save.fVerticalMove = INIT_FLOAT;	// 縦の移動量
 	m_Save.fHeight = INIT_FLOAT;		// 高さ
 	m_Save.fDistance = INIT_FLOAT;		// 距離
-	m_Info.fTargetDistance = INIT_FLOAT;
 }
 
 //========================================
@@ -126,13 +126,13 @@ void CCamera::Update(void)
 				{// マウスの右ボタンが押されている間
 					m_Info.nRotType++;
 				}
-				else if (pInputJoypad->GetTrigger(CJoypad::JOYKEY_LEFT_SHOULDER) || pInputJoypad->GetStick().aAngleTrigger[CJoypad::STICK_TYPE_RIGHT][CJoypad::STICK_ANGLE_LEFT])
-				{
-					m_Info.nRotType--;
-				}
-				else if (pInputJoypad->GetTrigger(CJoypad::JOYKEY_RIGHT_SHOULDER) || pInputJoypad->GetStick().aAngleTrigger[CJoypad::STICK_TYPE_RIGHT][CJoypad::STICK_ANGLE_RIGHT])
+				else if (pInputJoypad->GetTrigger(CJoypad::JOYKEY_LEFT_SHOULDER)/* || pInputJoypad->GetStick().aAngleTrigger[CJoypad::STICK_TYPE_RIGHT][CJoypad::STICK_ANGLE_LEFT]*/)
 				{
 					m_Info.nRotType++;
+				}
+				else if (pInputJoypad->GetTrigger(CJoypad::JOYKEY_RIGHT_SHOULDER)/* || pInputJoypad->GetStick().aAngleTrigger[CJoypad::STICK_TYPE_RIGHT][CJoypad::STICK_ANGLE_RIGHT]*/)
+				{
+					m_Info.nRotType--;
 				}
 
 				IntLoopControl(&m_Info.nRotType, ROT_MAX, 0);

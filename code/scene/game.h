@@ -75,8 +75,6 @@ public:
 	/* 時間			*/static bool IsTime() { return m_bTime; }
 	/* 終了			*/static bool IsEnd() { return m_bEnd; }
 	
-	static int m_nStage;							// 現在のステージ 
-
 	// ステージ情報
 	struct StageInfo
 	{
@@ -145,6 +143,7 @@ private:
 	bool m_bAddScore;					// スコアの加算フラグ
 	static bool m_bTime;				// 時間フラグ
 	static int m_nScore;				// スコアの保存用
+	static int m_nStage;				// 現在のステージ 
 	static int m_nSelectStage;			// 現在選択しているステージ 
 	static bool m_bEnd;					// 終了フラグ
 };

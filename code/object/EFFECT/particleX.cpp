@@ -17,6 +17,7 @@ CParticleX::CParticleX(int nPriority) : CObjectX(nPriority)
 	m_Info.pos = INIT_D3DXVECTOR3;
 	m_Info.rot = INIT_D3DXVECTOR3;
 	m_Info.move = INIT_D3DXVECTOR3;
+	m_Info.speed = INIT_D3DXVECTOR3;
 	m_Info.nForm = 0;
 	m_Info.nType = 0;
 	m_Info.nLife = 0;

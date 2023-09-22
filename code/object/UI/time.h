@@ -8,8 +8,8 @@
 #ifndef _TIME_H_
 #define _TIME_H_
 
+#include "../../main.h"
 #include "../object.h"
-#include "text2D.h"
 
 //****************************************
 // 前方宣言
@@ -19,7 +19,7 @@ class CText;
 //****************************************
 // クラス
 //****************************************
-class CTime : public CText2D
+class CTime : public CObject
 {
 	// 定義
 	static const int TIME_START_DEX = 6;	// 時間の開始位置
