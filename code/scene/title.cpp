@@ -117,7 +117,7 @@ HRESULT CTitle::Init(void)
 	m_Menu[1] = CText::Create(CText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 		D3DXVECTOR2(1080.0f, 100.0f),
-		"ENTERを押して始めてね!",
+		"ENTERかAボタンを押して始めてね!",
 		CFont::FONT_BESTTEN,
 		&pFont,false);
 
@@ -293,7 +293,7 @@ void CTitle::TitleAnime(void)
 			m_Menu[1] = CText::Create(CText::BOX_NORMAL_RECT,
 				D3DXVECTOR3(640.0f, 600.0f, 0.0f),
 				D3DXVECTOR2(1080.0f, 100.0f),
-				"ENTERを押して始めてね!",
+				"ENTERかAボタンを押して始めてね!",
 				CFont::FONT_BESTTEN,
 				&pFont, false);
 
@@ -379,12 +379,12 @@ void CTitle::Menu(void)
 	CSound *pSound = CManager::GetSound();
 
 	// -- メニュー選択 ---------------------------
-	if (pInputKeyboard->GetTrigger(DIK_W) || pInputKeyboard->GetTrigger(DIK_UP) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_UP)/* || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP]*/)
+	if (pInputKeyboard->GetTrigger(DIK_W) || pInputKeyboard->GetTrigger(DIK_UP) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
 	{
 		pSound->PlaySound(CSound::TYPE_SELECT);
 		m_nSelectMenu--;
 	}
-	else if (pInputKeyboard->GetTrigger(DIK_S) || pInputKeyboard->GetTrigger(DIK_DOWN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_DOWN)/* || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN]*/)
+	else if (pInputKeyboard->GetTrigger(DIK_S) || pInputKeyboard->GetTrigger(DIK_DOWN) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAngleTrigger[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
 	{
 		pSound->PlaySound(CSound::TYPE_SELECT);
 		m_nSelectMenu++;

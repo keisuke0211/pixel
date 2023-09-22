@@ -29,7 +29,7 @@ int CBullet::m_nNumAll = 0;
 #define BULLET_DIAMETER		(0.2f)	// サイズの倍率
 #define BULLET_LIFE			(60)	// 寿命
 
-#define CUBE_LIFE1			(120)	// 壁や床に配置した場合の寿命
+#define CUBE_LIFE1			(60)	// 壁や床に配置した場合の寿命
 #define CUBE_LIFE2			(60)	// 敵に当てた場合の寿命
 
 //========================================

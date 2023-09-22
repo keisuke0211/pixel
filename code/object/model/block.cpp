@@ -516,6 +516,12 @@ D3DXVECTOR3 CBlock::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3
 				float fPairHeight = pObj->GetHeight();	// ‚‚³
 				float fPairDepth = pObj->GetDepth();	// ‰œs‚«
 
+				int nModelId = pBlock->GetBlockType();
+				if (nModelId == MODEL_BOMB)
+				{
+					fPairHeight = 20.0f;
+				}
+
 				fPairWidth = round(fPairWidth);
 				fPairHeight = round(fPairHeight);
 				fPairDepth = round(fPairDepth);

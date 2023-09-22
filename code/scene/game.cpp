@@ -366,7 +366,7 @@ void CGame::Result(void)
 	{
 		CCrown::Create(m_nEveGame);
 		sprintf(aString, "TIME BONUS");
-		pos = D3DXVECTOR3(100.0f, 170.0f, 0.0f);
+		pos = D3DXVECTOR3(100.0f, 190.0f, 0.0f);
 	}
 		break;
 	case RST_TIME_CALC:
@@ -375,13 +375,13 @@ void CGame::Result(void)
 		m_nTimeTotal = TIME_SCORE * nTime;
 
 		sprintf(aString, "%d * %d = %d",TIME_SCORE,nTime,m_nTimeTotal);
-		pos = D3DXVECTOR3(100.0f, 240.0f, 0.0f);
+		pos = D3DXVECTOR3(100.0f, 260.0f, 0.0f);
 	}
 		break;
 	case RST_CLEAR:
 	{
 		sprintf(aString, "CLEAR BONUS");
-		pos = D3DXVECTOR3(100.0f, 310.0f, 0.0f);
+		pos = D3DXVECTOR3(100.0f, 340.0f, 0.0f);
 	}
 		break;
 	case RST_CLEAR_CALC:
@@ -393,7 +393,7 @@ void CGame::Result(void)
 		m_nClearTotal = nClear;
 
 		sprintf(aString, "%d", m_nClearTotal);
-		pos = D3DXVECTOR3(100.0f, 380.0f, 0.0f);
+		pos = D3DXVECTOR3(100.0f, 410.0f, 0.0f);
 	}
 		break;
 	case RST_BONUS:

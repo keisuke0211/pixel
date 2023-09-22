@@ -602,13 +602,13 @@ void CJoypad::UpdateStick(void)
 		//ジョイパッドの状態を取得
 		if (XInputGetState(nPatNum, &m_xInput) == ERROR_SUCCESS)
 		{
-			for (int nCntStick = 0; nCntStick < STICK_TYPE_MAX; nCntStick++)
+			for (int nStick = 0; nStick < STICK_TYPE_MAX; nStick++)
 			{
 				float X;		// スティックのX軸
 				float Y;		// スティックのY軸
 
 				// 種類に応じたスティックの軸の値を取得
-				switch (nCntStick)
+				switch (nStick)
 				{
 					//========== *** 左スティック ***
 				case STICK_TYPE_LEFT:
@@ -623,76 +623,77 @@ void CJoypad::UpdateStick(void)
 				}
 
 				// 角度を取得
-				m_stick[nPatNum].aAngle[nCntStick] = FindAngle(D3DXVECTOR3(X, Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f)) * -1;
+				m_stick[nPatNum].aAngle[nStick] = FindAngle(D3DXVECTOR3(X, Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f)) * -1;
 
 				// スティックの倒し具合を取得
-				m_stick[nPatNum].aTplDiameter[nCntStick] = fabsf(X);
+				m_stick[nPatNum].aTplDiameter[nStick] = fabsf(X);
 
-				if (m_stick[nPatNum].aTplDiameter[nCntStick] < fabsf(Y))
+				if (m_stick[nPatNum].aTplDiameter[nStick] < fabsf(Y))
 				{
-					m_stick[nPatNum].aTplDiameter[nCntStick] = fabsf(Y);
+					m_stick[nPatNum].aTplDiameter[nStick] = fabsf(Y);
 				}
-				m_stick[nPatNum].aTplDiameter[nCntStick] /= 32768.0f;
+				m_stick[nPatNum].aTplDiameter[nStick] /= 32768.0f;
+
 
 				// 方向入力フラグを初期化
 				for (int nCntAngle = 0; nCntAngle < STICK_ANGLE_MAX; nCntAngle++)
 				{
-					m_bAngle[nPatNum][nCntStick][nCntAngle] = false;
+					m_bAngle[nPatNum][nStick][nCntAngle] = false;
 				}
 
-				if (m_stick[nPatNum].aTplDiameter[nCntStick] > 0.1f)
+				if (m_stick[nPatNum].aTplDiameter[nStick] > 0.5f)
 				{// スティックが倒されている時、
 
-					if ((m_stick[nPatNum].aAngle[nCntStick] < D3DX_PI * -0.75)
-						|| (m_stick[nPatNum].aAngle[nCntStick] > D3DX_PI * 0.75))
+					if ((m_stick[nPatNum].aAngle[nStick] < D3DX_PI * -0.75)
+						|| (m_stick[nPatNum].aAngle[nStick] > D3DX_PI * 0.75))
 					{// 角度が四分割で上に位置する時、上フラグを真にする
-						m_bAngle[nPatNum][nCntStick][STICK_ANGLE_UP] = true;
+						m_bAngle[nPatNum][nStick][STICK_ANGLE_UP] = true;
 					}
-					else if ((m_stick[nPatNum].aAngle[nCntStick] > D3DX_PI * -0.25)
-						&& (m_stick[nPatNum].aAngle[nCntStick] < D3DX_PI * 0.25))
+					else if ((m_stick[nPatNum].aAngle[nStick] > D3DX_PI * -0.25)
+						&& (m_stick[nPatNum].aAngle[nStick] < D3DX_PI * 0.25))
 					{// 角度が四分割で下に位置する時、下フラグを真にする
-						m_bAngle[nPatNum][nCntStick][STICK_ANGLE_DOWN] = true;
+						m_bAngle[nPatNum][nStick][STICK_ANGLE_DOWN] = true;
 					}
-					else if ((m_stick[nPatNum].aAngle[nCntStick] > D3DX_PI * -0.75)
-						&& (m_stick[nPatNum].aAngle[nCntStick] < D3DX_PI * -0.25))
+					else if ((m_stick[nPatNum].aAngle[nStick] > D3DX_PI * -0.75)
+						&& (m_stick[nPatNum].aAngle[nStick] < D3DX_PI * -0.25))
 					{// 角度が四分割で左に位置する時、左フラグを真にする
-						m_bAngle[nPatNum][nCntStick][STICK_ANGLE_LEFT] = true;
+						m_bAngle[nPatNum][nStick][STICK_ANGLE_LEFT] = true;
 					}
-					else if ((m_stick[nPatNum].aAngle[nCntStick] > D3DX_PI * 0.25)
-						&& (m_stick[nPatNum].aAngle[nCntStick] < D3DX_PI * 0.75))
+					else if ((m_stick[nPatNum].aAngle[nStick] > D3DX_PI * 0.25)
+						&& (m_stick[nPatNum].aAngle[nStick] < D3DX_PI * 0.75))
 					{// 角度が四分割で右に位置する時、右フラグを真にする
-						m_bAngle[nPatNum][nCntStick][STICK_ANGLE_RIGHT] = true;
+						m_bAngle[nPatNum][nStick][STICK_ANGLE_RIGHT] = true;
 					}
 				}
 
 				// 角度に応じた入力処理
-				for (int nCntAngle = 0; nCntAngle < STICK_ANGLE_MAX; nCntAngle++)
+				for (int nAngle = 0; nAngle < STICK_ANGLE_MAX; nAngle++)
 				{
 					// スティックのトリガー情報を保存
-					m_stick[nPatNum].aAngleTrigger[nCntStick][nCntAngle] = (m_stick[nPatNum].aAnglePress[nCntStick][nCntAngle] ^ m_bAngle[nPatNum][nCntStick][nCntAngle])&m_bAngle[nPatNum][nCntStick][nCntAngle];
+					m_stick[nPatNum].aAngleTrigger[nStick][nAngle] = (m_stick[nPatNum].aAnglePress[nStick][nAngle] ^ m_bAngle[nPatNum][nStick][nAngle])&m_bAngle[nPatNum][nStick][nAngle];
 
 					// スティックのリリース情報を保存
-					m_stick[nPatNum].aAngleRelease[nCntStick][nCntAngle] = (m_stick[nPatNum].aAnglePress[nCntStick][nCntAngle] ^ m_bAngle[nPatNum][nCntStick][nCntAngle])&~m_bAngle[nPatNum][nCntStick][nCntAngle];
+					m_stick[nPatNum].aAngleRelease[nStick][nAngle] = (m_stick[nPatNum].aAnglePress[nStick][nAngle] ^ m_bAngle[nPatNum][nStick][nAngle])&~m_bAngle[nPatNum][nStick][nAngle];
 
 					// 現在の時間を取得
-					m_aStickCurrentTime[nPatNum][nCntStick][nCntAngle] = timeGetTime();
+					m_aStickCurrentTime[nPatNum][nStick][nAngle] = timeGetTime();
 
-					if (m_bAngle[nPatNum][nCntStick][nCntAngle] && ((m_aStickCurrentTime[nPatNum][nCntStick][nCntAngle] - m_aStickExecLastTime[nPatNum][nCntStick][nCntAngle]) > REPEATE_INTERVAL))
+					if (m_bAngle[nPatNum][nStick][nAngle] && ((m_aStickCurrentTime[nPatNum][nStick][nAngle] - m_aStickExecLastTime[nPatNum][nStick][nAngle]) > REPEATE_INTERVAL))
 					{// キーが入力されていて、かつ現在の時間と最後に真を返した時間の差がリピートの間隔を越えていた時、
 					 // 最後に真を返した時間を保存
-						m_aStickExecLastTime[nPatNum][nCntStick][nCntAngle] = m_aStickCurrentTime[nPatNum][nCntStick][nCntAngle];
+						m_aStickExecLastTime[nPatNum][nStick][nAngle] = m_aStickCurrentTime[nPatNum][nStick][nAngle];
 
 						// スティックのリピート情報を保存
-						m_stick[nPatNum].aAngleRepeat[nCntStick][nCntAngle] = m_bAngle[nPatNum][nCntStick][nCntAngle];
+						m_stick[nPatNum].aAngleRepeat[nStick][nAngle] = m_bAngle[nPatNum][nStick][nAngle];
 					}
 					else
 					{
 						// スティックのリピート情報を保存
-						m_stick[nPatNum].aAngleRepeat[nCntStick][nCntAngle] = 0;
+						m_stick[nPatNum].aAngleRepeat[nStick][nAngle] = 0;
 					}
 
 					// スティックのプレス情報を保存
-					m_stick[nPatNum].aAnglePress[nCntStick][nCntAngle] = m_bAngle[nPatNum][nCntStick][nCntAngle];
+					m_stick[nPatNum].aAnglePress[nStick][nAngle] = m_bAngle[nPatNum][nStick][nAngle];
 				}
 			}
 		}

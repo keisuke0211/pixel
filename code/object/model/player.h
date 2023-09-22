@@ -43,6 +43,7 @@ public:
 		bool bMove;				// 移動フラグ
 		bool bMotion;			// モーションフラグ
 		bool bAction;			// 行動フラグ
+		bool bRotMove;			// 回転フラグ
 
 	};
 

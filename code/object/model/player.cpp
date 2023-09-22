@@ -30,7 +30,7 @@
 #define GRAVITY_MAG		(0.08f)		// 重力係数 0.08
 #define GRAVITY_POWER	(9.5f)		// 重力加速度
 #define POS_DIAMETER	(0.3f)		// 移動倍率
-#define ROT_DIAMETER	(0.25f)		// 回転倍率
+#define ROT_DIAMETER	(0.3f)		// 回転倍率
 #define POS_RANGE_WIDE	(3)			// 判定の拡張
 #define DUST_MAXCNT		(15)		// カウントの最大値
 #define CUBE_LIFE1		(120)		// 壁や床に配置した場合の寿命
@@ -177,19 +177,19 @@ void CPlayer::KeyInput(void)
 
 	m_Info.bMove = true;
 
-	if (pInputJoypad->GetPress(CJoypad::JOYKEY_LEFT)/* || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT]*/)
+	if (pInputJoypad->GetPress(CJoypad::JOYKEY_LEFT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_LEFT])
 	{
 		MoveInput(DIRECTION_LEFT);
 	}
-	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_RIGHT)/* || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT]*/)
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_RIGHT) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_RIGHT])
 	{
 		MoveInput(DIRECTION_RIGHT);
 	}
-	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_DOWN)/* || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN]*/)
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_DOWN) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_DOWN])
 	{
 		MoveInput(DIRECTION_FRONT);
 	}
-	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_UP)/* || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP]*/)
+	else if (pInputJoypad->GetPress(CJoypad::JOYKEY_UP) || pInputJoypad->GetStick(0).aAnglePress[CJoypad::STICK_TYPE_LEFT][CJoypad::STICK_ANGLE_UP])
 	{
 		MoveInput(DIRECTION_BACK);
 	}
@@ -219,7 +219,7 @@ void CPlayer::KeyInput(void)
 	{
 		if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputMouse->GetTrigger(CMouse::MOUSE_LEFT) || pInputJoypad->GetTrigger(CJoypad::JOYKEY_A))
 		{
-			CBullet::Create(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 15, m_Info.pos.z), m_Info.rot);
+			CBullet::Create(D3DXVECTOR3(m_Info.pos.x, m_Info.pos.y + 15, m_Info.pos.z), m_Info.targetRot);
 			//pSound->PlaySound(CSound::TYPE_HIT);
 		}
 	}
@@ -253,6 +253,11 @@ void CPlayer::MoveInput(DIRECTION drct)
 	case DIRECTION_LEFT_FRONT	:m_Info.moveRot.y *= -0.75f; break;	// 左手前
 	case DIRECTION_RIGHT_BACK	:m_Info.moveRot.y *= 0.25f; break;	// 右奥
 	case DIRECTION_RIGHT_FRONT	:m_Info.moveRot.y *= 0.75f; break;	// 右手前
+	}
+
+	if (!m_Info.bRotMove && m_Info.rot.y != m_Info.targetRot.y)
+	{
+		m_Info.bRotMove = true;
 	}
 }
 
