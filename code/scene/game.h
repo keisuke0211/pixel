@@ -43,6 +43,7 @@ public:
 		STAGE_01,
 		STAGE_02,
 		STAGE_03,
+		STAGE_04,
 		STAGE_MAX
 	};
 
