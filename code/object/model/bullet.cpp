@@ -396,6 +396,10 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 				float fPairHeight = pObj->GetHeight();		// 高さ
 				float fPairDepth = pObj->GetDepth();		// 奥行き
 
+				fPairWidth = round(fWidth);
+				fPairHeight = round(fHeight);
+				fPairDepth = round(fDepth);
+
 				switch (vector)
 				{
 				case VECTOR_X: {	/* X方向 */
@@ -471,6 +475,10 @@ bool CBullet::Collsion(VECTOR vector, D3DXVECTOR3 pos)
 
 				if (m_Info.bHit)
 				{
+					// ダイナミックキャストする
+					CEnemy *pEnemy = dynamic_cast<CEnemy*>(pObj);
+					pEnemy->SetState(CEnemy::STATE_STOP);
+
 					// キューブの生成
 					CCube::Create(m_Info.nType, D3DXVECTOR3(pos.x, pos.y, pos.z), CUBE_LIFE2);
 

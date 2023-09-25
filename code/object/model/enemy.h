@@ -29,6 +29,7 @@ public:
 	{
 		STATE_NORMAL,	// 通常
 		STATE_STAND,	// 待機
+		STATE_STOP,		// 停止
 		STATE_DAMAGE,	// ダメージ
 		STATE_MAX,
 	};
@@ -77,6 +78,7 @@ public:
 	/* Hit処理	*/void HitLife(int nDamage);
 
 	/* 設定	*/
+	/* 状態設定		*/void SetState(STATE state);
 	/* 全体の重力	*/static void SetGravity(bool bSet) { m_bGravity = bSet; }
 
 	/* 取得 */
@@ -105,7 +107,6 @@ private:
 	} SetInfo;
 
 	// ***** 関数 *****
-	/* 状態設定				*/void SetState(STATE state);
 	/* 状態推移				*/void StateShift(void);
 	/* 当たり判定(方向指定)	*/bool Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos);
 	/* 当たり判定(全体)		*/void ModelCollsion(PRIO nPrio, TYPE nType, D3DXVECTOR3 pos);

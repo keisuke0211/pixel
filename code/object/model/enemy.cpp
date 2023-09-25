@@ -146,115 +146,118 @@ void CEnemy::Update(void)
 		// 状態推移
 		StateShift();
 
-		// 移動処理
-		if (m_Info.state != STATE_STAND && !m_Info.bCube && !m_Info.bRotMove)
+		if (m_Info.state != STATE_STOP)
 		{
-			// 当たり判定
-			if (!Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos) &&
-				!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos) &&
-				!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos) &&
-				!Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos) &&
-				!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos) &&
-				!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos))
+
+			// 移動処理
+			if (m_Info.state != STATE_STAND && !m_Info.bCube && !m_Info.bRotMove)
 			{
-				if (++m_Info.nCntTime >= m_Info.nTimeMax && m_Info.nMove != 0)
+				// 当たり判定
+				if (!Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos) &&
+					!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos) &&
+					!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos) &&
+					!Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos) &&
+					!Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos) &&
+					!Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos))
 				{
-					// 待機状態にする
-					SetState(STATE_STAND);
-
-					m_Info.nCntTime = 0;
-					m_Info.nStandTime = 0;
-
-					switch (m_Info.nMove)
+					if (++m_Info.nCntTime >= m_Info.nTimeMax && m_Info.nMove != 0)
 					{
+						// 待機状態にする
+						SetState(STATE_STAND);
+
+						m_Info.nCntTime = 0;
+						m_Info.nStandTime = 0;
+
+						switch (m_Info.nMove)
+						{
+							break;
+						case 1:
+						{
+							if (m_Info.rot.y == 0.0f)
+							{
+								m_Info.moveRot.y = 3.14f;
+							}
+							else if (m_Info.rot.y = 3.14f)
+							{
+								m_Info.moveRot.y = 0.0f;
+							}
+						}
 						break;
-					case 1:
-					{
-						if (m_Info.rot.y == 0.0f)
+						case 2:
 						{
-							m_Info.moveRot.y = 3.14f;
+							if (m_Info.rot.y == 1.57f)
+							{
+								m_Info.moveRot.y = -1.57f;
+							}
+							else if (m_Info.rot.y = -1.57f)
+							{
+								m_Info.moveRot.y = 1.57f;
+							}
 						}
-						else if (m_Info.rot.y = 3.14f)
-						{
-							m_Info.moveRot.y = 0.0f;
-						}
-					}
-					break;
-					case 2:
-					{
-						if (m_Info.rot.y == 1.57f)
-						{
-							m_Info.moveRot.y = -1.57f;
-						}
-						else if (m_Info.rot.y = -1.57f)
-						{
-							m_Info.moveRot.y = 1.57f;
-						}
-					}
-					break;
-					case 3:
-					{
-						m_Info.moveRot.y += 1.57f;
-						ControlAngle(&m_Info.rot.y);
-					}
-					break;
-					case 4:
-					{
-						m_Info.moveRot.y -= 1.57f;
-						ControlAngle(&m_Info.rot.y);
-					}
-					break;
-					default:
 						break;
+						case 3:
+						{
+							m_Info.moveRot.y += 1.57f;
+							ControlAngle(&m_Info.rot.y);
+						}
+						break;
+						case 4:
+						{
+							m_Info.moveRot.y -= 1.57f;
+							ControlAngle(&m_Info.rot.y);
+						}
+						break;
+						default:
+							break;
+						}
+
+						// 目標向きに移動向きを代入
+						m_Info.targetRot = m_Info.moveRot;
+						m_Info.bRotMove = true;
+
+						m_Info.move.x = sinf(m_Info.moveRot.y) * -3;
+						m_Info.move.z = cosf(m_Info.moveRot.y) * -3;
 					}
-
-					// 目標向きに移動向きを代入
-					m_Info.targetRot = m_Info.moveRot;
-					m_Info.bRotMove = true;
-
-					m_Info.move.x = sinf(m_Info.moveRot.y) * -3;
-					m_Info.move.z = cosf(m_Info.moveRot.y) * -3;
 				}
 			}
-		}
-		else if (m_Info.state == STATE_STAND && m_Info.bRotMove)
-		{
-			RotControl(&m_Info.rot);
-			RotControl(&m_Info.moveRot);
-			RotControl(&m_Info.targetRot);
-
-			// 角度を目標角度に向けて推移する
-			m_Info.rot.y += AngleDifference(m_Info.rot.y, m_Info.targetRot.y) * ROT_DIAMETER;
-
-			// 範囲内に入ったら
-			if (m_Info.rot.y > m_Info.targetRot.y - 0.05f && m_Info.rot.y < m_Info.targetRot.y + 0.05f)
+			else if (m_Info.state == STATE_STAND && m_Info.bRotMove)
 			{
-				m_Info.rot.y = m_Info.targetRot.y;
-				m_Info.bRotMove = false;
+				RotControl(&m_Info.rot);
+				RotControl(&m_Info.moveRot);
+				RotControl(&m_Info.targetRot);
+
+				// 角度を目標角度に向けて推移する
+				m_Info.rot.y += AngleDifference(m_Info.rot.y, m_Info.targetRot.y) * ROT_DIAMETER;
+
+				// 範囲内に入ったら
+				if (m_Info.rot.y > m_Info.targetRot.y - 0.05f && m_Info.rot.y < m_Info.targetRot.y + 0.05f)
+				{
+					m_Info.rot.y = m_Info.targetRot.y;
+					m_Info.bRotMove = false;
+				}
+				SetRot(m_Info.rot);
 			}
-			SetRot(m_Info.rot);
+
+			if (m_Info.state != STATE_STAND && !m_Info.bCube)
+			{
+				// 移動量の代入
+				m_Info.pos.x += m_Info.move.x;
+			}
+
+			// 当たり判定
+			if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos)) {}
+			if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos)) { m_Info.bCube = true; }
+			if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos)) {}
+
+			if (m_Info.state != STATE_STAND && !m_Info.bCube)
+			{
+				// 移動量の代入
+				m_Info.pos.z += m_Info.move.z;
+			}
+			if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos)) {}
+			if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos)) { m_Info.bCube = true; }
+			if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos)) {}
 		}
-
-		if (m_Info.state != STATE_STAND && !m_Info.bCube)
-		{
-			// 移動量の代入
-			m_Info.pos.x += m_Info.move.x;
-		}
-
-		// 当たり判定
-		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_X, m_Info.pos)) {}
-		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_X, m_Info.pos)) { m_Info.bCube = true; }
-		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_X, m_Info.pos)) {}
-
-		if (m_Info.state != STATE_STAND && !m_Info.bCube)
-		{
-			// 移動量の代入
-			m_Info.pos.z += m_Info.move.z;
-		}
-		if (Collision(PRIO_BLOCK, TYPE_BLOCK, VECTOR_Z, m_Info.pos)) {}
-		if (Collision(PRIO_CUBE, TYPE_CUBE, VECTOR_Z, m_Info.pos)) { m_Info.bCube = true; }
-		if (Collision(PRIO_OBJECT, TYPE_PLAYER, VECTOR_Z, m_Info.pos)) {}
-
 
 		// 重力の変更
 		if (m_bGravity && !m_Info.bGravity)
@@ -318,11 +321,6 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 		float fHeight = 8;		// 高さ
 		float fDepth = 15;		// 奥行き
 
-		/*if (TYPE_BLOCK == nType)
-		{
-			fHeight = 1;
-		}*/
-
 		// 各種類の当たり判定
 		if (type == nType)
 		{
@@ -342,6 +340,12 @@ bool CEnemy::Collision(PRIO nPrio, TYPE nType, VECTOR vector, D3DXVECTOR3 pos)
 				fPairWidth = 20;
 				fPairHeight = 10;
 				fPairDepth = 20;
+			}
+			else if (nType == TYPE_CUBE)
+			{
+				fPairWidth = round(fPairWidth);
+				fPairHeight = round(fPairHeight);
+				fPairDepth = round(fPairDepth);
 			}
 
 			switch (vector)
@@ -591,6 +595,11 @@ void CEnemy::SetState(STATE state)
 		m_Info.nCntState = STAND_TIME;
 	}
 	   break;
+	case STATE_STOP: {/* 停止 */
+		m_Info.state = STATE_STOP;
+		m_Info.nCntState = STAND_TIME;
+	}
+	   break;
 	}
 }
 
@@ -627,6 +636,16 @@ void CEnemy::StateShift(void)
 		}
 	}
 	   break;
+	case STATE_STOP: {/* 停止 */
+		if (--m_Info.nCntState <= 0)
+		{
+			if (!m_Info.bRotMove)
+			{
+				// 通常状態にする
+				SetState(STATE_NORMAL);
+			}
+		}
+	}
 	}
 }
 
