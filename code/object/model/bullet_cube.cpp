@@ -123,7 +123,9 @@ CCube *CCube::Create(int nShape, D3DXVECTOR3 pos, int nLife)
 
 	pSound->PlaySound(CSound::TYPE_SET);
 
-	m_nUseCube++;	// 使用数の加算
+	// 使用数の加算
+	m_nUseCube++;
+
 	// テキストの更新
 	CubeText();
 
@@ -833,6 +835,11 @@ void CCube::CubeText(void)
 	D3DXCOLOR col;
 	int nRest = m_nLimitCube - m_nUseCube;
 	char aString[TXT_MAX];
+
+	if (nRest <= 0)
+	{
+		nRest = 0;
+	}
 	sprintf(aString, "%02d", nRest);
 
 	// 長さを取得
