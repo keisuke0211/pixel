@@ -88,7 +88,7 @@ HRESULT CRanking::Init(void)
 	pSound->PlaySound(CSound::TYPE_RANKING);
 
 	// 読み込み
-	Load();		// プレイしたステージだけ
+	Load();			// プレイしたステージだけ
 
 	WordsLoad();	// テキスト
 
@@ -169,18 +169,15 @@ HRESULT CRanking::Init(void)
 
 			m_Explain[5] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 630, 0.0f),D3DXVECTOR2(0.0f, 100.0f),
 				"途中で入力をやめる場合は※を選択!",CFont::FONT_BESTTEN,&pFont, false, &pShadow);
-
-			/*m_Explain[6] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(50.0f, 690, 0.0f),D3DXVECTOR2(0.0f, 100.0f),
-				"※入力切り替え（十字ボタン・スティック）：MODE",CFont::FONT_BESTTEN,&pFont, false, &pShadow);*/
 		}
 
 		SetNameEntry(nRank);
 	}
 
 	// タイトルから来たら
-	/*if (m_bRankingAll)
+	if (m_bRankingAll)
 	{
-		pFont = { INIT_D3DXCOLOR,15.0f,1,1,-1 };
+		/*pFont = { INIT_D3DXCOLOR,15.0f,1,1,-1 };
 		FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
 
 		m_Explain[0] = CText::Create(CText::BOX_NORMAL_RECT,
@@ -195,8 +192,8 @@ HRESULT CRanking::Init(void)
 			D3DXVECTOR2(0.0f, 0.0f),
 			"現在のステージ：STAGE1",
 			CFont::FONT_BESTTEN,
-			&pFont, false,&pShadow);
-	}*/
+			&pFont, false,&pShadow);*/
+	}
 
 	return S_OK;
 }

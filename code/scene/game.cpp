@@ -36,6 +36,7 @@ CTime *CGame::m_pTime = NULL;
 CScore *CGame::m_pScore = NULL;
 bool CGame::m_bTime = false;
 bool CGame::m_bEnd = false;
+bool CGame::m_bGemeOver = false;
 int CGame::m_nStage = STAGE_00;
 int CGame::m_nSelectStage = STAGE_00;
 int CGame::m_nScore = 0;
@@ -68,6 +69,7 @@ CGame::CGame()
 	m_bTime = false;
 	m_nScore = 0;
 	m_bEnd = false;
+	m_bGemeOver = false;
 
 
 	for (int nRst = 0; nRst < RST_ADD_SCORE; nRst++)
@@ -98,6 +100,7 @@ HRESULT CGame::Init(void)
 	m_nStartTime = 0;
 	m_nEndTime = 0;
 	m_bEnd = false;
+	m_bGemeOver = false;
 	m_bTime = false;
 
 	m_nRstStgType = 0;
@@ -273,7 +276,7 @@ void CGame::Update(void)
 				}
 				else
 				{
-					if (--m_nEndTime <= 0)
+					if (--m_nEndTime <= 0 && !m_bGemeOver)
 					{
 						// ƒŠƒUƒ‹ƒg‰‰o
 						Result();
@@ -300,6 +303,7 @@ void CGame::Update(void)
 					m_nEndTime = (7 * 8) + 60 + 15;
 					m_bEnd = true;
 					m_bTime = true;
+					m_bGemeOver = true;
 				}
 				else if (m_bEnd)
 				{

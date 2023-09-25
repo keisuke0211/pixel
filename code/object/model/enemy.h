@@ -21,6 +21,7 @@ public:
 	// ***** 定義 *****
 	static const int MAX_ENEMY = 30;	// 敵の最大数
 	static const int STAND_TIME = 30;	// 待機時間の最大値
+	static const int STOP_TIME = 90;	// 停止時間の最大値
 
 	// ***** 列挙型 *****
 
@@ -51,7 +52,9 @@ public:
 		int nLife;				// 寿命
 		int nLifeMax;			// 寿命の最大値
 		STATE state;			// 状態
+		STATE stateOld;			// 過去の状態
 		int nCntState;			// 状態管理カウンター
+		int nCntStop;			// 停止時間
 		int nCntTime;			// 行動カウンター
 		int nTimeMax;			// 行動時間の最大値
 		int nStandTime;			// 待機時間

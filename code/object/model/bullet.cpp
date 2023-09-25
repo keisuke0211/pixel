@@ -124,7 +124,7 @@ void CBullet::Update(void)
 	// --- 取得 ---------------------------------
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
 	CMouse *pInputMouse = CManager::GetInputMouse();			// マウス
-	CJoypad *pInputJoypad = CManager::GetInputJoypad();		// ジョイパット
+	CJoypad *pInputJoypad = CManager::GetInputJoypad();			// ジョイパット
 
 	bool bPause = CPause::IsPause();
 	bool bEnd = CGame::IsEnd();

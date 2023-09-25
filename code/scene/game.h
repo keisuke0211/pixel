@@ -148,6 +148,7 @@ private:
 	static int m_nStage;				// 現在のステージ 
 	static int m_nSelectStage;			// 現在選択しているステージ 
 	static bool m_bEnd;					// 終了フラグ
+	static bool m_bGemeOver;			// ゲームオーバー
 };
 
 #endif

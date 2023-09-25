@@ -45,7 +45,9 @@ CEnemy::CEnemy(int nPriority) : CObjectX(nPriority)
 	m_Info.nLife = 0;
 	m_Info.nLifeMax = 0;
 	m_Info.state = STATE_NORMAL;
+	m_Info.stateOld = STATE_NORMAL;
 	m_Info.nCntState = 0;
+	m_Info.nCntStop = 0;
 	m_Info.nCntTime = 0;
 	m_Info.nTimeMax = 0;
 	m_Info.nStandTime = 0;
@@ -596,8 +598,12 @@ void CEnemy::SetState(STATE state)
 	}
 	   break;
 	case STATE_STOP: {/* í‚é~ */
-		m_Info.state = STATE_STOP;
-		m_Info.nCntState = STAND_TIME;
+		if (m_Info.state == STATE_NORMAL)
+		{
+			m_Info.stateOld = m_Info.state;
+			m_Info.state = STATE_STOP;
+			m_Info.nCntStop = STOP_TIME;
+		}
 	}
 	   break;
 	}
@@ -637,12 +643,13 @@ void CEnemy::StateShift(void)
 	}
 	   break;
 	case STATE_STOP: {/* í‚é~ */
-		if (--m_Info.nCntState <= 0)
+		if (--m_Info.nCntStop <= 0)
 		{
 			if (!m_Info.bRotMove)
 			{
 				// í èÌèÛë‘Ç…Ç∑ÇÈ
-				SetState(STATE_NORMAL);
+				SetState(m_Info.stateOld);
+				m_Info.stateOld = STATE_NORMAL;
 			}
 		}
 	}
