@@ -195,6 +195,7 @@ void CGame::Uninit(void)
 	CObject::ReleaseAll(CObject::TYPE_CUBE);
 	CObject::ReleaseAll(CObject::TYPE_PLAYER);
 	CObject::ReleaseAll(CObject::TYPE_ENEMY);
+	CObject::ReleaseAll(CObject::TYPE_BULLET);
 	CObject::ReleaseAll(CObject::TYPE_EFFECT);
 	CObject::ReleaseAll(CObject::TYPE_PARTICLE);
 	CObject::ReleaseAll(CObject::TYPE_TIME);
@@ -390,7 +391,10 @@ void CGame::Result(void)
 	break;
 	case RST_TIME:
 	{
-		CCrown::Create(m_nEveGame);
+		if (!m_bSpecial)
+		{
+			CCrown::Create(m_nEveGame);
+		}
 		if (!m_bSpecial)
 		{
 			sprintf(aString, "TIME BONUS");

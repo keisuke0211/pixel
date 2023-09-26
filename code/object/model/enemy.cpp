@@ -598,12 +598,9 @@ void CEnemy::SetState(STATE state)
 	}
 	   break;
 	case STATE_STOP: {/* í‚é~ */
-		if (m_Info.state == STATE_NORMAL)
-		{
-			m_Info.stateOld = m_Info.state;
-			m_Info.state = STATE_STOP;
-			m_Info.nCntStop = STOP_TIME;
-		}
+		m_Info.stateOld = m_Info.state;
+		m_Info.state = STATE_STOP;
+		m_Info.nCntStop = STOP_TIME;
 	}
 	   break;
 	}
