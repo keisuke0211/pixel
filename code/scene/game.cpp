@@ -415,6 +415,7 @@ void CGame::Result(void)
 		break;
 	case RST_BONUS_CALC:
 	{
+
 		m_nTotal = m_nTimeTotal + m_nClearTotal;
 
 		sprintf(aString, "%d",m_nTotal);
@@ -427,6 +428,9 @@ void CGame::Result(void)
 		{
 			if (m_nTotal <= 0)
 			{
+				CSound *pSound = CManager::GetSound();
+				pSound->StopSoundType(CSound::SOUND_TYPE_SE);
+
 				if (++m_nStage < STAGE_MAX)
 				{
 					char aString[TXT_MAX];
@@ -492,6 +496,9 @@ void CGame::Result(void)
 			{
 				m_nTextCreate = 0;
 				m_bAddScore = true;
+
+				CSound *pSound = CManager::GetSound();
+				pSound->PlaySound(CSound::TYPE_ADD_SCORE);
 			}
 		}
 	}

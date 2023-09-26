@@ -321,6 +321,9 @@ void CBlock::Bomb(void)
 	pObj->Par_SetLife(100);
 	pObj->Par_SetCol(D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
 	pObj->Par_SetForm(15);
+
+	CSound *pSound = CManager::GetSound();
+	pSound->PlaySound(CSound::TYPE_HIT);
 }
 
 //========================================

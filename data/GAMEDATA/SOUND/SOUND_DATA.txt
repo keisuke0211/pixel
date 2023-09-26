@@ -18,6 +18,7 @@ SOUND data/SOUND/SE/Cyber.wav 					0  0.2 1	# 決定SE
 SOUND data/SOUND/SE/shot.wav 					0  0.2 1	# キューブの配置音SE
 SOUND data/SOUND/SE/erase.wav 					0  0.2 1	# キューブの消滅音SE
 SOUND data/SOUND/SE/hit.wav 					0  0.2 1	# ダメージSE
+SOUND data/SOUND/SE/score.wav 					0  0.2 1	# スコア加算SE
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||
