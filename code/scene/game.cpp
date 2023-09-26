@@ -157,7 +157,14 @@ HRESULT CGame::Init(void)
 	char aCube[TXT_MAX];
 
 	// ì«Ç›çûÇ›
-	sprintf(aString, "STAGE %d",m_nStage + 1);
+	if (m_nStage != STAGE_04)
+	{
+		sprintf(aString, "STAGE %d", m_nStage + 1);
+	}
+	else if (m_nStage == STAGE_04)
+	{
+		sprintf(aString, "LAST STAGE", m_nStage + 1);
+	}
 	sprintf(aCube, "CUBE  %d", m_aStageInfo.nCube[m_nStage]);
 
 	int nStrlen = strlen(aString);
@@ -423,12 +430,21 @@ void CGame::Result(void)
 				if (++m_nStage < STAGE_MAX)
 				{
 					char aString[TXT_MAX];
-					sprintf(aString, "NEXTÅÀSTAGE%d", m_nStage + 1);
 
+					if (m_nStage != (STAGE_MAX - 1))
+					{
+						sprintf(aString, "NEXTÅÀSTAGE%d", m_nStage + 1);
+						 pos = D3DXVECTOR3(1000.0f, 650.0f, 0.0f);
+					}
+					else if (m_nStage == (STAGE_MAX - 1))
+					{
+						sprintf(aString, "NEXTÅÀLAST STAGE", m_nStage + 1);
+						pos = D3DXVECTOR3(900.0f, 650.0f, 0.0f);
+					}
 					int nStrlen = strlen(aString);
 
 					CText::Create(CText::BOX_NORMAL_RECT,
-						D3DXVECTOR3(1000.0f, 650.0f, 0.0f), D3DXVECTOR2(440.0f, 100.0f),
+						pos, D3DXVECTOR2(440.0f, 100.0f),
 						aString, CFont::FONT_BESTTEN, &pFont, false, &pShadow);
 
 					m_nStandTime = (nStrlen * 2) + 30 + 10;
