@@ -8,21 +8,18 @@
 #========================================
 #||||||||||||||||||||||||||||||||||||||||
 #========================================
-TEXTURE = data\\TEXTURE\\BG\\PixelSky_layer01.png 	#00 朝空１
-TEXTURE = data\\TEXTURE\\BG\\PixelSky_layer02.png 	#01 朝空２
-TEXTURE = data\\TEXTURE\\BG\\PixelSky_layer03.png 	#02 朝空３
-TEXTURE = data\\TEXTURE\\BG\\BgSky_layer00.png 		#03 夜空0
-TEXTURE = data\\TEXTURE\\BG\\BgSky_layer01.png 		#04 夜空1
-TEXTURE = data\\TEXTURE\\BG\\BgSky_layer02.png 		#05 夜空2
-TEXTURE = data\\TEXTURE\\BG\\BgSky_layer03.png 		#06 夜空3
-TEXTURE = data\\TEXTURE\\BG\\sea000.jpg 			#07 海１
-TEXTURE = data\\TEXTURE\\OBJ\\GrassBlock.png 		#08 草原
-TEXTURE = data\\TEXTURE\\Others\\Title.png 			#09 タイトル画面
-TEXTURE = data\\TEXTURE\\Others\\crown01.png 		#10 王冠・金
-TEXTURE = data\\TEXTURE\\Others\\crown02.png 		#11 王冠・銀
-TEXTURE = data\\TEXTURE\\Others\\crown03.png 		#12 王冠・銅
-TEXTURE = data\\TEXTURE\\TextBox\\TextBox.png 		#13 テキストボックス 長方形
-TEXTURE = data\\TEXTURE\\TextBox\\TextBox01.png 	#14 テキストボックス 正方形
+TEXTURE = data\\TEXTURE\\BG\\BgSky_layer00.png 		#00 夜空0
+TEXTURE = data\\TEXTURE\\BG\\BgSky_layer01.png 		#01 夜空1
+TEXTURE = data\\TEXTURE\\BG\\BgSky_layer02.png 		#02 夜空2
+TEXTURE = data\\TEXTURE\\BG\\BgSky_layer03.png 		#03 夜空3
+TEXTURE = data\\TEXTURE\\BG\\Ocean.png 				#04 海１
+TEXTURE = data\\TEXTURE\\OBJ\\GrassBlock.png 		#05 草原
+TEXTURE = data\\TEXTURE\\Others\\Title.png 			#06 タイトル画面
+TEXTURE = data\\TEXTURE\\Others\\crown01.png 		#07 王冠・金
+TEXTURE = data\\TEXTURE\\Others\\crown02.png 		#08 王冠・銀
+TEXTURE = data\\TEXTURE\\Others\\crown03.png 		#09 王冠・銅
+TEXTURE = data\\TEXTURE\\TextBox\\TextBox.png 		#10 テキストボックス 長方形
+TEXTURE = data\\TEXTURE\\TextBox\\TextBox01.png 	#11 テキストボックス 正方形
 
 #========================================
 #||||||||||||||||||||||||||||||||||||||||

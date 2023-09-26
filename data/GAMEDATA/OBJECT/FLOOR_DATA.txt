@@ -23,7 +23,7 @@ SET_FLOOR
 	DIVISION = 1
 	
 	SET_TEX
-		TYPE = 7
+		TYPE = 4
 		TEX_X = 0.00125
 		TEX_Y = 0.00125
 	END_TEX
@@ -47,7 +47,7 @@ SET_FLOOR
 	DIVISION = 1
 	
 	SET_TEX
-		TYPE = 8
+		TYPE = 5
 		TEX_X = 0.0
 		TEX_Y = 0.0
 	END_TEX

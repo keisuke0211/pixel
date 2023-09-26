@@ -29,14 +29,11 @@ public:
 	// 画像種類
 	enum Tex
 	{
-		TEX_SKY00 = 0,		// 朝空00
-		TEX_SKY01,			// 朝空01
-		TEX_SKY02,			// 朝空02
-		TEX_NIGHT_SKY00,	// 夜空00
+		TEX_NIGHT_SKY00 = 0,// 夜空00
 		TEX_NIGHT_SKY01,	// 夜空01
 		TEX_NIGHT_SKY02,	// 夜空02
 		TEX_NIGHT_SKY03,	// 夜空03
-		TEX_SEA01,			// 海01
+		TEX_OCEAN,			// 海01
 		TEX_GRASS,			// 草原
 		TEX_TITLE_BG,		// タイトル画面
 		TEX_CROWN00,		// 王冠・金
