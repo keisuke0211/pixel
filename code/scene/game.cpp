@@ -66,6 +66,7 @@ CGame::CGame()
 	m_nEveGame = 1;
 	m_bAddScore = false;
 
+	m_bSpecial = false;
 	m_bTime = false;
 	m_nScore = 0;
 	m_bEnd = false;
@@ -258,11 +259,16 @@ void CGame::Update(void)
 
 			if (bClear)
 			{// ÉQÅ[ÉÄÉNÉäÉA
-				if (!m_bEnd)
+				if (!m_bEnd || (m_bEnd && bClear && m_bGemeOver && m_nEndTime <= 0))
 				{
+					if (m_bEnd && bClear && m_bGemeOver && m_pTime->GetTime() <= 0 && nCubeRest >= 1)
+					{
+						m_bSpecial = true;
+					}
+
 					m_bEnd = true;
 
-					FormFont pFont = {INIT_D3DXCOLOR,20.0f,7,60,30};
+					FormFont pFont = { D3DXCOLOR(1.0f,0.96f,0,1),20.0f,7,60,30};
 					FormShadow pShadow = {D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)};
 
 					char aString[TXT_MAX];
@@ -280,6 +286,7 @@ void CGame::Update(void)
 					m_nEndTime = (nLength * 7) + 60 + 15;
 					m_bEnd = true;
 					m_bTime = true;
+					m_bGemeOver = false;
 				}
 				else
 				{
@@ -298,14 +305,15 @@ void CGame::Update(void)
 				}
 				else if (!m_bEnd && --m_nStandTime <= 0)
 				{
-					FormFont pFont = { INIT_D3DXCOLOR,20.0f,8,60,30 };
+					FormFont pFont = { D3DXCOLOR(0.7f,0.0f,0.0f,1),20.0f,8,60,30 };
+					FormShadow pShadow = { D3DXCOLOR(0.1f,0.1f,0.1f,1),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f) };
 
 					CText::Create(CText::BOX_NORMAL_RECT,
 						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
 						D3DXVECTOR2(440.0f, 100.0f),
 						"GAME OVER",
 						CFont::FONT_BESTTEN,
-						&pFont, false);
+						&pFont, false,&pShadow);
 
 					m_nEndTime = (7 * 8) + 60 + 15;
 					m_bEnd = true;
@@ -364,7 +372,14 @@ void CGame::Result(void)
 	case RST_TEXT:
 	{
 		CBlackout::Create();
-		sprintf(aString, "STAGE CLEAR RESULT BONUS");
+		if (!m_bSpecial)
+		{
+			sprintf(aString, "STAGE CLEAR RESULT BONUS");
+		}
+		else
+		{
+			sprintf(aString, "SPECIAL CLEAR RESULT BONUS");
+		}
 		pos = D3DXVECTOR3(23.0f, 105.0f, 0.0f);
 
 		int nUseCube = CCube::GetRest();
@@ -376,22 +391,37 @@ void CGame::Result(void)
 	case RST_TIME:
 	{
 		CCrown::Create(m_nEveGame);
-		sprintf(aString, "TIME BONUS");
+		if (!m_bSpecial)
+		{
+			sprintf(aString, "TIME BONUS");
+		}
+		else
+		{
+			sprintf(aString, "CUBE BONUS");
+		}
 		pos = D3DXVECTOR3(100.0f, 190.0f, 0.0f);
 	}
 		break;
 	case RST_TIME_CALC:
 	{
 		int nTime = m_pTime->GetTime();
-		m_nTimeTotal = TIME_SCORE * nTime;
-
-		sprintf(aString, "%d * %d = %d",TIME_SCORE,nTime,m_nTimeTotal);
+		if (!m_bSpecial)
+		{
+			m_nTimeTotal = TIME_SCORE * nTime;
+			sprintf(aString, "%d * %d = %d", TIME_SCORE, nTime, m_nTimeTotal);
+		}
+		else
+		{
+			nTime = CCube::GetRest();
+			m_nTimeTotal = CUBE_SCORE * nTime;
+			sprintf(aString, "%d * %d = %d", CUBE_SCORE, nTime, m_nTimeTotal);
+		}
 		pos = D3DXVECTOR3(100.0f, 260.0f, 0.0f);
 	}
 		break;
 	case RST_CLEAR:
 	{
-		sprintf(aString, "CLEAR BONUS");
+		sprintf(aString, "SPECIAL CLEAR BONUS");
 		pos = D3DXVECTOR3(100.0f, 340.0f, 0.0f);
 	}
 		break;
@@ -401,7 +431,14 @@ void CGame::Result(void)
 
 		int nPerfCube = m_aStageInfo.nCube[m_nStage];
 
-		m_nClearTotal = nClear;
+		if (!m_bSpecial)
+		{
+			m_nClearTotal = nClear;
+		}
+		else
+		{
+			m_nClearTotal = nClear * 2;
+		}
 
 		sprintf(aString, "%d", m_nClearTotal);
 		pos = D3DXVECTOR3(100.0f, 410.0f, 0.0f);
@@ -537,8 +574,16 @@ void CGame::Result(void)
 		{
 			if (m_nRstStgType == RST_TEXT || m_nRstStgType == RST_TIME || m_nRstStgType == RST_BONUS || m_nRstStgType == RST_CLEAR)
 			{
-				pFont = { D3DXCOLOR(1.0f,0.96f,0,1)	, 20.0f, 2, 5, 0 };
-				pShadow = { INIT_D3DXCOLOR, true, D3DXVECTOR3(1.0f,1.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
+				if (!m_bSpecial)
+				{
+					pFont = { D3DXCOLOR(1.0f,0.96f,0,1)	, 20.0f, 2, 5, 0 };
+					pShadow = { INIT_D3DXCOLOR, true, D3DXVECTOR3(1.0f,1.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
+				}
+				else
+				{
+					pFont = { D3DXCOLOR(0.02f,0.6f,1.0f,1)	, 20.0f, 2, 5, 0 };
+					pShadow = { INIT_D3DXCOLOR, true, D3DXVECTOR3(1.0f,1.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
+				}
 			}
 
 			m_nTextCreate = 0;

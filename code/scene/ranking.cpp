@@ -661,6 +661,9 @@ void CRanking::NameInput(void)
 				m_Info.bNameEntry = false;
 			}
 		}
+
+		pSound->PlaySound(CSound::TYPE_CYBER);
+
 	}
 }
 

@@ -24,13 +24,14 @@ class CText;	// テキスト
 //****************************************
 class CGame : public CScene
 {
-	static const int ADDTIME_MAX = 90;				// ボーナスをスコアに加算する時間
-	static const int MAX_CUBE = 30;					// ステージで配置出来るキューブの制限
-	static const char* STAGE_INFO_FILE;				// ステージ情報のファイルパス
-	static const char* SIDE_STAGE_FILE;				// 側面のファイル
-	static const char* FLOOR_STAGE_FILE;			// 床のファイル
+	static const int ADDTIME_MAX = 90;		// ボーナスをスコアに加算する時間
+	static const int MAX_CUBE = 30;			// ステージで配置出来るキューブの制限
+	static const char* STAGE_INFO_FILE;		// ステージ情報のファイルパス
+	static const char* SIDE_STAGE_FILE;		// 側面のファイル
+	static const char* FLOOR_STAGE_FILE;	// 床のファイル
 
-	static const int TIME_SCORE = 50;	// １秒のスコアの加算値
+	static const int TIME_SCORE = 50;		// １秒のスコアの加算値
+	static const int CUBE_SCORE = 150;		// １個のスコアの加算値
 
 public:
 
@@ -143,6 +144,7 @@ private:
 	int m_nEveGame;						// ゲーム評価
 	CText *m_RstText[RST_ADD_SCORE];	// テキスト表示
 	bool m_bAddScore;					// スコアの加算フラグ
+	bool m_bSpecial;					// 特殊クリア
 	static bool m_bTime;				// 時間フラグ
 	static int m_nScore;				// スコアの保存用
 	static int m_nStage;				// 現在のステージ 
