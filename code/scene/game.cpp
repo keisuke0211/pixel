@@ -68,7 +68,6 @@ CGame::CGame()
 
 	m_bSpecial = false;
 	m_bTime = false;
-	m_nScore = 0;
 	m_bEnd = false;
 	m_bGemeOver = false;
 
@@ -334,7 +333,7 @@ void CGame::Update(void)
 					if (--m_nEndTime <= 0)
 					{
 						CManager::GetFade()->SetFade(MODE_RANKING);
-						CRanking::SetScore11(m_pScore->GetScore());
+						CRanking::SetScore11(m_nScore);
 						CRanking::SetAllStage(false);
 					}
 				}
