@@ -264,7 +264,7 @@ void CGame::Update(void)
 				{
 					char aString[TXT_MAX];
 					D3DXCOLOR color,ShadowColor;
-					if (m_bEnd && bClear && m_bGemeOver && m_pTime->GetTime() <= 0 && nCubeRest >= 1)
+					if (m_bEnd && bClear && m_bGemeOver && m_pTime->GetTime() <= 0)
 					{
 						m_bSpecial = true;
 						sprintf(aString, "LIMIT CLEAR");
@@ -401,11 +401,8 @@ void CGame::Result(void)
 	{
 		if (!m_bSpecial)
 		{
-			CCrown::Create(m_nEveGame);
-		}
-		if (!m_bSpecial)
-		{
 			sprintf(aString, "TIME BONUS");
+			CCrown::Create(m_nEveGame);
 		}
 		else
 		{
@@ -433,7 +430,14 @@ void CGame::Result(void)
 		break;
 	case RST_CLEAR:
 	{
-		sprintf(aString, "LIMIT CLEAR BONUS");
+		if (!m_bSpecial)
+		{
+			sprintf(aString, "STAGE CLEAR BONUS");
+		}
+		else
+		{
+			sprintf(aString, "LIMIT CLEAR BONUS");
+		}
 		pos = D3DXVECTOR3(100.0f, 340.0f, 0.0f);
 	}
 		break;
