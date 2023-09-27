@@ -95,6 +95,17 @@ HRESULT CRanking::Init(void)
 	// ソート
 	SortDesc(&nUpdateRank);
 
+	int nRank = SetScore(m_nGameScore);
+
+	if (nRank < RANK_NUM && nRank > -1)
+	{
+		m_bSetScore = true;
+	}
+	else
+	{
+		m_bSetScore = false;
+	}
+
 	FormFont pFont = { INIT_D3DXCOLOR,20.0f,1,1,-1 };
 	FormShadow pShadow = { INIT_D3DXCOLOR, true, D3DXVECTOR3(1.0f,1.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
 
@@ -133,17 +144,6 @@ HRESULT CRanking::Init(void)
 	CText::Create(CText::BOX_NORMAL_SQR, D3DXVECTOR3(400.0f, 290, 0.0f), D3DXVECTOR2(740.0f, 400.0f),
 		"", CFont::FONT_BESTTEN, &pFont, true);
 
-	int nRank = SetScore(m_nGameScore);
-
-	if (nRank < RANK_NUM && nRank > -1)
-	{
-		m_bSetScore = true;
-	}
-	else
-	{
-		m_bSetScore = false;
-	}
-
 	// スコア更新したら
 	if (m_bSetScore)
 	{
@@ -169,6 +169,11 @@ HRESULT CRanking::Init(void)
 
 			m_Explain[5] = CText::Create(CText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 630, 0.0f),D3DXVECTOR2(0.0f, 100.0f),
 				"途中で入力をやめる場合は※を選択!",CFont::FONT_BESTTEN,&pFont, false, &pShadow);
+
+			pFont = { D3DXCOLOR(0.8f,0.0f,0.0f,1.0f),15.0f,1,1,-1 };
+			pShadow = { INIT_D3DXCOLOR, true, D3DXVECTOR3(2.0f,2.0f,0.0f), D3DXVECTOR2(1.0f,1.0f) };
+			m_Explain[6] = CText::Create(CText::BOX_NORMAL_RECT, D3DXVECTOR3(50.0f, 670, 0.0f), D3DXVECTOR2(0.0f, 100.0f),
+				"パットの十字ボタン反応しないので 左スティックかキーボードで入力お願いします。", CFont::FONT_BESTTEN, &pFont, false, &pShadow);
 		}
 
 		SetNameEntry(nRank);
