@@ -262,18 +262,26 @@ void CGame::Update(void)
 			{// ÉQÅ[ÉÄÉNÉäÉA
 				if (!m_bEnd || (m_bEnd && bClear && m_bGemeOver && m_nEndTime <= 0))
 				{
+					char aString[TXT_MAX];
+					D3DXCOLOR color,ShadowColor;
 					if (m_bEnd && bClear && m_bGemeOver && m_pTime->GetTime() <= 0 && nCubeRest >= 1)
 					{
 						m_bSpecial = true;
+						sprintf(aString, "LIMIT CLEAR");
+						color = D3DXCOLOR(0.02f, 0.6f, 1.0f, 1);
+						ShadowColor = INIT_D3DXCOLOR;
+					}
+					else
+					{
+						sprintf(aString, "STAGE CLEAR");
+						color = D3DXCOLOR(1.0f, 0.96f, 0, 1);
+						ShadowColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 					}
 
 					m_bEnd = true;
 
-					FormFont pFont = { D3DXCOLOR(1.0f,0.96f,0,1),20.0f,7,60,30};
-					FormShadow pShadow = {D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)};
-
-					char aString[TXT_MAX];
-					sprintf(aString, "STAGE CLEAR");
+					FormFont pFont = { color,20.0f,7,60,30};
+					FormShadow pShadow = {ShadowColor,true,D3DXVECTOR3(2.0f,2.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)};
 
 					CText::Create(CText::BOX_NORMAL_RECT,
 						D3DXVECTOR3(640.0f, 300.0f, 0.0f),
@@ -379,7 +387,7 @@ void CGame::Result(void)
 		}
 		else
 		{
-			sprintf(aString, "SPECIAL CLEAR RESULT BONUS");
+			sprintf(aString, "LIMIT CLEAR RESULT BONUS");
 		}
 		pos = D3DXVECTOR3(23.0f, 105.0f, 0.0f);
 
@@ -425,7 +433,7 @@ void CGame::Result(void)
 		break;
 	case RST_CLEAR:
 	{
-		sprintf(aString, "SPECIAL CLEAR BONUS");
+		sprintf(aString, "LIMIT CLEAR BONUS");
 		pos = D3DXVECTOR3(100.0f, 340.0f, 0.0f);
 	}
 		break;
@@ -441,7 +449,7 @@ void CGame::Result(void)
 		}
 		else
 		{
-			m_nClearTotal = nClear * 2;
+			m_nClearTotal = nClear * (m_nStage + 2);
 		}
 
 		sprintf(aString, "%d", m_nClearTotal);

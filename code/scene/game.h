@@ -31,7 +31,7 @@ class CGame : public CScene
 	static const char* FLOOR_STAGE_FILE;	// 床のファイル
 
 	static const int TIME_SCORE = 50;		// １秒のスコアの加算値
-	static const int CUBE_SCORE = 150;		// １個のスコアの加算値
+	static const int CUBE_SCORE = 200;		// １個のスコアの加算値
 
 public:
 
