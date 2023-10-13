@@ -22,6 +22,8 @@
 #include "../EFFECT/particleX.h"
 #include "../../scene/pause.h"
 #include "../model/model.h"
+#include "../../manager.h"
+#include "../../system/renderer.h"
 
 //****************************************
 // マクロ定義
@@ -161,7 +163,48 @@ void CPlayer::Update(void)
 //========================================
 void CPlayer::Draw(void)
 {
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	CRenderer *pRenderer = CManager::GetRenderer();
+
+	LPDIRECT3DSURFACE9 pRenderDef, pZBuffDef;
+	D3DVIEWPORT9 pviewport;
+	LPDIRECT3DTEXTURE9 pTexture;
+	
+	//// 現在のレンダリングターゲットを取得（保存）
+	//pDevice->GetRenderTarget(0, &pRenderDef);
+
+	//// 現在のZバッファを取得（保存）
+	//pDevice->GetDepthStencilSurface(&pZBuffDef);
+
+	//// レンダリングターゲットを生成したテクスチャに設定
+	//pDevice->SetRenderTarget(0, pRenderDef);
+
+	//// Zバッファを生成したZバッファに設定
+	//pDevice->SetDepthStencilSurface(pZBuffDef);
+
+	//// テクスチャレンダリング用のビューポートを設定
+	//pDevice->SetViewport(&pviewport);
+
+	//CCamera *pCamera = CManager::GetCamera();		// カメラの取得
+	//D3DXVECTOR3 posV = pCamera->GetInfo().posV;		// 視点
+	//D3DXVECTOR3 posR = pCamera->GetInfo().posR;		// 注視点
+	//D3DXVECTOR3 vecU = pCamera->GetInfo().vecU;		// 上方向ベクトル
+
+	//pRenderer->ChangeTarget(posV, posR, vecU);
+
+	//// レンダリングターゲット用のテクスチャクリア
+	//pDevice->Clear(0, NULL,
+	//	(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+	//	D3DCOLOR_RGBA(0, 255, 0, 255), 1.0f, 0);
+
 	CMotionModel::Draw();
+
+	//// レンダリングターゲットを元に戻す
+	//pDevice->SetRenderTarget(0, pRenderDef);
+
+	//// Zバッファを元に戻す
+	//pDevice->SetDepthStencilSurface(pZBuffDef);
 }
 
 //========================================

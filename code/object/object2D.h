@@ -52,6 +52,7 @@ public:
 	void SetPtn(int nPtn) { m_nPtn = nPtn; }			// パターン
 	void BindTexture(int nIdx);							// テクスチャ指定
 	virtual void SetTex(PositionVec4 tex);				// テクスチャ座標
+	void SetTexture(LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }
 
 	/* 取得 */
 	float GetWidth(void) { return m_fWidth; }		// 幅

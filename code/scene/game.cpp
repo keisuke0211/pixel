@@ -30,6 +30,8 @@
 #include "../scene/pause.h"
 #include "fade.h"
 
+#include "../object/BG/test.h"
+
 // 静的変数
 CPlayer *CGame::m_pPlayer = NULL;
 CTime *CGame::m_pTime = NULL;
@@ -110,6 +112,9 @@ HRESULT CGame::Init(void)
 	m_nEveGame = 0;
 	m_nTotal = 0;
 	m_nAddTime = ADDTIME_MAX;
+
+	nCntTest = 0;
+	nCntTime = 10;
 
 	CTitle::SetStart(false);
 	CTitle::SetClear(false);
@@ -210,6 +215,20 @@ void CGame::Uninit(void)
 //========================================
 void CGame::Update(void)
 {
+	/*if (nCntTest <= 124)
+	{
+		if (--nCntTime <= 0)
+		{
+			float y = 0.05f * (nCntTest + 1);
+
+			FloatLoopControl(&y, D3DX_PI, -D3DX_PI);
+
+			CTest::Create(D3DXVECTOR3(640.0f, 340.0f, 0.0f), D3DXVECTOR3(0.0f, y, 0.0f));
+			nCntTest++;
+			nCntTime = 1;
+		}
+	}*/
+
 	// -- 取得 -------------------------------------------
 	CCamera *pCamera = CManager::GetCamera();					// カメラ
 	CKeyboard *pInputKeyboard = CManager::GetInputKeyboard();	// キーボード
@@ -229,6 +248,7 @@ void CGame::Update(void)
 		bool bStart = CTitle::IsStart();
 		if (!bStart)
 		{
+			CTitle::SetStart(true);
 			// カメラの注視点を設定
 			pCamera->SetPosR(D3DXVECTOR3(0.0f, 95.0f, 0.0f));
 			if (--m_nStartTime <= 0)

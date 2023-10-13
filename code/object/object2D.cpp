@@ -186,14 +186,14 @@ void CObject2D::SetVtxPos(VERTEX_2D *pVtx)
 	float fAngle = atan2f(m_fWidth, m_fHeight);
 
 	// í∏ì_ç¿ïWÇê›íË
-	pVtx[0].pos.x = m_pos.x + sinf(m_rot.z - (D3DX_PI - fAngle)) * fLength;
-	pVtx[0].pos.y = m_pos.y + cosf(m_rot.z - (D3DX_PI - fAngle)) * fLength;
-	pVtx[1].pos.x = m_pos.x + sinf(m_rot.z + (D3DX_PI - fAngle)) * fLength;
-	pVtx[1].pos.y = m_pos.y + cosf(m_rot.z + (D3DX_PI - fAngle)) * fLength;
-	pVtx[2].pos.x = m_pos.x + sinf(m_rot.z - fAngle) * fLength;
-	pVtx[2].pos.y = m_pos.y + cosf(m_rot.z - fAngle) * fLength;
-	pVtx[3].pos.x = m_pos.x + sinf(m_rot.z + fAngle) * fLength;
-	pVtx[3].pos.y = m_pos.y + cosf(m_rot.z + fAngle) * fLength;
+	pVtx[0].pos.x = m_pos.x + sinf(m_rot.y - (D3DX_PI - fAngle)) * fLength;
+	pVtx[0].pos.y = m_pos.y + cosf(m_rot.y - (D3DX_PI - fAngle)) * fLength;
+	pVtx[1].pos.x = m_pos.x + sinf(m_rot.y + (D3DX_PI - fAngle)) * fLength;
+	pVtx[1].pos.y = m_pos.y + cosf(m_rot.y + (D3DX_PI - fAngle)) * fLength;
+	pVtx[2].pos.x = m_pos.x + sinf(m_rot.y - fAngle) * fLength;
+	pVtx[2].pos.y = m_pos.y + cosf(m_rot.y - fAngle) * fLength;
+	pVtx[3].pos.x = m_pos.x + sinf(m_rot.y + fAngle) * fLength;
+	pVtx[3].pos.y = m_pos.y + cosf(m_rot.y + fAngle) * fLength;
 }
 
 //========================================

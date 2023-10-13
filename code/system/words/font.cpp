@@ -149,11 +149,10 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 	int iBmp_w = GM.gmBlackBoxX + (4 - (GM.gmBlackBoxX % 4)) % 4;
 	int iBmp_h = GM.gmBlackBoxY;
 	int Level = 17;
-	int x, y;
 	DWORD Alpha, Color;
 	FillMemory(LockedRect.pBits, LockedRect.Pitch * TM.tmHeight, 0);
-	for (y = iOfs_y; y<iOfs_y + iBmp_h; y++)
-		for (x = iOfs_x; x<iOfs_x + GM.gmBlackBoxX; x++) {
+	for (int y = iOfs_y; y<iOfs_y + iBmp_h; y++)
+		for (int x = iOfs_x; x<iOfs_x + GM.gmBlackBoxX; x++) {
 			Alpha = (255 * ptr[x - iOfs_x + iBmp_w*(y - iOfs_y)]) / (Level - 1);
 			Color = 0x00ffffff | (Alpha << 24);
 			memcpy((BYTE*)LockedRect.pBits + LockedRect.Pitch*y + 4 * x, &Color, sizeof(DWORD));
