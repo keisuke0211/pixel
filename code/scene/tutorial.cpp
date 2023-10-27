@@ -25,6 +25,7 @@
 #include "../system/camera.h"
 #include "../scene/pause.h"
 #include "../system/sound.h"
+#include "../object/model/model.h"
 #include "fade.h"
 
 // 静的変数
@@ -84,10 +85,12 @@ CTutorial::~CTutorial()
 //========================================
 HRESULT CTutorial::Init(void)
 {
-	CBlock::Reset();
 	CEnemy::Reset();
 	CBullet::Reset();
 	CCube::Reset();
+
+	CBlock::Load();			// ブロック
+	CModel::InitModel();	// モデル
 	CTitle::SetStart(false);
 	CTitle::SetClear(false);
 
@@ -135,6 +138,9 @@ void CTutorial::Uninit(void)
 {
 	CSound *pSound = CManager::GetSound();
 	pSound->StopSound();
+
+	CBlock::Reset();
+	CModel::UninitModel();
 
 	CObject::ReleaseAll(CObject::TYPE_BG);
 	CObject::ReleaseAll(CObject::TYPE_BLOCK);
@@ -260,6 +266,8 @@ void CTutorial::TextLoad(void)
 		// 最大数に達したら返す
 		if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
 		{
+			delete pFile;
+			pFile = NULL;
 			return;
 		}
 
@@ -888,6 +896,8 @@ void CTutorial::LoodBlock(void)
 		// 最大数に達したら返す
 		if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
 		{
+			delete pFile;
+			pFile = NULL;
 			return;
 		}
 		if (nRow == 150)
@@ -944,6 +954,8 @@ void CTutorial::LoodEnemy(void)
 		// 最大数に達したら返す
 		if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
 		{
+			delete pFile;
+			pFile = NULL;
 			return;
 		}
 

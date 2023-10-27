@@ -28,6 +28,7 @@
 #include "../system/camera.h"
 #include "../system/sound.h"
 #include "../scene/pause.h"
+#include "../object/model/model.h"
 #include "fade.h"
 
 // 静的変数
@@ -91,10 +92,12 @@ CGame::~CGame()
 //========================================
 HRESULT CGame::Init(void)
 {
-	CBlock::Reset();
 	CEnemy::Reset();
 	CBullet::Reset();
 	CCube::Reset();
+
+	CBlock::Load();			// ブロック
+	CModel::InitModel();	// モデル
 
 	m_rot = INIT_D3DXVECTOR3;
 	m_nStartTime = 0;
@@ -189,6 +192,9 @@ HRESULT CGame::Init(void)
 //========================================
 void CGame::Uninit(void)
 {
+	CBlock::Reset();
+	CModel::UninitModel();
+
 	CObject::ReleaseAll(CObject::TYPE_BG);
 	CObject::ReleaseAll(CObject::TYPE_BLOCK);
 	CObject::ReleaseAll(CObject::TYPE_CUBE);
@@ -1144,6 +1150,8 @@ void CGame::LoodBlock(void)
 		// 最大数に達したら返す
 		if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
 		{
+			delete pFile;
+			pFile = NULL;
 			return;
 		}
 
@@ -1198,6 +1206,8 @@ void CGame::LoodEnemy(void)
 		// 最大数に達したら返す
 		if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
 		{
+			delete pFile;
+			pFile = NULL;
 			return;
 		}
 

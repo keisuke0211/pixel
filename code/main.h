@@ -29,9 +29,9 @@ using namespace std;
 #define DIRECTINPUT_VERSION (0X0800) //ビルド時の警告対処用のマクロ
 #include"dinput.h"//入力処理に必要//２重インクルード帽子のマクロを定義する
 
-#ifdef _DEBUG
-#define   new                   new(_NORMAL_BLOCK, __FILE__, __LINE__)
-#endif
+//#ifdef _DEBUG
+//#define   new                   new(_NORMAL_BLOCK, __FILE__, __LINE__)
+//#endif
 //========================================
 // ライブラリ
 //========================================

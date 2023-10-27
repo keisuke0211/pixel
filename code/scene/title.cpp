@@ -70,8 +70,6 @@ HRESULT CTitle::Init(void)
 	m_bStart = false;
 	m_bClear = false;
 
-	CModel::InitModel();	// モデル
-	CBlock::Load();			// ブロック
 	CUiTitle::Create();		// タイトル背景
 
 	// テキスト読み込み

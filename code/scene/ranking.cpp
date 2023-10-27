@@ -212,8 +212,28 @@ void CRanking::Uninit(void)
 		Save();
 	}
 
-	delete[] m_pString;
-	m_pString = NULL;
+	for (int nStr = 0; nStr < nStringMax; nStr++)
+	{
+		for (int nCpnv = 0; nCpnv < m_pString[nStr].nConvMax; nCpnv++)
+		{
+			if (m_pString[nStr].pConv[nCpnv].pLetter != NULL)
+			{
+				delete[] m_pString[nStr].pConv[nCpnv].pLetter;
+				m_pString[nStr].pConv[nCpnv].pLetter = NULL;
+			}
+		}
+		if (m_pString[nStr].pConv != NULL)
+		{
+			delete[] m_pString[nStr].pConv;
+			m_pString[nStr].pConv = NULL;
+		}
+	}
+
+	if (m_pString != NULL)
+	{
+		delete[] m_pString;
+		m_pString = NULL;
+	}
 
 	CObject::ReleaseAll(CObject::TYPE_BG);
 	CObject::ReleaseAll(CObject::TYPE_FONT);
