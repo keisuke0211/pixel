@@ -56,11 +56,5 @@ private:
 	LPDIRECT3DDEVICE9 m_pD3DDevice;		// Direct3Dデバイスへのポインタ
 
 	static LPD3DXFONT m_pFont;			// フォントへのポインタ
-
-	LPDIRECT3DTEXTURE9 m_apTextureMT[2];	// レンダリングターゲット用テクスチャ
-	LPDIRECT3DSURFACE9 m_apRenderMT[2];		// テクスチャレンダリング用インターフェース
-	LPDIRECT3DSURFACE9 m_pZBuffMT;			// テクスチャレンダリング用Zバッファ
-	D3DVIEWPORT9 m_viewportMT;				// テクスチャレンダリング用ビューポート
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffMT;	// フィードバック用ポリゴンの頂点バッファ
 };
 #endif

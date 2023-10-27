@@ -648,6 +648,12 @@ void CBlock::Load(void)
 //========================================
 void CBlock::Reset(void)
 {
+	if (m_TypeInfo != NULL)
+	{
+		delete[] m_TypeInfo;
+		m_TypeInfo = NULL;
+	}
+
 	m_CameraRot = INIT_D3DXVECTOR3;
 	m_CameraHeigth = 0.0f;
 	m_nNumAll = 0;

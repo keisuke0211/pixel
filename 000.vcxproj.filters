@@ -147,9 +147,6 @@
     <ClCompile Include="code\system\words\font.cpp">
       <Filter>ソース ファイル\02_system\01_words</Filter>
     </ClCompile>
-    <ClCompile Include="code\system\words\text.cpp">
-      <Filter>ソース ファイル\02_system\01_words</Filter>
-    </ClCompile>
     <ClCompile Include="code\system\words\words.cpp">
       <Filter>ソース ファイル\02_system\01_words</Filter>
     </ClCompile>
@@ -174,8 +171,8 @@
     <ClCompile Include="code\object\UI\crown.cpp">
       <Filter>ソース ファイル\01_object\03_UI</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\BG\test.cpp">
-      <Filter>ソース ファイル\01_object\01_bg</Filter>
+    <ClCompile Include="code\system\words\text.cpp">
+      <Filter>ソース ファイル\02_system\01_words</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -281,9 +278,6 @@
     <ClInclude Include="code\system\words\font.h">
       <Filter>ソース ファイル\02_system\01_words</Filter>
     </ClInclude>
-    <ClInclude Include="code\system\words\text.h">
-      <Filter>ソース ファイル\02_system\01_words</Filter>
-    </ClInclude>
     <ClInclude Include="code\system\words\words.h">
       <Filter>ソース ファイル\02_system\01_words</Filter>
     </ClInclude>
@@ -308,8 +302,8 @@
     <ClInclude Include="code\object\UI\crown.h">
       <Filter>ソース ファイル\01_object\03_UI</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\BG\test.h">
-      <Filter>ソース ファイル\01_object\01_bg</Filter>
+    <ClInclude Include="code\system\words\text.h">
+      <Filter>ソース ファイル\02_system\01_words</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
